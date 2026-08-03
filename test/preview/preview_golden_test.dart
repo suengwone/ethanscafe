@@ -30,6 +30,17 @@ Future<void> _loadFont(String family, String path) async {
   await fontLoader.load();
 }
 
+Future<void> _loadPackageFont(String family, String assetKey) async {
+  final fontLoader = FontLoader(family)..addFont(rootBundle.load(assetKey));
+  await fontLoader.load();
+}
+
+const _lucideFonts = {
+  'Lucide': 'assets/lucide.ttf',
+  'Lucide300': 'assets/build_font/LucideVariable-w300.ttf',
+  'Lucide600': 'assets/build_font/LucideVariable-w600.ttf',
+};
+
 Future<void> _loadFonts() async {
   await _loadFont('Roboto', '/System/Library/Fonts/AppleSDGothicNeo.ttc');
 
@@ -38,6 +49,13 @@ Future<void> _loadFonts() async {
     await _loadFont(
       'MaterialIcons',
       '$flutterRoot/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf',
+    );
+  }
+
+  for (final entry in _lucideFonts.entries) {
+    await _loadPackageFont(
+      'packages/lucide_icons_flutter/${entry.key}',
+      'packages/lucide_icons_flutter/${entry.value}',
     );
   }
 }
@@ -51,6 +69,7 @@ const _previewUser = AppUser(
 
 void main() {
   setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
     await _loadFonts();
   });
 
