@@ -15,6 +15,10 @@ const double foxtrotRadiusLarge = 20;
 const double foxtrotRadiusMedium = 14;
 const double foxtrotRadiusSmall = 8;
 
+const double foxtrotScreenHPadding = 20;
+const EdgeInsets foxtrotListPadding =
+    EdgeInsets.fromLTRB(foxtrotScreenHPadding, 8, foxtrotScreenHPadding, 24);
+
 List<BoxShadow> foxtrotCardShadow = [
   BoxShadow(
     color: Colors.black.withValues(alpha: 0.35),
