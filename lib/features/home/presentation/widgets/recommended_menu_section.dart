@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/new_badge.dart';
@@ -29,25 +30,34 @@ class RecommendedMenuSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
               Text(
                 '이 메뉴 어때요?',
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               const Spacer(),
               TextButton(
                 onPressed: () => context.go('/menu'),
-                child: const Text('전체보기'),
+                style: TextButton.styleFrom(foregroundColor: foxtrotMuted),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('전체보기'),
+                    SizedBox(width: 2),
+                    Icon(LucideIcons.chevronRight, size: 16),
+                  ],
+                ),
               ),
             ],
           ),
         ),
+        const SizedBox(height: 4),
         SizedBox(
-          height: 170,
+          height: 178,
           child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             scrollDirection: Axis.horizontal,
             itemCount: items.length,
             separatorBuilder: (context, index) => const SizedBox(width: 12),
@@ -69,12 +79,12 @@ class _RecommendedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Container(
-      width: 120,
-      padding: const EdgeInsets.all(12),
+      width: 128,
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: foxtrotCard,
         borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-        border: Border.all(color: foxtrotBorder),
+        border: Border.all(color: foxtrotBorder.withValues(alpha: 0.7)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

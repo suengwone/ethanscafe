@@ -22,7 +22,7 @@ class RewardsCard extends ConsumerWidget {
     final remaining = rewardGoal - balance;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Material(
         color: Colors.transparent,
         child: Ink(
@@ -34,6 +34,7 @@ class RewardsCard extends ConsumerWidget {
             ),
             borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
             border: Border.all(color: foxtrotGold.withValues(alpha: 0.45)),
+            boxShadow: foxtrotCardShadow,
           ),
           child: InkWell(
             onTap: () => context.go('/points'),
@@ -74,10 +75,10 @@ class RewardsCard extends ConsumerWidget {
                   ),
                   const SizedBox(height: 12),
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
                     child: LinearProgressIndicator(
                       value: progress,
-                      minHeight: 6,
+                      minHeight: 8,
                       backgroundColor: foxtrotBorder,
                       valueColor:
                           const AlwaysStoppedAnimation<Color>(foxtrotGold),
