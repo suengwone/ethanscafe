@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../auth/domain/auth_models.dart';
@@ -60,7 +61,7 @@ class ProfileScreen extends ConsumerWidget {
               _buildListTile(
                 icon: LucideIcons.heart,
                 title: '즐겨찾기 메뉴',
-                onTap: () {},
+                onTap: () => context.push('/profile/favorites'),
               ),
             ],
           ),
@@ -128,12 +129,7 @@ class ProfileScreen extends ConsumerWidget {
               ],
             ),
           const SizedBox(height: 24),
-          Center(
-            child: Text(
-              '앱 버전 1.0.0',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ),
+          const Center(child: _AppVersionLabel()),
           const SizedBox(height: 24),
         ],
       ),
@@ -178,6 +174,24 @@ class ProfileScreen extends ConsumerWidget {
       ),
       trailing: trailing ?? const Icon(LucideIcons.chevronRight, size: 18),
       onTap: onTap,
+    );
+  }
+}
+
+class _AppVersionLabel extends StatelessWidget {
+  const _AppVersionLabel();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<PackageInfo>(
+      future: PackageInfo.fromPlatform(),
+      builder: (context, snapshot) {
+        final version = snapshot.data?.version;
+        return Text(
+          version == null ? '앱 버전 확인 중...' : '앱 버전 $version',
+          style: Theme.of(context).textTheme.bodySmall,
+        );
+      },
     );
   }
 }
