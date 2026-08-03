@@ -7,12 +7,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:cafe_app/core/theme/app_theme.dart';
+import 'package:cafe_app/core/widgets/app_shell.dart';
 import 'package:cafe_app/features/auth/domain/auth_models.dart';
 import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
 import 'package:cafe_app/features/auth/presentation/login_screen.dart';
-import 'package:cafe_app/features/home/presentation/home_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
+import 'package:cafe_app/router/app_router.dart';
 
 import '../features/auth/fake_auth_repository.dart';
 
@@ -38,6 +40,13 @@ Future<void> _loadFonts() async {
     );
   }
 }
+
+const _previewUser = AppUser(
+  uid: 'preview-user',
+  displayName: '이단',
+  email: 'ethan@example.com',
+  providerId: 'google',
+);
 
 void main() {
   setUpAll(() async {
@@ -84,15 +93,63 @@ void main() {
     addTearDown(tester.view.reset);
   }
 
-  testWidgets('포인트 화면 스크린샷', (WidgetTester tester) async {
-    await configureView(tester);
-
+  Future<void> pumpScreen(WidgetTester tester, Widget screen) async {
     await tester.pumpWidget(
-      const ProviderScope(
-        child: MaterialApp(home: PointsScreen()),
+      ProviderScope(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
+        ],
+        child: MaterialApp(theme: buildAppTheme(), home: screen),
       ),
     );
     await tester.pumpAndSettle();
+  }
+
+  Future<void> pumpApp(WidgetTester tester, {AppUser? user}) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(
+            FakeAuthRepository(user: user),
+          ),
+        ],
+        child: Consumer(
+          builder: (context, ref, _) {
+            final router = ref.watch(routerProvider);
+            return MaterialApp.router(
+              theme: buildAppTheme(),
+              routerConfig: router,
+            );
+          },
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('홈 화면(게스트) 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpApp(tester);
+
+    await expectLater(
+      find.byType(AppShell),
+      matchesGoldenFile('../../preview/home_screen.png'),
+    );
+  });
+
+  testWidgets('홈 화면(로그인) 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpApp(tester, user: _previewUser);
+
+    await expectLater(
+      find.byType(AppShell),
+      matchesGoldenFile('../../preview/home_screen_logged_in.png'),
+    );
+  });
+
+  testWidgets('포인트 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const PointsScreen());
 
     await expectLater(
       find.byType(PointsScreen),
@@ -100,32 +157,9 @@ void main() {
     );
   });
 
-  testWidgets('홈 화면 스크린샷', (WidgetTester tester) async {
-    await configureView(tester);
-
-    await tester.pumpWidget(
-      const MaterialApp(home: HomeScreen()),
-    );
-    await tester.pumpAndSettle();
-
-    await expectLater(
-      find.byType(HomeScreen),
-      matchesGoldenFile('../../preview/home_screen.png'),
-    );
-  });
-
   testWidgets('로그인 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
-
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
-        ],
-        child: const MaterialApp(home: LoginScreen()),
-      ),
-    );
-    await tester.pumpAndSettle();
+    await pumpScreen(tester, const LoginScreen());
 
     await expectLater(
       find.byType(LoginScreen),
@@ -135,16 +169,7 @@ void main() {
 
   testWidgets('프로필 화면(게스트) 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
-
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
-        ],
-        child: const MaterialApp(home: ProfileScreen()),
-      ),
-    );
-    await tester.pumpAndSettle();
+    await pumpScreen(tester, const ProfileScreen());
 
     await expectLater(
       find.byType(ProfileScreen),
@@ -159,17 +184,13 @@ void main() {
       ProviderScope(
         overrides: [
           authRepositoryProvider.overrideWithValue(
-            FakeAuthRepository(
-              user: const AppUser(
-                uid: 'preview-user',
-                displayName: '이단',
-                email: 'ethan@example.com',
-                providerId: 'google',
-              ),
-            ),
+            FakeAuthRepository(user: _previewUser),
           ),
         ],
-        child: const MaterialApp(home: ProfileScreen()),
+        child: MaterialApp(
+          theme: buildAppTheme(),
+          home: const ProfileScreen(),
+        ),
       ),
     );
     await tester.pumpAndSettle();
