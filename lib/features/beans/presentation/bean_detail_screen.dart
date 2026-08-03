@@ -1,0 +1,694 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+
+import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/new_badge.dart';
+import '../domain/bean_models.dart';
+import 'beans_providers.dart';
+
+final _priceFormat = NumberFormat('#,###');
+
+class BeanDetailScreen extends ConsumerWidget {
+  const BeanDetailScreen({super.key, required this.beanId});
+
+  final String beanId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final beanState = ref.watch(beanProvider(beanId));
+    final bean = beanState.asData?.value;
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('원두 상세')),
+      body: beanState.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, _) => Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('원두 정보를 불러오지 못했습니다.'),
+              const SizedBox(height: 8),
+              TextButton(
+                onPressed: () => ref.invalidate(beanProvider(beanId)),
+                child: const Text('다시 시도'),
+              ),
+            ],
+          ),
+        ),
+        data: (bean) => _BeanDetailBody(bean: bean),
+      ),
+      bottomNavigationBar: bean == null ? null : _OrderBar(bean: bean),
+    );
+  }
+}
+
+class _BeanDetailBody extends StatelessWidget {
+  const _BeanDetailBody({required this.bean});
+
+  final Bean bean;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _HeaderSection(bean: bean),
+          const SizedBox(height: 16),
+          _TastingNotesSection(bean: bean),
+          const SizedBox(height: 16),
+          _FlavorProfileSection(bean: bean),
+          const SizedBox(height: 16),
+          _StorySection(bean: bean),
+          const SizedBox(height: 16),
+          _InfoSection(bean: bean),
+        ],
+      ),
+    );
+  }
+}
+
+class _HeaderSection extends StatelessWidget {
+  const _HeaderSection({required this.bean});
+
+  final Bean bean;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Container(
+              width: 88,
+              height: 88,
+              decoration: BoxDecoration(
+                color: foxtrotSurface,
+                shape: BoxShape.circle,
+                border: Border.all(color: foxtrotGold, width: 1.5),
+              ),
+              child: const Icon(
+                LucideIcons.bean,
+                color: foxtrotGold,
+                size: 40,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    bean.name,
+                    style: textTheme.headlineSmall,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                if (bean.isNew) ...[
+                  const SizedBox(width: 8),
+                  const NewBadge(),
+                ],
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(bean.description, style: textTheme.bodySmall),
+            const SizedBox(height: 14),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              alignment: WrapAlignment.center,
+              children: [
+                _InfoChip(icon: LucideIcons.mapPin, label: bean.origin),
+                _InfoChip(
+                  icon: LucideIcons.flame,
+                  label: '${bean.roastLevel.label} 로스팅',
+                ),
+                _InfoChip(icon: LucideIcons.droplets, label: bean.process),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _InfoChip extends StatelessWidget {
+  const _InfoChip({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: foxtrotSurface,
+        borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
+        border: Border.all(color: foxtrotBorder),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: foxtrotGold),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 12, color: foxtrotCream),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TastingNotesSection extends StatelessWidget {
+  const _TastingNotesSection({required this.bean});
+
+  final Bean bean;
+
+  @override
+  Widget build(BuildContext context) {
+    return _SectionCard(
+      title: '향미 노트',
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: bean.tastingNotes
+            .map(
+              (note) => Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: foxtrotGold.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
+                ),
+                child: Text(
+                  note,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: foxtrotGoldLight,
+                  ),
+                ),
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+}
+
+class _FlavorProfileSection extends StatelessWidget {
+  const _FlavorProfileSection({required this.bean});
+
+  final Bean bean;
+
+  @override
+  Widget build(BuildContext context) {
+    return _SectionCard(
+      title: '테이스팅 프로필',
+      child: Column(
+        children: [
+          _ProfileRow(label: '산미', level: bean.acidity),
+          const SizedBox(height: 12),
+          _ProfileRow(label: '바디', level: bean.body),
+          const SizedBox(height: 12),
+          _ProfileRow(label: '단맛', level: bean.sweetness),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProfileRow extends StatelessWidget {
+  const _ProfileRow({required this.label, required this.level});
+
+  final String label;
+  final int level;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 40,
+          child: Text(label, style: Theme.of(context).textTheme.bodyMedium),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Row(
+            children: List.generate(5, (index) {
+              final filled = index < level;
+              return Expanded(
+                child: Container(
+                  height: 6,
+                  margin: EdgeInsets.only(right: index < 4 ? 6 : 0),
+                  decoration: BoxDecoration(
+                    color: filled ? foxtrotGold : foxtrotSurface,
+                    borderRadius: BorderRadius.circular(3),
+                    border: filled ? null : Border.all(color: foxtrotBorder),
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Text('$level/5', style: Theme.of(context).textTheme.bodySmall),
+      ],
+    );
+  }
+}
+
+class _StorySection extends StatelessWidget {
+  const _StorySection({required this.bean});
+
+  final Bean bean;
+
+  @override
+  Widget build(BuildContext context) {
+    return _SectionCard(
+      title: '원두 이야기',
+      child: Text(
+        bean.story,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.6),
+      ),
+    );
+  }
+}
+
+class _InfoSection extends StatelessWidget {
+  const _InfoSection({required this.bean});
+
+  final Bean bean;
+
+  @override
+  Widget build(BuildContext context) {
+    return _SectionCard(
+      title: '상세 정보',
+      child: Column(
+        children: [
+          _InfoRow(label: '원산지', value: bean.origin),
+          _InfoRow(label: '가공 방식', value: bean.process),
+          _InfoRow(label: '로스팅', value: bean.roastLevel.label),
+          _InfoRow(label: '추천 추출', value: bean.recommendedBrews.join(' · ')),
+          _InfoRow(
+            label: '가격',
+            value:
+                '200g ${_priceFormat.format(bean.price200)}원 · '
+                '500g ${_priceFormat.format(bean.price500)}원',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  const _InfoRow({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 72,
+            child: Text(label, style: textTheme.bodySmall),
+          ),
+          Expanded(child: Text(value, style: textTheme.bodyMedium)),
+        ],
+      ),
+    );
+  }
+}
+
+class _SectionCard extends StatelessWidget {
+  const _SectionCard({required this.title, required this.child});
+
+  final String title;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 12),
+            child,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OrderBar extends StatelessWidget {
+  const _OrderBar({required this.bean});
+
+  final Bean bean;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: foxtrotSurface,
+        border: Border(top: BorderSide(color: foxtrotBorder)),
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '200g 기준',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    Text(
+                      '${_priceFormat.format(bean.price200)}원',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: foxtrotGoldLight,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              FilledButton.icon(
+                onPressed: () => _showOrderSheet(context),
+                icon: const Icon(LucideIcons.shoppingBag, size: 18),
+                label: const Text('주문하기'),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 28,
+                    vertical: 14,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showOrderSheet(BuildContext context) async {
+    final result = await showModalBottomSheet<BeanOrderSelection>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: foxtrotCard,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => BeanOrderSheet(bean: bean),
+    );
+    if (result == null || !context.mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          '${bean.name} ${result.weight.label} · ${result.grind.label} '
+          '${result.quantity}개 주문이 접수되었습니다.',
+        ),
+      ),
+    );
+  }
+}
+
+class BeanOrderSelection {
+  const BeanOrderSelection({
+    required this.weight,
+    required this.grind,
+    required this.quantity,
+  });
+
+  final BeanWeight weight;
+  final GrindOption grind;
+  final int quantity;
+}
+
+class BeanOrderSheet extends StatefulWidget {
+  const BeanOrderSheet({super.key, required this.bean});
+
+  final Bean bean;
+
+  @override
+  State<BeanOrderSheet> createState() => _BeanOrderSheetState();
+}
+
+class _BeanOrderSheetState extends State<BeanOrderSheet> {
+  BeanWeight _weight = BeanWeight.g200;
+  GrindOption _grind = GrindOption.wholeBean;
+  int _quantity = 1;
+
+  int get _totalPrice => widget.bean.priceOf(_weight) * _quantity;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          top: 20,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.bean.name, style: textTheme.titleLarge),
+            const SizedBox(height: 4),
+            Text(
+              '${widget.bean.origin} · ${widget.bean.roastLevel.label} 로스팅',
+              style: textTheme.bodySmall,
+            ),
+            const SizedBox(height: 20),
+            Text('용량', style: textTheme.titleSmall),
+            const SizedBox(height: 8),
+            Row(
+              children: BeanWeight.values
+                  .map(
+                    (weight) => Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          right: weight == BeanWeight.values.last ? 0 : 8,
+                        ),
+                        child: _WeightOption(
+                          weight: weight,
+                          price: widget.bean.priceOf(weight),
+                          selected: _weight == weight,
+                          onTap: () => setState(() => _weight = weight),
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+            const SizedBox(height: 20),
+            Text('분쇄도', style: textTheme.titleSmall),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: GrindOption.values
+                  .map(
+                    (grind) => ChoiceChip(
+                      label: Text(grind.label),
+                      selected: _grind == grind,
+                      onSelected: (_) => setState(() => _grind = grind),
+                      selectedColor: foxtrotGold.withValues(alpha: 0.25),
+                      labelStyle: TextStyle(
+                        fontSize: 13,
+                        color: _grind == grind
+                            ? foxtrotGoldLight
+                            : foxtrotCream,
+                      ),
+                      side: BorderSide(
+                        color: _grind == grind ? foxtrotGold : foxtrotBorder,
+                      ),
+                      backgroundColor: foxtrotSurface,
+                      showCheckmark: false,
+                    ),
+                  )
+                  .toList(),
+            ),
+            const SizedBox(height: 6),
+            Text(_grind.description, style: textTheme.bodySmall),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Text('수량', style: textTheme.titleSmall),
+                const Spacer(),
+                _QuantityButton(
+                  icon: LucideIcons.minus,
+                  enabled: _quantity > 1,
+                  onTap: () => setState(() => _quantity--),
+                ),
+                SizedBox(
+                  width: 44,
+                  child: Text(
+                    '$_quantity',
+                    textAlign: TextAlign.center,
+                    style: textTheme.titleMedium,
+                  ),
+                ),
+                _QuantityButton(
+                  icon: LucideIcons.plus,
+                  enabled: _quantity < 9,
+                  onTap: () => setState(() => _quantity++),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            const Divider(),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Text('총 결제 금액', style: textTheme.bodyMedium),
+                const Spacer(),
+                Text(
+                  '${_priceFormat.format(_totalPrice)}원',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: foxtrotGoldLight,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: () => Navigator.of(context).pop(
+                  BeanOrderSelection(
+                    weight: _weight,
+                    grind: _grind,
+                    quantity: _quantity,
+                  ),
+                ),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: Text('${_priceFormat.format(_totalPrice)}원 주문하기'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _WeightOption extends StatelessWidget {
+  const _WeightOption({
+    required this.weight,
+    required this.price,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final BeanWeight weight;
+  final int price;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          color: selected
+              ? foxtrotGold.withValues(alpha: 0.15)
+              : foxtrotSurface,
+          borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
+          border: Border.all(
+            color: selected ? foxtrotGold : foxtrotBorder,
+            width: selected ? 1.5 : 1,
+          ),
+        ),
+        child: Column(
+          children: [
+            Text(
+              weight.label,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: selected ? foxtrotGoldLight : foxtrotCream,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '${_priceFormat.format(price)}원',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _QuantityButton extends StatelessWidget {
+  const _QuantityButton({
+    required this.icon,
+    required this.enabled,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final bool enabled;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
+      onTap: enabled ? onTap : null,
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: foxtrotSurface,
+          borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
+          border: Border.all(color: foxtrotBorder),
+        ),
+        child: Icon(
+          icon,
+          size: 18,
+          color: enabled ? foxtrotGold : foxtrotMuted,
+        ),
+      ),
+    );
+  }
+}

@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/new_badge.dart';
+import '../../beans/presentation/beans_list_view.dart';
 
 class MenuScreen extends ConsumerWidget {
   const MenuScreen({super.key});
@@ -29,7 +30,7 @@ class MenuScreen extends ConsumerWidget {
             _MenuList(category: 'coffee'),
             _MenuList(category: 'non-coffee'),
             _MenuList(category: 'dessert'),
-            _MenuList(category: 'beans'),
+            BeansListView(),
           ],
         ),
       ),
@@ -108,8 +109,6 @@ class _MenuList extends StatelessWidget {
         return LucideIcons.cupSoda;
       case 'dessert':
         return LucideIcons.croissant;
-      case 'beans':
-        return LucideIcons.bean;
       default:
         return LucideIcons.coffee;
     }
@@ -135,12 +134,6 @@ class _MenuList extends StatelessWidget {
           {'name': '크로플', 'description': '바삭한 크로와상 와플', 'price': '6,500원', 'isNew': 'false'},
           {'name': '티라미수', 'description': '이탈리아 정통 디저트', 'price': '7,000원', 'isNew': 'false'},
           {'name': '치즈케이크', 'description': '뉴욕 스타일', 'price': '6,500원', 'isNew': 'false'},
-        ];
-      case 'beans':
-        return [
-          {'name': '에티오피아 예가체프', 'description': '플로럴한 향과 과일향', 'price': '18,000원', 'isNew': 'false'},
-          {'name': '콜롬비아 수프레모', 'description': '균형잡힌 바디감', 'price': '15,000원', 'isNew': 'false'},
-          {'name': '브라질 산토스', 'description': '너츠향과 초콜릿향', 'price': '14,000원', 'isNew': 'true'},
         ];
       default:
         return [];
