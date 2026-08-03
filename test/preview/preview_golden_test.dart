@@ -20,6 +20,7 @@ import 'package:cafe_app/features/menu/presentation/favorite_menu_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
 import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
+import 'package:cafe_app/features/order/presentation/order_history_screen.dart';
 import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/profile/presentation/notification_settings_screen.dart';
@@ -324,6 +325,16 @@ void main() {
     await expectLater(
       find.byType(NotificationSettingsScreen),
       matchesGoldenFile('../../preview/notification_settings_screen.png'),
+    );
+  });
+
+  testWidgets('주문 내역 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const OrderHistoryScreen());
+
+    await expectLater(
+      find.byType(OrderHistoryScreen),
+      matchesGoldenFile('../../preview/order_history_screen.png'),
     );
   });
 

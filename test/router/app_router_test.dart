@@ -15,6 +15,7 @@ import 'package:cafe_app/features/menu/presentation/favorite_menu_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
 import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
+import 'package:cafe_app/features/order/presentation/order_history_screen.dart';
 import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
@@ -184,6 +185,34 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(CouponListScreen), findsOneWidget);
+    expect(find.byType(LoginScreen), findsNothing);
+  });
+
+  testWidgets('비로그인 시 주문 내역은 로그인으로 리다이렉트된다', (tester) async {
+    final router = await pumpApp(tester);
+
+    router.go('/profile/orders');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LoginScreen), findsOneWidget);
+    expect(find.byType(OrderHistoryScreen), findsNothing);
+  });
+
+  testWidgets('로그인 시 주문 내역 화면에 접근할 수 있다', (tester) async {
+    final router = await pumpApp(
+      tester,
+      user: const AppUser(
+        uid: 'test-uid',
+        displayName: '테스트 사용자',
+        email: 'test@example.com',
+        providerId: 'google',
+      ),
+    );
+
+    router.go('/profile/orders');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(OrderHistoryScreen), findsOneWidget);
     expect(find.byType(LoginScreen), findsNothing);
   });
 
