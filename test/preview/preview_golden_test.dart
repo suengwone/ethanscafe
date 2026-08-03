@@ -17,6 +17,8 @@ import 'package:cafe_app/features/beans/presentation/bean_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/favorite_menu_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
+import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
+import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
 import 'package:cafe_app/router/app_router.dart';
@@ -183,6 +185,26 @@ void main() {
     await expectLater(
       find.byType(AppShell),
       matchesGoldenFile('../../preview/home_screen_logged_in.png'),
+    );
+  });
+
+  testWidgets('알림 목록 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const NoticeListScreen());
+
+    await expectLater(
+      find.byType(NoticeListScreen),
+      matchesGoldenFile('../../preview/notice_list_screen.png'),
+    );
+  });
+
+  testWidgets('매장 찾기 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const StoreListScreen());
+
+    await expectLater(
+      find.byType(StoreListScreen),
+      matchesGoldenFile('../../preview/store_list_screen.png'),
     );
   });
 
