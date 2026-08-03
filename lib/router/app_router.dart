@@ -10,6 +10,7 @@ import '../features/menu/presentation/menu_detail_screen.dart';
 import '../features/menu/presentation/menu_screen.dart';
 import '../features/notice/presentation/notice_list_screen.dart';
 import '../features/points/presentation/points_screen.dart';
+import '../features/profile/presentation/notification_settings_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
 import '../features/store/presentation/store_list_screen.dart';
 
@@ -94,6 +95,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'favorites',
                     builder: (context, state) => const FavoriteMenuScreen(),
+                  ),
+                  GoRoute(
+                    path: 'notifications',
+                    builder: (context, state) =>
+                        const NotificationSettingsScreen(),
                   ),
                 ],
               ),
