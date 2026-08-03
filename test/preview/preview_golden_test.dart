@@ -7,8 +7,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:cafe_app/features/auth/domain/auth_models.dart';
+import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
+import 'package:cafe_app/features/auth/presentation/login_screen.dart';
 import 'package:cafe_app/features/home/presentation/home_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
+import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
+
+import '../features/auth/fake_auth_repository.dart';
 
 Future<void> _loadFont(String family, String path) async {
   final file = File(path);
@@ -105,6 +111,72 @@ void main() {
     await expectLater(
       find.byType(HomeScreen),
       matchesGoldenFile('../../preview/home_screen.png'),
+    );
+  });
+
+  testWidgets('로그인 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
+        ],
+        child: const MaterialApp(home: LoginScreen()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await expectLater(
+      find.byType(LoginScreen),
+      matchesGoldenFile('../../preview/login_screen.png'),
+    );
+  });
+
+  testWidgets('프로필 화면(게스트) 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
+        ],
+        child: const MaterialApp(home: ProfileScreen()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await expectLater(
+      find.byType(ProfileScreen),
+      matchesGoldenFile('../../preview/profile_screen.png'),
+    );
+  });
+
+  testWidgets('프로필 화면(로그인) 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(
+            FakeAuthRepository(
+              user: const AppUser(
+                uid: 'preview-user',
+                displayName: '이단',
+                email: 'ethan@example.com',
+                providerId: 'google',
+              ),
+            ),
+          ),
+        ],
+        child: const MaterialApp(home: ProfileScreen()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await expectLater(
+      find.byType(ProfileScreen),
+      matchesGoldenFile('../../preview/profile_screen_logged_in.png'),
     );
   });
 }
