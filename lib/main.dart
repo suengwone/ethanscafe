@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'core/theme/app_theme.dart';
 import 'router/app_router.dart';
 
 Future<void> main() async {
@@ -26,17 +27,7 @@ class CafeApp extends ConsumerWidget {
     
     return MaterialApp.router(
       title: "Ethan's Cafe",
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.brown,
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
-        appBarTheme: const AppBarTheme(
-          centerTitle: true,
-          elevation: 0,
-        ),
-      ),
+      theme: buildAppTheme(),
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );
