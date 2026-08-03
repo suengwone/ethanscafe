@@ -29,9 +29,10 @@ class RewardsCard extends ConsumerWidget {
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [cafeGreen, cafeDarkGreen],
+              colors: [foxtrotCard, foxtrotSurface],
             ),
             borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: foxtrotGold.withValues(alpha: 0.45)),
           ),
           child: InkWell(
             onTap: () => context.go('/points'),
@@ -43,20 +44,24 @@ class RewardsCard extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.star_rounded, color: cafeGold, size: 20),
+                      const Icon(
+                        Icons.star_rounded,
+                        color: foxtrotGold,
+                        size: 20,
+                      ),
                       const SizedBox(width: 6),
                       const Text(
                         '나의 리워드',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: foxtrotCream,
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       const Spacer(),
-                      Icon(
+                      const Icon(
                         Icons.chevron_right,
-                        color: Colors.white.withValues(alpha: 0.8),
+                        color: foxtrotMuted,
                       ),
                     ],
                   ),
@@ -64,7 +69,7 @@ class RewardsCard extends ConsumerWidget {
                   Text(
                     '${_pointFormat.format(balance)}P',
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: foxtrotGoldLight,
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                     ),
@@ -75,8 +80,9 @@ class RewardsCard extends ConsumerWidget {
                     child: LinearProgressIndicator(
                       value: progress,
                       minHeight: 6,
-                      backgroundColor: Colors.white.withValues(alpha: 0.25),
-                      valueColor: const AlwaysStoppedAnimation<Color>(cafeGold),
+                      backgroundColor: foxtrotBorder,
+                      valueColor:
+                          const AlwaysStoppedAnimation<Color>(foxtrotGold),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -84,8 +90,8 @@ class RewardsCard extends ConsumerWidget {
                     remaining > 0
                         ? '${_pointFormat.format(remaining)}P 더 모으면 무료 음료 쿠폰!'
                         : '무료 음료 쿠폰으로 교환할 수 있어요!',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.85),
+                    style: const TextStyle(
+                      color: foxtrotMuted,
                       fontSize: 12,
                     ),
                   ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/theme/app_theme.dart';
+
 class _RecommendedItem {
   final String name;
   final String price;
@@ -101,9 +103,9 @@ class _RecommendedCard extends StatelessWidget {
       width: 120,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: foxtrotCard,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: foxtrotBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,7 +114,7 @@ class _RecommendedCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 32,
-                backgroundColor: colorScheme.primaryContainer,
+                backgroundColor: foxtrotSurface,
                 child: Icon(item.icon, size: 30, color: colorScheme.primary),
               ),
               if (item.isNew)
@@ -125,13 +127,13 @@ class _RecommendedCard extends StatelessWidget {
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: foxtrotGold,
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: const Text(
                       'NEW',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: foxtrotBlack,
                         fontSize: 8,
                         fontWeight: FontWeight.bold,
                       ),
@@ -153,9 +155,9 @@ class _RecommendedCard extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             item.price,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 13,
-              color: Colors.grey.shade600,
+              color: foxtrotMuted,
             ),
           ),
         ],

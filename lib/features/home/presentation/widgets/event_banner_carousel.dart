@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_theme.dart';
+
 class _BannerItem {
   final String title;
   final String subtitle;
@@ -19,19 +21,19 @@ const _banners = [
   _BannerItem(
     title: '여름 시즌 신메뉴 출시',
     subtitle: '시원한 콜드브루와 함께 여름을 즐겨보세요',
-    colors: [Color(0xFF1E88A8), Color(0xFF0B5468)],
+    colors: [Color(0xFF8A6D2F), Color(0xFF4A3A17)],
     icon: Icons.ac_unit,
   ),
   _BannerItem(
     title: '원두 정기 구독',
     subtitle: '매달 새로운 원두를 집에서 만나보세요',
-    colors: [Color(0xFF6D4C41), Color(0xFF3E2723)],
+    colors: [Color(0xFF5C4433), Color(0xFF2B1E14)],
     icon: Icons.coffee,
   ),
   _BannerItem(
     title: '친구 초대 이벤트',
     subtitle: '친구를 초대하면 3,000P를 드려요',
-    colors: [Color(0xFF00704A), Color(0xFF004E33)],
+    colors: [foxtrotCard, foxtrotSurface],
     icon: Icons.card_giftcard,
   ),
 ];
@@ -75,7 +77,7 @@ class _EventBannerCarouselState extends State<EventBannerCarousel> {
               decoration: BoxDecoration(
                 color: isActive
                     ? Theme.of(context).colorScheme.primary
-                    : Colors.grey.shade300,
+                    : foxtrotBorder,
                 borderRadius: BorderRadius.circular(3),
               ),
             );
@@ -102,6 +104,7 @@ class _BannerCard extends StatelessWidget {
           colors: banner.colors,
         ),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: foxtrotGold.withValues(alpha: 0.35)),
       ),
       padding: const EdgeInsets.all(20),
       child: Row(
@@ -114,7 +117,7 @@ class _BannerCard extends StatelessWidget {
                 Text(
                   banner.title,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: foxtrotGoldLight,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -123,7 +126,7 @@ class _BannerCard extends StatelessWidget {
                 Text(
                   banner.subtitle,
                   style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.85),
+                    color: foxtrotCream.withValues(alpha: 0.85),
                     fontSize: 13,
                   ),
                 ),
@@ -133,7 +136,7 @@ class _BannerCard extends StatelessWidget {
           Icon(
             banner.icon,
             size: 48,
-            color: Colors.white.withValues(alpha: 0.5),
+            color: foxtrotGoldLight.withValues(alpha: 0.5),
           ),
         ],
       ),
