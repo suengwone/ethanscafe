@@ -1,0 +1,36 @@
+import 'package:cafe_app/features/store/data/firestore_stores_repository.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  group('storeFromFirestore', () {
+    test('Firestore 문서 데이터를 CafeStore로 변환한다', () {
+      final store = storeFromFirestore('macheon', {
+        'name': '폭스트롯 마천점',
+        'address': '서울 송파구 성내천로 189 1층',
+        'phone': '010-7730-2388',
+        'latitude': 37.501458,
+        'longitude': 127.149322,
+        'weekdayHours': '09:00 - 21:00',
+        'weekendHours': '09:00 - 21:00',
+        'services': ['핸드드립 바', '카카오페이'],
+      });
+
+      expect(store.id, 'macheon');
+      expect(store.name, '폭스트롯 마천점');
+      expect(store.latitude, 37.501458);
+      expect(store.services, ['핸드드립 바', '카카오페이']);
+    });
+
+    test('정수형 좌표도 double로 변환한다', () {
+      final store = storeFromFirestore('store-2', {
+        'name': '테스트점',
+        'latitude': 37,
+        'longitude': 127,
+      });
+
+      expect(store.latitude, 37.0);
+      expect(store.longitude, 127.0);
+      expect(store.services, isEmpty);
+    });
+  });
+}
