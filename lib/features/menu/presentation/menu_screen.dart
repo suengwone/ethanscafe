@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/new_badge.dart';
 
 class MenuScreen extends ConsumerWidget {
   const MenuScreen({super.key});
@@ -46,7 +47,7 @@ class _MenuList extends StatelessWidget {
     final menuItems = _getMenuItems(category);
     
     return ListView.builder(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       itemCount: menuItems.length,
       itemBuilder: (context, index) {
         final item = menuItems[index];
@@ -58,16 +59,19 @@ class _MenuList extends StatelessWidget {
               height: 60,
               decoration: BoxDecoration(
                 color: foxtrotSurface,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
                 border: Border.all(color: foxtrotBorder),
               ),
               child: const Icon(Icons.coffee, color: foxtrotGold),
             ),
             title: Text(
               item['name']!,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.labelLarge,
             ),
-            subtitle: Text(item['description']!),
+            subtitle: Text(
+              item['description']!,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
             trailing: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -79,25 +83,7 @@ class _MenuList extends StatelessWidget {
                     fontSize: 16,
                   ),
                 ),
-                if (item['isNew'] == 'true')
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: foxtrotGold,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Text(
-                      'NEW',
-                      style: TextStyle(
-                        color: foxtrotBlack,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                if (item['isNew'] == 'true') const NewBadge(),
               ],
             ),
             onTap: () {

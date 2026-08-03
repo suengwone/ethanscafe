@@ -55,13 +55,9 @@ class LoginScreen extends ConsumerWidget {
               color: foxtrotGold,
             ),
             const SizedBox(height: 32),
-            const Text(
+            Text(
               'Ethan\'s Cafe',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: foxtrotGoldLight,
-              ),
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 48),
             _SocialLoginButton(
@@ -140,7 +136,7 @@ class _SocialLoginButton extends StatelessWidget {
           backgroundColor: backgroundColor,
           foregroundColor: textColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
             side: borderColor != null
                 ? BorderSide(color: borderColor!)
                 : BorderSide.none,

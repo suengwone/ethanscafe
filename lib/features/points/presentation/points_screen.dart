@@ -65,30 +65,23 @@ class _BalanceSection extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const Text(
+            Text(
               '나의 포인트',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
             Text(
               '${_pointFormat.format(data.balance)}P',
-              style: const TextStyle(
-                fontSize: 36,
-                fontWeight: FontWeight.bold,
-                color: foxtrotGoldLight,
-              ),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium
+                  ?.copyWith(fontSize: 36),
             ),
             const SizedBox(height: 8),
             Text(
               '결제 금액의 10%가 포인트로 적립됩니다.\n적립된 포인트는 현금처럼 사용할 수 있어요.',
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 12,
-                color: foxtrotMuted,
-              ),
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 16),
             Row(
@@ -246,19 +239,16 @@ class _MembershipQrSection extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const Text(
+            Text(
               '멤버십 바코드',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
               ),
               child: QrImageView(
                 data: membershipId,
@@ -269,10 +259,7 @@ class _MembershipQrSection extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               membershipId,
-              style: const TextStyle(
-                fontSize: 12,
-                color: foxtrotMuted,
-              ),
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
         ),
@@ -293,18 +280,18 @@ class _HistorySection extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const Text(
+            Text(
               '포인트 히스토리',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
             if (history.isEmpty)
               Text(
                 '적립/사용 내역이 없습니다.',
-                style: const TextStyle(color: foxtrotMuted),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(fontSize: 14),
               )
             else
               ...history.map((entry) => _HistoryItem(entry: entry)),
@@ -329,10 +316,7 @@ class _HistoryItem extends StatelessWidget {
         children: [
           Text(
             DateFormat('yyyy.MM.dd').format(entry.createdAt),
-            style: const TextStyle(
-              color: foxtrotMuted,
-              fontSize: 12,
-            ),
+            style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -343,10 +327,7 @@ class _HistoryItem extends StatelessWidget {
                 if (paymentAmount != null)
                   Text(
                     '결제 ${_pointFormat.format(paymentAmount)}원',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: foxtrotMuted,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
               ],
             ),
@@ -357,7 +338,9 @@ class _HistoryItem extends StatelessWidget {
                 : '${_pointFormat.format(entry.amount)}P',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: entry.isEarn ? foxtrotGold : Colors.redAccent,
+              color: entry.isEarn
+                  ? foxtrotGold
+                  : Theme.of(context).colorScheme.error,
             ),
           ),
         ],

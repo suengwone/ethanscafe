@@ -103,7 +103,7 @@ class _BannerCard extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: banner.colors,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
         border: Border.all(color: foxtrotGold.withValues(alpha: 0.35)),
       ),
       padding: const EdgeInsets.all(20),
@@ -116,19 +116,17 @@ class _BannerCard extends StatelessWidget {
               children: [
                 Text(
                   banner.title,
-                  style: const TextStyle(
-                    color: foxtrotGoldLight,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: foxtrotGoldLight),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   banner.subtitle,
-                  style: TextStyle(
-                    color: foxtrotCream.withValues(alpha: 0.85),
-                    fontSize: 13,
-                  ),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: foxtrotCream.withValues(alpha: 0.85),
+                      ),
                 ),
               ],
             ),

@@ -31,12 +31,12 @@ class RewardsCard extends ConsumerWidget {
               end: Alignment.bottomRight,
               colors: [foxtrotCard, foxtrotSurface],
             ),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
             border: Border.all(color: foxtrotGold.withValues(alpha: 0.45)),
           ),
           child: InkWell(
             onTap: () => context.go('/points'),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -50,13 +50,9 @@ class RewardsCard extends ConsumerWidget {
                         size: 20,
                       ),
                       const SizedBox(width: 6),
-                      const Text(
+                      Text(
                         '나의 리워드',
-                        style: TextStyle(
-                          color: foxtrotCream,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: Theme.of(context).textTheme.labelLarge,
                       ),
                       const Spacer(),
                       const Icon(
@@ -90,10 +86,7 @@ class RewardsCard extends ConsumerWidget {
                     remaining > 0
                         ? '${_pointFormat.format(remaining)}P 더 모으면 무료 음료 쿠폰!'
                         : '무료 음료 쿠폰으로 교환할 수 있어요!',
-                    style: const TextStyle(
-                      color: foxtrotMuted,
-                      fontSize: 12,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),

@@ -32,6 +32,7 @@ class ProfileScreen extends ConsumerWidget {
           _ProfileHeader(user: user),
           const SizedBox(height: 8),
           _buildSection(
+            context,
             '나의 활동',
             [
               _buildListTile(
@@ -46,7 +47,7 @@ class ProfileScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: foxtrotGold,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
                   ),
                   child: const Text(
                     '2',
@@ -64,6 +65,7 @@ class ProfileScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           _buildSection(
+            context,
             '설정',
             [
               _buildListTile(
@@ -85,6 +87,7 @@ class ProfileScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           _buildSection(
+            context,
             '기타',
             [
               _buildListTile(
@@ -112,12 +115,13 @@ class ProfileScreen extends ConsumerWidget {
           const SizedBox(height: 8),
           if (user != null)
             _buildSection(
+              context,
               '계정',
               [
                 _buildListTile(
                   icon: Icons.logout,
                   title: '로그아웃',
-                  textColor: Colors.redAccent,
+                  textColor: Theme.of(context).colorScheme.error,
                   onTap: () => _signOut(context, ref),
                 ),
               ],
@@ -126,10 +130,7 @@ class ProfileScreen extends ConsumerWidget {
           Center(
             child: Text(
               '앱 버전 1.0.0',
-              style: const TextStyle(
-                color: foxtrotMuted,
-                fontSize: 12,
-              ),
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
           const SizedBox(height: 24),
@@ -138,7 +139,11 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSection(String title, List<Widget> children) {
+  Widget _buildSection(
+    BuildContext context,
+    String title,
+    List<Widget> children,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -146,11 +151,7 @@ class ProfileScreen extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
             title,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: foxtrotMuted,
-            ),
+            style: Theme.of(context).textTheme.titleSmall,
           ),
         ),
         Card(
@@ -192,7 +193,7 @@ class _ProfileHeader extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(24),
-      color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
       child: Column(
         children: [
           CircleAvatar(
@@ -210,10 +211,7 @@ class _ProfileHeader extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             user?.displayLabel ?? '게스트',
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 8),
           if (user == null)
@@ -225,10 +223,10 @@ class _ProfileHeader extends StatelessWidget {
           else if (email != null)
             Text(
               email,
-              style: const TextStyle(
-                fontSize: 14,
-                color: foxtrotMuted,
-              ),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(fontSize: 14),
             ),
         ],
       ),

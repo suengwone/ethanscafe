@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/theme/app_theme.dart';
 import '../../auth/presentation/auth_providers.dart';
 import 'widgets/event_banner_carousel.dart';
 import 'widgets/recommended_menu_section.dart';
@@ -60,18 +59,12 @@ class _GreetingHeader extends StatelessWidget {
               children: [
                 Text(
                   isLoggedIn ? '$name님, 반가워요!' : "Ethan's Cafe에 어서오세요!",
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 4),
-                const Text(
+                Text(
                   '오늘도 향긋한 커피 한 잔의 여유를 즐겨보세요',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: foxtrotMuted,
-                  ),
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
             ),

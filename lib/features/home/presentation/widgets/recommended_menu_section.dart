@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/new_badge.dart';
 
 class _RecommendedItem {
   final String name;
@@ -60,12 +61,9 @@ class RecommendedMenuSection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              const Text(
+              Text(
                 '이 메뉴 어때요?',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(context).textTheme.titleMedium,
               ),
               const Spacer(),
               TextButton(
@@ -104,7 +102,7 @@ class _RecommendedCard extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: foxtrotCard,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
         border: Border.all(color: foxtrotBorder),
       ),
       child: Column(
@@ -118,27 +116,10 @@ class _RecommendedCard extends StatelessWidget {
                 child: Icon(item.icon, size: 30, color: colorScheme.primary),
               ),
               if (item.isNew)
-                Positioned(
+                const Positioned(
                   right: 0,
                   top: 0,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 5,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: foxtrotGold,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Text(
-                      'NEW',
-                      style: TextStyle(
-                        color: foxtrotBlack,
-                        fontSize: 8,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                  child: NewBadge(),
                 ),
             ],
           ),
@@ -147,18 +128,12 @@ class _RecommendedCard extends StatelessWidget {
             item.name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
+            style: Theme.of(context).textTheme.labelLarge,
           ),
           const SizedBox(height: 2),
           Text(
             item.price,
-            style: const TextStyle(
-              fontSize: 13,
-              color: foxtrotMuted,
-            ),
+            style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
       ),
