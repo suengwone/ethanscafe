@@ -1,5 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/firestore_menu_repository.dart';
 import '../data/local_favorites_repository.dart';
 import '../data/local_menu_repository.dart';
 import '../domain/favorites_repository.dart';
@@ -7,6 +9,11 @@ import '../domain/menu_models.dart';
 import '../domain/menu_repository.dart';
 
 final menuRepositoryProvider = Provider<MenuRepository>((ref) {
+  try {
+    if (Firebase.apps.isNotEmpty) {
+      return FirestoreMenuRepository();
+    }
+  } catch (_) {}
   return LocalMenuRepository();
 });
 

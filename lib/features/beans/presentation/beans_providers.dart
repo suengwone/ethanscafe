@@ -1,10 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/firestore_beans_repository.dart';
 import '../data/local_beans_repository.dart';
 import '../domain/bean_models.dart';
 import '../domain/beans_repository.dart';
 
 final beansRepositoryProvider = Provider<BeansRepository>((ref) {
+  try {
+    if (Firebase.apps.isNotEmpty) {
+      return FirestoreBeansRepository();
+    }
+  } catch (_) {}
   return LocalBeansRepository();
 });
 
