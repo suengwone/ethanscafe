@@ -12,6 +12,7 @@ import 'package:cafe_app/core/widgets/app_shell.dart';
 import 'package:cafe_app/features/auth/domain/auth_models.dart';
 import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
 import 'package:cafe_app/features/auth/presentation/login_screen.dart';
+import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
 import 'package:cafe_app/router/app_router.dart';
@@ -154,6 +155,16 @@ void main() {
     await expectLater(
       find.byType(PointsScreen),
       matchesGoldenFile('../../preview/points_screen.png'),
+    );
+  });
+
+  testWidgets('메뉴 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const MenuScreen());
+
+    await expectLater(
+      find.byType(MenuScreen),
+      matchesGoldenFile('../../preview/menu_screen.png'),
     );
   });
 
