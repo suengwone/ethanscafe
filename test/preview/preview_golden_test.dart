@@ -20,6 +20,7 @@ import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
 import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
 import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
+import 'package:cafe_app/features/profile/presentation/notification_settings_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
 import 'package:cafe_app/router/app_router.dart';
 
@@ -311,6 +312,16 @@ void main() {
     await expectLater(
       find.byType(ProfileScreen),
       matchesGoldenFile('../../preview/profile_screen.png'),
+    );
+  });
+
+  testWidgets('알림 설정 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const NotificationSettingsScreen());
+
+    await expectLater(
+      find.byType(NotificationSettingsScreen),
+      matchesGoldenFile('../../preview/notification_settings_screen.png'),
     );
   });
 
