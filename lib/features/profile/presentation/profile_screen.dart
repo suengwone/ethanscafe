@@ -2,48 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../auth/domain/auth_models.dart';
+import '../../auth/presentation/auth_providers.dart';
+
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
+  Future<void> _signOut(BuildContext context, WidgetRef ref) async {
+    await ref.read(authControllerProvider.notifier).signOut();
+    if (!context.mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('로그아웃되었습니다.')),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authStateProvider).value;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('내 정보'),
       ),
       body: ListView(
         children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-            child: Column(
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.grey.shade300,
-                  child: const Icon(
-                    Icons.person,
-                    size: 50,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  '게스트',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextButton.icon(
-                  onPressed: () => context.go('/login'),
-                  icon: const Icon(Icons.login),
-                  label: const Text('로그인하기'),
-                ),
-              ],
-            ),
-          ),
+          _ProfileHeader(user: user),
           const SizedBox(height: 8),
           _buildSection(
             '나의 활동',
@@ -124,17 +109,18 @@ class ProfileScreen extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 8),
-          _buildSection(
-            '계정',
-            [
-              _buildListTile(
-                icon: Icons.logout,
-                title: '로그아웃',
-                textColor: Colors.red,
-                onTap: () {},
-              ),
-            ],
-          ),
+          if (user != null)
+            _buildSection(
+              '계정',
+              [
+                _buildListTile(
+                  icon: Icons.logout,
+                  title: '로그아웃',
+                  textColor: Colors.red,
+                  onTap: () => _signOut(context, ref),
+                ),
+              ],
+            ),
           const SizedBox(height: 24),
           Center(
             child: Text(
@@ -189,6 +175,62 @@ class ProfileScreen extends ConsumerWidget {
       ),
       trailing: trailing ?? const Icon(Icons.chevron_right),
       onTap: onTap,
+    );
+  }
+}
+
+class _ProfileHeader extends StatelessWidget {
+  final AppUser? user;
+
+  const _ProfileHeader({required this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    final photoUrl = user?.photoUrl;
+    final email = user?.email;
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 50,
+            backgroundColor: Colors.grey.shade300,
+            backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+            child: photoUrl == null
+                ? const Icon(
+                    Icons.person,
+                    size: 50,
+                    color: Colors.grey,
+                  )
+                : null,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            user?.displayLabel ?? '게스트',
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          if (user == null)
+            TextButton.icon(
+              onPressed: () => context.go('/login'),
+              icon: const Icon(Icons.login),
+              label: const Text('로그인하기'),
+            )
+          else if (email != null)
+            Text(
+              email,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade700,
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
