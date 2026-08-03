@@ -74,6 +74,14 @@ Future<void> _loadFonts() async {
   }
 }
 
+Future<void> expectGolden(Finder finder, String name) async {
+  if (!autoUpdateGoldenFiles) {
+    markTestSkipped('골든 스크린샷은 --update-goldens 실행 시에만 생성/비교합니다.');
+    return;
+  }
+  await expectLater(finder, matchesGoldenFile('../../preview/$name.png'));
+}
+
 const _previewUser = AppUser(
   uid: 'preview-user',
   displayName: '이단',
@@ -180,60 +188,42 @@ void main() {
     await configureView(tester);
     await pumpApp(tester);
 
-    await expectLater(
-      find.byType(AppShell),
-      matchesGoldenFile('../../preview/home_screen.png'),
-    );
+    await expectGolden(find.byType(AppShell), 'home_screen');
   });
 
   testWidgets('홈 화면(로그인) 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpApp(tester, user: _previewUser);
 
-    await expectLater(
-      find.byType(AppShell),
-      matchesGoldenFile('../../preview/home_screen_logged_in.png'),
-    );
+    await expectGolden(find.byType(AppShell), 'home_screen_logged_in');
   });
 
   testWidgets('알림 목록 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(tester, const NoticeListScreen());
 
-    await expectLater(
-      find.byType(NoticeListScreen),
-      matchesGoldenFile('../../preview/notice_list_screen.png'),
-    );
+    await expectGolden(find.byType(NoticeListScreen), 'notice_list_screen');
   });
 
   testWidgets('매장 찾기 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(tester, const StoreListScreen());
 
-    await expectLater(
-      find.byType(StoreListScreen),
-      matchesGoldenFile('../../preview/store_list_screen.png'),
-    );
+    await expectGolden(find.byType(StoreListScreen), 'store_list_screen');
   });
 
   testWidgets('포인트 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(tester, const PointsScreen());
 
-    await expectLater(
-      find.byType(PointsScreen),
-      matchesGoldenFile('../../preview/points_screen.png'),
-    );
+    await expectGolden(find.byType(PointsScreen), 'points_screen');
   });
 
   testWidgets('메뉴 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(tester, const MenuScreen());
 
-    await expectLater(
-      find.byType(MenuScreen),
-      matchesGoldenFile('../../preview/menu_screen.png'),
-    );
+    await expectGolden(find.byType(MenuScreen), 'menu_screen');
   });
 
   testWidgets('메뉴 상세 화면 스크린샷', (WidgetTester tester) async {
@@ -243,20 +233,14 @@ void main() {
       const MenuDetailScreen(menuId: 'espresso-vanilla-latte'),
     );
 
-    await expectLater(
-      find.byType(MenuDetailScreen),
-      matchesGoldenFile('../../preview/menu_detail_screen.png'),
-    );
+    await expectGolden(find.byType(MenuDetailScreen), 'menu_detail_screen');
   });
 
   testWidgets('즐겨찾기 메뉴 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(tester, const FavoriteMenuScreen());
 
-    await expectLater(
-      find.byType(FavoriteMenuScreen),
-      matchesGoldenFile('../../preview/favorite_menu_screen.png'),
-    );
+    await expectGolden(find.byType(FavoriteMenuScreen), 'favorite_menu_screen');
   });
 
   testWidgets('원두 목록 화면 스크린샷', (WidgetTester tester) async {
@@ -267,10 +251,7 @@ void main() {
     DefaultTabController.of(tabContext).animateTo(5);
     await tester.pumpAndSettle();
 
-    await expectLater(
-      find.byType(MenuScreen),
-      matchesGoldenFile('../../preview/beans_list_screen.png'),
-    );
+    await expectGolden(find.byType(MenuScreen), 'beans_list_screen');
   });
 
   testWidgets('원두 상세 화면 스크린샷', (WidgetTester tester) async {
@@ -280,10 +261,7 @@ void main() {
       const BeanDetailScreen(beanId: 'ethiopia-yirgacheffe-aricha'),
     );
 
-    await expectLater(
-      find.byType(BeanDetailScreen),
-      matchesGoldenFile('../../preview/bean_detail_screen.png'),
-    );
+    await expectGolden(find.byType(BeanDetailScreen), 'bean_detail_screen');
   });
 
   testWidgets('원두 주문 바텀시트 스크린샷', (WidgetTester tester) async {
@@ -296,39 +274,30 @@ void main() {
     await tester.tap(find.text('주문하기'));
     await tester.pumpAndSettle();
 
-    await expectLater(
-      find.byType(MaterialApp),
-      matchesGoldenFile('../../preview/bean_order_sheet.png'),
-    );
+    await expectGolden(find.byType(MaterialApp), 'bean_order_sheet');
   });
 
   testWidgets('로그인 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(tester, const LoginScreen());
 
-    await expectLater(
-      find.byType(LoginScreen),
-      matchesGoldenFile('../../preview/login_screen.png'),
-    );
+    await expectGolden(find.byType(LoginScreen), 'login_screen');
   });
 
   testWidgets('프로필 화면(게스트) 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(tester, const ProfileScreen());
 
-    await expectLater(
-      find.byType(ProfileScreen),
-      matchesGoldenFile('../../preview/profile_screen.png'),
-    );
+    await expectGolden(find.byType(ProfileScreen), 'profile_screen');
   });
 
   testWidgets('알림 설정 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(tester, const NotificationSettingsScreen());
 
-    await expectLater(
+    await expectGolden(
       find.byType(NotificationSettingsScreen),
-      matchesGoldenFile('../../preview/notification_settings_screen.png'),
+      'notification_settings_screen',
     );
   });
 
@@ -336,10 +305,7 @@ void main() {
     await configureView(tester);
     await pumpScreen(tester, const OrderHistoryScreen());
 
-    await expectLater(
-      find.byType(OrderHistoryScreen),
-      matchesGoldenFile('../../preview/order_history_screen.png'),
-    );
+    await expectGolden(find.byType(OrderHistoryScreen), 'order_history_screen');
   });
 
   testWidgets('쿠폰함 화면 스크린샷', (WidgetTester tester) async {
@@ -362,29 +328,23 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await expectLater(
-      find.byType(CouponListScreen),
-      matchesGoldenFile('../../preview/coupon_list_screen.png'),
-    );
+    await expectGolden(find.byType(CouponListScreen), 'coupon_list_screen');
   });
 
   testWidgets('결제 수단 관리 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(tester, const PaymentMethodsScreen());
 
-    await expectLater(
-      find.byType(PaymentMethodsScreen),
-      matchesGoldenFile('../../preview/payment_methods_screen.png'),
-    );
+    await expectGolden(find.byType(PaymentMethodsScreen), 'payment_methods_screen');
   });
 
   testWidgets('배송지 관리 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(tester, const DeliveryAddressScreen());
 
-    await expectLater(
+    await expectGolden(
       find.byType(DeliveryAddressScreen),
-      matchesGoldenFile('../../preview/delivery_address_screen.png'),
+      'delivery_address_screen',
     );
   });
 
@@ -392,30 +352,21 @@ void main() {
     await configureView(tester);
     await pumpScreen(tester, const SupportScreen());
 
-    await expectLater(
-      find.byType(SupportScreen),
-      matchesGoldenFile('../../preview/support_screen.png'),
-    );
+    await expectGolden(find.byType(SupportScreen), 'support_screen');
   });
 
   testWidgets('이용약관 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(tester, const PolicyScreen(type: PolicyType.terms));
 
-    await expectLater(
-      find.byType(PolicyScreen),
-      matchesGoldenFile('../../preview/terms_screen.png'),
-    );
+    await expectGolden(find.byType(PolicyScreen), 'terms_screen');
   });
 
   testWidgets('개인정보처리방침 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(tester, const PolicyScreen(type: PolicyType.privacy));
 
-    await expectLater(
-      find.byType(PolicyScreen),
-      matchesGoldenFile('../../preview/privacy_screen.png'),
-    );
+    await expectGolden(find.byType(PolicyScreen), 'privacy_screen');
   });
 
   testWidgets('프로필 화면(로그인) 스크린샷', (WidgetTester tester) async {
@@ -436,9 +387,6 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await expectLater(
-      find.byType(ProfileScreen),
-      matchesGoldenFile('../../preview/profile_screen_logged_in.png'),
-    );
+    await expectGolden(find.byType(ProfileScreen), 'profile_screen_logged_in');
   });
 }
