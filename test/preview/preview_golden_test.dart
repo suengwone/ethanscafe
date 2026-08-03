@@ -23,8 +23,12 @@ import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
 import 'package:cafe_app/features/order/presentation/order_history_screen.dart';
 import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
+import 'package:cafe_app/features/profile/presentation/delivery_address_screen.dart';
 import 'package:cafe_app/features/profile/presentation/notification_settings_screen.dart';
+import 'package:cafe_app/features/profile/presentation/payment_methods_screen.dart';
+import 'package:cafe_app/features/profile/presentation/policy_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
+import 'package:cafe_app/features/profile/presentation/support_screen.dart';
 import 'package:cafe_app/router/app_router.dart';
 
 import '../features/auth/fake_auth_repository.dart';
@@ -361,6 +365,56 @@ void main() {
     await expectLater(
       find.byType(CouponListScreen),
       matchesGoldenFile('../../preview/coupon_list_screen.png'),
+    );
+  });
+
+  testWidgets('결제 수단 관리 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const PaymentMethodsScreen());
+
+    await expectLater(
+      find.byType(PaymentMethodsScreen),
+      matchesGoldenFile('../../preview/payment_methods_screen.png'),
+    );
+  });
+
+  testWidgets('배송지 관리 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const DeliveryAddressScreen());
+
+    await expectLater(
+      find.byType(DeliveryAddressScreen),
+      matchesGoldenFile('../../preview/delivery_address_screen.png'),
+    );
+  });
+
+  testWidgets('고객센터 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const SupportScreen());
+
+    await expectLater(
+      find.byType(SupportScreen),
+      matchesGoldenFile('../../preview/support_screen.png'),
+    );
+  });
+
+  testWidgets('이용약관 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const PolicyScreen(type: PolicyType.terms));
+
+    await expectLater(
+      find.byType(PolicyScreen),
+      matchesGoldenFile('../../preview/terms_screen.png'),
+    );
+  });
+
+  testWidgets('개인정보처리방침 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const PolicyScreen(type: PolicyType.privacy));
+
+    await expectLater(
+      find.byType(PolicyScreen),
+      matchesGoldenFile('../../preview/privacy_screen.png'),
     );
   });
 

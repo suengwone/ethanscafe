@@ -18,7 +18,10 @@ import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
 import 'package:cafe_app/features/order/presentation/order_history_screen.dart';
 import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
+import 'package:cafe_app/features/profile/presentation/delivery_address_screen.dart';
+import 'package:cafe_app/features/profile/presentation/payment_methods_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
+import 'package:cafe_app/features/profile/presentation/support_screen.dart';
 import 'package:cafe_app/router/app_router.dart';
 
 import '../features/auth/fake_auth_repository.dart';
@@ -213,6 +216,70 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(OrderHistoryScreen), findsOneWidget);
+    expect(find.byType(LoginScreen), findsNothing);
+  });
+
+  testWidgets('비로그인 시 결제 수단 관리는 로그인으로 리다이렉트된다', (tester) async {
+    final router = await pumpApp(tester);
+
+    router.go('/profile/payment-methods');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LoginScreen), findsOneWidget);
+    expect(find.byType(PaymentMethodsScreen), findsNothing);
+  });
+
+  testWidgets('로그인 시 결제 수단 관리 화면에 접근할 수 있다', (tester) async {
+    final router = await pumpApp(
+      tester,
+      user: const AppUser(
+        uid: 'test-uid',
+        displayName: '테스트 사용자',
+        email: 'test@example.com',
+        providerId: 'google',
+      ),
+    );
+
+    router.go('/profile/payment-methods');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PaymentMethodsScreen), findsOneWidget);
+    expect(find.byType(LoginScreen), findsNothing);
+  });
+
+  testWidgets('로그인 시 배송지 관리 화면에 접근할 수 있다', (tester) async {
+    final router = await pumpApp(
+      tester,
+      user: const AppUser(
+        uid: 'test-uid',
+        displayName: '테스트 사용자',
+        email: 'test@example.com',
+        providerId: 'google',
+      ),
+    );
+
+    router.go('/profile/addresses');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(DeliveryAddressScreen), findsOneWidget);
+    expect(find.byType(LoginScreen), findsNothing);
+  });
+
+  testWidgets('로그인 시 고객센터 화면에 접근할 수 있다', (tester) async {
+    final router = await pumpApp(
+      tester,
+      user: const AppUser(
+        uid: 'test-uid',
+        displayName: '테스트 사용자',
+        email: 'test@example.com',
+        providerId: 'google',
+      ),
+    );
+
+    router.go('/profile/support');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SupportScreen), findsOneWidget);
     expect(find.byType(LoginScreen), findsNothing);
   });
 
