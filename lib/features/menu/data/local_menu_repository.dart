@@ -18,6 +18,7 @@ class LocalMenuRepository implements MenuRepository {
       price: 6800,
       badge: MenuBadge.isNew,
       servingOptions: _hotIced,
+      isRecommended: true,
       detail: '핀카 리브레 농장의 게이샤 품종을 정성껏 핸드드립으로 내려드립니다. '
           '화사한 자스민 향과 복숭아의 산뜻한 단맛이 어우러집니다.',
     ),
@@ -134,6 +135,7 @@ class LocalMenuRepository implements MenuRepository {
       price: 5500,
       badge: MenuBadge.hit,
       servingOptions: _hotIced,
+      isRecommended: true,
       detail: '리스트레토 샷에 벨벳 같은 마이크로폼을 더해 '
           '커피 본연의 맛을 진하게 느낄 수 있습니다.',
     ),
@@ -222,6 +224,7 @@ class LocalMenuRepository implements MenuRepository {
       price: 6000,
       badge: MenuBadge.hit,
       servingOptions: ['ICED'],
+      isRecommended: true,
       detail: '생딸기로 직접 만든 수제 딸기청과 우유의 조합. 샷 추가도 가능합니다.',
     ),
     MenuItem(
@@ -251,6 +254,7 @@ class LocalMenuRepository implements MenuRepository {
       price: 6000,
       badge: MenuBadge.isNew,
       servingOptions: ['ICED'],
+      isRecommended: true,
       detail: '매일 아침 손질한 제철 과일을 주문 즉시 갈아드립니다.',
     ),
     MenuItem(
@@ -387,6 +391,7 @@ class LocalMenuRepository implements MenuRepository {
       category: MenuCategory.dessert,
       price: 4300,
       badge: MenuBadge.hit,
+      isRecommended: true,
       detail: '반죽에 블루베리를 넣어 은은한 단맛이 도는 인기 베이글입니다.',
     ),
     MenuItem(

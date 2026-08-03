@@ -38,6 +38,7 @@ abstract class MenuItem with _$MenuItem {
     @Default(MenuBadge.none) MenuBadge badge,
     @Default(<String>[]) List<String> servingOptions,
     String? detail,
+    @Default(false) bool isRecommended,
   }) = _MenuItem;
 
   String get priceLabel =>
