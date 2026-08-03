@@ -59,7 +59,7 @@ class _GreetingHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isLoggedIn ? '$name님, 반가워요!' : "Ethan's Cafe에 어서오세요!",
+                  isLoggedIn ? '$name님, 반가워요!' : '폭스트롯에 어서오세요!',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 4),

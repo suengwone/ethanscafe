@@ -70,12 +70,17 @@ class LoginScreen extends ConsumerWidget {
                 color: foxtrotGold,
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
             Text(
-              'Ethan\'s Cafe',
+              '폭스트롯',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            const SizedBox(height: 48),
+            const SizedBox(height: 8),
+            Text(
+              'NOT FAST. JUST BETTER.',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 28),
             _SocialLoginButton(
               onPressed: isLoading
                   ? null

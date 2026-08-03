@@ -26,7 +26,7 @@ class CafeApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
     
     return MaterialApp.router(
-      title: "Ethan's Cafe",
+      title: '폭스트롯',
       theme: buildAppTheme(),
       routerConfig: router,
       debugShowCheckedModeBanner: false,

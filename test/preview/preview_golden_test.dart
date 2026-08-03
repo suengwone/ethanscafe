@@ -89,7 +89,7 @@ void main() {
 
   setUp(() {
     PackageInfo.setMockInitialValues(
-      appName: "Ethan's Cafe",
+      appName: '폭스트롯',
       packageName: 'com.ethanscafe.cafe_app',
       version: '1.0.0',
       buildNumber: '1',
