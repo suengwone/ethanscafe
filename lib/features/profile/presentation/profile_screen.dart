@@ -7,6 +7,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../auth/domain/auth_models.dart';
 import '../../auth/presentation/auth_providers.dart';
+import '../../coupon/presentation/coupons_providers.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -24,6 +25,7 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authStateProvider).value;
+    final usableCouponCount = ref.watch(usableCouponCountProvider).value ?? 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -45,18 +47,27 @@ class ProfileScreen extends ConsumerWidget {
               _buildListTile(
                 icon: LucideIcons.ticket,
                 title: '쿠폰함',
-                trailing: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: foxtrotGold,
-                    borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-                  ),
-                  child: const Text(
-                    '2',
-                    style: TextStyle(color: foxtrotBlack, fontSize: 12),
-                  ),
-                ),
-                onTap: () {},
+                trailing: usableCouponCount > 0
+                    ? Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: foxtrotGold,
+                          borderRadius:
+                              BorderRadius.circular(foxtrotRadiusMedium),
+                        ),
+                        child: Text(
+                          '$usableCouponCount',
+                          style: const TextStyle(
+                            color: foxtrotBlack,
+                            fontSize: 12,
+                          ),
+                        ),
+                      )
+                    : null,
+                onTap: () => context.push('/profile/coupons'),
               ),
               _buildListTile(
                 icon: LucideIcons.heart,
