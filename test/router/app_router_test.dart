@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cafe_app/features/auth/domain/auth_models.dart';
 import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
 import 'package:cafe_app/features/auth/presentation/login_screen.dart';
+import 'package:cafe_app/features/beans/presentation/bean_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
@@ -81,6 +82,17 @@ void main() {
 
     expect(find.byType(MenuScreen), findsOneWidget);
     expect(find.byType(LoginScreen), findsNothing);
+  });
+
+  testWidgets('비로그인 시 원두 상세 화면은 볼 수 있다', (tester) async {
+    final router = await pumpApp(tester);
+
+    router.go('/menu/beans/ethiopia-yirgacheffe');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(BeanDetailScreen), findsOneWidget);
+    expect(find.byType(LoginScreen), findsNothing);
+    expect(find.text('에티오피아 예가체프 G1'), findsOneWidget);
   });
 
   testWidgets('로그인 시 포인트 화면에 접근할 수 있다', (tester) async {

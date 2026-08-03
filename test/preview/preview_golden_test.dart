@@ -12,6 +12,7 @@ import 'package:cafe_app/core/widgets/app_shell.dart';
 import 'package:cafe_app/features/auth/domain/auth_models.dart';
 import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
 import 'package:cafe_app/features/auth/presentation/login_screen.dart';
+import 'package:cafe_app/features/beans/presentation/bean_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
@@ -119,7 +120,11 @@ void main() {
         overrides: [
           authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
         ],
-        child: MaterialApp(theme: buildAppTheme(), home: screen),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: buildAppTheme(),
+          home: screen,
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -184,6 +189,48 @@ void main() {
     await expectLater(
       find.byType(MenuScreen),
       matchesGoldenFile('../../preview/menu_screen.png'),
+    );
+  });
+
+  testWidgets('원두 목록 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const MenuScreen());
+
+    await tester.tap(find.text('원두'));
+    await tester.pumpAndSettle();
+
+    await expectLater(
+      find.byType(MenuScreen),
+      matchesGoldenFile('../../preview/beans_list_screen.png'),
+    );
+  });
+
+  testWidgets('원두 상세 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const BeanDetailScreen(beanId: 'ethiopia-yirgacheffe'),
+    );
+
+    await expectLater(
+      find.byType(BeanDetailScreen),
+      matchesGoldenFile('../../preview/bean_detail_screen.png'),
+    );
+  });
+
+  testWidgets('원두 주문 바텀시트 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const BeanDetailScreen(beanId: 'ethiopia-yirgacheffe'),
+    );
+
+    await tester.tap(find.text('주문하기'));
+    await tester.pumpAndSettle();
+
+    await expectLater(
+      find.byType(MaterialApp),
+      matchesGoldenFile('../../preview/bean_order_sheet.png'),
     );
   });
 
