@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import '../../../core/theme/app_theme.dart';
 import '../domain/points_models.dart';
 import 'points_providers.dart';
 
@@ -77,16 +78,16 @@ class _BalanceSection extends ConsumerWidget {
               style: const TextStyle(
                 fontSize: 36,
                 fontWeight: FontWeight.bold,
-                color: Colors.brown,
+                color: foxtrotGoldLight,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               '결제 금액의 10%가 포인트로 적립됩니다.\n적립된 포인트는 현금처럼 사용할 수 있어요.',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 12,
-                color: Colors.grey.shade600,
+                color: foxtrotMuted,
               ),
             ),
             const SizedBox(height: 16),
@@ -253,17 +254,24 @@ class _MembershipQrSection extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            QrImageView(
-              data: membershipId,
-              version: QrVersions.auto,
-              size: 200.0,
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: QrImageView(
+                data: membershipId,
+                version: QrVersions.auto,
+                size: 200.0,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               membershipId,
               style: const TextStyle(
                 fontSize: 12,
-                color: Colors.grey,
+                color: foxtrotMuted,
               ),
             ),
           ],
@@ -296,7 +304,7 @@ class _HistorySection extends StatelessWidget {
             if (history.isEmpty)
               Text(
                 '적립/사용 내역이 없습니다.',
-                style: TextStyle(color: Colors.grey.shade600),
+                style: const TextStyle(color: foxtrotMuted),
               )
             else
               ...history.map((entry) => _HistoryItem(entry: entry)),
@@ -321,8 +329,8 @@ class _HistoryItem extends StatelessWidget {
         children: [
           Text(
             DateFormat('yyyy.MM.dd').format(entry.createdAt),
-            style: TextStyle(
-              color: Colors.grey.shade600,
+            style: const TextStyle(
+              color: foxtrotMuted,
               fontSize: 12,
             ),
           ),
@@ -335,9 +343,9 @@ class _HistoryItem extends StatelessWidget {
                 if (paymentAmount != null)
                   Text(
                     '결제 ${_pointFormat.format(paymentAmount)}원',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
-                      color: Colors.grey.shade600,
+                      color: foxtrotMuted,
                     ),
                   ),
               ],
@@ -349,7 +357,7 @@ class _HistoryItem extends StatelessWidget {
                 : '${_pointFormat.format(entry.amount)}P',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: entry.isEarn ? Colors.green : Colors.red,
+              color: entry.isEarn ? foxtrotGold : Colors.redAccent,
             ),
           ),
         ],

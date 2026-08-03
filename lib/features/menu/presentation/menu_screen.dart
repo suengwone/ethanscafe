@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/theme/app_theme.dart';
+
 class MenuScreen extends ConsumerWidget {
   const MenuScreen({super.key});
 
@@ -55,10 +57,11 @@ class _MenuList extends StatelessWidget {
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                color: Colors.grey.shade200,
+                color: foxtrotSurface,
                 borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: foxtrotBorder),
               ),
-              child: const Icon(Icons.coffee, color: Colors.brown),
+              child: const Icon(Icons.coffee, color: foxtrotGold),
             ),
             title: Text(
               item['name']!,
@@ -83,14 +86,15 @@ class _MenuList extends StatelessWidget {
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: foxtrotGold,
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: const Text(
                       'NEW',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: foxtrotBlack,
                         fontSize: 10,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),

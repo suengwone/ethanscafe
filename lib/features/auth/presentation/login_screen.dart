@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/theme/app_theme.dart';
 import '../domain/auth_models.dart';
 import 'auth_providers.dart';
 
@@ -51,7 +52,7 @@ class LoginScreen extends ConsumerWidget {
             const Icon(
               Icons.coffee,
               size: 100,
-              color: Colors.brown,
+              color: foxtrotGold,
             ),
             const SizedBox(height: 32),
             const Text(
@@ -59,6 +60,7 @@ class LoginScreen extends ConsumerWidget {
               style: TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
+                color: foxtrotGoldLight,
               ),
             ),
             const SizedBox(height: 48),
@@ -80,7 +82,7 @@ class LoginScreen extends ConsumerWidget {
               icon: Icons.g_mobiledata,
               label: '구글로 시작하기',
               textColor: Colors.black87,
-              borderColor: Colors.grey.shade300,
+              borderColor: foxtrotBorder,
             ),
             const SizedBox(height: 12),
             _SocialLoginButton(
@@ -91,6 +93,7 @@ class LoginScreen extends ConsumerWidget {
               icon: Icons.apple,
               label: 'Apple로 시작하기',
               textColor: Colors.white,
+              borderColor: foxtrotBorder,
             ),
             const SizedBox(height: 24),
             if (isLoading)

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/theme/app_theme.dart';
 import '../../auth/domain/auth_models.dart';
 import '../../auth/presentation/auth_providers.dart';
 
@@ -44,12 +45,12 @@ class ProfileScreen extends ConsumerWidget {
                 trailing: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: foxtrotGold,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Text(
                     '2',
-                    style: TextStyle(color: Colors.white, fontSize: 12),
+                    style: TextStyle(color: foxtrotBlack, fontSize: 12),
                   ),
                 ),
                 onTap: () {},
@@ -116,7 +117,7 @@ class ProfileScreen extends ConsumerWidget {
                 _buildListTile(
                   icon: Icons.logout,
                   title: '로그아웃',
-                  textColor: Colors.red,
+                  textColor: Colors.redAccent,
                   onTap: () => _signOut(context, ref),
                 ),
               ],
@@ -125,8 +126,8 @@ class ProfileScreen extends ConsumerWidget {
           Center(
             child: Text(
               '앱 버전 1.0.0',
-              style: TextStyle(
-                color: Colors.grey.shade600,
+              style: const TextStyle(
+                color: foxtrotMuted,
                 fontSize: 12,
               ),
             ),
@@ -145,10 +146,10 @@ class ProfileScreen extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: Colors.grey.shade700,
+              color: foxtrotMuted,
             ),
           ),
         ),
@@ -196,13 +197,13 @@ class _ProfileHeader extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 50,
-            backgroundColor: Colors.grey.shade300,
+            backgroundColor: foxtrotCard,
             backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
             child: photoUrl == null
                 ? const Icon(
                     Icons.person,
                     size: 50,
-                    color: Colors.grey,
+                    color: foxtrotMuted,
                   )
                 : null,
           ),
@@ -224,9 +225,9 @@ class _ProfileHeader extends StatelessWidget {
           else if (email != null)
             Text(
               email,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
-                color: Colors.grey.shade700,
+                color: foxtrotMuted,
               ),
             ),
         ],
