@@ -42,7 +42,7 @@ class ProfileScreen extends ConsumerWidget {
               _buildListTile(
                 icon: LucideIcons.receiptText,
                 title: '주문 내역',
-                onTap: () {},
+                onTap: () => context.push('/profile/orders'),
               ),
               _buildListTile(
                 icon: LucideIcons.ticket,

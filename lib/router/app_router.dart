@@ -10,6 +10,7 @@ import '../features/menu/presentation/favorite_menu_screen.dart';
 import '../features/menu/presentation/menu_detail_screen.dart';
 import '../features/menu/presentation/menu_screen.dart';
 import '../features/notice/presentation/notice_list_screen.dart';
+import '../features/order/presentation/order_history_screen.dart';
 import '../features/points/presentation/points_screen.dart';
 import '../features/profile/presentation/notification_settings_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
@@ -105,6 +106,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'coupons',
                     builder: (context, state) => const CouponListScreen(),
+                  ),
+                  GoRoute(
+                    path: 'orders',
+                    builder: (context, state) => const OrderHistoryScreen(),
                   ),
                 ],
               ),
