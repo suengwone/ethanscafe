@@ -13,6 +13,8 @@ import 'package:cafe_app/features/beans/presentation/bean_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/favorite_menu_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
+import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
+import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
 import 'package:cafe_app/router/app_router.dart';
@@ -106,6 +108,26 @@ void main() {
     expect(find.byType(MenuDetailScreen), findsOneWidget);
     expect(find.byType(LoginScreen), findsNothing);
     expect(find.text('아메리카노'), findsOneWidget);
+  });
+
+  testWidgets('비로그인 시 알림 목록 화면은 볼 수 있다', (tester) async {
+    final router = await pumpApp(tester);
+
+    router.go('/notices');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(NoticeListScreen), findsOneWidget);
+    expect(find.byType(LoginScreen), findsNothing);
+  });
+
+  testWidgets('비로그인 시 매장 찾기 화면은 볼 수 있다', (tester) async {
+    final router = await pumpApp(tester);
+
+    router.go('/stores');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(StoreListScreen), findsOneWidget);
+    expect(find.byType(LoginScreen), findsNothing);
   });
 
   testWidgets('비로그인 시 즐겨찾기 메뉴는 로그인으로 리다이렉트된다', (tester) async {

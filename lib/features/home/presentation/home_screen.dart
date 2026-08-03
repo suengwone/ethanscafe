@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../auth/presentation/auth_providers.dart';
 import 'widgets/event_banner_carousel.dart';
@@ -68,6 +69,16 @@ class _GreetingHeader extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          IconButton(
+            onPressed: () => context.push('/stores'),
+            icon: const Icon(LucideIcons.mapPin, size: 20),
+            tooltip: '매장 찾기',
+          ),
+          IconButton(
+            onPressed: () => context.push('/notices'),
+            icon: const Icon(LucideIcons.bell, size: 20),
+            tooltip: '알림',
           ),
           if (!isLoggedIn)
             OutlinedButton(

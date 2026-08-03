@@ -8,10 +8,12 @@ import '../features/beans/presentation/bean_detail_screen.dart';
 import '../features/menu/presentation/favorite_menu_screen.dart';
 import '../features/menu/presentation/menu_detail_screen.dart';
 import '../features/menu/presentation/menu_screen.dart';
+import '../features/notice/presentation/notice_list_screen.dart';
 import '../features/points/presentation/points_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
+import '../features/store/presentation/store_list_screen.dart';
 
-const publicPaths = {'/', '/login', '/menu'};
+const publicPaths = {'/', '/login', '/menu', '/notices', '/stores'};
 
 bool isPublicPath(String location) =>
     publicPaths.contains(location) || location.startsWith('/menu/');
@@ -40,6 +42,16 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/',
                 builder: (context, state) => const HomeScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'notices',
+                    builder: (context, state) => const NoticeListScreen(),
+                  ),
+                  GoRoute(
+                    path: 'stores',
+                    builder: (context, state) => const StoreListScreen(),
+                  ),
+                ],
               ),
             ],
           ),
