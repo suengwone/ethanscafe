@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../domain/auth_models.dart';
@@ -49,10 +50,25 @@ class LoginScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.coffee,
-              size: 100,
-              color: foxtrotGold,
+            Container(
+              width: 112,
+              height: 112,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [foxtrotCard, foxtrotSurface],
+                ),
+                border: Border.all(
+                  color: foxtrotGold.withValues(alpha: 0.45),
+                ),
+              ),
+              child: const Icon(
+                LucideIcons.coffee,
+                size: 52,
+                color: foxtrotGold,
+              ),
             ),
             const SizedBox(height: 32),
             Text(
@@ -65,7 +81,7 @@ class LoginScreen extends ConsumerWidget {
                   ? null
                   : () => _signIn(context, ref, AuthProviderType.kakao),
               backgroundColor: const Color(0xFFFEE500),
-              icon: Icons.chat_bubble,
+              icon: const Icon(LucideIcons.messageCircle600, size: 22),
               label: '카카오로 시작하기',
               textColor: Colors.black87,
             ),
@@ -75,7 +91,13 @@ class LoginScreen extends ConsumerWidget {
                   ? null
                   : () => _signIn(context, ref, AuthProviderType.google),
               backgroundColor: Colors.white,
-              icon: Icons.g_mobiledata,
+              icon: const Text(
+                'G',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
               label: '구글로 시작하기',
               textColor: Colors.black87,
               borderColor: foxtrotBorder,
@@ -86,7 +108,7 @@ class LoginScreen extends ConsumerWidget {
                   ? null
                   : () => _signIn(context, ref, AuthProviderType.apple),
               backgroundColor: Colors.black,
-              icon: Icons.apple,
+              icon: const Icon(Icons.apple, size: 24),
               label: 'Apple로 시작하기',
               textColor: Colors.white,
               borderColor: foxtrotBorder,
@@ -111,7 +133,7 @@ class LoginScreen extends ConsumerWidget {
 class _SocialLoginButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Color backgroundColor;
-  final IconData icon;
+  final Widget icon;
   final String label;
   final Color textColor;
   final Color? borderColor;
@@ -142,7 +164,7 @@ class _SocialLoginButton extends StatelessWidget {
                 : BorderSide.none,
           ),
         ),
-        icon: Icon(icon),
+        icon: icon,
         label: Text(
           label,
           style: const TextStyle(fontSize: 16),
