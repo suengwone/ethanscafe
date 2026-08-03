@@ -10,6 +10,7 @@ import 'package:cafe_app/features/auth/domain/auth_models.dart';
 import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
 import 'package:cafe_app/features/auth/presentation/login_screen.dart';
 import 'package:cafe_app/features/beans/presentation/bean_detail_screen.dart';
+import 'package:cafe_app/features/coupon/presentation/coupon_list_screen.dart';
 import 'package:cafe_app/features/menu/presentation/favorite_menu_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
@@ -155,6 +156,34 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(FavoriteMenuScreen), findsOneWidget);
+    expect(find.byType(LoginScreen), findsNothing);
+  });
+
+  testWidgets('비로그인 시 쿠폰함은 로그인으로 리다이렉트된다', (tester) async {
+    final router = await pumpApp(tester);
+
+    router.go('/profile/coupons');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LoginScreen), findsOneWidget);
+    expect(find.byType(CouponListScreen), findsNothing);
+  });
+
+  testWidgets('로그인 시 쿠폰함 화면에 접근할 수 있다', (tester) async {
+    final router = await pumpApp(
+      tester,
+      user: const AppUser(
+        uid: 'test-uid',
+        displayName: '테스트 사용자',
+        email: 'test@example.com',
+        providerId: 'google',
+      ),
+    );
+
+    router.go('/profile/coupons');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(CouponListScreen), findsOneWidget);
     expect(find.byType(LoginScreen), findsNothing);
   });
 

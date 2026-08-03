@@ -14,6 +14,8 @@ import 'package:cafe_app/features/auth/domain/auth_models.dart';
 import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
 import 'package:cafe_app/features/auth/presentation/login_screen.dart';
 import 'package:cafe_app/features/beans/presentation/bean_detail_screen.dart';
+import 'package:cafe_app/features/coupon/presentation/coupon_list_screen.dart';
+import 'package:cafe_app/features/coupon/presentation/coupons_providers.dart';
 import 'package:cafe_app/features/menu/presentation/favorite_menu_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
@@ -322,6 +324,32 @@ void main() {
     await expectLater(
       find.byType(NotificationSettingsScreen),
       matchesGoldenFile('../../preview/notification_settings_screen.png'),
+    );
+  });
+
+  testWidgets('쿠폰함 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(
+            FakeAuthRepository(user: _previewUser),
+          ),
+          couponNowProvider.overrideWithValue(DateTime(2026, 8, 3)),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: buildAppTheme(),
+          home: const CouponListScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await expectLater(
+      find.byType(CouponListScreen),
+      matchesGoldenFile('../../preview/coupon_list_screen.png'),
     );
   });
 
