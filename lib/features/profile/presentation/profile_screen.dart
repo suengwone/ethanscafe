@@ -89,12 +89,12 @@ class ProfileScreen extends ConsumerWidget {
               _buildListTile(
                 icon: LucideIcons.creditCard,
                 title: '결제 수단 관리',
-                onTap: () {},
+                onTap: () => context.push('/profile/payment-methods'),
               ),
               _buildListTile(
                 icon: LucideIcons.mapPin,
                 title: '배송지 관리',
-                onTap: () {},
+                onTap: () => context.push('/profile/addresses'),
               ),
             ],
           ),
@@ -106,17 +106,17 @@ class ProfileScreen extends ConsumerWidget {
               _buildListTile(
                 icon: LucideIcons.circleQuestionMark,
                 title: '고객센터',
-                onTap: () {},
+                onTap: () => context.push('/profile/support'),
               ),
               _buildListTile(
                 icon: LucideIcons.info,
                 title: '이용약관',
-                onTap: () {},
+                onTap: () => context.push('/profile/terms'),
               ),
               _buildListTile(
                 icon: LucideIcons.shieldCheck,
                 title: '개인정보처리방침',
-                onTap: () {},
+                onTap: () => context.push('/profile/privacy'),
               ),
               _buildListTile(
                 icon: LucideIcons.building2,

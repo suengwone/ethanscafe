@@ -12,8 +12,12 @@ import '../features/menu/presentation/menu_screen.dart';
 import '../features/notice/presentation/notice_list_screen.dart';
 import '../features/order/presentation/order_history_screen.dart';
 import '../features/points/presentation/points_screen.dart';
+import '../features/profile/presentation/delivery_address_screen.dart';
 import '../features/profile/presentation/notification_settings_screen.dart';
+import '../features/profile/presentation/payment_methods_screen.dart';
+import '../features/profile/presentation/policy_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
+import '../features/profile/presentation/support_screen.dart';
 import '../features/store/presentation/store_list_screen.dart';
 
 const publicPaths = {'/', '/login', '/menu', '/notices', '/stores'};
@@ -110,6 +114,28 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'orders',
                     builder: (context, state) => const OrderHistoryScreen(),
+                  ),
+                  GoRoute(
+                    path: 'payment-methods',
+                    builder: (context, state) => const PaymentMethodsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'addresses',
+                    builder: (context, state) => const DeliveryAddressScreen(),
+                  ),
+                  GoRoute(
+                    path: 'support',
+                    builder: (context, state) => const SupportScreen(),
+                  ),
+                  GoRoute(
+                    path: 'terms',
+                    builder: (context, state) =>
+                        const PolicyScreen(type: PolicyType.terms),
+                  ),
+                  GoRoute(
+                    path: 'privacy',
+                    builder: (context, state) =>
+                        const PolicyScreen(type: PolicyType.privacy),
                   ),
                 ],
               ),
