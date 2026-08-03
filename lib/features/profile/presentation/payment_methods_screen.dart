@@ -68,7 +68,7 @@ class PaymentMethodsScreen extends ConsumerWidget {
             return const _EmptyPaymentMethods();
           }
           return ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: foxtrotListPadding,
             children: [
               ...cards.map((card) => _PaymentMethodCard(card: card)),
             ],
@@ -77,7 +77,12 @@ class PaymentMethodsScreen extends ConsumerWidget {
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(
+            foxtrotScreenHPadding,
+            12,
+            foxtrotScreenHPadding,
+            16,
+          ),
           child: FilledButton.icon(
             onPressed: () => _showAddCardSheet(context, ref),
             icon: const Icon(LucideIcons.plus, size: 20),

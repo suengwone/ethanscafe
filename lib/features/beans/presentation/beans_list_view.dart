@@ -34,7 +34,7 @@ class BeansListView extends ConsumerWidget {
         ),
       ),
       data: (beans) => ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: foxtrotListPadding,
         itemCount: beans.length + 1,
         itemBuilder: (context, index) {
           if (index == 0) {
@@ -53,7 +53,7 @@ class _BeansHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 8, 4, 12),
+      padding: const EdgeInsets.only(top: 8, bottom: 12),
       child: Text(
         '매주 화요일 로스팅한 원두를 홀빈 또는 원하는 분쇄도로 보내드립니다.',
         style: Theme.of(context).textTheme.bodySmall,

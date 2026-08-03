@@ -37,14 +37,14 @@ class SupportScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('고객센터')),
       body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: foxtrotListPadding,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: Text('문의하기', style: textTheme.titleSmall),
           ),
           Card(
-            margin: const EdgeInsets.symmetric(horizontal: 8),
+            margin: EdgeInsets.zero,
             child: Column(
               children: [
                 ListTile(
@@ -66,11 +66,11 @@ class SupportScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: Text('자주 묻는 질문', style: textTheme.titleSmall),
           ),
           Card(
-            margin: const EdgeInsets.symmetric(horizontal: 8),
+            margin: EdgeInsets.zero,
             child: Column(
               children: [
                 for (final faq in _faqs)

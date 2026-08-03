@@ -49,7 +49,7 @@ class OrderHistoryScreen extends ConsumerWidget {
             return const _EmptyOrders();
           }
           return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: foxtrotListPadding,
             itemCount: orders.length,
             itemBuilder: (context, index) =>
                 _OrderCard(entry: orders[index]),

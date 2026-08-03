@@ -167,14 +167,19 @@ class ProfileScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(
+            horizontal: foxtrotScreenHPadding,
+            vertical: 8,
+          ),
           child: Text(
             title,
             style: Theme.of(context).textTheme.titleSmall,
           ),
         ),
         Card(
-          margin: const EdgeInsets.symmetric(horizontal: 8),
+          margin: const EdgeInsets.symmetric(
+            horizontal: foxtrotScreenHPadding,
+          ),
           child: Column(children: children),
         ),
       ],

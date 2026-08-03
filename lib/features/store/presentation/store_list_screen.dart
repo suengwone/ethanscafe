@@ -77,12 +77,12 @@ class StoreListScreen extends ConsumerWidget {
             );
           }
           return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: foxtrotListPadding,
             itemCount: sorted.length + 1,
             itemBuilder: (context, index) {
               if (index == 0) {
                 return Padding(
-                  padding: const EdgeInsets.fromLTRB(4, 8, 4, 12),
+                  padding: const EdgeInsets.only(top: 8, bottom: 12),
                   child: Text(
                     distances == null
                         ? '우측 상단 버튼을 누르면 내 위치에서 가까운 순으로 정렬됩니다.'

@@ -74,12 +74,12 @@ class _MenuList extends ConsumerWidget {
       data: (menuItems) {
         final note = category.note;
         return ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: foxtrotListPadding,
           itemCount: menuItems.length + (note == null ? 0 : 1),
           itemBuilder: (context, index) {
             if (note != null && index == 0) {
               return Padding(
-                padding: const EdgeInsets.fromLTRB(4, 8, 4, 12),
+                padding: const EdgeInsets.only(top: 8, bottom: 12),
                 child: Text(
                   note,
                   style: Theme.of(context).textTheme.bodySmall,
@@ -103,7 +103,7 @@ class _MenuTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 4),
+      margin: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
         leading: Container(
           width: 60,

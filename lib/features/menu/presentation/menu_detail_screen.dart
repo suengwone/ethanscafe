@@ -86,7 +86,12 @@ class _MenuDetailBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(
+        foxtrotScreenHPadding,
+        16,
+        foxtrotScreenHPadding,
+        24,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

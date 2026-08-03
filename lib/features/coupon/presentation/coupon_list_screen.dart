@@ -45,7 +45,7 @@ class CouponListScreen extends ConsumerWidget {
           }
 
           return ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: foxtrotListPadding,
             children: [
               _SectionLabel(label: '사용 가능 ${usable.length}장'),
               ...usable.map(
@@ -95,7 +95,7 @@ class _SectionLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Text(label, style: Theme.of(context).textTheme.titleSmall),
     );
   }

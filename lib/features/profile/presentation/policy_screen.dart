@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_theme.dart';
+
 enum PolicyType { terms, privacy }
 
 class PolicyScreen extends StatelessWidget {
@@ -24,7 +26,12 @@ class PolicyScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(_title)),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(
+          foxtrotScreenHPadding,
+          16,
+          foxtrotScreenHPadding,
+          24,
+        ),
         children: [
           Text(
             '시행일: 2026년 1월 1일',

@@ -37,7 +37,7 @@ class FavoriteMenuScreen extends ConsumerWidget {
             return const _EmptyFavorites();
           }
           return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: foxtrotListPadding,
             itemCount: items.length,
             itemBuilder: (context, index) =>
                 _FavoriteTile(item: items[index]),
@@ -88,7 +88,7 @@ class _FavoriteTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 4),
+      margin: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
         leading: Container(
           width: 60,

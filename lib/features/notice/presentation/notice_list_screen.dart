@@ -38,7 +38,7 @@ class NoticeListScreen extends ConsumerWidget {
             return const _EmptyNotices();
           }
           return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: foxtrotListPadding,
             itemCount: notices.length,
             itemBuilder: (context, index) =>
                 _NoticeCard(notice: notices[index]),

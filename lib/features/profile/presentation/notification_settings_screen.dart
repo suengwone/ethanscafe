@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/theme/app_theme.dart';
 import '../data/local_notification_settings_repository.dart';
 import '../domain/notification_settings.dart';
 
@@ -57,7 +58,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
           ),
         ),
         data: (settings) => ListView(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: foxtrotListPadding,
           children: [
             _SettingsSection(
               title: '푸시 알림',
@@ -126,11 +127,11 @@ class _SettingsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Text(title, style: Theme.of(context).textTheme.titleSmall),
         ),
         Card(
-          margin: const EdgeInsets.symmetric(horizontal: 8),
+          margin: EdgeInsets.zero,
           child: Column(children: children),
         ),
         const SizedBox(height: 8),
