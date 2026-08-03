@@ -24,10 +24,10 @@ class HomeScreen extends StatelessWidget {
             onTap: () => context.go('/menu'),
           ),
           _MenuCard(
-            icon: Icons.card_giftcard,
-            title: '스탬프',
+            icon: Icons.payments,
+            title: '포인트',
             color: Colors.purple,
-            onTap: () => context.go('/stamp'),
+            onTap: () => context.go('/points'),
           ),
           _MenuCard(
             icon: Icons.store,
