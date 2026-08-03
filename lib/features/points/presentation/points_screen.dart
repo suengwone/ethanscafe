@@ -38,13 +38,16 @@ class PointsScreen extends ConsumerWidget {
           ),
         ),
         data: (data) => SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: foxtrotListPadding,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _BalanceSection(data: data),
               const SizedBox(height: 24),
+              const _SectionHeader(title: '멤버십 바코드'),
               _MembershipQrSection(membershipId: data.membershipId),
               const SizedBox(height: 24),
+              const _SectionHeader(title: '포인트 히스토리'),
               _HistorySection(history: data.history),
             ],
           ),
@@ -63,14 +66,15 @@ class _BalanceSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               '나의 포인트',
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.titleSmall,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             Text(
               '${_pointFormat.format(data.balance)}P',
               style: Theme.of(context)
@@ -81,7 +85,6 @@ class _BalanceSection extends ConsumerWidget {
             const SizedBox(height: 8),
             Text(
               '결제 금액의 10%가 포인트로 적립됩니다.\n적립된 포인트는 현금처럼 사용할 수 있어요.',
-              textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 16),
@@ -228,6 +231,20 @@ class _AmountInputDialogState extends State<_AmountInputDialog> {
   }
 }
 
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader({required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Text(title, style: Theme.of(context).textTheme.titleSmall),
+    );
+  }
+}
+
 class _MembershipQrSection extends StatelessWidget {
   const _MembershipQrSection({required this.membershipId});
 
@@ -237,14 +254,9 @@ class _MembershipQrSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            Text(
-              '멤버십 바코드',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -278,14 +290,10 @@ class _HistorySection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '포인트 히스토리',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 16),
             if (history.isEmpty)
               Text(
                 '적립/사용 내역이 없습니다.',
