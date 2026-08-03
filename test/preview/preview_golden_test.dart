@@ -196,7 +196,8 @@ void main() {
     await configureView(tester);
     await pumpScreen(tester, const MenuScreen());
 
-    await tester.tap(find.text('원두'));
+    final tabContext = tester.element(find.byType(TabBarView));
+    DefaultTabController.of(tabContext).animateTo(5);
     await tester.pumpAndSettle();
 
     await expectLater(
@@ -209,7 +210,7 @@ void main() {
     await configureView(tester);
     await pumpScreen(
       tester,
-      const BeanDetailScreen(beanId: 'ethiopia-yirgacheffe'),
+      const BeanDetailScreen(beanId: 'ethiopia-yirgacheffe-aricha'),
     );
 
     await expectLater(
@@ -222,7 +223,7 @@ void main() {
     await configureView(tester);
     await pumpScreen(
       tester,
-      const BeanDetailScreen(beanId: 'ethiopia-yirgacheffe'),
+      const BeanDetailScreen(beanId: 'ethiopia-yirgacheffe-aricha'),
     );
 
     await tester.tap(find.text('주문하기'));

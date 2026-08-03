@@ -87,12 +87,12 @@ void main() {
   testWidgets('비로그인 시 원두 상세 화면은 볼 수 있다', (tester) async {
     final router = await pumpApp(tester);
 
-    router.go('/menu/beans/ethiopia-yirgacheffe');
+    router.go('/menu/beans/ethiopia-yirgacheffe-aricha');
     await tester.pumpAndSettle();
 
     expect(find.byType(BeanDetailScreen), findsOneWidget);
     expect(find.byType(LoginScreen), findsNothing);
-    expect(find.text('에티오피아 예가체프 G1'), findsOneWidget);
+    expect(find.text('에티오피아 예가체프 아리차 에이미 G1'), findsOneWidget);
   });
 
   testWidgets('로그인 시 포인트 화면에 접근할 수 있다', (tester) async {
