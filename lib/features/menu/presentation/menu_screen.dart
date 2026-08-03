@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/new_badge.dart';
@@ -62,7 +63,11 @@ class _MenuList extends StatelessWidget {
                 borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
                 border: Border.all(color: foxtrotBorder),
               ),
-              child: const Icon(Icons.coffee, color: foxtrotGold),
+              child: Icon(
+                _categoryIcon(category),
+                color: foxtrotGold,
+                size: 26,
+              ),
             ),
             title: Text(
               item['name']!,
@@ -93,6 +98,21 @@ class _MenuList extends StatelessWidget {
         );
       },
     );
+  }
+
+  IconData _categoryIcon(String category) {
+    switch (category) {
+      case 'coffee':
+        return LucideIcons.coffee;
+      case 'non-coffee':
+        return LucideIcons.cupSoda;
+      case 'dessert':
+        return LucideIcons.croissant;
+      case 'beans':
+        return LucideIcons.bean;
+      default:
+        return LucideIcons.coffee;
+    }
   }
 
   List<Map<String, String>> _getMenuItems(String category) {

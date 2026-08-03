@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/new_badge.dart';
@@ -22,29 +23,29 @@ const _recommendedItems = [
   _RecommendedItem(
     name: '플랫화이트',
     price: '5,500원',
-    icon: Icons.coffee,
+    icon: LucideIcons.coffee,
     isNew: true,
   ),
   _RecommendedItem(
     name: '토피넛 라떼',
     price: '5,500원',
-    icon: Icons.emoji_food_beverage,
+    icon: LucideIcons.cupSoda,
     isNew: true,
   ),
   _RecommendedItem(
     name: '아메리카노',
     price: '4,500원',
-    icon: Icons.coffee_outlined,
+    icon: LucideIcons.milk,
   ),
   _RecommendedItem(
     name: '크로플',
     price: '6,500원',
-    icon: Icons.bakery_dining,
+    icon: LucideIcons.croissant,
   ),
   _RecommendedItem(
     name: '브라질 산토스',
     price: '14,000원',
-    icon: Icons.grain,
+    icon: LucideIcons.bean,
     isNew: true,
   ),
 ];

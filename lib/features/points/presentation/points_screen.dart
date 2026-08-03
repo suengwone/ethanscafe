@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../core/theme/app_theme.dart';
@@ -89,7 +90,7 @@ class _BalanceSection extends ConsumerWidget {
                 Expanded(
                   child: FilledButton.icon(
                     onPressed: () => _showRecordPaymentDialog(context, ref),
-                    icon: const Icon(Icons.add),
+                    icon: const Icon(LucideIcons.plus600, size: 18),
                     label: const Text('결제 적립'),
                   ),
                 ),
@@ -99,7 +100,7 @@ class _BalanceSection extends ConsumerWidget {
                     onPressed: data.balance > 0
                         ? () => _showUsePointsDialog(context, ref, data.balance)
                         : null,
-                    icon: const Icon(Icons.payments_outlined),
+                    icon: const Icon(LucideIcons.handCoins, size: 20),
                     label: const Text('포인트 사용'),
                   ),
                 ),

@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../../core/theme/app_theme.dart';
 
@@ -22,19 +23,19 @@ const _banners = [
     title: '여름 시즌 신메뉴 출시',
     subtitle: '시원한 콜드브루와 함께 여름을 즐겨보세요',
     colors: [Color(0xFF8A6D2F), Color(0xFF4A3A17)],
-    icon: Icons.ac_unit,
+    icon: LucideIcons.snowflake300,
   ),
   _BannerItem(
     title: '원두 정기 구독',
     subtitle: '매달 새로운 원두를 집에서 만나보세요',
     colors: [Color(0xFF5C4433), Color(0xFF2B1E14)],
-    icon: Icons.coffee,
+    icon: LucideIcons.bean300,
   ),
   _BannerItem(
     title: '친구 초대 이벤트',
     subtitle: '친구를 초대하면 3,000P를 드려요',
     colors: [foxtrotCard, foxtrotSurface],
-    icon: Icons.card_giftcard,
+    icon: LucideIcons.gift300,
   ),
 ];
 

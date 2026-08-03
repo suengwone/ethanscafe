@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AppShell extends StatelessWidget {
   const AppShell({super.key, required this.navigationShell});
@@ -18,23 +19,23 @@ class AppShell extends StatelessWidget {
         ),
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
+            icon: Icon(LucideIcons.house),
+            selectedIcon: Icon(LucideIcons.house600),
             label: '홈',
           ),
           NavigationDestination(
-            icon: Icon(Icons.local_cafe_outlined),
-            selectedIcon: Icon(Icons.local_cafe),
+            icon: Icon(LucideIcons.coffee),
+            selectedIcon: Icon(LucideIcons.coffee600),
             label: '주문',
           ),
           NavigationDestination(
-            icon: Icon(Icons.qr_code_2_outlined),
-            selectedIcon: Icon(Icons.qr_code_2),
+            icon: Icon(LucideIcons.qrCode),
+            selectedIcon: Icon(LucideIcons.qrCode600),
             label: '페이',
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
+            icon: Icon(LucideIcons.user),
+            selectedIcon: Icon(LucideIcons.user600),
             label: '마이',
           ),
         ],

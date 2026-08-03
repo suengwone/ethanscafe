@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../auth/domain/auth_models.dart';
@@ -36,12 +37,12 @@ class ProfileScreen extends ConsumerWidget {
             '나의 활동',
             [
               _buildListTile(
-                icon: Icons.receipt_long,
+                icon: LucideIcons.receiptText,
                 title: '주문 내역',
                 onTap: () {},
               ),
               _buildListTile(
-                icon: Icons.card_giftcard,
+                icon: LucideIcons.ticket,
                 title: '쿠폰함',
                 trailing: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -57,7 +58,7 @@ class ProfileScreen extends ConsumerWidget {
                 onTap: () {},
               ),
               _buildListTile(
-                icon: Icons.favorite,
+                icon: LucideIcons.heart,
                 title: '즐겨찾기 메뉴',
                 onTap: () {},
               ),
@@ -69,17 +70,17 @@ class ProfileScreen extends ConsumerWidget {
             '설정',
             [
               _buildListTile(
-                icon: Icons.notifications,
+                icon: LucideIcons.bell,
                 title: '알림 설정',
                 onTap: () {},
               ),
               _buildListTile(
-                icon: Icons.payment,
+                icon: LucideIcons.creditCard,
                 title: '결제 수단 관리',
                 onTap: () {},
               ),
               _buildListTile(
-                icon: Icons.location_on,
+                icon: LucideIcons.mapPin,
                 title: '배송지 관리',
                 onTap: () {},
               ),
@@ -91,22 +92,22 @@ class ProfileScreen extends ConsumerWidget {
             '기타',
             [
               _buildListTile(
-                icon: Icons.help,
+                icon: LucideIcons.circleQuestionMark,
                 title: '고객센터',
                 onTap: () {},
               ),
               _buildListTile(
-                icon: Icons.info,
+                icon: LucideIcons.info,
                 title: '이용약관',
                 onTap: () {},
               ),
               _buildListTile(
-                icon: Icons.privacy_tip,
+                icon: LucideIcons.shieldCheck,
                 title: '개인정보처리방침',
                 onTap: () {},
               ),
               _buildListTile(
-                icon: Icons.business,
+                icon: LucideIcons.building2,
                 title: '사업자 정보',
                 onTap: () {},
               ),
@@ -119,7 +120,7 @@ class ProfileScreen extends ConsumerWidget {
               '계정',
               [
                 _buildListTile(
-                  icon: Icons.logout,
+                  icon: LucideIcons.logOut,
                   title: '로그아웃',
                   textColor: Theme.of(context).colorScheme.error,
                   onTap: () => _signOut(context, ref),
@@ -175,7 +176,7 @@ class ProfileScreen extends ConsumerWidget {
         title,
         style: TextStyle(color: textColor),
       ),
-      trailing: trailing ?? const Icon(Icons.chevron_right),
+      trailing: trailing ?? const Icon(LucideIcons.chevronRight, size: 18),
       onTap: onTap,
     );
   }
@@ -202,7 +203,7 @@ class _ProfileHeader extends StatelessWidget {
             backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
             child: photoUrl == null
                 ? const Icon(
-                    Icons.person,
+                    LucideIcons.user300,
                     size: 50,
                     color: foxtrotMuted,
                   )
@@ -217,7 +218,7 @@ class _ProfileHeader extends StatelessWidget {
           if (user == null)
             TextButton.icon(
               onPressed: () => context.go('/login'),
-              icon: const Icon(Icons.login),
+              icon: const Icon(LucideIcons.logIn, size: 20),
               label: const Text('로그인하기'),
             )
           else if (email != null)

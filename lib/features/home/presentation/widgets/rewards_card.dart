@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../points/presentation/points_providers.dart';
@@ -45,7 +46,7 @@ class RewardsCard extends ConsumerWidget {
                   Row(
                     children: [
                       const Icon(
-                        Icons.star_rounded,
+                        LucideIcons.sparkles,
                         color: foxtrotGold,
                         size: 20,
                       ),
@@ -56,8 +57,9 @@ class RewardsCard extends ConsumerWidget {
                       ),
                       const Spacer(),
                       const Icon(
-                        Icons.chevron_right,
+                        LucideIcons.chevronRight,
                         color: foxtrotMuted,
+                        size: 20,
                       ),
                     ],
                   ),
