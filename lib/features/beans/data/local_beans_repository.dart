@@ -51,15 +51,15 @@ class LocalBeansRepository implements BeansRepository {
       origin: '페루 카하마르카',
       description: '토피의 단맛과 감귤류, 누룽지캔디의 고소함',
       story:
-          '페루 엘 바바코 농장의 버번 품종을 워시드 방식으로 정제했습니다. '
-          '토피의 진득한 단맛에 감귤류의 산미가 균형을 잡고, 식으면서 누룽지캔디 '
-          '같은 구수한 단맛이 올라옵니다. 부담 없이 매일 마시기 좋은 데일리 '
-          '커피입니다.',
+          '페루 카하마르카 쿠테르보의 엘 바바코 농장에서 자란 버번 품종을 '
+          '워시드 방식으로 정제했습니다. 토피의 진득한 단맛에 감귤류의 산미가 '
+          '균형을 잡고, 누룽지캔디와 꿀의 구수한 단맛이 미디엄 헤비 바디로 '
+          '이어집니다. 부담 없이 매일 마시기 좋은 데일리 커피입니다.',
       roastLevel: RoastLevel.medium,
       process: '워시드',
-      tastingNotes: ['토피', '감귤류', '누룽지캔디'],
+      tastingNotes: ['토피', '감귤류', '누룽지캔디', '허니'],
       acidity: 3,
-      body: 3,
+      body: 4,
       sweetness: 4,
       recommendedBrews: ['핸드드립', '에스프레소'],
       price200: 16000,
@@ -69,15 +69,16 @@ class LocalBeansRepository implements BeansRepository {
       id: 'indonesia-mandheling-g1',
       name: '인도네시아 만델링 G1 TP',
       origin: '인도네시아 수마트라',
-      description: '갈색 설탕과 브랜디, 묵직한 초코 시럽',
+      description: '탠저린과 바질, 카카오와 마카다미아의 고소함',
       story:
-          '수마트라 섬의 전통적인 만델링 커피로, G1 등급에 트리플 피크드(TP)로 '
-          '결점두를 골라낸 원두입니다. 갈색 설탕과 브랜디의 깊은 향, 건포도의 '
-          '단맛과 초코 시럽처럼 진한 바디가 특징입니다. 묵직한 커피를 좋아하는 '
-          '분께 추천합니다.',
+          '수마트라 브네르 므리아 지역의 만델링 커피로, G1 등급에 트리플 '
+          '피크드(TP)로 결점두를 골라낸 원두입니다. 인도네시아 전통의 웻 '
+          '헐드(길링 바사) 가공으로 탠저린과 바질의 이국적인 향, 소이빈과 '
+          '마카다미아의 고소함, 카카오의 묵직한 여운이 특징입니다. 묵직한 '
+          '커피를 좋아하는 분께 추천합니다.',
       roastLevel: RoastLevel.mediumDark,
-      process: '세미 워시드',
-      tastingNotes: ['갈색 설탕', '브랜디', '건포도', '초코 시럽'],
+      process: '웻 헐드',
+      tastingNotes: ['탠저린', '바질', '소이빈', '카카오', '마카다미아'],
       acidity: 2,
       body: 5,
       sweetness: 3,
@@ -96,7 +97,7 @@ class LocalBeansRepository implements BeansRepository {
           '와인 같은 복합미와 크림처럼 부드러운 질감이 어우러집니다. 매장에서 '
           '가장 사랑받는 드립 커피 중 하나입니다.',
       roastLevel: RoastLevel.mediumLight,
-      process: '내추럴',
+      process: '무산소 발효 허니',
       tastingNotes: ['체리', '체리 콜라', '석류', '와인', '크림'],
       acidity: 4,
       body: 3,
@@ -129,15 +130,15 @@ class LocalBeansRepository implements BeansRepository {
       id: 'guatemala-antigua-la-gloria',
       name: '과테말라 안티구아 라 글로리아 SHB',
       origin: '과테말라 안티구아',
-      description: '월넛과 브라운 슈가, 스모키한 초콜릿',
+      description: '당밀과 월넛, 스모키한 다크초콜릿',
       story:
           '화산 지대인 안티구아 계곡의 라 글로리아 농장에서 자란 SHB 등급 '
-          '원두입니다. 월넛과 바닐라의 고소함 사이로 페퍼민트의 산뜻함이 스치고, '
-          '브라운 슈가의 단맛과 특유의 스모크, 초콜릿 피니시가 깊고 클래식한 '
-          '한 잔을 만듭니다.',
+          '원두입니다. 아몬드와 월넛의 고소함 위로 당밀과 브라운 슈가의 단맛이 '
+          '겹치고, 특유의 스모크와 다크초콜릿 피니시가 깊고 클래식한 한 잔을 '
+          '만듭니다.',
       roastLevel: RoastLevel.medium,
       process: '워시드',
-      tastingNotes: ['월넛', '바닐라', '페퍼민트', '브라운 슈가', '스모크', '초콜릿'],
+      tastingNotes: ['당밀', '아몬드', '월넛', '브라운 슈가', '스모크', '다크초콜릿'],
       acidity: 3,
       body: 4,
       sweetness: 3,
