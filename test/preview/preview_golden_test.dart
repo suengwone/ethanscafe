@@ -56,6 +56,16 @@ const _lucideFonts = {
 };
 
 Future<void> _loadFonts() async {
+  const pretendardWeights = [
+    'Regular',
+    'Medium',
+    'SemiBold',
+    'Bold',
+    'ExtraBold',
+  ];
+  for (final weight in pretendardWeights) {
+    await _loadFont('Pretendard', 'assets/fonts/Pretendard-$weight.otf');
+  }
   await _loadFont('Roboto', '/System/Library/Fonts/AppleSDGothicNeo.ttc');
 
   final flutterRoot = Platform.environment['FLUTTER_ROOT'];
