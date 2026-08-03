@@ -10,43 +10,46 @@ class _RecommendedItem {
   final String price;
   final IconData icon;
   final bool isNew;
+  final bool isHit;
 
   const _RecommendedItem({
     required this.name,
     required this.price,
     required this.icon,
     this.isNew = false,
+    this.isHit = false,
   });
 }
 
 const _recommendedItems = [
   _RecommendedItem(
-    name: '플랫화이트',
-    price: '5,500원',
-    icon: LucideIcons.coffee,
-    isNew: true,
-  ),
-  _RecommendedItem(
-    name: '토피넛 라떼',
-    price: '5,500원',
-    icon: LucideIcons.cupSoda,
-    isNew: true,
-  ),
-  _RecommendedItem(
-    name: '아메리카노',
-    price: '4,500원',
-    icon: LucideIcons.milk,
-  ),
-  _RecommendedItem(
-    name: '크로플',
-    price: '6,500원',
-    icon: LucideIcons.croissant,
-  ),
-  _RecommendedItem(
-    name: '브라질 산토스',
-    price: '14,000원',
+    name: '니카라과 핀카 리브레 게이샤',
+    price: '6,800원',
     icon: LucideIcons.bean,
     isNew: true,
+  ),
+  _RecommendedItem(
+    name: '플랫 화이트',
+    price: '5,500원',
+    icon: LucideIcons.coffee,
+    isHit: true,
+  ),
+  _RecommendedItem(
+    name: '딸기 라떼',
+    price: '6,000원',
+    icon: LucideIcons.cupSoda,
+    isHit: true,
+  ),
+  _RecommendedItem(
+    name: '과일 주스',
+    price: '6,000원',
+    icon: LucideIcons.milk,
+    isNew: true,
+  ),
+  _RecommendedItem(
+    name: '얼그레이 케이크',
+    price: '7,000원',
+    icon: LucideIcons.croissant,
   ),
 ];
 
@@ -121,6 +124,12 @@ class _RecommendedCard extends StatelessWidget {
                   right: 0,
                   top: 0,
                   child: NewBadge(),
+                ),
+              if (item.isHit)
+                const Positioned(
+                  right: 0,
+                  top: 0,
+                  child: HitBadge(),
                 ),
             ],
           ),
