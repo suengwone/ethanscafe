@@ -47,9 +47,10 @@ const _recommendedItems = [
     isNew: true,
   ),
   _RecommendedItem(
-    name: '얼그레이 케이크',
-    price: '7,000원',
+    name: '블루베리 베이글',
+    price: '4,300원',
     icon: LucideIcons.croissant,
+    isHit: true,
   ),
 ];
 
