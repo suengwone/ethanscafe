@@ -1,0 +1,301 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+
+part of 'store_models.dart';
+
+// **************************************************************************
+// FreezedGenerator
+// **************************************************************************
+
+// dart format off
+T _$identity<T>(T value) => value;
+/// @nodoc
+mixin _$CafeStore {
+
+ String get id; String get name; String get address; String get phone; double get latitude; double get longitude; String get weekdayHours; String get weekendHours; List<String> get services;
+/// Create a copy of CafeStore
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CafeStoreCopyWith<CafeStore> get copyWith => _$CafeStoreCopyWithImpl<CafeStore>(this as CafeStore, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CafeStore&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.address, address) || other.address == address)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.weekdayHours, weekdayHours) || other.weekdayHours == weekdayHours)&&(identical(other.weekendHours, weekendHours) || other.weekendHours == weekendHours)&&const DeepCollectionEquality().equals(other.services, services));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,id,name,address,phone,latitude,longitude,weekdayHours,weekendHours,const DeepCollectionEquality().hash(services));
+
+@override
+String toString() {
+  return 'CafeStore(id: $id, name: $name, address: $address, phone: $phone, latitude: $latitude, longitude: $longitude, weekdayHours: $weekdayHours, weekendHours: $weekendHours, services: $services)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $CafeStoreCopyWith<$Res>  {
+  factory $CafeStoreCopyWith(CafeStore value, $Res Function(CafeStore) _then) = _$CafeStoreCopyWithImpl;
+@useResult
+$Res call({
+ String id, String name, String address, String phone, double latitude, double longitude, String weekdayHours, String weekendHours, List<String> services
+});
+
+
+
+
+}
+/// @nodoc
+class _$CafeStoreCopyWithImpl<$Res>
+    implements $CafeStoreCopyWith<$Res> {
+  _$CafeStoreCopyWithImpl(this._self, this._then);
+
+  final CafeStore _self;
+  final $Res Function(CafeStore) _then;
+
+/// Create a copy of CafeStore
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? address = null,Object? phone = null,Object? latitude = null,Object? longitude = null,Object? weekdayHours = null,Object? weekendHours = null,Object? services = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,address: null == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
+as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
+as String,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as double,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
+as double,weekdayHours: null == weekdayHours ? _self.weekdayHours : weekdayHours // ignore: cast_nullable_to_non_nullable
+as String,weekendHours: null == weekendHours ? _self.weekendHours : weekendHours // ignore: cast_nullable_to_non_nullable
+as String,services: null == services ? _self.services : services // ignore: cast_nullable_to_non_nullable
+as List<String>,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [CafeStore].
+extension CafeStorePatterns on CafeStore {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CafeStore value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CafeStore() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CafeStore value)  $default,){
+final _that = this;
+switch (_that) {
+case _CafeStore():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CafeStore value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CafeStore() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String address,  String phone,  double latitude,  double longitude,  String weekdayHours,  String weekendHours,  List<String> services)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CafeStore() when $default != null:
+return $default(_that.id,_that.name,_that.address,_that.phone,_that.latitude,_that.longitude,_that.weekdayHours,_that.weekendHours,_that.services);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String address,  String phone,  double latitude,  double longitude,  String weekdayHours,  String weekendHours,  List<String> services)  $default,) {final _that = this;
+switch (_that) {
+case _CafeStore():
+return $default(_that.id,_that.name,_that.address,_that.phone,_that.latitude,_that.longitude,_that.weekdayHours,_that.weekendHours,_that.services);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String address,  String phone,  double latitude,  double longitude,  String weekdayHours,  String weekendHours,  List<String> services)?  $default,) {final _that = this;
+switch (_that) {
+case _CafeStore() when $default != null:
+return $default(_that.id,_that.name,_that.address,_that.phone,_that.latitude,_that.longitude,_that.weekdayHours,_that.weekendHours,_that.services);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _CafeStore implements CafeStore {
+  const _CafeStore({required this.id, required this.name, required this.address, required this.phone, required this.latitude, required this.longitude, required this.weekdayHours, required this.weekendHours, final  List<String> services = const <String>[]}): _services = services;
+  
+
+@override final  String id;
+@override final  String name;
+@override final  String address;
+@override final  String phone;
+@override final  double latitude;
+@override final  double longitude;
+@override final  String weekdayHours;
+@override final  String weekendHours;
+ final  List<String> _services;
+@override@JsonKey() List<String> get services {
+  if (_services is EqualUnmodifiableListView) return _services;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_services);
+}
+
+
+/// Create a copy of CafeStore
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CafeStoreCopyWith<_CafeStore> get copyWith => __$CafeStoreCopyWithImpl<_CafeStore>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CafeStore&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.address, address) || other.address == address)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.weekdayHours, weekdayHours) || other.weekdayHours == weekdayHours)&&(identical(other.weekendHours, weekendHours) || other.weekendHours == weekendHours)&&const DeepCollectionEquality().equals(other._services, _services));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,id,name,address,phone,latitude,longitude,weekdayHours,weekendHours,const DeepCollectionEquality().hash(_services));
+
+@override
+String toString() {
+  return 'CafeStore(id: $id, name: $name, address: $address, phone: $phone, latitude: $latitude, longitude: $longitude, weekdayHours: $weekdayHours, weekendHours: $weekendHours, services: $services)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CafeStoreCopyWith<$Res> implements $CafeStoreCopyWith<$Res> {
+  factory _$CafeStoreCopyWith(_CafeStore value, $Res Function(_CafeStore) _then) = __$CafeStoreCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, String name, String address, String phone, double latitude, double longitude, String weekdayHours, String weekendHours, List<String> services
+});
+
+
+
+
+}
+/// @nodoc
+class __$CafeStoreCopyWithImpl<$Res>
+    implements _$CafeStoreCopyWith<$Res> {
+  __$CafeStoreCopyWithImpl(this._self, this._then);
+
+  final _CafeStore _self;
+  final $Res Function(_CafeStore) _then;
+
+/// Create a copy of CafeStore
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? address = null,Object? phone = null,Object? latitude = null,Object? longitude = null,Object? weekdayHours = null,Object? weekendHours = null,Object? services = null,}) {
+  return _then(_CafeStore(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,address: null == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
+as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
+as String,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as double,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
+as double,weekdayHours: null == weekdayHours ? _self.weekdayHours : weekdayHours // ignore: cast_nullable_to_non_nullable
+as String,weekendHours: null == weekendHours ? _self.weekendHours : weekendHours // ignore: cast_nullable_to_non_nullable
+as String,services: null == services ? _self._services : services // ignore: cast_nullable_to_non_nullable
+as List<String>,
+  ));
+}
+
+
+}
+
+// dart format on
