@@ -73,7 +73,7 @@ class ProfileScreen extends ConsumerWidget {
               _buildListTile(
                 icon: LucideIcons.bell,
                 title: '알림 설정',
-                onTap: () {},
+                onTap: () => context.push('/profile/notifications'),
               ),
               _buildListTile(
                 icon: LucideIcons.creditCard,
@@ -110,7 +110,7 @@ class ProfileScreen extends ConsumerWidget {
               _buildListTile(
                 icon: LucideIcons.building2,
                 title: '사업자 정보',
-                onTap: () {},
+                onTap: () => _showBusinessInfo(context),
               ),
             ],
           ),
@@ -133,6 +133,17 @@ class ProfileScreen extends ConsumerWidget {
           const SizedBox(height: 24),
         ],
       ),
+    );
+  }
+
+  void _showBusinessInfo(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: foxtrotCard,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => const _BusinessInfoSheet(),
     );
   }
 
@@ -174,6 +185,54 @@ class ProfileScreen extends ConsumerWidget {
       ),
       trailing: trailing ?? const Icon(LucideIcons.chevronRight, size: 18),
       onTap: onTap,
+    );
+  }
+}
+
+class _BusinessInfoSheet extends StatelessWidget {
+  const _BusinessInfoSheet();
+
+  static const _entries = [
+    ('상호', "Ethan's Cafe"),
+    ('대표자', '이단'),
+    ('사업자등록번호', '123-45-67890'),
+    ('주소', '서울 성동구 연무장길 47 1층'),
+    ('대표번호', '02-1234-5678'),
+    ('이메일', 'hello@ethanscafe.com'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('사업자 정보', style: textTheme.titleLarge),
+            const SizedBox(height: 16),
+            for (final (label, value) in _entries)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 110,
+                      child: Text(label, style: textTheme.bodySmall),
+                    ),
+                    Expanded(
+                      child: Text(value, style: textTheme.bodyMedium),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }
