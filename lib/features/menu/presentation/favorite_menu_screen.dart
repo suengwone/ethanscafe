@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/text_utils.dart';
 import '../domain/menu_models.dart';
 import 'menu_detail_screen.dart';
 import 'menu_providers.dart';
@@ -65,7 +66,7 @@ class _EmptyFavorites extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '메뉴 상세에서 하트를 눌러 자주 마시는 메뉴를 등록해보세요.',
+            '메뉴 상세에서 하트를 눌러 자주 마시는 메뉴를 등록해보세요.'.keepWord,
             style: Theme.of(context).textTheme.bodySmall,
             textAlign: TextAlign.center,
           ),
@@ -105,11 +106,11 @@ class _FavoriteTile extends ConsumerWidget {
           ),
         ),
         title: Text(
-          item.name,
+          item.name.keepWord,
           style: Theme.of(context).textTheme.labelLarge,
         ),
         subtitle: Text(
-          '${item.category.label} · ${item.priceLabel}',
+          '${item.category.label} · ${item.priceLabel}'.keepWord,
           style: Theme.of(context).textTheme.bodySmall,
         ),
         trailing: IconButton(

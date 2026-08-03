@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
 import '../domain/bean_models.dart';
 import 'beans_providers.dart';
@@ -110,7 +111,7 @@ class _HeaderSection extends StatelessWidget {
               children: [
                 Flexible(
                   child: Text(
-                    bean.name,
+                    bean.name.keepWord,
                     style: textTheme.headlineSmall,
                     textAlign: TextAlign.center,
                   ),
@@ -122,7 +123,11 @@ class _HeaderSection extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 6),
-            Text(bean.description, style: textTheme.bodySmall),
+            Text(
+              bean.description.keepWord,
+              style: textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 14),
             Wrap(
               spacing: 8,
@@ -284,7 +289,7 @@ class _StorySection extends StatelessWidget {
     return _SectionCard(
       title: '원두 이야기',
       child: Text(
-        bean.story,
+        bean.story.keepWord,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.6),
       ),
     );
@@ -336,7 +341,7 @@ class _InfoRow extends StatelessWidget {
             width: 72,
             child: Text(label, style: textTheme.bodySmall),
           ),
-          Expanded(child: Text(value, style: textTheme.bodyMedium)),
+          Expanded(child: Text(value.keepWord, style: textTheme.bodyMedium)),
         ],
       ),
     );
@@ -489,10 +494,11 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.bean.name, style: textTheme.titleLarge),
+            Text(widget.bean.name.keepWord, style: textTheme.titleLarge),
             const SizedBox(height: 4),
             Text(
-              '${widget.bean.origin} · ${widget.bean.roastLevel.label} 로스팅',
+              '${widget.bean.origin} · ${widget.bean.roastLevel.label} 로스팅'
+                  .keepWord,
               style: textTheme.bodySmall,
             ),
             const SizedBox(height: 20),
@@ -546,7 +552,7 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
                   .toList(),
             ),
             const SizedBox(height: 6),
-            Text(_grind.description, style: textTheme.bodySmall),
+            Text(_grind.description.keepWord, style: textTheme.bodySmall),
             const SizedBox(height: 20),
             Row(
               children: [

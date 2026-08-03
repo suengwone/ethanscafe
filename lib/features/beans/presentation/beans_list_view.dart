@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
 import '../domain/bean_models.dart';
 import 'beans_providers.dart';
@@ -55,7 +56,7 @@ class _BeansHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 8, bottom: 12),
       child: Text(
-        '매주 화요일 로스팅한 원두를 홀빈 또는 원하는 분쇄도로 보내드립니다.',
+        '매주 화요일 로스팅한 원두를 홀빈 또는 원하는 분쇄도로 보내드립니다.'.keepWord,
         style: Theme.of(context).textTheme.bodySmall,
       ),
     );
@@ -101,12 +102,12 @@ class _BeanCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Flexible(
                           child: Text(
-                            bean.name,
+                            bean.name.keepWord,
                             style: textTheme.labelLarge,
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         if (bean.isNew) ...[
@@ -117,7 +118,7 @@ class _BeanCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${bean.origin} · ${bean.roastLevel.label} 로스팅',
+                      '${bean.origin} · ${bean.roastLevel.label} 로스팅'.keepWord,
                       style: textTheme.bodySmall,
                     ),
                     const SizedBox(height: 8),

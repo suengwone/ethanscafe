@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/utils/text_utils.dart';
 import '../../../points/presentation/points_providers.dart';
 
 const int rewardGoal = 5000;
@@ -86,9 +87,10 @@ class RewardsCard extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    remaining > 0
-                        ? '${_pointFormat.format(remaining)}P 더 모으면 무료 음료 쿠폰!'
-                        : '무료 음료 쿠폰으로 교환할 수 있어요!',
+                    (remaining > 0
+                            ? '${_pointFormat.format(remaining)}P 더 모으면 무료 음료 쿠폰!'
+                            : '무료 음료 쿠폰으로 교환할 수 있어요!')
+                        .keepWord,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],

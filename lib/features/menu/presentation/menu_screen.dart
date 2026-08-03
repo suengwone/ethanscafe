@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
 import '../../beans/presentation/beans_list_view.dart';
 import '../domain/menu_models.dart';
@@ -81,7 +82,7 @@ class _MenuList extends ConsumerWidget {
               return Padding(
                 padding: const EdgeInsets.only(top: 8, bottom: 12),
                 child: Text(
-                  note,
+                  note.keepWord,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               );
@@ -120,11 +121,11 @@ class _MenuTile extends StatelessWidget {
           ),
         ),
         title: Text(
-          item.name,
+          item.name.keepWord,
           style: Theme.of(context).textTheme.labelLarge,
         ),
         subtitle: Text(
-          item.description,
+          item.description.keepWord,
           style: Theme.of(context).textTheme.bodySmall,
         ),
         trailing: Column(

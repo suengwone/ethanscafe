@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/utils/text_utils.dart';
 import '../../domain/banner_models.dart';
 import '../home_providers.dart';
 
@@ -116,7 +117,7 @@ class _BannerCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  banner.title,
+                  banner.title.keepWord,
                   style: Theme.of(context)
                       .textTheme
                       .titleMedium
@@ -124,7 +125,7 @@ class _BannerCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  banner.subtitle,
+                  banner.subtitle.keepWord,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: foxtrotCream.withValues(alpha: 0.85),
                       ),

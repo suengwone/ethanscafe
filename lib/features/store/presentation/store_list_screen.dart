@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/text_utils.dart';
 import '../domain/store_models.dart';
 import 'stores_providers.dart';
 
@@ -84,9 +85,10 @@ class StoreListScreen extends ConsumerWidget {
                 return Padding(
                   padding: const EdgeInsets.only(top: 8, bottom: 12),
                   child: Text(
-                    distances == null
-                        ? '우측 상단 버튼을 누르면 내 위치에서 가까운 순으로 정렬됩니다.'
-                        : '내 위치에서 가까운 순으로 정렬되었습니다.',
+                    (distances == null
+                            ? '우측 상단 버튼을 누르면 내 위치에서 가까운 순으로 정렬됩니다.'
+                            : '내 위치에서 가까운 순으로 정렬되었습니다.')
+                        .keepWord,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 );
@@ -157,7 +159,10 @@ class _StoreCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text(store.name, style: textTheme.titleMedium),
+                  child: Text(
+                    store.name.keepWord,
+                    style: textTheme.titleMedium,
+                  ),
                 ),
                 if (distanceMeters != null)
                   Container(
@@ -240,7 +245,10 @@ class _InfoRow extends StatelessWidget {
         Icon(icon, size: 14, color: foxtrotGold),
         const SizedBox(width: 8),
         Expanded(
-          child: Text(text, style: Theme.of(context).textTheme.bodySmall),
+          child: Text(
+            text.keepWord,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         ),
       ],
     );

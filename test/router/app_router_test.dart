@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:cafe_app/core/utils/text_utils.dart';
 import 'package:cafe_app/features/auth/domain/auth_models.dart';
 import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
 import 'package:cafe_app/features/auth/presentation/login_screen.dart';
@@ -101,7 +102,10 @@ void main() {
 
     expect(find.byType(BeanDetailScreen), findsOneWidget);
     expect(find.byType(LoginScreen), findsNothing);
-    expect(find.text('에티오피아 예가체프 아리차 에이미 G1'), findsOneWidget);
+    expect(
+      find.text('에티오피아 예가체프 아리차 에이미 G1'.keepWord),
+      findsOneWidget,
+    );
   });
 
   testWidgets('비로그인 시 메뉴 상세 화면은 볼 수 있다', (tester) async {
@@ -112,7 +116,7 @@ void main() {
 
     expect(find.byType(MenuDetailScreen), findsOneWidget);
     expect(find.byType(LoginScreen), findsNothing);
-    expect(find.text('아메리카노'), findsOneWidget);
+    expect(find.text('아메리카노'.keepWord), findsOneWidget);
   });
 
   testWidgets('비로그인 시 알림 목록 화면은 볼 수 있다', (tester) async {

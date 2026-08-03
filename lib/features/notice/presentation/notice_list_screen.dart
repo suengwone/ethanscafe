@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/text_utils.dart';
 import '../domain/notice_models.dart';
 import 'notices_providers.dart';
 
@@ -103,7 +104,7 @@ class _NoticeCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(notice.title, style: textTheme.labelLarge),
+                Text(notice.title.keepWord, style: textTheme.labelLarge),
                 const SizedBox(height: 4),
                 Text(
                   _dateFormat.format(notice.createdAt),
@@ -116,7 +117,7 @@ class _NoticeCard extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                notice.body,
+                notice.body.keepWord,
                 style: textTheme.bodyMedium?.copyWith(height: 1.6),
               ),
             ),

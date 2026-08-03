@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
 import '../domain/menu_models.dart';
 import 'menu_providers.dart';
@@ -101,7 +102,7 @@ class _MenuDetailBody extends StatelessWidget {
             _SectionCard(
               title: '메뉴 소개',
               child: Text(
-                item.detail!,
+                item.detail!.keepWord,
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium
@@ -116,7 +117,7 @@ class _MenuDetailBody extends StatelessWidget {
             _SectionCard(
               title: '옵션 안내',
               child: Text(
-                item.category.note!,
+                item.category.note!.keepWord,
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall
@@ -164,7 +165,7 @@ class _HeaderSection extends StatelessWidget {
               children: [
                 Flexible(
                   child: Text(
-                    item.name,
+                    item.name.keepWord,
                     style: textTheme.headlineSmall,
                     textAlign: TextAlign.center,
                   ),
@@ -180,7 +181,11 @@ class _HeaderSection extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 6),
-            Text(item.description, style: textTheme.bodySmall),
+            Text(
+              item.description.keepWord,
+              style: textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 14),
             Text(
               item.priceLabel,
@@ -267,7 +272,7 @@ class _InfoRow extends StatelessWidget {
             width: 72,
             child: Text(label, style: textTheme.bodySmall),
           ),
-          Expanded(child: Text(value, style: textTheme.bodyMedium)),
+          Expanded(child: Text(value.keepWord, style: textTheme.bodyMedium)),
         ],
       ),
     );

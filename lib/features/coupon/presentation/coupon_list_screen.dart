@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/text_utils.dart';
 import '../domain/coupon_models.dart';
 import 'coupons_providers.dart';
 
@@ -141,9 +142,12 @@ class _CouponCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(coupon.title, style: textTheme.labelLarge),
+                    Text(coupon.title.keepWord, style: textTheme.labelLarge),
                     const SizedBox(height: 4),
-                    Text(coupon.description, style: textTheme.bodySmall),
+                    Text(
+                      coupon.description.keepWord,
+                      style: textTheme.bodySmall,
+                    ),
                     const SizedBox(height: 6),
                     Text(
                       '~ ${_dateFormat.format(coupon.expiresAt)}',

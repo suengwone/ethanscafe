@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/utils/text_utils.dart';
 import '../../../../core/widgets/new_badge.dart';
 import '../../../menu/domain/menu_models.dart';
 import '../../../menu/presentation/menu_detail_screen.dart';
@@ -55,7 +56,7 @@ class RecommendedMenuSection extends ConsumerWidget {
         ),
         const SizedBox(height: 4),
         SizedBox(
-          height: 178,
+          height: 196,
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             scrollDirection: Axis.horizontal,
@@ -79,7 +80,7 @@ class _RecommendedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Container(
-      width: 128,
+      width: 148,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: foxtrotCard,
@@ -116,8 +117,8 @@ class _RecommendedCard extends StatelessWidget {
           ),
           const Spacer(),
           Text(
-            item.name,
-            maxLines: 1,
+            item.name.keepWord,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.labelLarge,
           ),

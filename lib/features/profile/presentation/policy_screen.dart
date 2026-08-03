@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/text_utils.dart';
 
 enum PolicyType { terms, privacy }
 
@@ -39,10 +40,10 @@ class PolicyScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           for (final section in _sections) ...[
-            Text(section.heading, style: textTheme.titleSmall),
+            Text(section.heading.keepWord, style: textTheme.titleSmall),
             const SizedBox(height: 8),
             Text(
-              section.body,
+              section.body.keepWord,
               style: textTheme.bodySmall?.copyWith(height: 1.6),
             ),
             const SizedBox(height: 20),
