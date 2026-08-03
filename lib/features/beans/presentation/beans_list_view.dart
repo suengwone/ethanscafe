@@ -34,16 +34,44 @@ class BeansListView extends ConsumerWidget {
           ],
         ),
       ),
-      data: (beans) => ListView.builder(
-        padding: foxtrotListPadding,
-        itemCount: beans.length + 1,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return const _BeansHeader();
-          }
-          return _BeanCard(bean: beans[index - 1]);
-        },
-      ),
+      data: (beans) {
+        final acidic =
+            beans.where((bean) => !bean.isDecaf && bean.isAcidic).toList();
+        final nutty =
+            beans.where((bean) => !bean.isDecaf && !bean.isAcidic).toList();
+        final decaf = beans.where((bean) => bean.isDecaf).toList();
+
+        return ListView(
+          padding: foxtrotListPadding,
+          children: [
+            const _BeansHeader(),
+            if (acidic.isNotEmpty) ...[
+              const _BeanSectionHeader(
+                icon: LucideIcons.citrus,
+                title: '산미가 화사한 원두',
+                subtitle: '과일처럼 밝고 산뜻한 맛을 좋아한다면',
+              ),
+              ...acidic.map((bean) => _BeanCard(bean: bean)),
+            ],
+            if (nutty.isNotEmpty) ...[
+              const _BeanSectionHeader(
+                icon: LucideIcons.nut,
+                title: '산미 적은 고소한 원두',
+                subtitle: '산미 부담 없이 고소하고 뭵직한 한 잔을 원한다면',
+              ),
+              ...nutty.map((bean) => _BeanCard(bean: bean)),
+            ],
+            if (decaf.isNotEmpty) ...[
+              const _BeanSectionHeader(
+                icon: LucideIcons.moonStar,
+                title: '디카페인',
+                subtitle: '늦은 오후에도 카페인 걱정 없이',
+              ),
+              ...decaf.map((bean) => _BeanCard(bean: bean)),
+            ],
+          ],
+        );
+      },
     );
   }
 }
@@ -58,6 +86,46 @@ class _BeansHeader extends StatelessWidget {
       child: Text(
         '매주 화요일 로스팅한 원두를 홀빈 또는 원하는 분쇄도로 보내드립니다.'.keepWord,
         style: Theme.of(context).textTheme.bodySmall,
+      ),
+    );
+  }
+}
+
+class _BeanSectionHeader extends StatelessWidget {
+  const _BeanSectionHeader({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 18, bottom: 6),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 18, color: foxtrotGold),
+              const SizedBox(width: 7),
+              Expanded(
+                child: Text(title.keepWord, style: textTheme.titleMedium),
+              ),
+            ],
+          ),
+          const SizedBox(height: 3),
+          Padding(
+            padding: const EdgeInsets.only(left: 25),
+            child: Text(subtitle.keepWord, style: textTheme.bodySmall),
+          ),
+        ],
       ),
     );
   }
