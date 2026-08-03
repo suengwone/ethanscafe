@@ -1,64 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/new_badge.dart';
+import '../../../menu/domain/menu_models.dart';
+import '../../../menu/presentation/menu_detail_screen.dart';
+import '../../../menu/presentation/menu_providers.dart';
 
-class _RecommendedItem {
-  final String name;
-  final String price;
-  final IconData icon;
-  final bool isNew;
-  final bool isHit;
+final recommendedMenuItemsProvider =
+    FutureProvider<List<MenuItem>>((ref) async {
+  final items = await ref.watch(menuItemsProvider.future);
+  return items.where((item) => item.isRecommended).toList();
+});
 
-  const _RecommendedItem({
-    required this.name,
-    required this.price,
-    required this.icon,
-    this.isNew = false,
-    this.isHit = false,
-  });
-}
-
-const _recommendedItems = [
-  _RecommendedItem(
-    name: '니카라과 핀카 리브레 게이샤',
-    price: '6,800원',
-    icon: LucideIcons.bean,
-    isNew: true,
-  ),
-  _RecommendedItem(
-    name: '플랫 화이트',
-    price: '5,500원',
-    icon: LucideIcons.coffee,
-    isHit: true,
-  ),
-  _RecommendedItem(
-    name: '딸기 라떼',
-    price: '6,000원',
-    icon: LucideIcons.cupSoda,
-    isHit: true,
-  ),
-  _RecommendedItem(
-    name: '과일 주스',
-    price: '6,000원',
-    icon: LucideIcons.milk,
-    isNew: true,
-  ),
-  _RecommendedItem(
-    name: '블루베리 베이글',
-    price: '4,300원',
-    icon: LucideIcons.croissant,
-    isHit: true,
-  ),
-];
-
-class RecommendedMenuSection extends StatelessWidget {
+class RecommendedMenuSection extends ConsumerWidget {
   const RecommendedMenuSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final items =
+        ref.watch(recommendedMenuItemsProvider).asData?.value ?? const [];
+    if (items.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -83,10 +49,10 @@ class RecommendedMenuSection extends StatelessWidget {
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
-            itemCount: _recommendedItems.length,
+            itemCount: items.length,
             separatorBuilder: (context, index) => const SizedBox(width: 12),
             itemBuilder: (context, index) =>
-                _RecommendedCard(item: _recommendedItems[index]),
+                _RecommendedCard(item: items[index]),
           ),
         ),
       ],
@@ -97,7 +63,7 @@ class RecommendedMenuSection extends StatelessWidget {
 class _RecommendedCard extends StatelessWidget {
   const _RecommendedCard({required this.item});
 
-  final _RecommendedItem item;
+  final MenuItem item;
 
   @override
   Widget build(BuildContext context) {
@@ -118,15 +84,19 @@ class _RecommendedCard extends StatelessWidget {
               CircleAvatar(
                 radius: 32,
                 backgroundColor: foxtrotSurface,
-                child: Icon(item.icon, size: 30, color: colorScheme.primary),
+                child: Icon(
+                  menuCategoryIcon(item.category),
+                  size: 30,
+                  color: colorScheme.primary,
+                ),
               ),
-              if (item.isNew)
+              if (item.badge == MenuBadge.isNew)
                 const Positioned(
                   right: 0,
                   top: 0,
                   child: NewBadge(),
                 ),
-              if (item.isHit)
+              if (item.badge == MenuBadge.hit)
                 const Positioned(
                   right: 0,
                   top: 0,
@@ -143,7 +113,7 @@ class _RecommendedCard extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            item.price,
+            item.priceLabel,
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
