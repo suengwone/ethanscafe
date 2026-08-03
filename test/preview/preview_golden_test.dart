@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:cafe_app/core/theme/app_theme.dart';
@@ -13,6 +14,8 @@ import 'package:cafe_app/features/auth/domain/auth_models.dart';
 import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
 import 'package:cafe_app/features/auth/presentation/login_screen.dart';
 import 'package:cafe_app/features/beans/presentation/bean_detail_screen.dart';
+import 'package:cafe_app/features/menu/presentation/favorite_menu_screen.dart';
+import 'package:cafe_app/features/menu/presentation/menu_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
@@ -75,7 +78,18 @@ void main() {
   });
 
   setUp(() {
+    PackageInfo.setMockInitialValues(
+      appName: "Ethan's Cafe",
+      packageName: 'com.ethanscafe.cafe_app',
+      version: '1.0.0',
+      buildNumber: '1',
+      buildSignature: '',
+    );
     SharedPreferences.setMockInitialValues({
+      'favorite_menu_ids': [
+        'espresso-vanilla-latte',
+        'beverage-matcha-latte',
+      ],
       'points_data': jsonEncode({
         'membershipId': 'MEMBER-12345678',
         'balance': 1250,
@@ -189,6 +203,29 @@ void main() {
     await expectLater(
       find.byType(MenuScreen),
       matchesGoldenFile('../../preview/menu_screen.png'),
+    );
+  });
+
+  testWidgets('메뉴 상세 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const MenuDetailScreen(menuId: 'espresso-vanilla-latte'),
+    );
+
+    await expectLater(
+      find.byType(MenuDetailScreen),
+      matchesGoldenFile('../../preview/menu_detail_screen.png'),
+    );
+  });
+
+  testWidgets('즐겨찾기 메뉴 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const FavoriteMenuScreen());
+
+    await expectLater(
+      find.byType(FavoriteMenuScreen),
+      matchesGoldenFile('../../preview/favorite_menu_screen.png'),
     );
   });
 
