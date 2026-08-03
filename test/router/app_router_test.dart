@@ -10,6 +10,8 @@ import 'package:cafe_app/features/auth/domain/auth_models.dart';
 import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
 import 'package:cafe_app/features/auth/presentation/login_screen.dart';
 import 'package:cafe_app/features/beans/presentation/bean_detail_screen.dart';
+import 'package:cafe_app/features/menu/presentation/favorite_menu_screen.dart';
+import 'package:cafe_app/features/menu/presentation/menu_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
@@ -93,6 +95,45 @@ void main() {
     expect(find.byType(BeanDetailScreen), findsOneWidget);
     expect(find.byType(LoginScreen), findsNothing);
     expect(find.text('에티오피아 예가체프 아리차 에이미 G1'), findsOneWidget);
+  });
+
+  testWidgets('비로그인 시 메뉴 상세 화면은 볼 수 있다', (tester) async {
+    final router = await pumpApp(tester);
+
+    router.go('/menu/item/espresso-americano');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(MenuDetailScreen), findsOneWidget);
+    expect(find.byType(LoginScreen), findsNothing);
+    expect(find.text('아메리카노'), findsOneWidget);
+  });
+
+  testWidgets('비로그인 시 즐겨찾기 메뉴는 로그인으로 리다이렉트된다', (tester) async {
+    final router = await pumpApp(tester);
+
+    router.go('/profile/favorites');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LoginScreen), findsOneWidget);
+    expect(find.byType(FavoriteMenuScreen), findsNothing);
+  });
+
+  testWidgets('로그인 시 즐겨찾기 메뉴 화면에 접근할 수 있다', (tester) async {
+    final router = await pumpApp(
+      tester,
+      user: const AppUser(
+        uid: 'test-uid',
+        displayName: '테스트 사용자',
+        email: 'test@example.com',
+        providerId: 'google',
+      ),
+    );
+
+    router.go('/profile/favorites');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(FavoriteMenuScreen), findsOneWidget);
+    expect(find.byType(LoginScreen), findsNothing);
   });
 
   testWidgets('로그인 시 포인트 화면에 접근할 수 있다', (tester) async {

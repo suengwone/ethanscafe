@@ -5,6 +5,8 @@ import '../features/home/presentation/home_screen.dart';
 import '../features/auth/presentation/auth_providers.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/beans/presentation/bean_detail_screen.dart';
+import '../features/menu/presentation/favorite_menu_screen.dart';
+import '../features/menu/presentation/menu_detail_screen.dart';
 import '../features/menu/presentation/menu_screen.dart';
 import '../features/points/presentation/points_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
@@ -53,6 +55,12 @@ final routerProvider = Provider<GoRouter>((ref) {
                       beanId: state.pathParameters['beanId']!,
                     ),
                   ),
+                  GoRoute(
+                    path: 'item/:menuId',
+                    builder: (context, state) => MenuDetailScreen(
+                      menuId: state.pathParameters['menuId']!,
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -70,6 +78,12 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/profile',
                 builder: (context, state) => const ProfileScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'favorites',
+                    builder: (context, state) => const FavoriteMenuScreen(),
+                  ),
+                ],
               ),
             ],
           ),
