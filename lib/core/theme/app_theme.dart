@@ -42,6 +42,7 @@ ThemeData buildAppTheme() {
   return ThemeData(
     colorScheme: colorScheme,
     useMaterial3: true,
+    fontFamily: 'Pretendard',
     scaffoldBackgroundColor: foxtrotBlack,
     textTheme: const TextTheme(
       headlineMedium: TextStyle(
