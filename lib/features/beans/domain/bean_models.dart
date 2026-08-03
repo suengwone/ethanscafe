@@ -60,4 +60,8 @@ abstract class Bean with _$Bean {
 
   int priceOf(BeanWeight weight) =>
       weight == BeanWeight.g500 ? price500 : price200;
+
+  bool get isDecaf => process.contains('디카페인');
+
+  bool get isAcidic => acidity >= 4;
 }
