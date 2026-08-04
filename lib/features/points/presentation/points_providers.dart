@@ -3,9 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/presentation/auth_providers.dart';
 import '../data/firestore_points_repository.dart';
+import '../data/functions_qr_points_repository.dart';
 import '../data/local_points_repository.dart';
+import '../data/local_qr_points_repository.dart';
 import '../domain/points_models.dart';
 import '../domain/points_repository.dart';
+import '../domain/qr_points_repository.dart';
 
 final pointsRepositoryProvider = Provider<PointsRepository>((ref) {
   try {
@@ -17,6 +20,18 @@ final pointsRepositoryProvider = Provider<PointsRepository>((ref) {
     }
   } catch (_) {}
   return LocalPointsRepository();
+});
+
+final qrPointsRepositoryProvider = Provider<QrPointsRepository>((ref) {
+  try {
+    if (Firebase.apps.isNotEmpty) {
+      final user = ref.watch(authStateProvider).value;
+      if (user != null) {
+        return FunctionsQrPointsRepository();
+      }
+    }
+  } catch (_) {}
+  return LocalQrPointsRepository(ref.watch(pointsRepositoryProvider));
 });
 
 final pointsControllerProvider =
@@ -49,5 +64,13 @@ class PointsController extends AsyncNotifier<PointsData> {
     state = await AsyncValue.guard(
       () => repository.usePoints(amount: amount, description: description),
     );
+  }
+
+  Future<QrEarnResult> earnFromQr(String code) async {
+    final result = await ref.read(qrPointsRepositoryProvider).earnFromQr(code);
+    state = await AsyncValue.guard(
+      () => ref.read(pointsRepositoryProvider).load(),
+    );
+    return result;
   }
 }
