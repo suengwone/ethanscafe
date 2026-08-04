@@ -57,7 +57,7 @@ class BeansListView extends ConsumerWidget {
               const _BeanSectionHeader(
                 icon: LucideIcons.nut,
                 title: '산미 적은 고소한 원두',
-                subtitle: '산미 부담 없이 고소하고 뭵직한 한 잔을 원한다면',
+                subtitle: '산미 부담 없이 고소하고 묵직한 한 잔을 원한다면',
               ),
               ...nutty.map((bean) => _BeanCard(bean: bean)),
             ],
@@ -146,74 +146,85 @@ class _BeanCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
         onTap: () => context.push('/menu/beans/${bean.id}'),
         child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Row(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  color: foxtrotSurface,
-                  borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-                  border: Border.all(color: foxtrotBorder),
-                ),
-                child: const Icon(
-                  LucideIcons.bean,
-                  color: foxtrotGold,
-                  size: 26,
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+              Row(
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: foxtrotSurface,
+                      borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
+                      border: Border.all(color: foxtrotBorder),
+                    ),
+                    child: const Icon(
+                      LucideIcons.bean,
+                      color: foxtrotGold,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Flexible(
-                          child: Text(
-                            bean.name.keepWord,
-                            style: textTheme.labelLarge,
-                          ),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                bean.name.keepWord,
+                                style: textTheme.labelLarge,
+                              ),
+                            ),
+                            if (bean.isNew) ...[
+                              const SizedBox(width: 6),
+                              const NewBadge(),
+                            ],
+                          ],
                         ),
-                        if (bean.isNew) ...[
-                          const SizedBox(width: 6),
-                          const NewBadge(),
-                        ],
+                        const SizedBox(height: 3),
+                        Text(
+                          '${bean.origin} · ${bean.roastLevel.label} 로스팅'
+                              .keepWord,
+                          style: textTheme.bodySmall,
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${bean.origin} · ${bean.roastLevel.label} 로스팅'.keepWord,
-                      style: textTheme.bodySmall,
-                    ),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 6,
-                      runSpacing: 6,
-                      children: bean.tastingNotes
-                          .take(3)
-                          .map((note) => _TastingNoteChip(note: note))
-                          .toList(),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: bean.tastingNotes
+                    .take(3)
+                    .map((note) => _TastingNoteChip(note: note))
+                    .toList(),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                height: 1,
+                color: foxtrotBorder.withValues(alpha: 0.5),
+              ),
+              const SizedBox(height: 10),
+              Row(
                 children: [
+                  Text('200g 기준', style: textTheme.bodySmall),
+                  const Spacer(),
                   Text(
                     '${_priceFormat.format(bean.price200)}원',
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                      letterSpacing: -0.3,
+                      color: foxtrotCream,
                     ),
                   ),
-                  Text('200g', style: textTheme.bodySmall),
-                  const SizedBox(height: 8),
+                  const SizedBox(width: 2),
                   const Icon(
                     LucideIcons.chevronRight,
                     size: 16,
