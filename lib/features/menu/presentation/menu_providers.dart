@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../auth/presentation/auth_providers.dart';
+import '../data/firestore_favorites_repository.dart';
 import '../data/firestore_menu_repository.dart';
 import '../data/local_favorites_repository.dart';
 import '../data/local_menu_repository.dart';
@@ -37,6 +39,14 @@ final menuItemProvider =
 });
 
 final favoritesRepositoryProvider = Provider<FavoritesRepository>((ref) {
+  try {
+    if (Firebase.apps.isNotEmpty) {
+      final user = ref.watch(authStateProvider).value;
+      if (user != null) {
+        return FirestoreFavoritesRepository(uid: user.uid);
+      }
+    }
+  } catch (_) {}
   return LocalFavoritesRepository();
 });
 
