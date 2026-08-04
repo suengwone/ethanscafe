@@ -1,14 +1,25 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../auth/presentation/auth_providers.dart';
+import '../data/firestore_payment_methods_repository.dart';
 import '../data/local_payment_methods_repository.dart';
 import '../domain/payment_method.dart';
 
 final paymentMethodsRepositoryProvider =
     Provider<PaymentMethodsRepository>((ref) {
+  try {
+    if (Firebase.apps.isNotEmpty) {
+      final user = ref.watch(authStateProvider).value;
+      if (user != null) {
+        return FirestorePaymentMethodsRepository(uid: user.uid);
+      }
+    }
+  } catch (_) {}
   return LocalPaymentMethodsRepository();
 });
 
