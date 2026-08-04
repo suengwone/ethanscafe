@@ -22,6 +22,7 @@ class MenuScreen extends ConsumerWidget {
           title: const Text('메뉴'),
           bottom: const TabBar(
             isScrollable: true,
+            tabAlignment: TabAlignment.center,
             tabs: [
               Tab(text: '드립 커피'),
               Tab(text: '에스프레소'),
