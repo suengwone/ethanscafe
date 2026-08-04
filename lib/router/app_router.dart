@@ -12,6 +12,7 @@ import '../features/menu/presentation/menu_screen.dart';
 import '../features/notice/presentation/notice_list_screen.dart';
 import '../features/order/presentation/order_history_screen.dart';
 import '../features/points/presentation/points_screen.dart';
+import '../features/points/presentation/qr_scan_screen.dart';
 import '../features/profile/presentation/delivery_address_screen.dart';
 import '../features/profile/presentation/notification_settings_screen.dart';
 import '../features/profile/presentation/payment_methods_screen.dart';
@@ -89,6 +90,12 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/points',
                 builder: (context, state) => const PointsScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'scan',
+                    builder: (context, state) => const QrScanScreen(),
+                  ),
+                ],
               ),
             ],
           ),
