@@ -1,10 +1,21 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../auth/presentation/auth_providers.dart';
+import '../data/firestore_points_repository.dart';
 import '../data/local_points_repository.dart';
 import '../domain/points_models.dart';
 import '../domain/points_repository.dart';
 
 final pointsRepositoryProvider = Provider<PointsRepository>((ref) {
+  try {
+    if (Firebase.apps.isNotEmpty) {
+      final user = ref.watch(authStateProvider).value;
+      if (user != null) {
+        return FirestorePointsRepository(uid: user.uid);
+      }
+    }
+  } catch (_) {}
   return LocalPointsRepository();
 });
 
