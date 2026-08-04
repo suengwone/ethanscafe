@@ -1,13 +1,24 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../auth/presentation/auth_providers.dart';
+import '../data/firestore_delivery_addresses_repository.dart';
 import '../data/local_delivery_addresses_repository.dart';
 import '../domain/delivery_address.dart';
 
 final deliveryAddressesRepositoryProvider =
     Provider<DeliveryAddressesRepository>((ref) {
+  try {
+    if (Firebase.apps.isNotEmpty) {
+      final user = ref.watch(authStateProvider).value;
+      if (user != null) {
+        return FirestoreDeliveryAddressesRepository(uid: user.uid);
+      }
+    }
+  } catch (_) {}
   return LocalDeliveryAddressesRepository();
 });
 
