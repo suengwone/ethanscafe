@@ -33,6 +33,10 @@ service cloud.firestore {
       allow read, write: if isSignedIn() && request.auth.uid == userId;
     }
 
+    match /qrTokens/{code} {
+      allow read, write: if isAdmin();
+    }
+
     match /menus/{document=**} {
       allow read: if true;
       allow write: if isAdmin();
