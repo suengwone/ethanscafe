@@ -26,7 +26,7 @@ class HomeScreen extends ConsumerWidget {
               isLoggedIn: user != null,
             ),
             const SizedBox(height: 20),
-            const RewardsCard(),
+            if (user != null) const RewardsCard() else const GuestRewardsCard(),
             const SizedBox(height: 16),
             const _QuickActions(),
             const SizedBox(height: 28),

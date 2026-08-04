@@ -12,6 +12,89 @@ const int rewardGoal = 5000;
 
 final _pointFormat = NumberFormat('#,###');
 
+class GuestRewardsCard extends StatelessWidget {
+  const GuestRewardsCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Material(
+        color: Colors.transparent,
+        child: Ink(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [foxtrotCard, foxtrotSurface],
+            ),
+            borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
+            border: Border.all(color: foxtrotGold.withValues(alpha: 0.45)),
+            boxShadow: foxtrotCardShadow,
+          ),
+          child: InkWell(
+            onTap: () => context.go('/login'),
+            borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        LucideIcons.sparkles,
+                        color: foxtrotGold,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        '폭스트롯 리워드',
+                        style: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      const Spacer(),
+                      const Icon(
+                        LucideIcons.chevronRight,
+                        color: foxtrotMuted,
+                        size: 20,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    '로그인하고\n포인트를 모아보세요'.keepWord,
+                    style: const TextStyle(
+                      color: foxtrotGoldLight,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      height: 1.3,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '결제 금액의 10%가 적립되고, ${_pointFormat.format(rewardGoal)}P를 모으면 무료 음료 쿠폰을 드려요!'
+                        .keepWord,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 14),
+                  FilledButton.icon(
+                    onPressed: () => context.go('/login'),
+                    icon: const Icon(LucideIcons.logIn, size: 18),
+                    label: const Text('로그인하기'),
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size.fromHeight(44),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class RewardsCard extends ConsumerWidget {
   const RewardsCard({super.key});
 
