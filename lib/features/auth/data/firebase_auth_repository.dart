@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 
@@ -73,6 +74,10 @@ class FirebaseAuthRepository implements AuthRepository {
 
   Future<AppUser> _signInWithGoogle() async {
     try {
+      if (kIsWeb) {
+        final result = await _auth.signInWithPopup(fb.GoogleAuthProvider());
+        return _requireUser(result.user);
+      }
       final signIn = GoogleSignIn.instance;
       await signIn.initialize();
       final account = await signIn.authenticate();
@@ -102,7 +107,9 @@ class FirebaseAuthRepository implements AuthRepository {
       final appleProvider = fb.AppleAuthProvider()
         ..addScope('email')
         ..addScope('name');
-      final result = await _auth.signInWithProvider(appleProvider);
+      final result = kIsWeb
+          ? await _auth.signInWithPopup(appleProvider)
+          : await _auth.signInWithProvider(appleProvider);
       return _requireUser(result.user);
     } on fb.FirebaseAuthException catch (e) {
       throw AuthException(_firebaseMessage(e));
