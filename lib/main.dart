@@ -1,15 +1,30 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'core/theme/app_theme.dart';
+import 'firebase_options.dart';
 import 'router/app_router.dart';
+
+const _kakaoNativeAppKey = String.fromEnvironment('KAKAO_NATIVE_APP_KEY');
+const _kakaoJavaScriptAppKey = String.fromEnvironment('KAKAO_JS_APP_KEY');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   } catch (e) {
     debugPrint('Firebase initialization skipped: $e');
+  }
+  if (_kakaoNativeAppKey.isNotEmpty || _kakaoJavaScriptAppKey.isNotEmpty) {
+    KakaoSdk.init(
+      nativeAppKey:
+          _kakaoNativeAppKey.isNotEmpty ? _kakaoNativeAppKey : null,
+      javaScriptAppKey:
+          _kakaoJavaScriptAppKey.isNotEmpty ? _kakaoJavaScriptAppKey : null,
+    );
   }
   runApp(
     const ProviderScope(
