@@ -37,3 +37,16 @@ abstract class PointHistoryEntry with _$PointHistoryEntry {
 
   bool get isEarn => type == PointHistoryType.earn;
 }
+
+@freezed
+abstract class QrEarnResult with _$QrEarnResult {
+  const factory QrEarnResult({
+    required String storeName,
+    required int paymentAmount,
+    required int earned,
+    required int balance,
+  }) = _QrEarnResult;
+
+  factory QrEarnResult.fromJson(Map<String, dynamic> json) =>
+      _$QrEarnResultFromJson(json);
+}

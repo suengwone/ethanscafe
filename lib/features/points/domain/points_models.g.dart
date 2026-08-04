@@ -47,3 +47,19 @@ const _$PointHistoryTypeEnumMap = {
   PointHistoryType.earn: 'earn',
   PointHistoryType.use: 'use',
 };
+
+_QrEarnResult _$QrEarnResultFromJson(Map<String, dynamic> json) =>
+    _QrEarnResult(
+      storeName: json['storeName'] as String,
+      paymentAmount: (json['paymentAmount'] as num).toInt(),
+      earned: (json['earned'] as num).toInt(),
+      balance: (json['balance'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$QrEarnResultToJson(_QrEarnResult instance) =>
+    <String, dynamic>{
+      'storeName': instance.storeName,
+      'paymentAmount': instance.paymentAmount,
+      'earned': instance.earned,
+      'balance': instance.balance,
+    };
