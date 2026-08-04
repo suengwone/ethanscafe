@@ -23,6 +23,7 @@ import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
 import 'package:cafe_app/features/order/presentation/order_history_screen.dart';
 import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
+import 'package:cafe_app/features/points/presentation/qr_scan_screen.dart';
 import 'package:cafe_app/features/profile/presentation/delivery_address_screen.dart';
 import 'package:cafe_app/features/profile/presentation/notification_settings_screen.dart';
 import 'package:cafe_app/features/profile/presentation/payment_methods_screen.dart';
@@ -227,6 +228,19 @@ void main() {
     await pumpScreen(tester, const PointsScreen());
 
     await expectGolden(find.byType(PointsScreen), 'points_screen');
+  });
+
+  testWidgets('QR 스캔 적립 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      QrScanScreen(
+        scannerBuilder: (context, onDetect) =>
+            const ColoredBox(color: Color(0xFF1C1B1A)),
+      ),
+    );
+
+    await expectGolden(find.byType(QrScanScreen), 'qr_scan_screen');
   });
 
   testWidgets('메뉴 화면 스크린샷', (WidgetTester tester) async {
