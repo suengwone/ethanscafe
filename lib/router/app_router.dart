@@ -4,6 +4,7 @@ import '../core/widgets/app_shell.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/auth/presentation/auth_providers.dart';
 import '../features/auth/presentation/login_screen.dart';
+import '../features/beans/presentation/bean_cart_screen.dart';
 import '../features/beans/presentation/bean_detail_screen.dart';
 import '../features/coupon/presentation/coupon_list_screen.dart';
 import '../features/menu/presentation/favorite_menu_screen.dart';
@@ -69,6 +70,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: '/menu',
                 builder: (context, state) => const MenuScreen(),
                 routes: [
+                  GoRoute(
+                    path: 'beans-cart',
+                    builder: (context, state) => const BeanCartScreen(),
+                  ),
                   GoRoute(
                     path: 'beans/:beanId',
                     builder: (context, state) => BeanDetailScreen(
