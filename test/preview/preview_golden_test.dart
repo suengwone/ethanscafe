@@ -13,6 +13,10 @@ import 'package:cafe_app/core/widgets/app_shell.dart';
 import 'package:cafe_app/features/auth/domain/auth_models.dart';
 import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
 import 'package:cafe_app/features/auth/presentation/login_screen.dart';
+import 'package:cafe_app/features/beans/data/local_beans_repository.dart';
+import 'package:cafe_app/features/beans/domain/bean_models.dart';
+import 'package:cafe_app/features/beans/presentation/bean_cart_providers.dart';
+import 'package:cafe_app/features/beans/presentation/bean_cart_screen.dart';
 import 'package:cafe_app/features/beans/presentation/bean_detail_screen.dart';
 import 'package:cafe_app/features/coupon/presentation/coupon_list_screen.dart';
 import 'package:cafe_app/features/coupon/presentation/coupons_providers.dart';
@@ -299,6 +303,53 @@ void main() {
     await tester.pumpAndSettle();
 
     await expectGolden(find.byType(MaterialApp), 'bean_order_sheet');
+  });
+
+  Future<void> fillBeanCart(WidgetTester tester, Finder finder) async {
+    final container = ProviderScope.containerOf(tester.element(finder));
+    final beans = await LocalBeansRepository().loadBeans();
+    final notifier = container.read(beanCartProvider.notifier);
+    notifier.add(
+      bean: beans[0],
+      weight: BeanWeight.g200,
+      grind: GrindOption.handDrip,
+    );
+    notifier.add(
+      bean: beans[1],
+      weight: BeanWeight.g500,
+      grind: GrindOption.wholeBean,
+      quantity: 2,
+    );
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('원두 장바구니 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const BeanCartScreen());
+
+    await fillBeanCart(tester, find.byType(BeanCartScreen));
+
+    await expectGolden(find.byType(BeanCartScreen), 'bean_cart_screen');
+  });
+
+  testWidgets('원두 장바구니 빈 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const BeanCartScreen());
+
+    await expectGolden(find.byType(BeanCartScreen), 'bean_cart_screen_empty');
+  });
+
+  testWidgets('원두 목록 장바구니 바 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const MenuScreen());
+
+    final tabContext = tester.element(find.byType(TabBarView));
+    DefaultTabController.of(tabContext).animateTo(5);
+    await tester.pumpAndSettle();
+
+    await fillBeanCart(tester, find.byType(MenuScreen));
+
+    await expectGolden(find.byType(MenuScreen), 'beans_list_cart_bar');
   });
 
   testWidgets('로그인 화면 스크린샷', (WidgetTester tester) async {
