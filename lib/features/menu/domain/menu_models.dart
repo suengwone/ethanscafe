@@ -20,6 +20,8 @@ enum MenuCategory {
 
   final String label;
   final String? note;
+
+  String get imageAsset => 'assets/images/menu/$name.png';
 }
 
 enum MenuBadge { none, isNew, hit }
@@ -43,4 +45,6 @@ abstract class MenuItem with _$MenuItem {
 
   String get priceLabel =>
       '${_menuPriceFormat.format(price)}원${priceFrom ? '~' : ''}';
+
+  String get imageAsset => category.imageAsset;
 }
