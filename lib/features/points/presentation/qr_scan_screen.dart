@@ -1,4 +1,4 @@
-import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -100,11 +100,14 @@ class _QrScanScreenState extends ConsumerState<QrScanScreen> {
   }
 
   String _errorMessage(Object error) {
-    if (error is FirebaseFunctionsException) {
-      return error.message ?? '적립에 실패했습니다. 다시 시도해주세요.';
-    }
     if (error is FormatException) {
       return error.message;
+    }
+    if (error is StateError) {
+      return error.message;
+    }
+    if (error is FirebaseException) {
+      return error.message ?? '적립에 실패했습니다. 다시 시도해주세요.';
     }
     return '적립에 실패했습니다. 다시 시도해주세요.';
   }

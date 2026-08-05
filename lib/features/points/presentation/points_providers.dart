@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/presentation/auth_providers.dart';
 import '../data/firestore_points_repository.dart';
-import '../data/functions_qr_points_repository.dart';
+import '../data/firestore_qr_points_repository.dart';
 import '../data/local_points_repository.dart';
 import '../data/local_qr_points_repository.dart';
 import '../domain/points_models.dart';
@@ -27,7 +27,7 @@ final qrPointsRepositoryProvider = Provider<QrPointsRepository>((ref) {
     if (Firebase.apps.isNotEmpty) {
       final user = ref.watch(authStateProvider).value;
       if (user != null) {
-        return FunctionsQrPointsRepository();
+        return FirestoreQrPointsRepository(uid: user.uid);
       }
     }
   } catch (_) {}
