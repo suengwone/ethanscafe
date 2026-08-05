@@ -89,6 +89,16 @@ Future<void> _loadFonts() async {
   }
 }
 
+Future<void> precacheAssetImages(WidgetTester tester) async {
+  await tester.runAsync(() async {
+    for (final element in find.byType(Image).evaluate()) {
+      final image = element.widget as Image;
+      await precacheImage(image.image, element);
+    }
+  });
+  await tester.pumpAndSettle();
+}
+
 Future<void> expectGolden(Finder finder, String name) async {
   if (!autoUpdateGoldenFiles) {
     markTestSkipped('골든 스크린샷은 --update-goldens 실행 시에만 생성/비교합니다.');
@@ -175,6 +185,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    await precacheAssetImages(tester);
   }
 
   Future<void> pumpApp(WidgetTester tester, {AppUser? user}) async {
@@ -197,6 +208,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    await precacheAssetImages(tester);
   }
 
   testWidgets('홈 화면(게스트) 스크린샷', (WidgetTester tester) async {
