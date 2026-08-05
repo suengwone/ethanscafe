@@ -153,12 +153,10 @@ Firebase Console에서 활성화:
    - 프로덕션 모드로 시작
    - 위치: asia-northeast3 (서울)
 
-3. **Storage**
-   - 시작하기 클릭
-   - 프로덕션 모드로 시작
-
-4. **Cloud Messaging** (푸시 알림)
+3. **Cloud Messaging** (푸시 알림)
    - 자동 활성화됨
+
+> 참고: Cloud Functions, Storage 등 Blaze(종량제) 요금제가 필요한 서비스는 사용하지 않는다. 무료(Spark) 요금제 범위에서 운영한다.
 
 ## 9. Firestore 보안 규칙
 
