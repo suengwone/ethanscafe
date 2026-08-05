@@ -8,6 +8,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
 import '../domain/bean_models.dart';
+import 'bean_cart_providers.dart';
 import 'beans_providers.dart';
 
 final _priceFormat = NumberFormat('#,###');
@@ -40,38 +41,105 @@ class BeansListView extends ConsumerWidget {
         final nutty =
             beans.where((bean) => !bean.isDecaf && !bean.isAcidic).toList();
         final decaf = beans.where((bean) => bean.isDecaf).toList();
+        final cartCount = ref.watch(beanCartCountProvider);
 
-        return ListView(
-          padding: foxtrotListPadding,
+        return Stack(
           children: [
-            const _BeansHeader(),
-            if (acidic.isNotEmpty) ...[
-              const _BeanSectionHeader(
-                icon: LucideIcons.citrus,
-                title: '산미가 화사한 원두',
-                subtitle: '과일처럼 밝고 산뜻한 맛을 좋아한다면',
+            ListView(
+              padding: cartCount > 0
+                  ? foxtrotListPadding.copyWith(bottom: 88)
+                  : foxtrotListPadding,
+              children: [
+                const _BeansHeader(),
+                if (acidic.isNotEmpty) ...[
+                  const _BeanSectionHeader(
+                    icon: LucideIcons.citrus,
+                    title: '산미가 화사한 원두',
+                    subtitle: '과일처럼 밝고 산뜻한 맛을 좋아한다면',
+                  ),
+                  ...acidic.map((bean) => _BeanCard(bean: bean)),
+                ],
+                if (nutty.isNotEmpty) ...[
+                  const _BeanSectionHeader(
+                    icon: LucideIcons.nut,
+                    title: '산미 적은 고소한 원두',
+                    subtitle: '산미 부담 없이 고소하고 묵직한 한 잔을 원한다면',
+                  ),
+                  ...nutty.map((bean) => _BeanCard(bean: bean)),
+                ],
+                if (decaf.isNotEmpty) ...[
+                  const _BeanSectionHeader(
+                    icon: LucideIcons.moonStar,
+                    title: '디카페인',
+                    subtitle: '늦은 오후에도 카페인 걱정 없이',
+                  ),
+                  ...decaf.map((bean) => _BeanCard(bean: bean)),
+                ],
+              ],
+            ),
+            if (cartCount > 0)
+              const Positioned(
+                left: foxtrotScreenHPadding,
+                right: foxtrotScreenHPadding,
+                bottom: 16,
+                child: _CartSummaryBar(),
               ),
-              ...acidic.map((bean) => _BeanCard(bean: bean)),
-            ],
-            if (nutty.isNotEmpty) ...[
-              const _BeanSectionHeader(
-                icon: LucideIcons.nut,
-                title: '산미 적은 고소한 원두',
-                subtitle: '산미 부담 없이 고소하고 묵직한 한 잔을 원한다면',
-              ),
-              ...nutty.map((bean) => _BeanCard(bean: bean)),
-            ],
-            if (decaf.isNotEmpty) ...[
-              const _BeanSectionHeader(
-                icon: LucideIcons.moonStar,
-                title: '디카페인',
-                subtitle: '늦은 오후에도 카페인 걱정 없이',
-              ),
-              ...decaf.map((bean) => _BeanCard(bean: bean)),
-            ],
           ],
         );
       },
+    );
+  }
+}
+
+class _CartSummaryBar extends ConsumerWidget {
+  const _CartSummaryBar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = ref.watch(beanCartCountProvider);
+    final total = ref.watch(beanCartTotalProvider);
+
+    return Material(
+      color: foxtrotGold,
+      borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
+        onTap: () => context.push('/menu/beans-cart'),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+          child: Row(
+            children: [
+              const Icon(
+                LucideIcons.shoppingBag,
+                size: 18,
+                color: foxtrotBlack,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '장바구니 · $count개',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: foxtrotBlack,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                '${_priceFormat.format(total)}원',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: foxtrotBlack,
+                ),
+              ),
+              const SizedBox(width: 4),
+              const Icon(
+                LucideIcons.chevronRight,
+                size: 16,
+                color: foxtrotBlack,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

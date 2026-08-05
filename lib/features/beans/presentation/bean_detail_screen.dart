@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -7,6 +8,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
 import '../domain/bean_models.dart';
+import 'bean_cart_providers.dart';
 import 'beans_providers.dart';
 
 final _priceFormat = NumberFormat('#,###');
@@ -22,7 +24,10 @@ class BeanDetailScreen extends ConsumerWidget {
     final bean = beanState.asData?.value;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('원두 상세')),
+      appBar: AppBar(
+        title: const Text('원두 상세'),
+        actions: const [BeanCartButton(), SizedBox(width: 4)],
+      ),
       body: beanState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
@@ -372,13 +377,58 @@ class _SectionCard extends StatelessWidget {
   }
 }
 
-class _OrderBar extends StatelessWidget {
+class BeanCartButton extends ConsumerWidget {
+  const BeanCartButton({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = ref.watch(beanCartCountProvider);
+
+    return IconButton(
+      onPressed: () => context.push('/menu/beans-cart'),
+      tooltip: '원두 장바구니',
+      icon: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          const Icon(LucideIcons.shoppingBag, size: 22),
+          if (count > 0)
+            Positioned(
+              top: -4,
+              right: -6,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 5,
+                  vertical: 1,
+                ),
+                decoration: BoxDecoration(
+                  color: foxtrotGold,
+                  borderRadius: BorderRadius.circular(9),
+                ),
+                constraints: const BoxConstraints(minWidth: 16),
+                child: Text(
+                  '$count',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: foxtrotBlack,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _OrderBar extends ConsumerWidget {
   const _OrderBar({required this.bean});
 
   final Bean bean;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: const BoxDecoration(
         color: foxtrotSurface,
@@ -410,7 +460,7 @@ class _OrderBar extends StatelessWidget {
                 ),
               ),
               FilledButton.icon(
-                onPressed: () => _showOrderSheet(context),
+                onPressed: () => _showOrderSheet(context, ref),
                 icon: const Icon(LucideIcons.shoppingBag, size: 18),
                 label: const Text('주문하기'),
                 style: FilledButton.styleFrom(
@@ -427,7 +477,7 @@ class _OrderBar extends StatelessWidget {
     );
   }
 
-  Future<void> _showOrderSheet(BuildContext context) async {
+  Future<void> _showOrderSheet(BuildContext context, WidgetRef ref) async {
     final result = await showModalBottomSheet<BeanOrderSelection>(
       context: context,
       isScrollControlled: true,
@@ -438,6 +488,27 @@ class _OrderBar extends StatelessWidget {
       builder: (context) => BeanOrderSheet(bean: bean),
     );
     if (result == null || !context.mounted) return;
+
+    if (result.action == BeanOrderAction.addToCart) {
+      ref
+          .read(beanCartProvider.notifier)
+          .add(
+            bean: bean,
+            weight: result.weight,
+            grind: result.grind,
+            quantity: result.quantity,
+          );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${bean.name}을(를) 장바구니에 담았습니다.'),
+          action: SnackBarAction(
+            label: '보기',
+            onPressed: () => context.push('/menu/beans-cart'),
+          ),
+        ),
+      );
+      return;
+    }
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -450,13 +521,17 @@ class _OrderBar extends StatelessWidget {
   }
 }
 
+enum BeanOrderAction { addToCart, orderNow }
+
 class BeanOrderSelection {
   const BeanOrderSelection({
+    required this.action,
     required this.weight,
     required this.grind,
     required this.quantity,
   });
 
+  final BeanOrderAction action;
   final BeanWeight weight;
   final GrindOption grind;
   final int quantity;
@@ -477,6 +552,17 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
   int _quantity = 1;
 
   int get _totalPrice => widget.bean.priceOf(_weight) * _quantity;
+
+  void _pop(BuildContext context, BeanOrderAction action) {
+    Navigator.of(context).pop(
+      BeanOrderSelection(
+        action: action,
+        weight: _weight,
+        grind: _grind,
+        quantity: _quantity,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -596,21 +682,31 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
               ],
             ),
             const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: () => Navigator.of(context).pop(
-                  BeanOrderSelection(
-                    weight: _weight,
-                    grind: _grind,
-                    quantity: _quantity,
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => _pop(context, BeanOrderAction.addToCart),
+                    icon: const Icon(LucideIcons.shoppingBag, size: 18),
+                    label: const Text('장바구니 담기'),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      side: const BorderSide(color: foxtrotGold),
+                      foregroundColor: foxtrotGoldLight,
+                    ),
                   ),
                 ),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: FilledButton(
+                    onPressed: () => _pop(context, BeanOrderAction.orderNow),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    child: Text('${_priceFormat.format(_totalPrice)}원 주문'),
+                  ),
                 ),
-                child: Text('${_priceFormat.format(_totalPrice)}원 주문하기'),
-              ),
+              ],
             ),
           ],
         ),
