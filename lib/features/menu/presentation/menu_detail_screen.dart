@@ -153,10 +153,15 @@ class _HeaderSection extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(color: foxtrotGold, width: 1.5),
               ),
-              child: Icon(
-                menuCategoryIcon(item.category),
-                color: foxtrotGold,
-                size: 40,
+              clipBehavior: Clip.antiAlias,
+              child: Image.asset(
+                item.imageAsset,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Icon(
+                  menuCategoryIcon(item.category),
+                  color: foxtrotGold,
+                  size: 40,
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -297,6 +302,36 @@ class _SectionCard extends StatelessWidget {
             const SizedBox(height: 12),
             child,
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class MenuImageThumbnail extends StatelessWidget {
+  const MenuImageThumbnail({super.key, required this.item, this.size = 60});
+
+  final MenuItem item;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: foxtrotSurface,
+        borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
+        border: Border.all(color: foxtrotBorder),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Image.asset(
+        item.imageAsset,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Icon(
+          menuCategoryIcon(item.category),
+          color: foxtrotGold,
+          size: size * 0.45,
         ),
       ),
     );

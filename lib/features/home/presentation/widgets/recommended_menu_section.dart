@@ -92,13 +92,22 @@ class _RecommendedCard extends StatelessWidget {
         children: [
           Stack(
             children: [
-              CircleAvatar(
-                radius: 32,
-                backgroundColor: foxtrotSurface,
-                child: Icon(
-                  menuCategoryIcon(item.category),
-                  size: 30,
-                  color: colorScheme.primary,
+              Container(
+                width: 64,
+                height: 64,
+                decoration: const BoxDecoration(
+                  color: foxtrotSurface,
+                  shape: BoxShape.circle,
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: Image.asset(
+                  item.imageAsset,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Icon(
+                    menuCategoryIcon(item.category),
+                    size: 30,
+                    color: colorScheme.primary,
+                  ),
                 ),
               ),
               if (item.badge == MenuBadge.isNew)

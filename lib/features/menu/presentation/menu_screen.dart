@@ -107,20 +107,7 @@ class _MenuTile extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
-        leading: Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            color: foxtrotSurface,
-            borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-            border: Border.all(color: foxtrotBorder),
-          ),
-          child: Icon(
-            menuCategoryIcon(item.category),
-            color: foxtrotGold,
-            size: 26,
-          ),
-        ),
+        leading: MenuImageThumbnail(item: item),
         title: Text(
           item.name.keepWord,
           style: Theme.of(context).textTheme.labelLarge,
