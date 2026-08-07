@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/presentation/auth_providers.dart';
 import '../../beans/domain/bean_cart_models.dart';
+import '../../coupon/domain/coupon_models.dart';
+import '../../coupon/presentation/coupons_providers.dart';
 import '../../points/presentation/points_providers.dart';
 import '../data/firestore_bean_orders_repository.dart';
 import '../data/local_bean_orders_repository.dart';
@@ -37,6 +39,7 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
   Future<BeanOrder> placeOrder({
     required List<BeanCartItem> cartItems,
     int usedPoints = 0,
+    Coupon? coupon,
   }) async {
     if (cartItems.isEmpty) {
       throw StateError('장바구니가 비어 있습니다.');
@@ -55,12 +58,27 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
         )
         .toList();
     final totalAmount = items.fold(0, (sum, item) => sum + item.totalPrice);
-    if (usedPoints < 0 || usedPoints > totalAmount) {
+
+    var couponDiscount = 0;
+    if (coupon != null) {
+      final now = ref.read(couponNowProvider);
+      if (!coupon.canApplyTo(orderAmount: totalAmount, now: now)) {
+        throw StateError('적용할 수 없는 쿠폰입니다.');
+      }
+      couponDiscount = coupon.discountFor(totalAmount);
+    }
+
+    if (usedPoints < 0 || usedPoints > totalAmount - couponDiscount) {
       throw ArgumentError.value(
         usedPoints,
         'usedPoints',
         '사용 포인트가 결제 금액을 벗어났습니다.',
       );
+    }
+
+    if (coupon != null) {
+      await ref.read(couponsRepositoryProvider).markUsed(coupon.id);
+      ref.invalidate(couponsControllerProvider);
     }
 
     final pointsRepository = ref.read(pointsRepositoryProvider);
@@ -71,7 +89,7 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
       );
     }
 
-    final paidAmount = totalAmount - usedPoints;
+    final paidAmount = totalAmount - couponDiscount - usedPoints;
     var earnedPoints = 0;
     if (paidAmount > 0) {
       await pointsRepository.recordPayment(
@@ -86,6 +104,9 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
           items: items,
           usedPoints: usedPoints,
           earnedPoints: earnedPoints,
+          couponId: coupon?.id,
+          couponTitle: coupon?.title,
+          couponDiscount: couponDiscount,
         );
     state = AsyncValue.data([order, ...state.value ?? const []]);
     return order;

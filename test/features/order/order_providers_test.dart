@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:cafe_app/features/beans/domain/bean_cart_models.dart';
 import 'package:cafe_app/features/beans/domain/bean_models.dart';
+import 'package:cafe_app/features/coupon/domain/coupon_models.dart';
+import 'package:cafe_app/features/coupon/presentation/coupons_providers.dart';
 import 'package:cafe_app/features/order/domain/order_models.dart';
 import 'package:cafe_app/features/order/presentation/order_providers.dart';
 import 'package:cafe_app/features/points/domain/points_models.dart';
@@ -154,6 +156,129 @@ void main() {
 
     await expectLater(
       controller.placeOrder(cartItems: const []),
+      throwsStateError,
+    );
+  });
+
+  Future<Coupon> loadCoupon(ProviderContainer container, String id) async {
+    final coupons = await container.read(couponsControllerProvider.future);
+    return coupons.firstWhere((coupon) => coupon.id == id);
+  }
+
+  test('정액 쿠폰 적용 시 할인되고 쿠폰이 사용 처리된다', () async {
+    final container = createContainer();
+    final coupon = await loadCoupon(container, 'bean-order-3000');
+    final controller = container.read(beanOrdersControllerProvider.notifier);
+
+    final order = await controller.placeOrder(
+      cartItems: _cartItems(),
+      coupon: coupon,
+    );
+
+    expect(order.couponId, 'bean-order-3000');
+    expect(order.couponTitle, coupon.title);
+    expect(order.couponDiscount, 3000);
+    expect(order.paidAmount, 59000);
+    expect(order.earnedPoints, 5900);
+
+    final coupons = await container.read(couponsControllerProvider.future);
+    expect(
+      coupons.firstWhere((c) => c.id == 'bean-order-3000').isUsed,
+      isTrue,
+    );
+
+    final points = await container.read(pointsRepositoryProvider).load();
+    expect(points.balance, 5900);
+    expect(points.history.first.paymentAmount, 59000);
+  });
+
+  test('정률 쿠폰은 주문 금액의 비율만큼 할인된다', () async {
+    final container = createContainer();
+    final coupon = await loadCoupon(container, 'bean-order-10p');
+    final controller = container.read(beanOrdersControllerProvider.notifier);
+
+    final order = await controller.placeOrder(
+      cartItems: _cartItems(),
+      coupon: coupon,
+    );
+
+    expect(order.couponDiscount, 6200);
+    expect(order.paidAmount, 55800);
+    expect(order.earnedPoints, 5580);
+  });
+
+  test('쿠폰과 포인트를 함께 사용하면 할인 후 금액에서 차감된다', () async {
+    final container = createContainer();
+    await container
+        .read(pointsRepositoryProvider)
+        .recordPayment(paymentAmount: 50000);
+    final coupon = await loadCoupon(container, 'bean-order-3000');
+    final controller = container.read(beanOrdersControllerProvider.notifier);
+
+    final order = await controller.placeOrder(
+      cartItems: _cartItems(),
+      usedPoints: 5000,
+      coupon: coupon,
+    );
+
+    expect(order.couponDiscount, 3000);
+    expect(order.usedPoints, 5000);
+    expect(order.paidAmount, 54000);
+    expect(order.earnedPoints, 5400);
+  });
+
+  test('할인 후 금액을 초과한 포인트 지정은 거부된다', () async {
+    final container = createContainer();
+    final coupon = await loadCoupon(container, 'bean-order-3000');
+    final controller = container.read(beanOrdersControllerProvider.notifier);
+
+    await expectLater(
+      controller.placeOrder(
+        cartItems: _cartItems(),
+        usedPoints: 59001,
+        coupon: coupon,
+      ),
+      throwsArgumentError,
+    );
+  });
+
+  test('최소 주문 금액 미달 쿠폰은 거부되고 주문이 생성되지 않는다', () async {
+    final container = createContainer();
+    final coupon = await loadCoupon(container, 'bean-order-3000');
+    final controller = container.read(beanOrdersControllerProvider.notifier);
+    final smallCart = [
+      BeanCartItem(
+        bean: _bean('a'),
+        weight: BeanWeight.g200,
+        grind: GrindOption.handDrip,
+        quantity: 1,
+      ),
+    ];
+
+    await expectLater(
+      controller.placeOrder(cartItems: smallCart, coupon: coupon),
+      throwsStateError,
+    );
+
+    final orders = await container.read(beanOrdersControllerProvider.future);
+    expect(orders, isEmpty);
+    final coupons = await container.read(couponsControllerProvider.future);
+    expect(
+      coupons.firstWhere((c) => c.id == 'bean-order-3000').isUsed,
+      isFalse,
+    );
+  });
+
+  test('이미 사용된 쿠폰은 적용할 수 없다', () async {
+    final container = createContainer();
+    final coupon = await loadCoupon(container, 'bean-order-3000');
+    final controller = container.read(beanOrdersControllerProvider.notifier);
+
+    await expectLater(
+      controller.placeOrder(
+        cartItems: _cartItems(),
+        coupon: coupon.copyWith(isUsed: true),
+      ),
       throwsStateError,
     );
   });
