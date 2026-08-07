@@ -36,6 +36,9 @@ class FirestoreBeanOrdersRepository implements BeanOrdersRepository {
     required List<BeanOrderItem> items,
     int usedPoints = 0,
     int earnedPoints = 0,
+    String? couponId,
+    String? couponTitle,
+    int couponDiscount = 0,
   }) async {
     if (items.isEmpty) {
       throw ArgumentError.value(items, 'items', '주문 상품이 비어 있습니다.');
@@ -47,6 +50,9 @@ class FirestoreBeanOrdersRepository implements BeanOrdersRepository {
       totalAmount: items.fold(0, (total, item) => total + item.totalPrice),
       usedPoints: usedPoints,
       earnedPoints: earnedPoints,
+      couponId: couponId,
+      couponTitle: couponTitle,
+      couponDiscount: couponDiscount,
       createdAt: DateTime.now(),
     );
 
@@ -79,6 +85,9 @@ BeanOrder beanOrderFromFirestore(Map<String, dynamic> data) {
     totalAmount: (data['totalAmount'] as num? ?? 0).toInt(),
     usedPoints: (data['usedPoints'] as num? ?? 0).toInt(),
     earnedPoints: (data['earnedPoints'] as num? ?? 0).toInt(),
+    couponId: data['couponId'] as String?,
+    couponTitle: data['couponTitle'] as String?,
+    couponDiscount: (data['couponDiscount'] as num? ?? 0).toInt(),
     status: BeanOrderStatus.values.asNameMap()[data['status']] ??
         BeanOrderStatus.received,
     createdAt: firestoreDateTime(data['createdAt']),
@@ -108,6 +117,9 @@ Map<String, dynamic> beanOrderToFirestore(BeanOrder order) {
     'totalAmount': order.totalAmount,
     'usedPoints': order.usedPoints,
     'earnedPoints': order.earnedPoints,
+    if (order.couponId != null) 'couponId': order.couponId,
+    if (order.couponTitle != null) 'couponTitle': order.couponTitle,
+    'couponDiscount': order.couponDiscount,
     'status': order.status.name,
     'createdAt': Timestamp.fromDate(order.createdAt),
   };

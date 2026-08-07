@@ -50,6 +50,9 @@ abstract class BeanOrder with _$BeanOrder {
     required int totalAmount,
     @Default(0) int usedPoints,
     @Default(0) int earnedPoints,
+    String? couponId,
+    String? couponTitle,
+    @Default(0) int couponDiscount,
     @Default(BeanOrderStatus.received) BeanOrderStatus status,
     required DateTime createdAt,
   }) = _BeanOrder;
@@ -57,7 +60,7 @@ abstract class BeanOrder with _$BeanOrder {
   factory BeanOrder.fromJson(Map<String, dynamic> json) =>
       _$BeanOrderFromJson(json);
 
-  int get paidAmount => totalAmount - usedPoints;
+  int get paidAmount => totalAmount - couponDiscount - usedPoints;
 
   int get itemCount => items.fold(0, (sum, item) => sum + item.quantity);
 

@@ -59,6 +59,9 @@ void main() {
       expect(order.totalAmount, 0);
       expect(order.usedPoints, 0);
       expect(order.earnedPoints, 0);
+      expect(order.couponId, isNull);
+      expect(order.couponTitle, isNull);
+      expect(order.couponDiscount, 0);
       expect(order.status, BeanOrderStatus.received);
     });
 
@@ -112,6 +115,9 @@ void main() {
         totalAmount: 54000,
         usedPoints: 4000,
         earnedPoints: 5000,
+        couponId: 'bean-order-3000',
+        couponTitle: '원두 주문 3,000원 할인',
+        couponDiscount: 3000,
         status: BeanOrderStatus.shipped,
         createdAt: DateTime(2026, 8, 6, 15, 30),
       );

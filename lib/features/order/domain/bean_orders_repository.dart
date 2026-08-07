@@ -7,5 +7,8 @@ abstract class BeanOrdersRepository {
     required List<BeanOrderItem> items,
     int usedPoints,
     int earnedPoints,
+    String? couponId,
+    String? couponTitle,
+    int couponDiscount,
   });
 }

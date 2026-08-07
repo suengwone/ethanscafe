@@ -27,6 +27,9 @@ class LocalBeanOrdersRepository implements BeanOrdersRepository {
     required List<BeanOrderItem> items,
     int usedPoints = 0,
     int earnedPoints = 0,
+    String? couponId,
+    String? couponTitle,
+    int couponDiscount = 0,
   }) async {
     if (items.isEmpty) {
       throw ArgumentError.value(items, 'items', '주문 상품이 비어 있습니다.');
@@ -40,6 +43,9 @@ class LocalBeanOrdersRepository implements BeanOrdersRepository {
       totalAmount: items.fold(0, (sum, item) => sum + item.totalPrice),
       usedPoints: usedPoints,
       earnedPoints: earnedPoints,
+      couponId: couponId,
+      couponTitle: couponTitle,
+      couponDiscount: couponDiscount,
       createdAt: DateTime.now(),
     );
 

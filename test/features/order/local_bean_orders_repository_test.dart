@@ -53,6 +53,25 @@ void main() {
     expect(order.paidAmount, 67000);
     expect(order.itemCount, 3);
     expect(order.status, BeanOrderStatus.received);
+    expect(order.couponId, isNull);
+    expect(order.couponDiscount, 0);
+  });
+
+  test('쿠폰 사용 주문은 쿠폰 정보가 영속화된다', () async {
+    await repository.placeOrder(
+      items: _items,
+      usedPoints: 1000,
+      couponId: 'bean-order-3000',
+      couponTitle: '원두 주문 3,000원 할인',
+      couponDiscount: 3000,
+    );
+
+    final reloaded = await LocalBeanOrdersRepository().load();
+    final order = reloaded.first;
+    expect(order.couponId, 'bean-order-3000');
+    expect(order.couponTitle, '원두 주문 3,000원 할인');
+    expect(order.couponDiscount, 3000);
+    expect(order.paidAmount, 64000);
   });
 
   test('빈 상품 목록으로는 주문할 수 없다', () async {

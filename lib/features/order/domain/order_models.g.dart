@@ -44,6 +44,9 @@ _BeanOrder _$BeanOrderFromJson(Map<String, dynamic> json) => _BeanOrder(
   totalAmount: (json['totalAmount'] as num).toInt(),
   usedPoints: (json['usedPoints'] as num?)?.toInt() ?? 0,
   earnedPoints: (json['earnedPoints'] as num?)?.toInt() ?? 0,
+  couponId: json['couponId'] as String?,
+  couponTitle: json['couponTitle'] as String?,
+  couponDiscount: (json['couponDiscount'] as num?)?.toInt() ?? 0,
   status:
       $enumDecodeNullable(_$BeanOrderStatusEnumMap, json['status']) ??
       BeanOrderStatus.received,
@@ -57,6 +60,9 @@ Map<String, dynamic> _$BeanOrderToJson(_BeanOrder instance) =>
       'totalAmount': instance.totalAmount,
       'usedPoints': instance.usedPoints,
       'earnedPoints': instance.earnedPoints,
+      'couponId': instance.couponId,
+      'couponTitle': instance.couponTitle,
+      'couponDiscount': instance.couponDiscount,
       'status': _$BeanOrderStatusEnumMap[instance.status]!,
       'createdAt': instance.createdAt.toIso8601String(),
     };
