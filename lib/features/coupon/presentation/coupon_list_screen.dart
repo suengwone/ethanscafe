@@ -15,7 +15,7 @@ class CouponListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final couponsState = ref.watch(couponsProvider);
+    final couponsState = ref.watch(couponsControllerProvider);
     final now = ref.watch(couponNowProvider);
 
     return Scaffold(
@@ -29,7 +29,7 @@ class CouponListScreen extends ConsumerWidget {
               const Text('쿠폰을 불러오지 못했습니다.'),
               const SizedBox(height: 8),
               TextButton(
-                onPressed: () => ref.invalidate(couponsProvider),
+                onPressed: () => ref.invalidate(couponsControllerProvider),
                 child: const Text('다시 시도'),
               ),
             ],
@@ -50,7 +50,11 @@ class CouponListScreen extends ConsumerWidget {
             children: [
               _SectionLabel(label: '사용 가능 ${usable.length}장'),
               ...usable.map(
-                (coupon) => _CouponCard(coupon: coupon, now: now),
+                (coupon) => _CouponCard(
+                  coupon: coupon,
+                  now: now,
+                  onTap: () => _startUseFlow(context, ref, coupon),
+                ),
               ),
               if (unusable.isNotEmpty) ...[
                 const SizedBox(height: 16),
@@ -64,6 +68,36 @@ class CouponListScreen extends ConsumerWidget {
         },
       ),
     );
+  }
+
+  Future<void> _startUseFlow(
+    BuildContext context,
+    WidgetRef ref,
+    Coupon coupon,
+  ) async {
+    final confirmed = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: foxtrotCard,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => _CouponUseSheet(coupon: coupon),
+    );
+    if (confirmed != true || !context.mounted) return;
+
+    try {
+      await ref.read(couponsControllerProvider.notifier).useCoupon(coupon.id);
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('쿠폰이 사용 처리되었습니다.')),
+      );
+    } catch (_) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('쿠폰 사용에 실패했습니다. 다시 시도해주세요.')),
+      );
+    }
   }
 }
 
@@ -103,10 +137,11 @@ class _SectionLabel extends StatelessWidget {
 }
 
 class _CouponCard extends StatelessWidget {
-  const _CouponCard({required this.coupon, required this.now});
+  const _CouponCard({required this.coupon, required this.now, this.onTap});
 
   final Coupon coupon;
   final DateTime now;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -115,50 +150,54 @@ class _CouponCard extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
-      child: Opacity(
-        opacity: usable ? 1 : 0.5,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                width: 52,
-                height: 52,
-                decoration: BoxDecoration(
-                  color: foxtrotSurface,
-                  borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-                  border: Border.all(
-                    color: usable ? foxtrotGold : foxtrotBorder,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Opacity(
+          opacity: usable ? 1 : 0.5,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: foxtrotSurface,
+                    borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
+                    border: Border.all(
+                      color: usable ? foxtrotGold : foxtrotBorder,
+                    ),
+                  ),
+                  child: Icon(
+                    LucideIcons.ticket,
+                    color: usable ? foxtrotGold : foxtrotMuted,
+                    size: 24,
                   ),
                 ),
-                child: Icon(
-                  LucideIcons.ticket,
-                  color: usable ? foxtrotGold : foxtrotMuted,
-                  size: 24,
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(coupon.title.keepWord, style: textTheme.labelLarge),
+                      const SizedBox(height: 4),
+                      Text(
+                        coupon.description.keepWord,
+                        style: textTheme.bodySmall,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        '~ ${_dateFormat.format(coupon.expiresAt)}',
+                        style: textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(coupon.title.keepWord, style: textTheme.labelLarge),
-                    const SizedBox(height: 4),
-                    Text(
-                      coupon.description.keepWord,
-                      style: textTheme.bodySmall,
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      '~ ${_dateFormat.format(coupon.expiresAt)}',
-                      style: textTheme.bodySmall,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 10),
-              _StatusChip(coupon: coupon, now: now),
-            ],
+                const SizedBox(width: 10),
+                _StatusChip(coupon: coupon, now: now),
+              ],
+            ),
           ),
         ),
       ),
@@ -201,6 +240,125 @@ class _StatusChip extends StatelessWidget {
         style: TextStyle(
           fontSize: 11,
           color: highlighted ? foxtrotGoldLight : foxtrotMuted,
+        ),
+      ),
+    );
+  }
+}
+
+class _CouponUseSheet extends StatelessWidget {
+  const _CouponUseSheet({required this.coupon});
+
+  final Coupon coupon;
+
+  Future<void> _confirmUse(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('쿠폰 사용'),
+        content: const Text(
+          '매장 직원 확인 후 사용 처리해주세요.\n사용 처리된 쿠폰은 되돌릴 수 없습니다.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('취소'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('사용'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && context.mounted) {
+      Navigator.pop(context, true);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          foxtrotScreenHPadding,
+          20,
+          foxtrotScreenHPadding,
+          16,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Center(
+              child: Container(
+                width: 88,
+                height: 88,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: foxtrotSurface,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: foxtrotGold, width: 1.5),
+                ),
+                child: const Icon(
+                  LucideIcons.ticket,
+                  color: foxtrotGold,
+                  size: 40,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              coupon.title.keepWord,
+              style: textTheme.titleMedium,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 6),
+            Text(
+              coupon.description.keepWord,
+              style: textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 6),
+            Text(
+              '~ ${_dateFormat.format(coupon.expiresAt)}까지 사용 가능',
+              style: textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: foxtrotSurface,
+                borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
+                border: Border.all(color: foxtrotBorder),
+              ),
+              child: Row(
+                children: [
+                  const Icon(LucideIcons.info, color: foxtrotGold, size: 18),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      '매장 직원에게 이 화면을 보여주세요.\n직원 확인 후 사용하기 버튼을 눌러주세요.',
+                      style: textTheme.bodySmall,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            FilledButton(
+              onPressed: () => _confirmUse(context),
+              child: const Text('사용하기'),
+            ),
+            const SizedBox(height: 8),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('닫기'),
+            ),
+          ],
         ),
       ),
     );

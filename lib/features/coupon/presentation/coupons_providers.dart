@@ -15,14 +15,31 @@ final couponsRepositoryProvider = Provider<CouponsRepository>((ref) {
   return LocalCouponsRepository();
 });
 
-final couponsProvider = FutureProvider<List<Coupon>>((ref) {
-  return ref.watch(couponsRepositoryProvider).loadCoupons();
-});
+final couponsControllerProvider =
+    AsyncNotifierProvider<CouponsController, List<Coupon>>(
+      CouponsController.new,
+    );
+
+class CouponsController extends AsyncNotifier<List<Coupon>> {
+  @override
+  Future<List<Coupon>> build() {
+    return ref.watch(couponsRepositoryProvider).loadCoupons();
+  }
+
+  Future<void> useCoupon(String couponId) async {
+    await ref.read(couponsRepositoryProvider).markUsed(couponId);
+    final coupons = state.value ?? const <Coupon>[];
+    state = AsyncValue.data([
+      for (final coupon in coupons)
+        if (coupon.id == couponId) coupon.copyWith(isUsed: true) else coupon,
+    ]);
+  }
+}
 
 final couponNowProvider = Provider<DateTime>((ref) => DateTime.now());
 
 final usableCouponCountProvider = FutureProvider<int>((ref) async {
-  final coupons = await ref.watch(couponsProvider.future);
+  final coupons = await ref.watch(couponsControllerProvider.future);
   final now = ref.watch(couponNowProvider);
   return coupons.where((coupon) => coupon.isUsable(now)).length;
 });

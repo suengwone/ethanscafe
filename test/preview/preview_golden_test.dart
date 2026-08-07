@@ -9,6 +9,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:cafe_app/core/theme/app_theme.dart';
+import 'package:cafe_app/core/utils/text_utils.dart';
 import 'package:cafe_app/core/widgets/app_shell.dart';
 import 'package:cafe_app/features/auth/domain/auth_models.dart';
 import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
@@ -464,6 +465,32 @@ void main() {
     await tester.pumpAndSettle();
 
     await expectGolden(find.byType(CouponListScreen), 'coupon_list_screen');
+  });
+
+  testWidgets('쿠폰 사용 바텀시트 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(
+            FakeAuthRepository(user: _previewUser),
+          ),
+          couponNowProvider.overrideWithValue(DateTime(2026, 8, 3)),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: buildAppTheme(),
+          home: const CouponListScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('웰컴 아메리카노 1잔'.keepWord).first);
+    await tester.pumpAndSettle();
+
+    await expectGolden(find.byType(MaterialApp), 'coupon_use_sheet');
   });
 
   testWidgets('결제 수단 관리 화면 스크린샷', (WidgetTester tester) async {
