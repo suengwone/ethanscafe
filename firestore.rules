@@ -78,9 +78,15 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    match /coupons/{document=**} {
+    match /coupons/{couponId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin()
+        || (isSignedIn()
+          && resource.data.isUsed != true
+          && request.resource.data.isUsed == true
+          && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['isUsed']));
     }
 
     match /{document=**} {

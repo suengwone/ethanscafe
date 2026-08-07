@@ -22,6 +22,14 @@ class FirestoreCouponsRepository implements CouponsRepository {
         .map((doc) => couponFromFirestore(doc.id, doc.data()))
         .toList();
   }
+
+  @override
+  Future<void> markUsed(String couponId) {
+    return _firestore
+        .collection(collectionPath)
+        .doc(couponId)
+        .update({'isUsed': true});
+  }
 }
 
 Coupon couponFromFirestore(String id, Map<String, dynamic> data) {

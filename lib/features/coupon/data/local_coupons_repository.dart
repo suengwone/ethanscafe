@@ -2,6 +2,8 @@ import '../domain/coupon_models.dart';
 import '../domain/coupons_repository.dart';
 
 class LocalCouponsRepository implements CouponsRepository {
+  final List<Coupon> _coupons = [..._seedCoupons];
+
   @override
   Future<List<Coupon>> loadCoupons() async {
     final coupons = [..._coupons]
@@ -9,7 +11,19 @@ class LocalCouponsRepository implements CouponsRepository {
     return coupons;
   }
 
-  static final _coupons = <Coupon>[
+  @override
+  Future<void> markUsed(String couponId) async {
+    final index = _coupons.indexWhere((coupon) => coupon.id == couponId);
+    if (index == -1) {
+      throw ArgumentError.value(couponId, 'couponId', '쿠폰을 찾을 수 없습니다.');
+    }
+    if (_coupons[index].isUsed) {
+      throw StateError('이미 사용 처리된 쿠폰입니다.');
+    }
+    _coupons[index] = _coupons[index].copyWith(isUsed: true);
+  }
+
+  static final _seedCoupons = <Coupon>[
     Coupon(
       id: 'welcome-americano',
       title: '웰컴 아메리카노 1잔',
