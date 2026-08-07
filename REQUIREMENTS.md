@@ -69,7 +69,7 @@
 ### 3.5 내 정보 (profile)
 - [x] 프로필 화면 (`/profile`)
 - [x] 프로필 헤더 (아바타, 닉네임, 로그인 유도)
-- [x] 나의 활동: 주문 내역(`/profile/orders`, 포인트 결제 기록 기반), 쿠폰함(`/profile/coupons`, 뱃지 카운트), 즐겨찾기 메뉴(`/profile/favorites`)
+- [x] 나의 활동: 주문 내역(`/profile/orders`, 원두 주문 + 매장 결제 기록 통합), 쿠폰함(`/profile/coupons`, 뱃지 카운트), 즐겨찾기 메뉴(`/profile/favorites`)
 - [x] 설정: 알림 설정(`/profile/notifications`), 결제 수단 관리(`/profile/payment-methods`), 배송지 관리(`/profile/addresses`)
 - [x] 기타: 고객센터(`/profile/support`), 이용약관(`/profile/terms`), 개인정보처리방침(`/profile/privacy`), 사업자 정보
 - [x] 계정: 로그아웃
@@ -87,15 +87,16 @@
 ### 3.7 원두 쇼핑 (beans)
 - [x] 원두 목록 (메뉴 원두 탭, Firestore `beans` + 로컬 폴백)
 - [x] 원두 상세 화면 (`/menu/beans/:beanId`, 주문 수량/옵션 바텀시트)
-- [x] 원두 장바구니 (`/menu/beans-cart`, 수량 편집·합계·주문 접수 안내)
-- [ ] 원두 주문/결제 백엔드 연동 (현재 주문하기는 접수 안내 스낵바만 표시)
+- [x] 원두 장바구니 (`/menu/beans-cart`, 수량 편집·합계·포인트 사용 토글)
+- [x] 원두 주문/결제 백엔드 연동 (주문하기 시 Firestore `orders` 주문 생성 + 포인트 사용/결제 금액 10% 적립 연동, 게스트는 로컬 저장)
+- [x] 주문 내역 표시 (`/profile/orders`, 주문 상태·포인트 사용/적립 표시)
 
 ## 4. 비기능 요구사항
 
 ### 4.1 백엔드/데이터
-- Firestore 컬렉션: `users`, `points`, `favorites`, `notificationSettings`, `fcmTokens`, `paymentMethods`, `deliveryAddresses`, `qrTokens`, `menus`, `beans`, `banners`, `notices`, `stores`, `coupons`
+- Firestore 컬렉션: `users`, `points`, `favorites`, `notificationSettings`, `fcmTokens`, `paymentMethods`, `deliveryAddresses`, `orders`, `qrTokens`, `menus`, `beans`, `banners`, `notices`, `stores`, `coupons`
 - 보안 규칙 (`firestore.rules`):
-  - 사용자별 데이터(`users`, `points`, `favorites`, `notificationSettings`, `fcmTokens`, `paymentMethods`, `deliveryAddresses`): 본인만 읽기/쓰기
+  - 사용자별 데이터(`users`, `points`, `favorites`, `notificationSettings`, `fcmTokens`, `paymentMethods`, `deliveryAddresses`, `orders`): 본인만 읽기/쓰기
   - 공개 콘텐츠(`menus`, `beans`, `banners`, `notices`, `stores`, `coupons`): 공개 읽기, 쓰기는 admin 커스텀 클레임
   - `qrTokens`: 생성/삭제는 admin, 사용자는 미사용 토큰을 1회 사용 처리만 가능
 - 리전: asia-northeast3 (서울)
@@ -125,7 +126,7 @@
 | `/menu` | 메뉴 (탭: 주문) | 구현됨 |
 | `/menu/item/:menuId` | 메뉴 상세 | 구현됨 |
 | `/menu/beans/:beanId` | 원두 상세 | 구현됨 |
-| `/menu/beans-cart` | 원두 장바구니 | 구현됨 (결제 연동 제외) |
+| `/menu/beans-cart` | 원두 장바구니 | 구현됨 |
 | `/points` | 포인트 (탭: 페이) | 구현됨 |
 | `/points/scan` | QR 스캔 적립 | 구현됨 |
 | `/profile` | 내 정보 (탭: 마이) | 구현됨 |
@@ -144,7 +145,8 @@
 
 ## 6. 향후 작업 (제안)
 
-1. 원두 장바구니 주문/결제 백엔드 연동 (주문 컬렉션 설계 포함)
-2. 실제 주문 시스템 도입 시 주문 내역 화면을 포인트 기록 기반에서 주문 데이터 기반으로 전환
-3. 미사용 의존성 정리 (image_picker, flutter_dotenv, webview_flutter 등 사용 여부 재검토)
-4. 관리자용 QR 토큰 발급 도구 / 메뉴·배너 관리 방안 마련
+1. 원두 주문 상태 전환(로스팅/발송/배송 완료) 관리자 도구 및 실결제(PG) 연동
+2. 미사용 의존성 정리 (image_picker, flutter_dotenv, webview_flutter 등 사용 여부 재검토)
+3. 관리자용 QR 토큰 발급 도구 / 메뉴·배너 관리 방안 마련
+
+> 변경 이력: 원두 장바구니 주문/결제 백엔드 연동 및 주문 내역 화면의 주문 데이터 기반 전환 완료 (2026-08-07).
