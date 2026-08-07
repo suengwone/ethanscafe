@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -32,7 +33,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('사용하기'), findsOneWidget);
-    expect(find.text('매장 직원에게 이 화면을 보여주세요.\n직원 확인 후 사용하기 버튼을 눌러주세요.'),
+    expect(find.byType(QrImageView), findsOneWidget);
+    expect(find.text('매장 직원에게 QR 코드를 보여주세요.\n직원 스캔·확인 후 사용하기 버튼을 눌러주세요.'),
         findsOneWidget);
   });
 
