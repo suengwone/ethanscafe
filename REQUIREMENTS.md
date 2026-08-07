@@ -70,6 +70,7 @@
 - [x] 프로필 화면 (`/profile`)
 - [x] 프로필 헤더 (아바타, 닉네임, 로그인 유도)
 - [x] 나의 활동: 주문 내역(`/profile/orders`, 원두 주문 + 매장 결제 기록 통합), 쿠폰함(`/profile/coupons`, 뱃지 카운트), 즐겨찾기 메뉴(`/profile/favorites`)
+- [x] 쿠폰 매장 사용 처리 플로우 (사용 가능 쿠폰 탭 → 바텀시트에서 직원 확인 후 사용 처리, Firestore `coupons.isUsed` 1회 사용 규칙)
 - [x] 설정: 알림 설정(`/profile/notifications`), 결제 수단 관리(`/profile/payment-methods`), 배송지 관리(`/profile/addresses`)
 - [x] 기타: 고객센터(`/profile/support`), 이용약관(`/profile/terms`), 개인정보처리방침(`/profile/privacy`), 사업자 정보
 - [x] 계정: 로그아웃
@@ -83,6 +84,7 @@
 - [x] 알림 권한 요청
 - [x] FCM 토큰 Firestore 저장 (`fcmTokens`, 로그인 사용자 본인만 관리)
 - [x] Android/iOS 네이티브 푸시 설정
+- [x] 원두 주문 상태 변경 푸시 발송 (Cloud Functions `orders/{uid}` 트리거, 로스팅/발송/배송 완료 시 FCM 멀티캐스트 + `/profile/orders` 딥링크, 알림 설정 `pushEnabled` 존중, 무효 토큰 정리)
 
 ### 3.7 원두 쇼핑 (beans)
 - [x] 원두 목록 (메뉴 원두 탭, Firestore `beans` + 로컬 폴백)
@@ -99,6 +101,8 @@
   - 사용자별 데이터(`users`, `points`, `favorites`, `notificationSettings`, `fcmTokens`, `paymentMethods`, `deliveryAddresses`, `orders`): 본인만 읽기/쓰기
   - 공개 콘텐츠(`menus`, `beans`, `banners`, `notices`, `stores`, `coupons`): 공개 읽기, 쓰기는 admin 커스텀 클레임
   - `qrTokens`: 생성/삭제는 admin, 사용자는 미사용 토큰을 1회 사용 처리만 가능
+  - `coupons`: 생성/삭제는 admin, 로그인 사용자는 미사용 쿠폰을 `isUsed`만 1회 사용 처리 가능
+- Cloud Functions (`functions/`, Node 20, v2): `sendBeanOrderStatusPush` — `orders/{uid}` 문서 변경 시 주문 상태 변화를 감지해 FCM 푸시 발송
 - 리전: asia-northeast3 (서울)
 
 ### 4.2 권한
@@ -152,8 +156,7 @@
 | 추천도 | 기능 | 설명 | 연관 기능/인프라 |
 |--------|------|------|------------------|
 | ★★★ | 매장 픽업 주문 (사이렌 오더) | 메뉴에서 음료/디저트 주문 후 매장 픽업. 주문 상태(접수/제조중/완료) 표시 | `orders` 확장, 메뉴 상세, 주문 내역 |
-| ★★★ | 쿠폰 실사용 플로우 | 주문/결제 시 쿠폰 적용(할인·무료 음료), 웰컴/생일 쿠폰 자동 발급 | 쿠폰함(`/profile/coupons`), 원두 장바구니 |
-| ★★★ | 원두 주문 상태 변경 푸시 알림 | 로스팅/발송/배송 완료 시 FCM 푸시 발송 및 딥링크로 주문 내역 이동 | FCM(`fcmTokens`), `orders` |
+| ★★★ | 쿠폰 장바구니/결제 적용 확장 | 주문/결제 시 쿠폰 할인 자동 적용, 웰컴/생일 쿠폰 자동 발급 (매장 사용 처리 플로우는 구현됨) | 쿠폰함(`/profile/coupons`), 원두 장바구니 |
 | ★★★ | 실결제(PG) 연동 | 원두/픽업 주문에 실제 결제 수단 연동 (토스페이먼츠 등) | 결제 수단 관리, `orders` |
 | ★★ | 재주문 | 주문 내역에서 동일 구성으로 장바구니 담기 | 주문 내역, 원두 장바구니 |
 | ★★ | 멤버십 등급제 | 구매 실적 기반 등급(예: 그린/골드) 및 적립률·쿠폰 혜택 차등 | 포인트, `users` |
@@ -170,5 +173,6 @@
 1. 원두 주문 상태 전환(로스팅/발송/배송 완료) 관리자 도구
 2. 미사용 의존성 정리 (image_picker, flutter_dotenv, webview_flutter 등 사용 여부 재검토)
 3. 관리자용 QR 토큰 발급 도구 / 메뉴·배너 관리 방안 마련
+4. Cloud Functions(`sendBeanOrderStatusPush`) 배포 파이프라인 구성 (`firebase deploy --only functions`)
 
-> 변경 이력: 원두 장바구니 주문/결제 백엔드 연동 및 주문 내역 화면의 주문 데이터 기반 전환 완료 (2026-08-07). 추천도 기반 기능 백로그 추가 (2026-08-07).
+> 변경 이력: 원두 장바구니 주문/결제 백엔드 연동 및 주문 내역 화면의 주문 데이터 기반 전환 완료 (2026-08-07). 추천도 기반 기능 백로그 추가 (2026-08-07). 쿠폰 매장 사용 처리 플로우 및 원두 주문 상태 변경 푸시 알림(Cloud Functions) 구현 완료 (2026-08-07).
