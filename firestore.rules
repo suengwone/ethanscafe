@@ -37,6 +37,10 @@ service cloud.firestore {
       allow read, write: if isSignedIn() && request.auth.uid == userId;
     }
 
+    match /orders/{userId} {
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+    }
+
     match /qrTokens/{code} {
       allow read: if isSignedIn();
       allow create, delete: if isAdmin();
