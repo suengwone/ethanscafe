@@ -40,7 +40,7 @@ void main() {
 
   testWidgets('직원 확인 다이얼로그에서 사용을 누르면 쿠폰이 사용 처리된다', (tester) async {
     await pumpCouponScreen(tester);
-    expect(find.text('사용 가능 2장'), findsOneWidget);
+    expect(find.text('사용 가능 4장'), findsOneWidget);
 
     await tester.tap(find.text('웰컴 아메리카노 1잔'.keepWord).first);
     await tester.pumpAndSettle();
@@ -53,7 +53,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('쿠폰이 사용 처리되었습니다.'), findsOneWidget);
-    expect(find.text('사용 가능 1장'), findsOneWidget);
+    expect(find.text('사용 가능 3장'), findsOneWidget);
   });
 
   testWidgets('다이얼로그에서 취소하면 쿠폰이 사용되지 않는다', (tester) async {
@@ -66,12 +66,17 @@ void main() {
     await tester.tap(find.text('취소'));
     await tester.pumpAndSettle();
 
-    expect(find.text('사용 가능 2장'), findsOneWidget);
+    expect(find.text('사용 가능 4장'), findsOneWidget);
   });
 
   testWidgets('사용 완료 쿠폰은 탭해도 시트가 열리지 않는다', (tester) async {
     await pumpCouponScreen(tester);
 
+    await tester.scrollUntilVisible(
+      find.text('카페 라떼 1잔 무료'.keepWord),
+      200,
+      scrollable: find.byType(Scrollable),
+    );
     await tester.tap(find.text('카페 라떼 1잔 무료'.keepWord));
     await tester.pumpAndSettle();
 

@@ -35,14 +35,14 @@ void main() {
 
   test('쿠폰 사용 시 사용 가능 쿠폰 수가 줄어든다', () async {
     final container = createContainer();
-    expect(await container.read(usableCouponCountProvider.future), 2);
+    expect(await container.read(usableCouponCountProvider.future), 4);
 
     await container.read(couponsControllerProvider.future);
     await container
         .read(couponsControllerProvider.notifier)
         .useCoupon('welcome-americano');
 
-    expect(await container.read(usableCouponCountProvider.future), 1);
+    expect(await container.read(usableCouponCountProvider.future), 3);
   });
 
   test('이미 사용된 쿠폰은 다시 사용할 수 없다', () async {

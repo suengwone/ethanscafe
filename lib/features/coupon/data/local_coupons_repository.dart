@@ -37,6 +37,21 @@ class LocalCouponsRepository implements CouponsRepository {
       expiresAt: DateTime(2026, 8, 15, 23, 59),
     ),
     Coupon(
+      id: 'bean-order-3000',
+      title: '원두 주문 3,000원 할인',
+      description: '원두 20,000원 이상 주문 시 3,000원 할인',
+      expiresAt: DateTime(2026, 12, 31, 23, 59),
+      discountAmount: 3000,
+      minOrderAmount: 20000,
+    ),
+    Coupon(
+      id: 'bean-order-10p',
+      title: '원두 주문 10% 할인',
+      description: '원두 주문 결제 금액의 10% 할인',
+      expiresAt: DateTime(2026, 9, 30, 23, 59),
+      discountRate: 10,
+    ),
+    Coupon(
       id: 'spring-drip-free',
       title: '드립 커피 1잔 무료',
       description: '봄 시즌 이벤트 드립 커피 무료 쿠폰',

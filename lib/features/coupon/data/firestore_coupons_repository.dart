@@ -39,5 +39,8 @@ Coupon couponFromFirestore(String id, Map<String, dynamic> data) {
     description: data['description'] as String? ?? '',
     expiresAt: firestoreDateTime(data['expiresAt']),
     isUsed: data['isUsed'] as bool? ?? false,
+    discountAmount: (data['discountAmount'] as num? ?? 0).toInt(),
+    discountRate: (data['discountRate'] as num? ?? 0).toInt(),
+    minOrderAmount: (data['minOrderAmount'] as num? ?? 0).toInt(),
   );
 }

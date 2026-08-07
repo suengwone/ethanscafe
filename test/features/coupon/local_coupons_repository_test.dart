@@ -34,7 +34,7 @@ void main() {
 
     final usable = coupons.where((coupon) => coupon.isUsable(now));
 
-    expect(usable.length, 2);
+    expect(usable.length, 4);
     expect(usable.any((coupon) => coupon.isUsed), isFalse);
     expect(usable.any((coupon) => coupon.isExpired(now)), isFalse);
   });
