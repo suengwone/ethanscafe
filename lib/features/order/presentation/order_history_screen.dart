@@ -127,6 +127,8 @@ class _BeanOrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final pointsSummary = [
+      if (order.couponDiscount > 0)
+        '쿠폰 -${_amountFormat.format(order.couponDiscount)}원',
       if (order.usedPoints > 0) '-${_amountFormat.format(order.usedPoints)}P 사용',
       if (order.earnedPoints > 0)
         '+${_amountFormat.format(order.earnedPoints)}P 적립',

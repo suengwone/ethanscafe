@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -187,7 +188,10 @@ void main() {
             ],
             'totalAmount': 68000,
             'usedPoints': 3000,
-            'earnedPoints': 6500,
+            'earnedPoints': 6200,
+            'couponId': 'bean-order-3000',
+            'couponTitle': '원두 주문 3,000원 할인',
+            'couponDiscount': 3000,
             'status': 'roasting',
             'createdAt': '2026-08-03T16:40:00.000',
           },
@@ -220,11 +224,16 @@ void main() {
     addTearDown(tester.view.reset);
   }
 
-  Future<void> pumpScreen(WidgetTester tester, Widget screen) async {
+  Future<void> pumpScreen(
+    WidgetTester tester,
+    Widget screen, {
+    List<Override> overrides = const [],
+  }) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
           authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
+          ...overrides,
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -386,11 +395,31 @@ void main() {
 
   testWidgets('원두 장바구니 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
-    await pumpScreen(tester, const BeanCartScreen());
+    await pumpScreen(
+      tester,
+      const BeanCartScreen(),
+      overrides: [couponNowProvider.overrideWithValue(DateTime(2026, 8, 3))],
+    );
 
     await fillBeanCart(tester, find.byType(BeanCartScreen));
 
     await expectGolden(find.byType(BeanCartScreen), 'bean_cart_screen');
+  });
+
+  testWidgets('원두 장바구니 쿠폰 선택 바텀시트 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const BeanCartScreen(),
+      overrides: [couponNowProvider.overrideWithValue(DateTime(2026, 8, 3))],
+    );
+
+    await fillBeanCart(tester, find.byType(BeanCartScreen));
+
+    await tester.tap(find.text('쿠폰 선택'));
+    await tester.pumpAndSettle();
+
+    await expectGolden(find.byType(MaterialApp), 'bean_cart_coupon_sheet');
   });
 
   testWidgets('원두 장바구니 빈 화면 스크린샷', (WidgetTester tester) async {
