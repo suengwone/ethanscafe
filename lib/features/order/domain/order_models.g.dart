@@ -1,0 +1,69 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'order_models.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_BeanOrderItem _$BeanOrderItemFromJson(Map<String, dynamic> json) =>
+    _BeanOrderItem(
+      beanId: json['beanId'] as String,
+      beanName: json['beanName'] as String,
+      weight: $enumDecode(_$BeanWeightEnumMap, json['weight']),
+      grind: $enumDecode(_$GrindOptionEnumMap, json['grind']),
+      quantity: (json['quantity'] as num).toInt(),
+      unitPrice: (json['unitPrice'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$BeanOrderItemToJson(_BeanOrderItem instance) =>
+    <String, dynamic>{
+      'beanId': instance.beanId,
+      'beanName': instance.beanName,
+      'weight': _$BeanWeightEnumMap[instance.weight]!,
+      'grind': _$GrindOptionEnumMap[instance.grind]!,
+      'quantity': instance.quantity,
+      'unitPrice': instance.unitPrice,
+    };
+
+const _$BeanWeightEnumMap = {BeanWeight.g200: 'g200', BeanWeight.g500: 'g500'};
+
+const _$GrindOptionEnumMap = {
+  GrindOption.wholeBean: 'wholeBean',
+  GrindOption.espresso: 'espresso',
+  GrindOption.mokaPot: 'mokaPot',
+  GrindOption.handDrip: 'handDrip',
+  GrindOption.frenchPress: 'frenchPress',
+};
+
+_BeanOrder _$BeanOrderFromJson(Map<String, dynamic> json) => _BeanOrder(
+  id: json['id'] as String,
+  items: (json['items'] as List<dynamic>)
+      .map((e) => BeanOrderItem.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  totalAmount: (json['totalAmount'] as num).toInt(),
+  usedPoints: (json['usedPoints'] as num?)?.toInt() ?? 0,
+  earnedPoints: (json['earnedPoints'] as num?)?.toInt() ?? 0,
+  status:
+      $enumDecodeNullable(_$BeanOrderStatusEnumMap, json['status']) ??
+      BeanOrderStatus.received,
+  createdAt: DateTime.parse(json['createdAt'] as String),
+);
+
+Map<String, dynamic> _$BeanOrderToJson(_BeanOrder instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'items': instance.items,
+      'totalAmount': instance.totalAmount,
+      'usedPoints': instance.usedPoints,
+      'earnedPoints': instance.earnedPoints,
+      'status': _$BeanOrderStatusEnumMap[instance.status]!,
+      'createdAt': instance.createdAt.toIso8601String(),
+    };
+
+const _$BeanOrderStatusEnumMap = {
+  BeanOrderStatus.received: 'received',
+  BeanOrderStatus.roasting: 'roasting',
+  BeanOrderStatus.shipped: 'shipped',
+  BeanOrderStatus.delivered: 'delivered',
+};

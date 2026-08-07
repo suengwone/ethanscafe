@@ -1,0 +1,125 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../core/firebase/firestore_converters.dart';
+import '../../beans/domain/bean_models.dart';
+import '../domain/bean_orders_repository.dart';
+import '../domain/order_models.dart';
+
+class FirestoreBeanOrdersRepository implements BeanOrdersRepository {
+  FirestoreBeanOrdersRepository({
+    required this.uid,
+    FirebaseFirestore? firestore,
+  }) : _firestore = firestore ?? FirebaseFirestore.instance;
+
+  final String uid;
+  final FirebaseFirestore _firestore;
+
+  static const collectionPath = 'orders';
+
+  DocumentReference<Map<String, dynamic>> get _doc =>
+      _firestore.collection(collectionPath).doc(uid);
+
+  @override
+  Future<List<BeanOrder>> load() async {
+    final snapshot = await _doc.get();
+    final data = snapshot.data();
+    if (data == null) {
+      return const [];
+    }
+    return beanOrdersFromFirestore(data);
+  }
+
+  @override
+  Future<BeanOrder> placeOrder({
+    required List<BeanOrderItem> items,
+    int usedPoints = 0,
+    int earnedPoints = 0,
+  }) async {
+    if (items.isEmpty) {
+      throw ArgumentError.value(items, 'items', '주문 상품이 비어 있습니다.');
+    }
+
+    final order = BeanOrder(
+      id: _generateId(),
+      items: items,
+      totalAmount: items.fold(0, (total, item) => total + item.totalPrice),
+      usedPoints: usedPoints,
+      earnedPoints: earnedPoints,
+      createdAt: DateTime.now(),
+    );
+
+    await _firestore.runTransaction((transaction) async {
+      final snapshot = await transaction.get(_doc);
+      final data = snapshot.data();
+      final orders =
+          data != null ? beanOrdersFromFirestore(data) : const <BeanOrder>[];
+      transaction.set(_doc, beanOrdersToFirestore([order, ...orders]));
+    });
+    return order;
+  }
+
+  String _generateId() =>
+      '${DateTime.now().microsecondsSinceEpoch}-${Random().nextInt(0xFFFF)}';
+}
+
+List<BeanOrder> beanOrdersFromFirestore(Map<String, dynamic> data) {
+  return ((data['orders'] as List<dynamic>?) ?? const [])
+      .map((order) => beanOrderFromFirestore(order as Map<String, dynamic>))
+      .toList();
+}
+
+BeanOrder beanOrderFromFirestore(Map<String, dynamic> data) {
+  return BeanOrder(
+    id: data['id'] as String? ?? '',
+    items: ((data['items'] as List<dynamic>?) ?? const [])
+        .map((item) => beanOrderItemFromFirestore(item as Map<String, dynamic>))
+        .toList(),
+    totalAmount: (data['totalAmount'] as num? ?? 0).toInt(),
+    usedPoints: (data['usedPoints'] as num? ?? 0).toInt(),
+    earnedPoints: (data['earnedPoints'] as num? ?? 0).toInt(),
+    status: BeanOrderStatus.values.asNameMap()[data['status']] ??
+        BeanOrderStatus.received,
+    createdAt: firestoreDateTime(data['createdAt']),
+  );
+}
+
+BeanOrderItem beanOrderItemFromFirestore(Map<String, dynamic> data) {
+  return BeanOrderItem(
+    beanId: data['beanId'] as String? ?? '',
+    beanName: data['beanName'] as String? ?? '',
+    weight: BeanWeight.values.asNameMap()[data['weight']] ?? BeanWeight.g200,
+    grind:
+        GrindOption.values.asNameMap()[data['grind']] ?? GrindOption.wholeBean,
+    quantity: (data['quantity'] as num? ?? 1).toInt(),
+    unitPrice: (data['unitPrice'] as num? ?? 0).toInt(),
+  );
+}
+
+Map<String, dynamic> beanOrdersToFirestore(List<BeanOrder> orders) {
+  return {'orders': orders.map(beanOrderToFirestore).toList()};
+}
+
+Map<String, dynamic> beanOrderToFirestore(BeanOrder order) {
+  return {
+    'id': order.id,
+    'items': order.items.map(beanOrderItemToFirestore).toList(),
+    'totalAmount': order.totalAmount,
+    'usedPoints': order.usedPoints,
+    'earnedPoints': order.earnedPoints,
+    'status': order.status.name,
+    'createdAt': Timestamp.fromDate(order.createdAt),
+  };
+}
+
+Map<String, dynamic> beanOrderItemToFirestore(BeanOrderItem item) {
+  return {
+    'beanId': item.beanId,
+    'beanName': item.beanName,
+    'weight': item.weight.name,
+    'grind': item.grind.name,
+    'quantity': item.quantity,
+    'unitPrice': item.unitPrice,
+  };
+}
