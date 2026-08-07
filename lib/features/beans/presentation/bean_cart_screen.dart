@@ -6,6 +6,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../order/presentation/order_providers.dart';
+import '../../points/presentation/points_providers.dart';
 import '../domain/bean_cart_models.dart';
 import 'bean_cart_providers.dart';
 
@@ -192,13 +194,58 @@ class _QuantityButton extends StatelessWidget {
   }
 }
 
-class _CheckoutBar extends ConsumerWidget {
+class _CheckoutBar extends ConsumerStatefulWidget {
   const _CheckoutBar();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_CheckoutBar> createState() => _CheckoutBarState();
+}
+
+class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
+  bool _usePoints = false;
+  bool _submitting = false;
+
+  Future<void> _placeOrder(int usedPoints) async {
+    final items = ref.read(beanCartProvider);
+    setState(() => _submitting = true);
+    try {
+      final order = await ref
+          .read(beanOrdersControllerProvider.notifier)
+          .placeOrder(cartItems: items, usedPoints: usedPoints);
+      if (!mounted) {
+        return;
+      }
+      ref.read(beanCartProvider.notifier).clear();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            order.earnedPoints > 0
+                ? '원두 주문이 접수되었습니다. ${_priceFormat.format(order.earnedPoints)}P가 적립됐어요.'
+                : '원두 주문이 접수되었습니다. 로스팅 후 순차 발송됩니다.',
+          ),
+        ),
+      );
+      context.pop();
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() => _submitting = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('주문 처리에 실패했습니다. 다시 시도해 주세요.')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final count = ref.watch(beanCartCountProvider);
     final total = ref.watch(beanCartTotalProvider);
+    final balance =
+        ref.watch(pointsControllerProvider).value?.balance ?? 0;
+    final usablePoints = balance.clamp(0, total);
+    final usedPoints = _usePoints ? usablePoints : 0;
+    final payAmount = total - usedPoints;
 
     return Container(
       decoration: const BoxDecoration(
@@ -207,47 +254,72 @@ class _CheckoutBar extends ConsumerWidget {
       ),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-          child: Row(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '총 $count개',
+              Row(
+                children: [
+                  const Icon(LucideIcons.coins, size: 16, color: foxtrotGold),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      '보유 포인트 ${_priceFormat.format(balance)}P',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
+                  ),
+                  if (usedPoints > 0)
                     Text(
-                      '${_priceFormat.format(total)}원',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: foxtrotGoldLight,
+                      '-${_priceFormat.format(usedPoints)}P',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: foxtrotGold),
+                    ),
+                  Switch(
+                    value: _usePoints,
+                    onChanged: usablePoints > 0 && !_submitting
+                        ? (value) => setState(() => _usePoints = value)
+                        : null,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '총 $count개',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        Text(
+                          '${_priceFormat.format(payAmount)}원',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: foxtrotGoldLight,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  FilledButton.icon(
+                    onPressed:
+                        _submitting ? null : () => _placeOrder(usedPoints),
+                    icon: const Icon(LucideIcons.packageCheck, size: 18),
+                    label: Text(_submitting ? '주문 중...' : '주문하기'),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 28,
+                        vertical: 14,
                       ),
                     ),
-                  ],
-                ),
-              ),
-              FilledButton.icon(
-                onPressed: () {
-                  ref.read(beanCartProvider.notifier).clear();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('원두 주문이 접수되었습니다. 로스팅 후 순차 발송됩니다.'),
-                    ),
-                  );
-                  context.pop();
-                },
-                icon: const Icon(LucideIcons.packageCheck, size: 18),
-                label: const Text('주문하기'),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 28,
-                    vertical: 14,
                   ),
-                ),
+                ],
               ),
             ],
           ),
