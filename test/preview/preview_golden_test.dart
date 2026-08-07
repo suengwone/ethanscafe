@@ -162,6 +162,54 @@ void main() {
           },
         ],
       }),
+      'bean_orders': jsonEncode({
+        'orders': [
+          {
+            'id': 'order-2',
+            'items': [
+              {
+                'beanId': 'ethiopia-yirgacheffe-aricha',
+                'beanName': '에티오피아 예가체프 아리차 에이미 G1',
+                'weight': 'g200',
+                'grind': 'handDrip',
+                'quantity': 2,
+                'unitPrice': 18000,
+              },
+              {
+                'beanId': 'brazil-monte-belo-yellow-bourbon',
+                'beanName': '브라질 몬테 벨로 옐로우버본',
+                'weight': 'g500',
+                'grind': 'wholeBean',
+                'quantity': 1,
+                'unitPrice': 32000,
+              },
+            ],
+            'totalAmount': 68000,
+            'usedPoints': 3000,
+            'earnedPoints': 6500,
+            'status': 'roasting',
+            'createdAt': '2026-08-03T16:40:00.000',
+          },
+          {
+            'id': 'order-1',
+            'items': [
+              {
+                'beanId': 'guatemala-antigua-la-gloria',
+                'beanName': '과테말라 안티구아 라 글로리아 SHB',
+                'weight': 'g200',
+                'grind': 'wholeBean',
+                'quantity': 1,
+                'unitPrice': 16000,
+              },
+            ],
+            'totalAmount': 16000,
+            'usedPoints': 0,
+            'earnedPoints': 1600,
+            'status': 'delivered',
+            'createdAt': '2026-07-22T13:10:00.000',
+          },
+        ],
+      }),
     });
   });
 
