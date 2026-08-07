@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
@@ -281,7 +282,7 @@ class _CouponUseSheet extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return SafeArea(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(
           foxtrotScreenHPadding,
           20,
@@ -294,22 +295,25 @@ class _CouponUseSheet extends StatelessWidget {
           children: [
             Center(
               child: Container(
-                width: 88,
-                height: 88,
-                alignment: Alignment.center,
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: foxtrotSurface,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: foxtrotGold, width: 1.5),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
                 ),
-                child: const Icon(
-                  LucideIcons.ticket,
-                  color: foxtrotGold,
-                  size: 40,
+                child: QrImageView(
+                  data: 'foxtrot-coupon:${coupon.id}',
+                  version: QrVersions.auto,
+                  size: 180.0,
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
+            Text(
+              coupon.id.toUpperCase(),
+              style: textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
             Text(
               coupon.title.keepWord,
               style: textTheme.titleMedium,
@@ -341,7 +345,7 @@ class _CouponUseSheet extends StatelessWidget {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      '매장 직원에게 이 화면을 보여주세요.\n직원 확인 후 사용하기 버튼을 눌러주세요.',
+                      '매장 직원에게 QR 코드를 보여주세요.\n직원 스캔·확인 후 사용하기 버튼을 눌러주세요.',
                       style: textTheme.bodySmall,
                     ),
                   ),
