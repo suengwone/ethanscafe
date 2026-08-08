@@ -14,9 +14,12 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../domain/auth_models.dart';
 import '../domain/auth_repository.dart';
+import 'kakao_web_authorize_stub.dart'
+    if (dart.library.html) 'kakao_web_authorize_web.dart' as kakao_web;
 import 'naver_web_authorize_stub.dart'
     if (dart.library.html) 'naver_web_authorize_web.dart' as naver_web;
 
+const _kakaoJsAppKey = String.fromEnvironment('KAKAO_JS_APP_KEY');
 const _naverClientId = String.fromEnvironment('NAVER_CLIENT_ID');
 
 class FirebaseAuthRepository implements AuthRepository {
@@ -81,9 +84,17 @@ class FirebaseAuthRepository implements AuthRepository {
   Future<AppUser> _signInWithKakao() async {
     try {
       if (kIsWeb) {
-        final result = await _auth.signInWithPopup(
-          fb.OAuthProvider('oidc.kakao-web'),
+        if (_kakaoJsAppKey.isEmpty) {
+          throw const AuthException('카카오 로그인 설정이 필요합니다. 관리자에게 문의해주세요.');
+        }
+        final webAuth = await kakao_web.authorizeWithKakaoWeb(
+          clientId: _kakaoJsAppKey,
         );
+        final credential = fb.OAuthProvider('oidc.kakao-web').credential(
+          idToken: webAuth.idToken,
+          accessToken: webAuth.accessToken,
+        );
+        final result = await _auth.signInWithCredential(credential);
         return _requireUser(result.user);
       }
       final token = await _loginWithKakaoSdk();
