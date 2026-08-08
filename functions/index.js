@@ -1,4 +1,5 @@
 const {setGlobalOptions} = require('firebase-functions/v2');
+const functionsV1 = require('firebase-functions/v1');
 const {onDocumentWritten} = require('firebase-functions/v2/firestore');
 const {onCall, HttpsError} = require('firebase-functions/v2/https');
 const {defineSecret} = require('firebase-functions/params');
@@ -7,6 +8,7 @@ const {getFirestore, FieldValue} = require('firebase-admin/firestore');
 const {getMessaging} = require('firebase-admin/messaging');
 
 const {collectStatusChangeNotifications} = require('./order_status');
+const {userDataDocPaths} = require('./account_cleanup');
 const {
   TOSS_CONFIRM_URL,
   validateConfirmRequest,
@@ -56,6 +58,18 @@ exports.confirmTossPayment = onCall(
     }
   },
 );
+
+exports.cleanUpDeletedUserData = functionsV1
+  .region('asia-northeast3')
+  .auth.user()
+  .onDelete(async (user) => {
+    const firestore = getFirestore();
+    const batch = firestore.batch();
+    for (const path of userDataDocPaths(user.uid)) {
+      batch.delete(firestore.doc(path));
+    }
+    await batch.commit();
+  });
 
 const ORDER_HISTORY_ROUTE = '/profile/orders';
 const ANDROID_CHANNEL_ID = 'high_importance_channel';
