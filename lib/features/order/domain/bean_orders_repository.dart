@@ -10,5 +10,7 @@ abstract class BeanOrdersRepository {
     String? couponId,
     String? couponTitle,
     int couponDiscount,
+    String? paymentKey,
+    String? paymentMethod,
   });
 }

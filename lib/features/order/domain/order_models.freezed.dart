@@ -293,7 +293,7 @@ as int,
 /// @nodoc
 mixin _$BeanOrder {
 
- String get id; List<BeanOrderItem> get items; int get totalAmount; int get usedPoints; int get earnedPoints; String? get couponId; String? get couponTitle; int get couponDiscount; BeanOrderStatus get status; DateTime get createdAt;
+ String get id; List<BeanOrderItem> get items; int get totalAmount; int get usedPoints; int get earnedPoints; String? get couponId; String? get couponTitle; int get couponDiscount; String? get paymentKey; String? get paymentMethod; BeanOrderStatus get status; DateTime get createdAt;
 /// Create a copy of BeanOrder
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -306,16 +306,16 @@ $BeanOrderCopyWith<BeanOrder> get copyWith => _$BeanOrderCopyWithImpl<BeanOrder>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BeanOrder&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.usedPoints, usedPoints) || other.usedPoints == usedPoints)&&(identical(other.earnedPoints, earnedPoints) || other.earnedPoints == earnedPoints)&&(identical(other.couponId, couponId) || other.couponId == couponId)&&(identical(other.couponTitle, couponTitle) || other.couponTitle == couponTitle)&&(identical(other.couponDiscount, couponDiscount) || other.couponDiscount == couponDiscount)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BeanOrder&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.usedPoints, usedPoints) || other.usedPoints == usedPoints)&&(identical(other.earnedPoints, earnedPoints) || other.earnedPoints == earnedPoints)&&(identical(other.couponId, couponId) || other.couponId == couponId)&&(identical(other.couponTitle, couponTitle) || other.couponTitle == couponTitle)&&(identical(other.couponDiscount, couponDiscount) || other.couponDiscount == couponDiscount)&&(identical(other.paymentKey, paymentKey) || other.paymentKey == paymentKey)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(items),totalAmount,usedPoints,earnedPoints,couponId,couponTitle,couponDiscount,status,createdAt);
+int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(items),totalAmount,usedPoints,earnedPoints,couponId,couponTitle,couponDiscount,paymentKey,paymentMethod,status,createdAt);
 
 @override
 String toString() {
-  return 'BeanOrder(id: $id, items: $items, totalAmount: $totalAmount, usedPoints: $usedPoints, earnedPoints: $earnedPoints, couponId: $couponId, couponTitle: $couponTitle, couponDiscount: $couponDiscount, status: $status, createdAt: $createdAt)';
+  return 'BeanOrder(id: $id, items: $items, totalAmount: $totalAmount, usedPoints: $usedPoints, earnedPoints: $earnedPoints, couponId: $couponId, couponTitle: $couponTitle, couponDiscount: $couponDiscount, paymentKey: $paymentKey, paymentMethod: $paymentMethod, status: $status, createdAt: $createdAt)';
 }
 
 
@@ -326,7 +326,7 @@ abstract mixin class $BeanOrderCopyWith<$Res>  {
   factory $BeanOrderCopyWith(BeanOrder value, $Res Function(BeanOrder) _then) = _$BeanOrderCopyWithImpl;
 @useResult
 $Res call({
- String id, List<BeanOrderItem> items, int totalAmount, int usedPoints, int earnedPoints, String? couponId, String? couponTitle, int couponDiscount, BeanOrderStatus status, DateTime createdAt
+ String id, List<BeanOrderItem> items, int totalAmount, int usedPoints, int earnedPoints, String? couponId, String? couponTitle, int couponDiscount, String? paymentKey, String? paymentMethod, BeanOrderStatus status, DateTime createdAt
 });
 
 
@@ -343,7 +343,7 @@ class _$BeanOrderCopyWithImpl<$Res>
 
 /// Create a copy of BeanOrder
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? items = null,Object? totalAmount = null,Object? usedPoints = null,Object? earnedPoints = null,Object? couponId = freezed,Object? couponTitle = freezed,Object? couponDiscount = null,Object? status = null,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? items = null,Object? totalAmount = null,Object? usedPoints = null,Object? earnedPoints = null,Object? couponId = freezed,Object? couponTitle = freezed,Object? couponDiscount = null,Object? paymentKey = freezed,Object? paymentMethod = freezed,Object? status = null,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
@@ -353,7 +353,9 @@ as int,earnedPoints: null == earnedPoints ? _self.earnedPoints : earnedPoints //
 as int,couponId: freezed == couponId ? _self.couponId : couponId // ignore: cast_nullable_to_non_nullable
 as String?,couponTitle: freezed == couponTitle ? _self.couponTitle : couponTitle // ignore: cast_nullable_to_non_nullable
 as String?,couponDiscount: null == couponDiscount ? _self.couponDiscount : couponDiscount // ignore: cast_nullable_to_non_nullable
-as int,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as int,paymentKey: freezed == paymentKey ? _self.paymentKey : paymentKey // ignore: cast_nullable_to_non_nullable
+as String?,paymentMethod: freezed == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
+as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as BeanOrderStatus,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -440,10 +442,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  List<BeanOrderItem> items,  int totalAmount,  int usedPoints,  int earnedPoints,  String? couponId,  String? couponTitle,  int couponDiscount,  BeanOrderStatus status,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  List<BeanOrderItem> items,  int totalAmount,  int usedPoints,  int earnedPoints,  String? couponId,  String? couponTitle,  int couponDiscount,  String? paymentKey,  String? paymentMethod,  BeanOrderStatus status,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BeanOrder() when $default != null:
-return $default(_that.id,_that.items,_that.totalAmount,_that.usedPoints,_that.earnedPoints,_that.couponId,_that.couponTitle,_that.couponDiscount,_that.status,_that.createdAt);case _:
+return $default(_that.id,_that.items,_that.totalAmount,_that.usedPoints,_that.earnedPoints,_that.couponId,_that.couponTitle,_that.couponDiscount,_that.paymentKey,_that.paymentMethod,_that.status,_that.createdAt);case _:
   return orElse();
 
 }
@@ -461,10 +463,10 @@ return $default(_that.id,_that.items,_that.totalAmount,_that.usedPoints,_that.ea
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  List<BeanOrderItem> items,  int totalAmount,  int usedPoints,  int earnedPoints,  String? couponId,  String? couponTitle,  int couponDiscount,  BeanOrderStatus status,  DateTime createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  List<BeanOrderItem> items,  int totalAmount,  int usedPoints,  int earnedPoints,  String? couponId,  String? couponTitle,  int couponDiscount,  String? paymentKey,  String? paymentMethod,  BeanOrderStatus status,  DateTime createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _BeanOrder():
-return $default(_that.id,_that.items,_that.totalAmount,_that.usedPoints,_that.earnedPoints,_that.couponId,_that.couponTitle,_that.couponDiscount,_that.status,_that.createdAt);case _:
+return $default(_that.id,_that.items,_that.totalAmount,_that.usedPoints,_that.earnedPoints,_that.couponId,_that.couponTitle,_that.couponDiscount,_that.paymentKey,_that.paymentMethod,_that.status,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -481,10 +483,10 @@ return $default(_that.id,_that.items,_that.totalAmount,_that.usedPoints,_that.ea
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  List<BeanOrderItem> items,  int totalAmount,  int usedPoints,  int earnedPoints,  String? couponId,  String? couponTitle,  int couponDiscount,  BeanOrderStatus status,  DateTime createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  List<BeanOrderItem> items,  int totalAmount,  int usedPoints,  int earnedPoints,  String? couponId,  String? couponTitle,  int couponDiscount,  String? paymentKey,  String? paymentMethod,  BeanOrderStatus status,  DateTime createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _BeanOrder() when $default != null:
-return $default(_that.id,_that.items,_that.totalAmount,_that.usedPoints,_that.earnedPoints,_that.couponId,_that.couponTitle,_that.couponDiscount,_that.status,_that.createdAt);case _:
+return $default(_that.id,_that.items,_that.totalAmount,_that.usedPoints,_that.earnedPoints,_that.couponId,_that.couponTitle,_that.couponDiscount,_that.paymentKey,_that.paymentMethod,_that.status,_that.createdAt);case _:
   return null;
 
 }
@@ -496,7 +498,7 @@ return $default(_that.id,_that.items,_that.totalAmount,_that.usedPoints,_that.ea
 @JsonSerializable()
 
 class _BeanOrder extends BeanOrder {
-  const _BeanOrder({required this.id, required final  List<BeanOrderItem> items, required this.totalAmount, this.usedPoints = 0, this.earnedPoints = 0, this.couponId, this.couponTitle, this.couponDiscount = 0, this.status = BeanOrderStatus.received, required this.createdAt}): _items = items,super._();
+  const _BeanOrder({required this.id, required final  List<BeanOrderItem> items, required this.totalAmount, this.usedPoints = 0, this.earnedPoints = 0, this.couponId, this.couponTitle, this.couponDiscount = 0, this.paymentKey, this.paymentMethod, this.status = BeanOrderStatus.received, required this.createdAt}): _items = items,super._();
   factory _BeanOrder.fromJson(Map<String, dynamic> json) => _$BeanOrderFromJson(json);
 
 @override final  String id;
@@ -513,6 +515,8 @@ class _BeanOrder extends BeanOrder {
 @override final  String? couponId;
 @override final  String? couponTitle;
 @override@JsonKey() final  int couponDiscount;
+@override final  String? paymentKey;
+@override final  String? paymentMethod;
 @override@JsonKey() final  BeanOrderStatus status;
 @override final  DateTime createdAt;
 
@@ -529,16 +533,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BeanOrder&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.usedPoints, usedPoints) || other.usedPoints == usedPoints)&&(identical(other.earnedPoints, earnedPoints) || other.earnedPoints == earnedPoints)&&(identical(other.couponId, couponId) || other.couponId == couponId)&&(identical(other.couponTitle, couponTitle) || other.couponTitle == couponTitle)&&(identical(other.couponDiscount, couponDiscount) || other.couponDiscount == couponDiscount)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BeanOrder&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.usedPoints, usedPoints) || other.usedPoints == usedPoints)&&(identical(other.earnedPoints, earnedPoints) || other.earnedPoints == earnedPoints)&&(identical(other.couponId, couponId) || other.couponId == couponId)&&(identical(other.couponTitle, couponTitle) || other.couponTitle == couponTitle)&&(identical(other.couponDiscount, couponDiscount) || other.couponDiscount == couponDiscount)&&(identical(other.paymentKey, paymentKey) || other.paymentKey == paymentKey)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(_items),totalAmount,usedPoints,earnedPoints,couponId,couponTitle,couponDiscount,status,createdAt);
+int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(_items),totalAmount,usedPoints,earnedPoints,couponId,couponTitle,couponDiscount,paymentKey,paymentMethod,status,createdAt);
 
 @override
 String toString() {
-  return 'BeanOrder(id: $id, items: $items, totalAmount: $totalAmount, usedPoints: $usedPoints, earnedPoints: $earnedPoints, couponId: $couponId, couponTitle: $couponTitle, couponDiscount: $couponDiscount, status: $status, createdAt: $createdAt)';
+  return 'BeanOrder(id: $id, items: $items, totalAmount: $totalAmount, usedPoints: $usedPoints, earnedPoints: $earnedPoints, couponId: $couponId, couponTitle: $couponTitle, couponDiscount: $couponDiscount, paymentKey: $paymentKey, paymentMethod: $paymentMethod, status: $status, createdAt: $createdAt)';
 }
 
 
@@ -549,7 +553,7 @@ abstract mixin class _$BeanOrderCopyWith<$Res> implements $BeanOrderCopyWith<$Re
   factory _$BeanOrderCopyWith(_BeanOrder value, $Res Function(_BeanOrder) _then) = __$BeanOrderCopyWithImpl;
 @override @useResult
 $Res call({
- String id, List<BeanOrderItem> items, int totalAmount, int usedPoints, int earnedPoints, String? couponId, String? couponTitle, int couponDiscount, BeanOrderStatus status, DateTime createdAt
+ String id, List<BeanOrderItem> items, int totalAmount, int usedPoints, int earnedPoints, String? couponId, String? couponTitle, int couponDiscount, String? paymentKey, String? paymentMethod, BeanOrderStatus status, DateTime createdAt
 });
 
 
@@ -566,7 +570,7 @@ class __$BeanOrderCopyWithImpl<$Res>
 
 /// Create a copy of BeanOrder
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? items = null,Object? totalAmount = null,Object? usedPoints = null,Object? earnedPoints = null,Object? couponId = freezed,Object? couponTitle = freezed,Object? couponDiscount = null,Object? status = null,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? items = null,Object? totalAmount = null,Object? usedPoints = null,Object? earnedPoints = null,Object? couponId = freezed,Object? couponTitle = freezed,Object? couponDiscount = null,Object? paymentKey = freezed,Object? paymentMethod = freezed,Object? status = null,Object? createdAt = null,}) {
   return _then(_BeanOrder(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
@@ -576,7 +580,9 @@ as int,earnedPoints: null == earnedPoints ? _self.earnedPoints : earnedPoints //
 as int,couponId: freezed == couponId ? _self.couponId : couponId // ignore: cast_nullable_to_non_nullable
 as String?,couponTitle: freezed == couponTitle ? _self.couponTitle : couponTitle // ignore: cast_nullable_to_non_nullable
 as String?,couponDiscount: null == couponDiscount ? _self.couponDiscount : couponDiscount // ignore: cast_nullable_to_non_nullable
-as int,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as int,paymentKey: freezed == paymentKey ? _self.paymentKey : paymentKey // ignore: cast_nullable_to_non_nullable
+as String?,paymentMethod: freezed == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
+as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as BeanOrderStatus,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));

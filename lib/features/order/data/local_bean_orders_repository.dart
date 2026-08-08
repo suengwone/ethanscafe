@@ -30,6 +30,8 @@ class LocalBeanOrdersRepository implements BeanOrdersRepository {
     String? couponId,
     String? couponTitle,
     int couponDiscount = 0,
+    String? paymentKey,
+    String? paymentMethod,
   }) async {
     if (items.isEmpty) {
       throw ArgumentError.value(items, 'items', '주문 상품이 비어 있습니다.');
@@ -46,6 +48,8 @@ class LocalBeanOrdersRepository implements BeanOrdersRepository {
       couponId: couponId,
       couponTitle: couponTitle,
       couponDiscount: couponDiscount,
+      paymentKey: paymentKey,
+      paymentMethod: paymentMethod,
       createdAt: DateTime.now(),
     );
 

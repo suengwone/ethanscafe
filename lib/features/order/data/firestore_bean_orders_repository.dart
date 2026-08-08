@@ -39,6 +39,8 @@ class FirestoreBeanOrdersRepository implements BeanOrdersRepository {
     String? couponId,
     String? couponTitle,
     int couponDiscount = 0,
+    String? paymentKey,
+    String? paymentMethod,
   }) async {
     if (items.isEmpty) {
       throw ArgumentError.value(items, 'items', '주문 상품이 비어 있습니다.');
@@ -53,6 +55,8 @@ class FirestoreBeanOrdersRepository implements BeanOrdersRepository {
       couponId: couponId,
       couponTitle: couponTitle,
       couponDiscount: couponDiscount,
+      paymentKey: paymentKey,
+      paymentMethod: paymentMethod,
       createdAt: DateTime.now(),
     );
 
@@ -88,6 +92,8 @@ BeanOrder beanOrderFromFirestore(Map<String, dynamic> data) {
     couponId: data['couponId'] as String?,
     couponTitle: data['couponTitle'] as String?,
     couponDiscount: (data['couponDiscount'] as num? ?? 0).toInt(),
+    paymentKey: data['paymentKey'] as String?,
+    paymentMethod: data['paymentMethod'] as String?,
     status: BeanOrderStatus.values.asNameMap()[data['status']] ??
         BeanOrderStatus.received,
     createdAt: firestoreDateTime(data['createdAt']),
@@ -120,6 +126,8 @@ Map<String, dynamic> beanOrderToFirestore(BeanOrder order) {
     if (order.couponId != null) 'couponId': order.couponId,
     if (order.couponTitle != null) 'couponTitle': order.couponTitle,
     'couponDiscount': order.couponDiscount,
+    if (order.paymentKey != null) 'paymentKey': order.paymentKey,
+    if (order.paymentMethod != null) 'paymentMethod': order.paymentMethod,
     'status': order.status.name,
     'createdAt': Timestamp.fromDate(order.createdAt),
   };

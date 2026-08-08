@@ -53,6 +53,8 @@ abstract class BeanOrder with _$BeanOrder {
     String? couponId,
     String? couponTitle,
     @Default(0) int couponDiscount,
+    String? paymentKey,
+    String? paymentMethod,
     @Default(BeanOrderStatus.received) BeanOrderStatus status,
     required DateTime createdAt,
   }) = _BeanOrder;
