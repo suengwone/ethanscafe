@@ -22,6 +22,31 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
+  Future<void> _deleteAccount(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => const _DeleteAccountDialog(),
+    );
+    if (confirmed != true || !context.mounted) {
+      return;
+    }
+    final success =
+        await ref.read(authControllerProvider.notifier).deleteAccount();
+    if (!context.mounted) {
+      return;
+    }
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('계정이 삭제되었습니다. 그동안 이용해주셔서 감사합니다.')),
+      );
+    } else {
+      final error = ref.read(authControllerProvider).error;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.toString())),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authStateProvider).value;
@@ -137,6 +162,12 @@ class ProfileScreen extends ConsumerWidget {
                   textColor: Theme.of(context).colorScheme.error,
                   onTap: () => _signOut(context, ref),
                 ),
+                _buildListTile(
+                  icon: LucideIcons.userX,
+                  title: '회원 탈퇴',
+                  textColor: Theme.of(context).colorScheme.error,
+                  onTap: () => _deleteAccount(context, ref),
+                ),
               ],
             ),
           const SizedBox(height: 24),
@@ -201,6 +232,34 @@ class ProfileScreen extends ConsumerWidget {
       ),
       trailing: trailing ?? const Icon(LucideIcons.chevronRight, size: 18),
       onTap: onTap,
+    );
+  }
+}
+
+class _DeleteAccountDialog extends StatelessWidget {
+  const _DeleteAccountDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('회원 탈퇴'),
+      content: const Text(
+        '탈퇴하면 계정과 포인트, 쿠폰, 주문 내역 등 모든 데이터가 삭제되며 복구할 수 없습니다.\n'
+        '정말 탈퇴하시겠어요?',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: const Text('취소'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          style: TextButton.styleFrom(
+            foregroundColor: Theme.of(context).colorScheme.error,
+          ),
+          child: const Text('탈퇴하기'),
+        ),
+      ],
     );
   }
 }
