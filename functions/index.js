@@ -4,11 +4,19 @@ const {onDocumentWritten} = require('firebase-functions/v2/firestore');
 const {onCall, HttpsError} = require('firebase-functions/v2/https');
 const {defineSecret} = require('firebase-functions/params');
 const {initializeApp} = require('firebase-admin/app');
+const {getAuth} = require('firebase-admin/auth');
 const {getFirestore, FieldValue} = require('firebase-admin/firestore');
 const {getMessaging} = require('firebase-admin/messaging');
 
 const {collectStatusChangeNotifications} = require('./order_status');
 const {userDataDocPaths} = require('./account_cleanup');
+const {
+  NAVER_PROFILE_URL,
+  validateNaverSignInRequest,
+  extractNaverProfile,
+  naverUid,
+  toUserRecordFields,
+} = require('./naver_auth');
 const {
   TOSS_CONFIRM_URL,
   validateConfirmRequest,
@@ -58,6 +66,59 @@ exports.confirmTossPayment = onCall(
     }
   },
 );
+
+exports.signInWithNaver = onCall(async (request) => {
+  let accessToken;
+  try {
+    ({accessToken} = validateNaverSignInRequest(request.data));
+  } catch (error) {
+    throw new HttpsError('invalid-argument', error.message);
+  }
+
+  const response = await fetch(NAVER_PROFILE_URL, {
+    headers: {'Authorization': `Bearer ${accessToken}`},
+  });
+  const body = await response.json().catch(() => null);
+  if (!response.ok) {
+    throw new HttpsError('unauthenticated', '네이버 인증에 실패했습니다.');
+  }
+
+  let profile;
+  try {
+    profile = extractNaverProfile(body);
+  } catch (error) {
+    throw new HttpsError('unauthenticated', '네이버 인증에 실패했습니다.');
+  }
+
+  const uid = naverUid(profile);
+  const fields = toUserRecordFields(profile);
+  const auth = getAuth();
+  try {
+    await upsertNaverUser(auth, uid, fields);
+  } catch (error) {
+    if (error.code === 'auth/email-already-exists') {
+      delete fields.email;
+      await upsertNaverUser(auth, uid, fields);
+    } else {
+      throw new HttpsError('internal', '네이버 로그인 처리에 실패했습니다.');
+    }
+  }
+
+  const token = await auth.createCustomToken(uid, {provider: 'naver'});
+  return {token};
+});
+
+async function upsertNaverUser(auth, uid, fields) {
+  try {
+    await auth.updateUser(uid, fields);
+  } catch (error) {
+    if (error.code === 'auth/user-not-found') {
+      await auth.createUser({uid, ...fields});
+    } else {
+      throw error;
+    }
+  }
+}
 
 exports.cleanUpDeletedUserData = functionsV1
   .region('asia-northeast3')
