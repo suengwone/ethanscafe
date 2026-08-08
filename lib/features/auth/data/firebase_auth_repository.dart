@@ -84,7 +84,7 @@ class FirebaseAuthRepository implements AuthRepository {
         throw const AuthException('카카오 OpenID 설정이 필요합니다. 관리자에게 문의해주세요.');
       }
       final credential = fb.OAuthProvider(
-        'oidc.kakao',
+        kIsWeb ? 'oidc.kakao-web' : 'oidc.kakao',
       ).credential(idToken: idToken, accessToken: token.accessToken);
       final result = await _auth.signInWithCredential(credential);
       return _requireUser(result.user);
