@@ -47,3 +47,9 @@ app.*.map.json
 
 # Slack preview screenshots
 /preview/
+
+# Android signing
+/android/key.properties
+/android/app/upload-keystore.jks
+*.jks
+*.keystore
