@@ -9,6 +9,8 @@ import '../../../core/utils/text_utils.dart';
 import '../../coupon/domain/coupon_models.dart';
 import '../../coupon/presentation/coupons_providers.dart';
 import '../../order/presentation/order_providers.dart';
+import '../../payment/domain/payment_models.dart';
+import '../../payment/presentation/payment_providers.dart';
 import '../../points/presentation/points_providers.dart';
 import '../domain/bean_cart_models.dart';
 import 'bean_cart_providers.dart';
@@ -368,16 +370,47 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
     setState(() => _coupon = selection.coupon);
   }
 
-  Future<void> _placeOrder(int usedPoints, Coupon? coupon) async {
+  String _orderName(List<BeanCartItem> items) => items.length == 1
+      ? items.first.bean.name
+      : '${items.first.bean.name} 외 ${items.length - 1}건';
+
+  Future<void> _placeOrder(
+    int usedPoints,
+    Coupon? coupon,
+    int payAmount,
+  ) async {
     final items = ref.read(beanCartProvider);
     setState(() => _submitting = true);
     try {
+      PaymentApproval? payment;
+      if (payAmount > 0) {
+        payment = await ref.read(paymentGatewayProvider).pay(
+              context,
+              PaymentRequest(
+                orderId: generatePaymentOrderId(),
+                orderName: _orderName(items),
+                amount: payAmount,
+              ),
+            );
+        if (payment == null) {
+          if (!mounted) {
+            return;
+          }
+          setState(() => _submitting = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('결제가 완료되지 않았습니다.')),
+          );
+          return;
+        }
+      }
+
       final order = await ref
           .read(beanOrdersControllerProvider.notifier)
           .placeOrder(
             cartItems: items,
             usedPoints: usedPoints,
             coupon: coupon,
+            payment: payment,
           );
       if (!mounted) {
         return;
@@ -520,9 +553,20 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                   FilledButton.icon(
                     onPressed: _submitting
                         ? null
-                        : () => _placeOrder(usedPoints, coupon),
-                    icon: const Icon(LucideIcons.packageCheck, size: 18),
-                    label: Text(_submitting ? '주문 중...' : '주문하기'),
+                        : () => _placeOrder(usedPoints, coupon, payAmount),
+                    icon: Icon(
+                      payAmount > 0
+                          ? LucideIcons.creditCard
+                          : LucideIcons.packageCheck,
+                      size: 18,
+                    ),
+                    label: Text(
+                      _submitting
+                          ? '주문 중...'
+                          : payAmount > 0
+                              ? '결제하기'
+                              : '주문하기',
+                    ),
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 28,

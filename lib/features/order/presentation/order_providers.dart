@@ -5,6 +5,7 @@ import '../../auth/presentation/auth_providers.dart';
 import '../../beans/domain/bean_cart_models.dart';
 import '../../coupon/domain/coupon_models.dart';
 import '../../coupon/presentation/coupons_providers.dart';
+import '../../payment/domain/payment_models.dart';
 import '../../points/presentation/points_providers.dart';
 import '../data/firestore_bean_orders_repository.dart';
 import '../data/local_bean_orders_repository.dart';
@@ -40,6 +41,7 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
     required List<BeanCartItem> cartItems,
     int usedPoints = 0,
     Coupon? coupon,
+    PaymentApproval? payment,
   }) async {
     if (cartItems.isEmpty) {
       throw StateError('장바구니가 비어 있습니다.');
@@ -76,6 +78,11 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
       );
     }
 
+    final paidAmount = totalAmount - couponDiscount - usedPoints;
+    if (payment != null && payment.amount != paidAmount) {
+      throw StateError('결제 승인 금액이 주문 금액과 일치하지 않습니다.');
+    }
+
     if (coupon != null) {
       await ref.read(couponsRepositoryProvider).markUsed(coupon.id);
       ref.invalidate(couponsControllerProvider);
@@ -89,7 +96,6 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
       );
     }
 
-    final paidAmount = totalAmount - couponDiscount - usedPoints;
     var earnedPoints = 0;
     if (paidAmount > 0) {
       await pointsRepository.recordPayment(
@@ -107,6 +113,8 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
           couponId: coupon?.id,
           couponTitle: coupon?.title,
           couponDiscount: couponDiscount,
+          paymentKey: payment?.paymentKey,
+          paymentMethod: payment?.method,
         );
     state = AsyncValue.data([order, ...state.value ?? const []]);
     return order;
