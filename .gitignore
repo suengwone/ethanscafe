@@ -53,3 +53,6 @@ app.*.map.json
 /android/app/upload-keystore.jks
 *.jks
 *.keystore
+
+# Env files with secrets
+.env
