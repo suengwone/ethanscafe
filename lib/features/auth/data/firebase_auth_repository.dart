@@ -1,16 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:math';
 
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
-import 'package:flutter/foundation.dart'
-    show TargetPlatform, defaultTargetPlatform, kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as kakao;
 import 'package:naver_login_sdk/naver_login_sdk.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../domain/auth_models.dart';
 import '../domain/auth_repository.dart';
@@ -51,8 +46,6 @@ class FirebaseAuthRepository implements AuthRepository {
         return _signInWithNaver();
       case AuthProviderType.google:
         return _signInWithGoogle();
-      case AuthProviderType.apple:
-        return _signInWithApple();
     }
   }
 
@@ -230,77 +223,6 @@ class FirebaseAuthRepository implements AuthRepository {
     } catch (_) {
       throw const AuthException('구글 로그인에 실패했습니다. 다시 시도해주세요.');
     }
-  }
-
-  Future<AppUser> _signInWithApple() async {
-    try {
-      if (!kIsWeb &&
-          (defaultTargetPlatform == TargetPlatform.iOS ||
-              defaultTargetPlatform == TargetPlatform.macOS)) {
-        return await _signInWithAppleNative();
-      }
-      final appleProvider = fb.AppleAuthProvider()
-        ..addScope('email')
-        ..addScope('name');
-      final result = kIsWeb
-          ? await _auth.signInWithPopup(appleProvider)
-          : await _auth.signInWithProvider(appleProvider);
-      return _requireUser(result.user);
-    } on AuthException {
-      rethrow;
-    } on SignInWithAppleAuthorizationException catch (e) {
-      if (e.code == AuthorizationErrorCode.canceled) {
-        throw const AuthException('로그인이 취소되었습니다.');
-      }
-      throw const AuthException('Apple 로그인에 실패했습니다. 다시 시도해주세요.');
-    } on fb.FirebaseAuthException catch (e) {
-      throw AuthException(_firebaseMessage(e));
-    } catch (_) {
-      throw const AuthException('Apple 로그인에 실패했습니다. 다시 시도해주세요.');
-    }
-  }
-
-  Future<AppUser> _signInWithAppleNative() async {
-    final rawNonce = _generateNonce();
-    final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-      nonce: hashedNonce,
-    );
-    final identityToken = appleCredential.identityToken;
-    if (identityToken == null) {
-      throw const AuthException('Apple 인증 정보를 가져오지 못했습니다.');
-    }
-    final credential = fb.OAuthProvider(
-      'apple.com',
-    ).credential(idToken: identityToken, rawNonce: rawNonce);
-    final result = await _auth.signInWithCredential(credential);
-    final user = result.user;
-    if (user != null &&
-        (user.displayName == null || user.displayName!.isEmpty)) {
-      final fullName = [
-        appleCredential.familyName,
-        appleCredential.givenName,
-      ].whereType<String>().join();
-      if (fullName.isNotEmpty) {
-        await user.updateDisplayName(fullName);
-        await user.reload();
-      }
-    }
-    return _requireUser(_auth.currentUser ?? user);
-  }
-
-  String _generateNonce([int length = 32]) {
-    const charset =
-        '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-._';
-    final random = Random.secure();
-    return List.generate(
-      length,
-      (_) => charset[random.nextInt(charset.length)],
-    ).join();
   }
 
   AppUser _requireUser(fb.User? user) {

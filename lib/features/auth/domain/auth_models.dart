@@ -2,7 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'auth_models.freezed.dart';
 
-enum AuthProviderType { kakao, naver, google, apple }
+enum AuthProviderType { kakao, naver, google }
 
 @freezed
 abstract class AppUser with _$AppUser {

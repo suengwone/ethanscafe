@@ -123,7 +123,7 @@ void main() {
 
     final success = await container
         .read(authControllerProvider.notifier)
-        .signInWith(AuthProviderType.apple);
+        .signInWith(AuthProviderType.google);
 
     expect(success, isFalse);
     expect(

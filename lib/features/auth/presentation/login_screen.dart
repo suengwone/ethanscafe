@@ -118,17 +118,6 @@ class LoginScreen extends ConsumerWidget {
                 textColor: Colors.black87,
                 borderColor: foxtrotBorder,
               ),
-              const SizedBox(height: 12),
-              _SocialLoginButton(
-                onPressed: isLoading
-                    ? null
-                    : () => _signIn(context, ref, AuthProviderType.apple),
-                backgroundColor: Colors.black,
-                icon: const Icon(Icons.apple, size: 24),
-                label: 'Apple로 시작하기',
-                textColor: Colors.white,
-                borderColor: foxtrotBorder,
-              ),
               const SizedBox(height: 24),
               if (isLoading)
                 const Padding(
