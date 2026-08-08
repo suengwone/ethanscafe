@@ -14,6 +14,8 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../domain/auth_models.dart';
 import '../domain/auth_repository.dart';
+import 'naver_web_authorize_stub.dart'
+    if (dart.library.html) 'naver_web_authorize_web.dart' as naver_web;
 
 const _naverClientId = String.fromEnvironment('NAVER_CLIENT_ID');
 
@@ -109,21 +111,27 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   Future<AppUser> _signInWithNaver() async {
-    if (kIsWeb) {
-      throw const AuthException('네이버 로그인은 모바일 앱에서만 지원됩니다.');
-    }
     if (_naverClientId.isEmpty) {
       throw const AuthException('네이버 로그인 설정이 필요합니다. 관리자에게 문의해주세요.');
     }
     try {
-      await _loginWithNaverSdk();
-      final accessToken = await NaverLoginSDK.getAccessToken();
-      if (accessToken.isEmpty) {
-        throw const AuthException('네이버 인증 정보를 가져오지 못했습니다.');
+      final Map<String, dynamic> payload;
+      if (kIsWeb) {
+        final authResult = await naver_web.authorizeWithNaverWeb(
+          clientId: _naverClientId,
+        );
+        payload = {'code': authResult.code, 'state': authResult.state};
+      } else {
+        await _loginWithNaverSdk();
+        final accessToken = await NaverLoginSDK.getAccessToken();
+        if (accessToken.isEmpty) {
+          throw const AuthException('네이버 인증 정보를 가져오지 못했습니다.');
+        }
+        payload = {'accessToken': accessToken};
       }
       final result = await _functions
           .httpsCallable(naverSignInCallableName)
-          .call({'accessToken': accessToken});
+          .call(payload);
       final data = Map<String, dynamic>.from(result.data as Map);
       final customToken = data['token'] as String?;
       if (customToken == null || customToken.isEmpty) {
