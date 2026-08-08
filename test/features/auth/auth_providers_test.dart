@@ -33,6 +33,19 @@ void main() {
     expect(repository.user!.providerId, 'google');
   });
 
+  test('네이버 로그인 성공 시 providerId가 naver로 설정된다', () async {
+    final repository = FakeAuthRepository();
+    final container = createContainer(repository);
+
+    final success = await container
+        .read(authControllerProvider.notifier)
+        .signInWith(AuthProviderType.naver);
+
+    expect(success, isTrue);
+    expect(repository.user, isNotNull);
+    expect(repository.user!.providerId, 'naver');
+  });
+
   test('로그인 실패 시 false를 반환하고 에러 상태가 된다', () async {
     final repository =
         FakeAuthRepository(failure: const AuthException('로그인 실패'));
