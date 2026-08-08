@@ -31,4 +31,12 @@ class FakeAuthRepository implements AuthRepository {
   Future<void> signOut() async {
     user = null;
   }
+
+  @override
+  Future<void> deleteAccount() async {
+    if (failure != null) {
+      throw failure!;
+    }
+    user = null;
+  }
 }

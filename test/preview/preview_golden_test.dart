@@ -603,4 +603,36 @@ void main() {
 
     await expectGolden(find.byType(ProfileScreen), 'profile_screen_logged_in');
   });
+
+  testWidgets('회원 탈퇴 확인 다이얼로그 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(
+            FakeAuthRepository(user: _previewUser),
+          ),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: buildAppTheme(),
+          home: const ProfileScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.text('회원 탈퇴'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('회원 탈퇴'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('회원 탈퇴'));
+    await tester.pumpAndSettle();
+
+    await expectGolden(find.byType(MaterialApp), 'delete_account_dialog');
+  });
 }

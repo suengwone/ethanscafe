@@ -60,6 +60,36 @@ void main() {
     expect(container.read(authControllerProvider).hasError, isFalse);
   });
 
+  test('계정 삭제 성공 시 true를 반환하고 사용자 정보가 제거된다', () async {
+    final repository = FakeAuthRepository(
+      user: const AppUser(uid: 'u1', displayName: '홍길동'),
+    );
+    final container = createContainer(repository);
+
+    final success =
+        await container.read(authControllerProvider.notifier).deleteAccount();
+
+    expect(success, isTrue);
+    expect(repository.user, isNull);
+    expect(container.read(authControllerProvider).hasError, isFalse);
+  });
+
+  test('계정 삭제 실패 시 false를 반환하고 에러 상태가 된다', () async {
+    final repository = FakeAuthRepository(
+      user: const AppUser(uid: 'u1', displayName: '홍길동'),
+      failure: const AuthException('보안을 위해 다시 로그인한 뒤 탈퇴를 진행해주세요.'),
+    );
+    final container = createContainer(repository);
+
+    final success =
+        await container.read(authControllerProvider.notifier).deleteAccount();
+
+    expect(success, isFalse);
+    final state = container.read(authControllerProvider);
+    expect(state.hasError, isTrue);
+    expect(state.error.toString(), '보안을 위해 다시 로그인한 뒤 탈퇴를 진행해주세요.');
+  });
+
   test('authStateProvider는 저장소의 사용자 상태를 노출한다', () async {
     final repository = FakeAuthRepository(
       user: const AppUser(uid: 'u1', displayName: '홍길동'),
