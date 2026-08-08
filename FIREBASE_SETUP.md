@@ -56,24 +56,22 @@ flutterfire configure
 <string>프로필 사진 설정을 위해 사진 접근이 필요합니다.</string>
 ```
 
-### 카카오 로그인 설정
-```xml
-<key>LSApplicationQueriesSchemes</key>
-<array>
-    <string>kakaokompassauth</string>
-    <string>kakaolink</string>
-</array>
+### 카카오/네이버 로그인 설정
 
-<key>CFBundleURLTypes</key>
-<array>
-    <dict>
-        <key>CFBundleURLSchemes</key>
-        <array>
-            <string>kakao{YOUR_KAKAO_APP_KEY}</string>
-        </array>
-    </dict>
-</array>
+`ios/Runner/Info.plist`에는 카카오/네이버 URL 스킴과 쿼리 스킴이 이미 등록되어 있다.
+스킴 값은 `ios/Flutter/SocialLogin.xcconfig`에서 주입되므로 실제 키로 교체한다:
+
 ```
+// ios/Flutter/SocialLogin.xcconfig
+KAKAO_NATIVE_APP_KEY = 실제_카카오_네이티브_앱_키
+NAVER_URL_SCHEME = 네이버_개발자센터에_등록한_URL_스킴
+```
+
+### Apple 로그인 설정
+
+- `ios/Runner/Runner.entitlements`에 Sign in with Apple이 등록되어 있다.
+- Apple Developer 콘솔의 앱 ID에서 "Sign in with Apple" capability를 켜야 한다.
+- Firebase Console > Authentication > Sign-in method에서 Apple을 활성화한다.
 
 ## 5. Android 추가 설정
 
@@ -89,20 +87,12 @@ android {
 ```
 
 ### 카카오 로그인 설정
-`android/app/src/main/AndroidManifest.xml`:
 
-```xml
-<activity 
-    android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
-    android:exported="true">
-    <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="kakao{YOUR_KAKAO_APP_KEY}" />
-    </intent-filter>
-</activity>
-```
+`android/app/src/main/AndroidManifest.xml`에 카카오 리다이렉트 액티비티가 등록되어 있다.
+스킴의 앱 키는 빌드 시 `--dart-define=KAKAO_NATIVE_APP_KEY=...` 값이 그대로 주입된다
+(`android/app/build.gradle.kts`의 dart-defines 파싱 참조).
+
+네이버 로그인은 Android에서 별도 매니페스트 설정이 필요 없다.
 
 ## 6. 환경 변수 설정
 
@@ -112,9 +102,28 @@ android {
 # 카카오 로그인
 KAKAO_NATIVE_APP_KEY=your_kakao_app_key
 
+# 네이버 로그인
+NAVER_CLIENT_ID=your_naver_client_id
+NAVER_CLIENT_SECRET=your_naver_client_secret
+NAVER_URL_SCHEME=your_naver_url_scheme  # iOS 전용
+
 # Firebase (자동 생성됨)
 # firebase_options.dart에서 관리
 ```
+
+실행/빌드 시 dart-define으로 주입한다:
+
+```bash
+flutter run \
+  --dart-define=KAKAO_NATIVE_APP_KEY=... \
+  --dart-define=NAVER_CLIENT_ID=... \
+  --dart-define=NAVER_CLIENT_SECRET=... \
+  --dart-define=NAVER_URL_SCHEME=...
+```
+
+네이버 로그인은 Firebase 기본 제공 provider가 아니므로 Cloud Functions의
+`signInWithNaver` callable이 네이버 프로필 조회 후 Firebase 커스텀 토큰을 발급한다
+(`firebase deploy --only functions` 필요).
 
 ## 7. main.dart 수정
 
@@ -147,6 +156,8 @@ Firebase Console에서 활성화:
      - 이메일/비밀번호
      - Google
      - Apple (iOS)
+     - OpenID Connect (`oidc.kakao`, 카카오 OpenID Connect 활성화 필요)
+     - 네이버는 별도 provider 없이 커스텀 토큰으로 로그인된다
 
 2. **Cloud Firestore**
    - 데이터베이스 만들기

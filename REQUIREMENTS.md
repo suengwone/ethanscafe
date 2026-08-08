@@ -28,8 +28,9 @@
 ### 3.1 인증 (auth)
 - [x] 로그인 화면 UI (`/login`)
 - [x] 카카오 로그인 (kakao_flutter_sdk_user, Firebase OIDC `oidc.kakao` 연동)
+- [x] 네이버 로그인 (naver_login_sdk + Functions `signInWithNaver` 커스텀 토큰)
 - [x] 구글 로그인 (google_sign_in)
-- [x] Apple 로그인 (iOS)
+- [x] Apple 로그인 (iOS 네이티브 sign_in_with_apple, 기타 플랫폼은 Firebase provider 플로우)
 - [x] 비로그인(게스트) 모드로 둘러보기 (공개 경로 외 접근 시 `/login` 리다이렉트)
 - [x] Firebase Auth 연동 및 로그인 상태 유지 (`authStateChanges` 기반)
 - [x] 로그아웃
@@ -104,7 +105,7 @@
   - 공개 콘텐츠(`menus`, `beans`, `banners`, `notices`, `stores`, `coupons`): 공개 읽기, 쓰기는 admin 커스텀 클레임
   - `qrTokens`: 생성/삭제는 admin, 사용자는 미사용 토큰을 1회 사용 처리만 가능
   - `coupons`: 생성/삭제는 admin, 로그인 사용자는 미사용 쿠폰을 `isUsed`만 1회 사용 처리 가능
-- Cloud Functions (`functions/`, Node 20, v2): `sendBeanOrderStatusPush` — `orders/{uid}` 문서 변경 시 주문 상태 변화를 감지해 FCM 푸시 발송 / `confirmTossPayment` — 토스페이먼츠 결제 승인 콜러블 (로그인 필수, `TOSS_SECRET_KEY` 시크릿, 승인 금액 검증)
+- Cloud Functions (`functions/`, Node 20, v2): `sendBeanOrderStatusPush` — `orders/{uid}` 문서 변경 시 주문 상태 변화를 감지해 FCM 푸시 발송 / `confirmTossPayment` — 토스페이먼츠 결제 승인 콜러블 (로그인 필수, `TOSS_SECRET_KEY` 시크릿, 승인 금액 검증) / `signInWithNaver` — 네이버 액세스 토큰 검증 후 Firebase 커스텀 토큰 발급
 - 리전: asia-northeast3 (서울)
 
 ### 4.2 권한
@@ -116,7 +117,8 @@
 
 ### 4.3 환경 설정
 - Firebase 설정: `lib/firebase_options.dart` 생성 완료 (초기화 실패 시 로컬 폴백으로 동작)
-- 카카오 앱 키: `--dart-define=KAKAO_NATIVE_APP_KEY=...`, `--dart-define=KAKAO_JS_APP_KEY=...` 로 주입 (미주입 시 카카오 SDK 초기화 생략)
+- 카카오 앱 키: `--dart-define=KAKAO_NATIVE_APP_KEY=...`, `--dart-define=KAKAO_JS_APP_KEY=...` 로 주입 (미주입 시 카카오 SDK 초기화 생략, Android 매니페스트 스킴에도 자동 반영)
+- 네이버 로그인 키: `--dart-define=NAVER_CLIENT_ID=...`, `--dart-define=NAVER_CLIENT_SECRET=...`, `--dart-define=NAVER_URL_SCHEME=...` 로 주입 (미주입 시 네이버 SDK 초기화 생략, iOS 스킴은 `ios/Flutter/SocialLogin.xcconfig`에서 관리)
 - Android minSdk 23 이상 적용됨
 - 앱 자산: `assets/images/menu/` (메뉴 이미지), Pretendard 폰트 등록됨
 - 모니터링: Crashlytics(전역 에러 핸들러 연결), Analytics
@@ -128,7 +130,7 @@
 | `/` | 홈 (탭: 홈) | 구현됨 |
 | `/notices` | 알림(공지) 목록 | 구현됨 |
 | `/stores` | 매장 찾기 | 구현됨 |
-| `/login` | 로그인 | 구현됨 (카카오/구글/Apple) |
+| `/login` | 로그인 | 구현됨 (카카오/네이버/구글/Apple) |
 | `/menu` | 메뉴 (탭: 주문) | 구현됨 |
 | `/menu/item/:menuId` | 메뉴 상세 | 구현됨 |
 | `/menu/beans/:beanId` | 원두 상세 | 구현됨 |
