@@ -3,6 +3,8 @@ const assert = require('node:assert/strict');
 
 const {
   validateNaverSignInRequest,
+  buildTokenRequestUrl,
+  extractAccessToken,
   extractNaverProfile,
   naverUid,
   toUserRecordFields,
@@ -17,6 +19,45 @@ test('올바른 요청은 accessToken을 반환한다', () => {
 test('accessToken이 없거나 비어 있으면 거부한다', () => {
   for (const data of [null, {}, {accessToken: ''}, {accessToken: '   '}, {accessToken: 1}]) {
     assert.throws(() => validateNaverSignInRequest(data));
+  }
+});
+
+test('code와 state가 있으면 code 요청으로 반환한다', () => {
+  const result = validateNaverSignInRequest({code: ' c-1 ', state: ' s-1 '});
+
+  assert.deepEqual(result, {code: 'c-1', state: 's-1'});
+});
+
+test('code만 있고 state가 없으면 거부한다', () => {
+  for (const data of [{code: 'c-1'}, {code: 'c-1', state: ''}, {state: 's-1'}]) {
+    assert.throws(() => validateNaverSignInRequest(data));
+  }
+});
+
+test('토큰 교환 URL을 만든다', () => {
+  const url = buildTokenRequestUrl({
+    clientId: 'id-1',
+    clientSecret: 'secret-1',
+    code: 'c-1',
+    state: 's-1',
+  });
+
+  const parsed = new URL(url);
+  assert.equal(parsed.origin + parsed.pathname, 'https://nid.naver.com/oauth2.0/token');
+  assert.equal(parsed.searchParams.get('grant_type'), 'authorization_code');
+  assert.equal(parsed.searchParams.get('client_id'), 'id-1');
+  assert.equal(parsed.searchParams.get('client_secret'), 'secret-1');
+  assert.equal(parsed.searchParams.get('code'), 'c-1');
+  assert.equal(parsed.searchParams.get('state'), 's-1');
+});
+
+test('토큰 응답에서 access_token을 추출한다', () => {
+  assert.equal(extractAccessToken({access_token: 'at-1'}), 'at-1');
+});
+
+test('access_token이 없으면 거부한다', () => {
+  for (const body of [null, {}, {access_token: ''}, {error: 'invalid_request'}]) {
+    assert.throws(() => extractAccessToken(body));
   }
 });
 

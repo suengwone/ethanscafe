@@ -13,6 +13,8 @@ const {userDataDocPaths} = require('./account_cleanup');
 const {
   NAVER_PROFILE_URL,
   validateNaverSignInRequest,
+  buildTokenRequestUrl,
+  extractAccessToken,
   extractNaverProfile,
   naverUid,
   toUserRecordFields,
@@ -28,6 +30,8 @@ setGlobalOptions({region: 'asia-northeast3'});
 initializeApp();
 
 const tossSecretKey = defineSecret('TOSS_SECRET_KEY');
+const naverClientId = defineSecret('NAVER_CLIENT_ID');
+const naverClientSecret = defineSecret('NAVER_CLIENT_SECRET');
 
 exports.confirmTossPayment = onCall(
   {secrets: [tossSecretKey]},
@@ -67,12 +71,35 @@ exports.confirmTossPayment = onCall(
   },
 );
 
-exports.signInWithNaver = onCall(async (request) => {
-  let accessToken;
+exports.signInWithNaver = onCall(
+  {secrets: [naverClientId, naverClientSecret]},
+  async (request) => {
+  let signInRequest;
   try {
-    ({accessToken} = validateNaverSignInRequest(request.data));
+    signInRequest = validateNaverSignInRequest(request.data);
   } catch (error) {
     throw new HttpsError('invalid-argument', error.message);
+  }
+
+  let accessToken = signInRequest.accessToken;
+  if (!accessToken) {
+    const tokenResponse = await fetch(
+      buildTokenRequestUrl({
+        clientId: naverClientId.value(),
+        clientSecret: naverClientSecret.value(),
+        code: signInRequest.code,
+        state: signInRequest.state,
+      }),
+    );
+    const tokenBody = await tokenResponse.json().catch(() => null);
+    if (!tokenResponse.ok) {
+      throw new HttpsError('unauthenticated', '네이버 인증에 실패했습니다.');
+    }
+    try {
+      accessToken = extractAccessToken(tokenBody);
+    } catch (error) {
+      throw new HttpsError('unauthenticated', '네이버 인증에 실패했습니다.');
+    }
   }
 
   const response = await fetch(NAVER_PROFILE_URL, {
@@ -106,7 +133,8 @@ exports.signInWithNaver = onCall(async (request) => {
 
   const token = await auth.createCustomToken(uid, {provider: 'naver'});
   return {token};
-});
+  },
+);
 
 async function upsertNaverUser(auth, uid, fields) {
   try {
