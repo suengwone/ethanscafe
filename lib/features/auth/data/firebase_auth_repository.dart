@@ -80,13 +80,19 @@ class FirebaseAuthRepository implements AuthRepository {
 
   Future<AppUser> _signInWithKakao() async {
     try {
+      if (kIsWeb) {
+        final result = await _auth.signInWithPopup(
+          fb.OAuthProvider('oidc.kakao-web'),
+        );
+        return _requireUser(result.user);
+      }
       final token = await _loginWithKakaoSdk();
       final idToken = token.idToken;
       if (idToken == null) {
         throw const AuthException('카카오 OpenID 설정이 필요합니다. 관리자에게 문의해주세요.');
       }
       final credential = fb.OAuthProvider(
-        kIsWeb ? 'oidc.kakao-web' : 'oidc.kakao',
+        'oidc.kakao',
       ).credential(idToken: idToken, accessToken: token.accessToken);
       final result = await _auth.signInWithCredential(credential);
       return _requireUser(result.user);
