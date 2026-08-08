@@ -37,6 +37,26 @@ class FirebaseAuthRepository implements AuthRepository {
     await _auth.signOut();
   }
 
+  @override
+  Future<void> deleteAccount() async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw const AuthException('로그인이 필요합니다.');
+    }
+    try {
+      await user.delete();
+    } on fb.FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'requires-recent-login':
+          throw const AuthException('보안을 위해 다시 로그인한 뒤 탈퇴를 진행해주세요.');
+        case 'network-request-failed':
+          throw const AuthException('네트워크 연결을 확인해주세요.');
+        default:
+          throw const AuthException('계정 삭제에 실패했습니다. 다시 시도해주세요.');
+      }
+    }
+  }
+
   Future<AppUser> _signInWithKakao() async {
     try {
       final token = await _loginWithKakaoSdk();

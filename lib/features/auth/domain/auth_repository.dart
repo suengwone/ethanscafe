@@ -17,4 +17,6 @@ abstract class AuthRepository {
   Future<AppUser> signInWith(AuthProviderType provider);
 
   Future<void> signOut();
+
+  Future<void> deleteAccount();
 }

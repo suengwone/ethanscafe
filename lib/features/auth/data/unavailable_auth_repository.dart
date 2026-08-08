@@ -17,4 +17,9 @@ class UnavailableAuthRepository implements AuthRepository {
 
   @override
   Future<void> signOut() async {}
+
+  @override
+  Future<void> deleteAccount() {
+    throw const AuthException('계정 삭제 기능이 아직 준비되지 않았습니다. Firebase 설정 후 이용해주세요.');
+  }
 }

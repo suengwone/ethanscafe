@@ -38,4 +38,11 @@ class AuthController extends AsyncNotifier<void> {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(repository.signOut);
   }
+
+  Future<bool> deleteAccount() async {
+    final repository = ref.read(authRepositoryProvider);
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(repository.deleteAccount);
+    return !state.hasError;
+  }
 }
