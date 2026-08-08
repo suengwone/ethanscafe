@@ -92,7 +92,8 @@
 - [x] 원두 장바구니 (`/menu/beans-cart`, 수량 편집·합계·포인트 사용 토글)
 - [x] 원두 주문/결제 백엔드 연동 (주문하기 시 Firestore `orders` 주문 생성 + 포인트 사용/결제 금액 10% 적립 연동, 게스트는 로컬 저장)
 - [x] 장바구니 쿠폰 할인 적용 (결제 바에서 쿠폰 선택 바텀시트 → 정액/정률 할인·최소 주문 금액 조건, 할인 후 금액 기준 포인트 사용/적립, 주문 시 쿠폰 1회 사용 처리 및 주문 기록 저장)
-- [x] 주문 내역 표시 (`/profile/orders`, 주문 상태·쿠폰 할인·포인트 사용/적립 표시)
+- [x] 주문 내역 표시 (`/profile/orders`, 주문 상태·쿠폰 할인·포인트 사용/적립·결제 수단 표시)
+- [x] 실결제(PG) 연동 (토스페이먼츠 결제창 WebView + Cloud Functions `confirmTossPayment` 서버 승인, 결제 금액 검증 후 주문 생성·`paymentKey` 기록, 게스트/로컬 모드는 모의 승인 폴백)
 
 ## 4. 비기능 요구사항
 
@@ -103,7 +104,7 @@
   - 공개 콘텐츠(`menus`, `beans`, `banners`, `notices`, `stores`, `coupons`): 공개 읽기, 쓰기는 admin 커스텀 클레임
   - `qrTokens`: 생성/삭제는 admin, 사용자는 미사용 토큰을 1회 사용 처리만 가능
   - `coupons`: 생성/삭제는 admin, 로그인 사용자는 미사용 쿠폰을 `isUsed`만 1회 사용 처리 가능
-- Cloud Functions (`functions/`, Node 20, v2): `sendBeanOrderStatusPush` — `orders/{uid}` 문서 변경 시 주문 상태 변화를 감지해 FCM 푸시 발송
+- Cloud Functions (`functions/`, Node 20, v2): `sendBeanOrderStatusPush` — `orders/{uid}` 문서 변경 시 주문 상태 변화를 감지해 FCM 푸시 발송 / `confirmTossPayment` — 토스페이먼츠 결제 승인 콜러블 (로그인 필수, `TOSS_SECRET_KEY` 시크릿, 승인 금액 검증)
 - 리전: asia-northeast3 (서울)
 
 ### 4.2 권한
@@ -158,7 +159,6 @@
 |--------|------|------|------------------|
 | ★★★ | 매장 픽업 주문 (사이렌 오더) | 메뉴에서 음료/디저트 주문 후 매장 픽업. 주문 상태(접수/제조중/완료) 표시 | `orders` 확장, 메뉴 상세, 주문 내역 |
 | ★★★ | 웰컴/생일 쿠폰 자동 발급 | 가입/생일 시 쿠폰 자동 지급 — `coupons` 생성이 admin 전용이므로 Cloud Functions 필요 (장바구니/결제 쿠폰 할인 적용은 구현됨) | 쿠폰함(`/profile/coupons`), Cloud Functions |
-| ★★★ | 실결제(PG) 연동 | 원두/픽업 주문에 실제 결제 수단 연동 (토스페이먼츠 등) | 결제 수단 관리, `orders` |
 | ★★ | 재주문 | 주문 내역에서 동일 구성으로 장바구니 담기 | 주문 내역, 원두 장바구니 |
 | ★★ | 멤버십 등급제 | 구매 실적 기반 등급(예: 그린/골드) 및 적립률·쿠폰 혜택 차등 | 포인트, `users` |
 | ★★ | 원두 정기구독 | 주기(2주/4주) 선택 정기 배송, 구독 관리 화면 | 원두 쇼핑, 배송지 관리 |
@@ -174,6 +174,7 @@
 1. 원두 주문 상태 전환(로스팅/발송/배송 완료) 관리자 도구
 2. 미사용 의존성 정리 (image_picker, flutter_dotenv, webview_flutter 등 사용 여부 재검토)
 3. 관리자용 QR 토큰 발급 도구 / 메뉴·배너 관리 방안 마련
-4. Cloud Functions(`sendBeanOrderStatusPush`) 배포 파이프라인 구성 (`firebase deploy --only functions`)
+4. Cloud Functions(`sendBeanOrderStatusPush`, `confirmTossPayment`) 배포 파이프라인 구성 (`firebase deploy --only functions`)
+5. 토스페이먼츠 운영 키 발급 및 설정 (`TOSS_CLIENT_KEY` dart-define, `TOSS_SECRET_KEY` Functions 시크릿 등록 — 미설정 시 테스트 키/모의 결제로 동작)
 
-> 변경 이력: 원두 장바구니 주문/결제 백엔드 연동 및 주문 내역 화면의 주문 데이터 기반 전환 완료 (2026-08-07). 추천도 기반 기능 백로그 추가 (2026-08-07). 쿠폰 매장 사용 처리 플로우 및 원두 주문 상태 변경 푸시 알림(Cloud Functions) 구현 완료 (2026-08-07). 원두 장바구니/결제 쿠폰 할인 적용 구현 완료, 웰컴/생일 쿠폰 자동 발급은 Cloud Functions 필요로 백로그 유지 (2026-08-07).
+> 변경 이력: 원두 장바구니 주문/결제 백엔드 연동 및 주문 내역 화면의 주문 데이터 기반 전환 완료 (2026-08-07). 추천도 기반 기능 백로그 추가 (2026-08-07). 쿠폰 매장 사용 처리 플로우 및 원두 주문 상태 변경 푸시 알림(Cloud Functions) 구현 완료 (2026-08-07). 원두 장바구니/결제 쿠폰 할인 적용 구현 완료, 웰컴/생일 쿠폰 자동 발급은 Cloud Functions 필요로 백로그 유지 (2026-08-07). 실결제(PG) 연동 구현 완료 — 토스페이먼츠 결제창 WebView(`TossPaymentScreen`) + `confirmTossPayment` 서버 승인, 주문에 결제 정보 기록 (2026-08-08).
