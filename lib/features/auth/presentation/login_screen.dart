@@ -15,15 +15,16 @@ class LoginScreen extends ConsumerWidget {
     WidgetRef ref,
     AuthProviderType provider,
   ) async {
-    final success =
-        await ref.read(authControllerProvider.notifier).signInWith(provider);
+    final success = await ref
+        .read(authControllerProvider.notifier)
+        .signInWith(provider);
     if (!context.mounted) {
       return;
     }
     if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('로그인되었습니다.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('로그인되었습니다.')));
       context.go('/');
     }
   }
@@ -42,93 +43,104 @@ class LoginScreen extends ConsumerWidget {
     final isLoading = ref.watch(authControllerProvider).isLoading;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('로그인'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 112,
-              height: 112,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [foxtrotCard, foxtrotSurface],
+      appBar: AppBar(title: const Text('로그인')),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 112,
+                height: 112,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [foxtrotCard, foxtrotSurface],
+                  ),
+                  border: Border.all(
+                    color: foxtrotGold.withValues(alpha: 0.45),
+                  ),
                 ),
-                border: Border.all(
-                  color: foxtrotGold.withValues(alpha: 0.45),
-                ),
-              ),
-              child: const Icon(
-                LucideIcons.coffee,
-                size: 52,
-                color: foxtrotGold,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              '폭스트롯',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'NOT FAST. JUST BETTER.',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            const SizedBox(height: 28),
-            _SocialLoginButton(
-              onPressed: isLoading
-                  ? null
-                  : () => _signIn(context, ref, AuthProviderType.kakao),
-              backgroundColor: const Color(0xFFFEE500),
-              icon: const Icon(LucideIcons.messageCircle600, size: 22),
-              label: '카카오로 시작하기',
-              textColor: Colors.black87,
-            ),
-            const SizedBox(height: 12),
-            _SocialLoginButton(
-              onPressed: isLoading
-                  ? null
-                  : () => _signIn(context, ref, AuthProviderType.google),
-              backgroundColor: Colors.white,
-              icon: const Text(
-                'G',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
+                child: const Icon(
+                  LucideIcons.coffee,
+                  size: 52,
+                  color: foxtrotGold,
                 ),
               ),
-              label: '구글로 시작하기',
-              textColor: Colors.black87,
-              borderColor: foxtrotBorder,
-            ),
-            const SizedBox(height: 12),
-            _SocialLoginButton(
-              onPressed: isLoading
-                  ? null
-                  : () => _signIn(context, ref, AuthProviderType.apple),
-              backgroundColor: Colors.black,
-              icon: const Icon(Icons.apple, size: 24),
-              label: 'Apple로 시작하기',
-              textColor: Colors.white,
-              borderColor: foxtrotBorder,
-            ),
-            const SizedBox(height: 24),
-            if (isLoading)
-              const Padding(
-                padding: EdgeInsets.only(bottom: 16),
-                child: CircularProgressIndicator(),
+              const SizedBox(height: 24),
+              Text('폭스트롯', style: Theme.of(context).textTheme.headlineMedium),
+              const SizedBox(height: 8),
+              Text(
+                'NOT FAST. JUST BETTER.',
+                style: Theme.of(context).textTheme.bodySmall,
               ),
-            TextButton(
-              onPressed: isLoading ? null : () => context.go('/'),
-              child: const Text('나중에 로그인하기'),
-            ),
-          ],
+              const SizedBox(height: 28),
+              _SocialLoginButton(
+                onPressed: isLoading
+                    ? null
+                    : () => _signIn(context, ref, AuthProviderType.kakao),
+                backgroundColor: const Color(0xFFFEE500),
+                icon: const Icon(LucideIcons.messageCircle600, size: 22),
+                label: '카카오로 시작하기',
+                textColor: Colors.black87,
+              ),
+              const SizedBox(height: 12),
+              _SocialLoginButton(
+                onPressed: isLoading
+                    ? null
+                    : () => _signIn(context, ref, AuthProviderType.naver),
+                backgroundColor: const Color(0xFF03C75A),
+                icon: const Text(
+                  'N',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                  ),
+                ),
+                label: '네이버로 시작하기',
+                textColor: Colors.white,
+              ),
+              const SizedBox(height: 12),
+              _SocialLoginButton(
+                onPressed: isLoading
+                    ? null
+                    : () => _signIn(context, ref, AuthProviderType.google),
+                backgroundColor: Colors.white,
+                icon: const Text(
+                  'G',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                ),
+                label: '구글로 시작하기',
+                textColor: Colors.black87,
+                borderColor: foxtrotBorder,
+              ),
+              const SizedBox(height: 12),
+              _SocialLoginButton(
+                onPressed: isLoading
+                    ? null
+                    : () => _signIn(context, ref, AuthProviderType.apple),
+                backgroundColor: Colors.black,
+                icon: const Icon(Icons.apple, size: 24),
+                label: 'Apple로 시작하기',
+                textColor: Colors.white,
+                borderColor: foxtrotBorder,
+              ),
+              const SizedBox(height: 24),
+              if (isLoading)
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 16),
+                  child: CircularProgressIndicator(),
+                ),
+              TextButton(
+                onPressed: isLoading ? null : () => context.go('/'),
+                child: const Text('나중에 로그인하기'),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -170,10 +182,7 @@ class _SocialLoginButton extends StatelessWidget {
           ),
         ),
         icon: icon,
-        label: Text(
-          label,
-          style: const TextStyle(fontSize: 16),
-        ),
+        label: Text(label, style: const TextStyle(fontSize: 16)),
       ),
     );
   }
