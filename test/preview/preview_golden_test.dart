@@ -27,6 +27,9 @@ import 'package:cafe_app/features/menu/presentation/menu_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
 import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
 import 'package:cafe_app/features/order/presentation/order_history_screen.dart';
+import 'package:cafe_app/features/payment/data/local_payments_repository.dart';
+import 'package:cafe_app/features/payment/domain/payment_models.dart';
+import 'package:cafe_app/features/payment/presentation/toss_payment_screen.dart';
 import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/points/presentation/qr_scan_screen.dart';
@@ -192,6 +195,8 @@ void main() {
             'couponId': 'bean-order-3000',
             'couponTitle': '원두 주문 3,000원 할인',
             'couponDiscount': 3000,
+            'paymentKey': 'preview-payment-key',
+            'paymentMethod': '카드',
             'status': 'roasting',
             'createdAt': '2026-08-03T16:40:00.000',
           },
@@ -440,6 +445,24 @@ void main() {
     await fillBeanCart(tester, find.byType(MenuScreen));
 
     await expectGolden(find.byType(MenuScreen), 'beans_list_cart_bar');
+  });
+
+  testWidgets('토스 결제 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      TossPaymentScreen(
+        request: const PaymentRequest(
+          orderId: 'bean-preview-0001',
+          orderName: '에티오피아 예가체프 아리차 에이미 G1 외 1건',
+          amount: 59000,
+        ),
+        repository: LocalPaymentsRepository(),
+        webViewBuilder: (context) => const ColoredBox(color: foxtrotBlack),
+      ),
+    );
+
+    await expectGolden(find.byType(TossPaymentScreen), 'toss_payment_screen');
   });
 
   testWidgets('로그인 화면 스크린샷', (WidgetTester tester) async {

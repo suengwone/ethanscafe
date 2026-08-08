@@ -8,6 +8,7 @@ import 'package:cafe_app/features/coupon/domain/coupon_models.dart';
 import 'package:cafe_app/features/coupon/presentation/coupons_providers.dart';
 import 'package:cafe_app/features/order/domain/order_models.dart';
 import 'package:cafe_app/features/order/presentation/order_providers.dart';
+import 'package:cafe_app/features/payment/domain/payment_models.dart';
 import 'package:cafe_app/features/points/domain/points_models.dart';
 import 'package:cafe_app/features/points/presentation/points_providers.dart';
 
@@ -257,6 +258,57 @@ void main() {
 
     await expectLater(
       controller.placeOrder(cartItems: smallCart, coupon: coupon),
+      throwsStateError,
+    );
+
+    final orders = await container.read(beanOrdersControllerProvider.future);
+    expect(orders, isEmpty);
+    final coupons = await container.read(couponsControllerProvider.future);
+    expect(
+      coupons.firstWhere((c) => c.id == 'bean-order-3000').isUsed,
+      isFalse,
+    );
+  });
+
+  test('결제 승인 정보가 주문에 기록된다', () async {
+    final container = createContainer();
+    final controller = container.read(beanOrdersControllerProvider.notifier);
+
+    final order = await controller.placeOrder(
+      cartItems: _cartItems(),
+      payment: const PaymentApproval(
+        paymentKey: 'pk-123',
+        orderId: 'bean-123456',
+        amount: 62000,
+        method: '카드',
+      ),
+    );
+
+    expect(order.paymentKey, 'pk-123');
+    expect(order.paymentMethod, '카드');
+    expect(order.paidAmount, 62000);
+
+    final orders = await container.read(beanOrdersControllerProvider.future);
+    expect(orders.first.paymentKey, 'pk-123');
+    expect(orders.first.paymentMethod, '카드');
+  });
+
+  test('결제 승인 금액이 주문 금액과 다르면 거부된다', () async {
+    final container = createContainer();
+    final coupon = await loadCoupon(container, 'bean-order-3000');
+    final controller = container.read(beanOrdersControllerProvider.notifier);
+
+    await expectLater(
+      controller.placeOrder(
+        cartItems: _cartItems(),
+        coupon: coupon,
+        payment: const PaymentApproval(
+          paymentKey: 'pk-123',
+          orderId: 'bean-123456',
+          amount: 62000,
+          method: '카드',
+        ),
+      ),
       throwsStateError,
     );
 
