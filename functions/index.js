@@ -1,13 +1,61 @@
 const {setGlobalOptions} = require('firebase-functions/v2');
 const {onDocumentWritten} = require('firebase-functions/v2/firestore');
+const {onCall, HttpsError} = require('firebase-functions/v2/https');
+const {defineSecret} = require('firebase-functions/params');
 const {initializeApp} = require('firebase-admin/app');
 const {getFirestore, FieldValue} = require('firebase-admin/firestore');
 const {getMessaging} = require('firebase-admin/messaging');
 
 const {collectStatusChangeNotifications} = require('./order_status');
+const {
+  TOSS_CONFIRM_URL,
+  validateConfirmRequest,
+  toApprovalPayload,
+  basicAuthHeader,
+} = require('./toss_payment');
 
 setGlobalOptions({region: 'asia-northeast3'});
 initializeApp();
+
+const tossSecretKey = defineSecret('TOSS_SECRET_KEY');
+
+exports.confirmTossPayment = onCall(
+  {secrets: [tossSecretKey]},
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', '로그인이 필요합니다.');
+    }
+
+    let confirmRequest;
+    try {
+      confirmRequest = validateConfirmRequest(request.data);
+    } catch (error) {
+      throw new HttpsError('invalid-argument', error.message);
+    }
+
+    const response = await fetch(TOSS_CONFIRM_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': basicAuthHeader(tossSecretKey.value()),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(confirmRequest),
+    });
+    const payment = await response.json();
+    if (!response.ok) {
+      throw new HttpsError(
+        'failed-precondition',
+        payment && payment.message ? payment.message : '결제 승인에 실패했습니다.',
+      );
+    }
+
+    try {
+      return toApprovalPayload(payment, confirmRequest.amount);
+    } catch (error) {
+      throw new HttpsError('failed-precondition', error.message);
+    }
+  },
+);
 
 const ORDER_HISTORY_ROUTE = '/profile/orders';
 const ANDROID_CHANNEL_ID = 'high_importance_channel';
