@@ -1,0 +1,6 @@
+// 소셜 로그인 네이티브 설정 값
+// - KAKAO_NATIVE_APP_KEY: 카카오 개발자 콘솔의 네이티브 앱 키 (Info.plist URL 스킴 kakao{키} 에 사용)
+// - NAVER_URL_SCHEME: 네이버 개발자 센터에 등록한 iOS URL 스킴
+// 실제 값으로 교체한 뒤 --dart-define 값과 동일하게 유지해야 합니다.
+KAKAO_NATIVE_APP_KEY = KAKAO_NATIVE_APP_KEY
+NAVER_URL_SCHEME = foxtrotnaverlogin

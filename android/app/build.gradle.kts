@@ -1,3 +1,4 @@
+import java.util.Base64
 import java.util.Properties
 
 plugins {
@@ -14,6 +15,20 @@ val keystorePropertiesFile = rootProject.file("key.properties")
 val keystoreProperties = Properties().apply {
     if (keystorePropertiesFile.exists()) {
         keystorePropertiesFile.inputStream().use { load(it) }
+    }
+}
+
+val dartDefines = mutableMapOf<String, String>().apply {
+    if (project.hasProperty("dart-defines")) {
+        (project.property("dart-defines") as String)
+            .split(",")
+            .forEach { entry ->
+                val decoded = String(Base64.getDecoder().decode(entry), Charsets.UTF_8)
+                val pair = decoded.split("=", limit = 2)
+                if (pair.size == 2) {
+                    put(pair[0], pair[1])
+                }
+            }
     }
 }
 
@@ -36,6 +51,8 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["kakaoNativeAppKey"] =
+            dartDefines["KAKAO_NATIVE_APP_KEY"] ?: "KAKAO_NATIVE_APP_KEY"
     }
 
     signingConfigs {
