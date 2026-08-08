@@ -64,10 +64,16 @@ class LoginScreen extends ConsumerWidget {
                     color: foxtrotGold.withValues(alpha: 0.45),
                   ),
                 ),
-                child: const Icon(
-                  LucideIcons.coffee,
-                  size: 52,
-                  color: foxtrotGold,
+                alignment: Alignment.center,
+                child: const Text(
+                  'f',
+                  style: TextStyle(
+                    fontSize: 56,
+                    height: 1,
+                    fontWeight: FontWeight.w700,
+                    fontStyle: FontStyle.italic,
+                    color: foxtrotGold,
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
