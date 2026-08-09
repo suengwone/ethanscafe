@@ -1,6 +1,6 @@
 class KakaoWebAuthResult {
-  const KakaoWebAuthResult({required this.idToken, this.accessToken});
+  const KakaoWebAuthResult({required this.code, required this.redirectUri});
 
-  final String idToken;
-  final String? accessToken;
+  final String code;
+  final String redirectUri;
 }

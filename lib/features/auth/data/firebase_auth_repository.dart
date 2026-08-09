@@ -23,6 +23,7 @@ class FirebaseAuthRepository implements AuthRepository {
 
   static const _functionsRegion = 'asia-northeast3';
   static const naverSignInCallableName = 'signInWithNaver';
+  static const kakaoSignInCallableName = 'signInWithKakao';
 
   FirebaseAuthRepository({fb.FirebaseAuth? auth, FirebaseFunctions? functions})
     : _auth = auth ?? fb.FirebaseAuth.instance,
@@ -83,9 +84,17 @@ class FirebaseAuthRepository implements AuthRepository {
         final webAuth = await kakao_web.authorizeWithKakaoWeb(
           clientId: _kakaoJsAppKey,
         );
+        final callableResult = await _functions
+            .httpsCallable(kakaoSignInCallableName)
+            .call({'code': webAuth.code, 'redirectUri': webAuth.redirectUri});
+        final data = Map<String, dynamic>.from(callableResult.data as Map);
+        final idToken = data['idToken'] as String?;
+        if (idToken == null || idToken.isEmpty) {
+          throw const AuthException('카카오 인증 정보를 가져오지 못했습니다.');
+        }
         final credential = fb.OAuthProvider('oidc.kakao-web').credential(
-          idToken: webAuth.idToken,
-          accessToken: webAuth.accessToken,
+          idToken: idToken,
+          accessToken: data['accessToken'] as String?,
         );
         final result = await _auth.signInWithCredential(credential);
         return _requireUser(result.user);
@@ -102,6 +111,8 @@ class FirebaseAuthRepository implements AuthRepository {
       return _requireUser(result.user);
     } on AuthException {
       rethrow;
+    } on FirebaseFunctionsException catch (e) {
+      throw AuthException(e.message ?? '카카오 로그인에 실패했습니다. 다시 시도해주세요.');
     } on fb.FirebaseAuthException catch (e) {
       throw AuthException(_firebaseMessage(e));
     } catch (_) {

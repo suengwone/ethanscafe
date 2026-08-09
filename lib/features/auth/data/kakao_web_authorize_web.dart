@@ -1,7 +1,6 @@
 // ignore_for_file: deprecated_member_use, avoid_web_libraries_in_flutter
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:html' as html;
 import 'dart:math';
 
@@ -18,11 +17,7 @@ Future<KakaoWebAuthResult> authorizeWithKakaoWeb({
     origin: origin,
     redirectUri: redirectUri,
   );
-  return _exchangeCode(
-    clientId: clientId,
-    redirectUri: redirectUri,
-    code: code,
-  );
+  return KakaoWebAuthResult(code: code, redirectUri: redirectUri);
 }
 
 Future<String> _authorizeCode({
@@ -87,53 +82,6 @@ Future<String> _authorizeCode({
   });
 
   return completer.future;
-}
-
-Future<KakaoWebAuthResult> _exchangeCode({
-  required String clientId,
-  required String redirectUri,
-  required String code,
-}) async {
-  final body = Uri(
-    queryParameters: {
-      'grant_type': 'authorization_code',
-      'client_id': clientId,
-      'redirect_uri': redirectUri,
-      'code': code,
-    },
-  ).query;
-
-  final html.HttpRequest response;
-  try {
-    response = await html.HttpRequest.request(
-      'https://kauth.kakao.com/oauth/token',
-      method: 'POST',
-      requestHeaders: {
-        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-      },
-      sendData: body,
-    );
-  } catch (_) {
-    throw const AuthException('카카오 로그인에 실패했습니다. 다시 시도해주세요.');
-  }
-
-  final text = response.responseText;
-  if (text == null || text.isEmpty) {
-    throw const AuthException('카카오 인증 정보를 가져오지 못했습니다.');
-  }
-  final data = jsonDecode(text);
-  if (data is! Map) {
-    throw const AuthException('카카오 인증 정보를 가져오지 못했습니다.');
-  }
-  final idToken = data['id_token'];
-  if (idToken is! String || idToken.isEmpty) {
-    throw const AuthException('카카오 OpenID 설정이 필요합니다. 관리자에게 문의해주세요.');
-  }
-  final accessToken = data['access_token'];
-  return KakaoWebAuthResult(
-    idToken: idToken,
-    accessToken: accessToken is String ? accessToken : null,
-  );
 }
 
 String _generateState([int length = 32]) {
