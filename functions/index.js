@@ -20,6 +20,12 @@ const {
   toUserRecordFields,
 } = require('./naver_auth');
 const {
+  KAKAO_TOKEN_URL,
+  validateKakaoSignInRequest,
+  buildKakaoTokenBody,
+  extractKakaoTokens,
+} = require('./kakao_auth');
+const {
   TOSS_CONFIRM_URL,
   validateConfirmRequest,
   toApprovalPayload,
@@ -32,6 +38,8 @@ initializeApp();
 const tossSecretKey = defineSecret('TOSS_SECRET_KEY');
 const naverClientId = defineSecret('NAVER_CLIENT_ID');
 const naverClientSecret = defineSecret('NAVER_CLIENT_SECRET');
+const kakaoJsAppKey = defineSecret('KAKAO_JS_APP_KEY');
+const kakaoClientSecret = defineSecret('KAKAO_CLIENT_SECRET');
 
 exports.confirmTossPayment = onCall(
   {secrets: [tossSecretKey]},
@@ -67,6 +75,40 @@ exports.confirmTossPayment = onCall(
       return toApprovalPayload(payment, confirmRequest.amount);
     } catch (error) {
       throw new HttpsError('failed-precondition', error.message);
+    }
+  },
+);
+
+exports.signInWithKakao = onCall(
+  {secrets: [kakaoJsAppKey, kakaoClientSecret]},
+  async (request) => {
+    let signInRequest;
+    try {
+      signInRequest = validateKakaoSignInRequest(request.data);
+    } catch (error) {
+      throw new HttpsError('invalid-argument', error.message);
+    }
+
+    const response = await fetch(KAKAO_TOKEN_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+      },
+      body: buildKakaoTokenBody({
+        clientId: kakaoJsAppKey.value(),
+        clientSecret: kakaoClientSecret.value(),
+        code: signInRequest.code,
+        redirectUri: signInRequest.redirectUri,
+      }),
+    });
+    const body = await response.json().catch(() => null);
+    if (!response.ok) {
+      throw new HttpsError('unauthenticated', '카카오 인증에 실패했습니다.');
+    }
+    try {
+      return extractKakaoTokens(body);
+    } catch (error) {
+      throw new HttpsError('unauthenticated', '카카오 인증에 실패했습니다.');
     }
   },
 );
