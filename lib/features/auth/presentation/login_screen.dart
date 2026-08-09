@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/foxtrot_logo.dart';
 import '../domain/auth_models.dart';
 import 'auth_providers.dart';
 
@@ -50,32 +51,7 @@ class LoginScreen extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: 112,
-                height: 112,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [foxtrotCard, foxtrotSurface],
-                  ),
-                  border: Border.all(
-                    color: foxtrotGold.withValues(alpha: 0.45),
-                  ),
-                ),
-                alignment: Alignment.center,
-                child: const Text(
-                  'f',
-                  style: TextStyle(
-                    fontSize: 56,
-                    height: 1,
-                    fontWeight: FontWeight.w700,
-                    fontStyle: FontStyle.italic,
-                    color: foxtrotGold,
-                  ),
-                ),
-              ),
+              const FoxtrotLogo(size: 112),
               const SizedBox(height: 24),
               Text('폭스트롯', style: Theme.of(context).textTheme.headlineMedium),
               const SizedBox(height: 8),
