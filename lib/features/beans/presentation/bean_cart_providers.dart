@@ -1,5 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../order/domain/order_models.dart';
+import '../../profile/domain/delivery_address.dart';
+import '../../store/domain/store_models.dart';
 import '../domain/bean_cart_models.dart';
 import '../domain/bean_models.dart';
 
@@ -65,3 +68,39 @@ final beanCartTotalProvider = Provider<int>((ref) {
       .watch(beanCartProvider)
       .fold(0, (sum, item) => sum + item.totalPrice);
 });
+
+final beanFulfillmentMethodProvider =
+    NotifierProvider<BeanFulfillmentMethodNotifier, BeanFulfillmentMethod>(
+      BeanFulfillmentMethodNotifier.new,
+    );
+
+class BeanFulfillmentMethodNotifier extends Notifier<BeanFulfillmentMethod> {
+  @override
+  BeanFulfillmentMethod build() => BeanFulfillmentMethod.delivery;
+
+  void select(BeanFulfillmentMethod method) => state = method;
+}
+
+final beanDeliveryAddressProvider =
+    NotifierProvider<BeanDeliveryAddressNotifier, DeliveryAddress?>(
+      BeanDeliveryAddressNotifier.new,
+    );
+
+class BeanDeliveryAddressNotifier extends Notifier<DeliveryAddress?> {
+  @override
+  DeliveryAddress? build() => null;
+
+  void select(DeliveryAddress address) => state = address;
+}
+
+final beanPickupStoreProvider =
+    NotifierProvider<BeanPickupStoreNotifier, CafeStore?>(
+      BeanPickupStoreNotifier.new,
+    );
+
+class BeanPickupStoreNotifier extends Notifier<CafeStore?> {
+  @override
+  CafeStore? build() => null;
+
+  void select(CafeStore store) => state = store;
+}

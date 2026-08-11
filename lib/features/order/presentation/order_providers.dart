@@ -7,6 +7,8 @@ import '../../coupon/domain/coupon_models.dart';
 import '../../coupon/presentation/coupons_providers.dart';
 import '../../payment/domain/payment_models.dart';
 import '../../points/presentation/points_providers.dart';
+import '../../profile/domain/delivery_address.dart';
+import '../../store/domain/store_models.dart';
 import '../data/firestore_bean_orders_repository.dart';
 import '../data/local_bean_orders_repository.dart';
 import '../domain/bean_orders_repository.dart';
@@ -42,9 +44,16 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
     int usedPoints = 0,
     Coupon? coupon,
     PaymentApproval? payment,
+    BeanFulfillmentMethod fulfillmentMethod = BeanFulfillmentMethod.delivery,
+    DeliveryAddress? deliveryAddress,
+    CafeStore? pickupStore,
   }) async {
     if (cartItems.isEmpty) {
       throw StateError('장바구니가 비어 있습니다.');
+    }
+    if (fulfillmentMethod == BeanFulfillmentMethod.pickup &&
+        pickupStore == null) {
+      throw StateError('픽업 매장이 선택되지 않았습니다.');
     }
 
     final items = cartItems
@@ -115,8 +124,33 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
           couponDiscount: couponDiscount,
           paymentKey: payment?.paymentKey,
           paymentMethod: payment?.method,
+          fulfillmentMethod: fulfillmentMethod,
+          storeId: fulfillmentMethod == BeanFulfillmentMethod.pickup
+              ? pickupStore?.id
+              : null,
+          storeName: fulfillmentMethod == BeanFulfillmentMethod.pickup
+              ? pickupStore?.name
+              : null,
+          recipient: fulfillmentMethod == BeanFulfillmentMethod.delivery
+              ? deliveryAddress?.recipient
+              : null,
+          recipientPhone: fulfillmentMethod == BeanFulfillmentMethod.delivery
+              ? deliveryAddress?.phone
+              : null,
+          shippingAddress: fulfillmentMethod == BeanFulfillmentMethod.delivery
+              ? _fullAddress(deliveryAddress)
+              : null,
         );
     state = AsyncValue.data([order, ...state.value ?? const []]);
     return order;
+  }
+
+  String? _fullAddress(DeliveryAddress? address) {
+    if (address == null) {
+      return null;
+    }
+    return address.address2.isEmpty
+        ? address.address1
+        : '${address.address1} ${address.address2}';
   }
 }
