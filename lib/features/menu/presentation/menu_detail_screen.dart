@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
+import '../../pickup/presentation/pickup_cart_providers.dart';
+import '../../pickup/presentation/pickup_cart_screen.dart';
+import '../../pickup/presentation/pickup_option_sheet.dart';
 import '../domain/menu_models.dart';
 import 'menu_providers.dart';
 
@@ -16,12 +20,15 @@ class MenuDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final menuState = ref.watch(menuItemProvider(menuId));
+    final item = menuState.asData?.value;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('메뉴 상세'),
         actions: [
           _FavoriteButton(menuId: menuId),
+          const PickupCartButton(),
+          const SizedBox(width: 4),
         ],
       ),
       body: menuState.when(
@@ -40,6 +47,83 @@ class MenuDetailScreen extends ConsumerWidget {
           ),
         ),
         data: (item) => _MenuDetailBody(item: item),
+      ),
+      bottomNavigationBar: item == null ? null : _PickupOrderBar(item: item),
+    );
+  }
+}
+
+class _PickupOrderBar extends ConsumerWidget {
+  const _PickupOrderBar({required this.item});
+
+  final MenuItem item;
+
+  Future<void> _order(BuildContext context, WidgetRef ref) async {
+    final selection = await showPickupOptionSheet(context, item);
+    if (selection == null || !context.mounted) return;
+
+    ref.read(pickupCartProvider.notifier).add(
+          menuItem: item,
+          option: selection.option,
+          quantity: selection.quantity,
+        );
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${item.name}을(를) 장바구니에 담았습니다.'),
+        action: SnackBarAction(
+          label: '보기',
+          onPressed: () => context.push('/menu/cart'),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: foxtrotSurface,
+        border: Border(top: BorderSide(color: foxtrotBorder)),
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '매장 픽업 주문',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    Text(
+                      item.priceLabel,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: foxtrotGoldLight,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              FilledButton.icon(
+                onPressed: () => _order(context, ref),
+                icon: const Icon(LucideIcons.coffee, size: 18),
+                label: const Text('주문하기'),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 28,
+                    vertical: 14,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

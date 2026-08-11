@@ -6,6 +6,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
 import '../../beans/presentation/beans_list_view.dart';
+import '../../pickup/presentation/pickup_cart_screen.dart';
 import '../domain/menu_models.dart';
 import 'menu_detail_screen.dart';
 import 'menu_providers.dart';
@@ -20,6 +21,7 @@ class MenuScreen extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('메뉴'),
+          actions: const [PickupCartButton(), SizedBox(width: 4)],
           bottom: const TabBar(
             isScrollable: true,
             tabAlignment: TabAlignment.center,

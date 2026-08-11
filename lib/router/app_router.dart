@@ -12,6 +12,7 @@ import '../features/menu/presentation/menu_detail_screen.dart';
 import '../features/menu/presentation/menu_screen.dart';
 import '../features/notice/presentation/notice_list_screen.dart';
 import '../features/order/presentation/order_history_screen.dart';
+import '../features/pickup/presentation/pickup_cart_screen.dart';
 import '../features/points/presentation/points_screen.dart';
 import '../features/points/presentation/qr_scan_screen.dart';
 import '../features/profile/presentation/delivery_address_screen.dart';
@@ -70,6 +71,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                 path: '/menu',
                 builder: (context, state) => const MenuScreen(),
                 routes: [
+                  GoRoute(
+                    path: 'cart',
+                    builder: (context, state) => const PickupCartScreen(),
+                  ),
                   GoRoute(
                     path: 'beans-cart',
                     builder: (context, state) => const BeanCartScreen(),

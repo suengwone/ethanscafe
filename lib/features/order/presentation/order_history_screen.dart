@@ -5,6 +5,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../pickup/domain/pickup_order_models.dart';
+import '../../pickup/presentation/pickup_order_providers.dart';
 import '../../points/domain/points_models.dart';
 import '../../points/presentation/points_providers.dart';
 import '../domain/order_models.dart';
@@ -26,6 +28,15 @@ class BeanOrderRecord implements OrderRecord {
   DateTime get createdAt => order.createdAt;
 }
 
+class PickupOrderRecord implements OrderRecord {
+  const PickupOrderRecord(this.order);
+
+  final PickupOrder order;
+
+  @override
+  DateTime get createdAt => order.createdAt;
+}
+
 class StorePaymentRecord implements OrderRecord {
   const StorePaymentRecord(this.entry);
 
@@ -38,13 +49,16 @@ class StorePaymentRecord implements OrderRecord {
 final orderHistoryProvider = FutureProvider<List<OrderRecord>>((ref) async {
   final pointsData = await ref.watch(pointsControllerProvider.future);
   final orders = await ref.watch(beanOrdersControllerProvider.future);
+  final pickupOrders = await ref.watch(pickupOrdersControllerProvider.future);
   return <OrderRecord>[
     ...orders.map(BeanOrderRecord.new),
+    ...pickupOrders.map(PickupOrderRecord.new),
     ...pointsData.history
         .where(
           (entry) =>
               entry.paymentAmount != null &&
-              entry.description != beanOrderPaymentDescription,
+              entry.description != beanOrderPaymentDescription &&
+              entry.description != pickupOrderPaymentDescription,
         )
         .map(StorePaymentRecord.new),
   ]..sort((a, b) => b.createdAt.compareTo(a.createdAt));
@@ -83,6 +97,7 @@ class OrderHistoryScreen extends ConsumerWidget {
             itemCount: records.length,
             itemBuilder: (context, index) => switch (records[index]) {
               BeanOrderRecord(:final order) => _BeanOrderCard(order: order),
+              PickupOrderRecord(:final order) => _PickupOrderCard(order: order),
               StorePaymentRecord(:final entry) => _OrderCard(entry: entry),
             },
           );
@@ -109,7 +124,7 @@ class _EmptyOrders extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '매장 결제나 원두 주문을 하면 내역이 쌓여요.',
+            '매장 결제나 픽업 · 원두 주문을 하면 내역이 쌓여요.',
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
@@ -210,6 +225,127 @@ class _BeanOrderCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _PickupOrderCard extends StatelessWidget {
+  const _PickupOrderCard({required this.order});
+
+  final PickupOrder order;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final pointsSummary = [
+      if (order.couponDiscount > 0)
+        '쿠폰 -${_amountFormat.format(order.couponDiscount)}원',
+      if (order.usedPoints > 0) '-${_amountFormat.format(order.usedPoints)}P 사용',
+      if (order.earnedPoints > 0)
+        '+${_amountFormat.format(order.earnedPoints)}P 적립',
+    ].join(' · ');
+
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: foxtrotSurface,
+                    borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
+                    border: Border.all(color: foxtrotBorder),
+                  ),
+                  child: const Icon(
+                    LucideIcons.coffee,
+                    color: foxtrotGold,
+                    size: 22,
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(order.summary.keepWord, style: textTheme.labelLarge),
+                      const SizedBox(height: 4),
+                      Text(
+                        _dateFormat.format(order.createdAt),
+                        style: textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 10),
+                _PickupStatusChip(status: order.status),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Text(
+                    '픽업 주문 · ${order.storeName} · 주문번호 ${order.pickupNumber}번 · 총 ${order.itemCount}개'
+                        .keepWord,
+                    style: textTheme.bodySmall,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '${_amountFormat.format(order.paidAmount)}원',
+                      style: textTheme.labelLarge,
+                    ),
+                    if (pointsSummary.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        pointsSummary,
+                        style:
+                            textTheme.bodySmall?.copyWith(color: foxtrotGold),
+                      ),
+                    ],
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PickupStatusChip extends StatelessWidget {
+  const _PickupStatusChip({required this.status});
+
+  final PickupOrderStatus status;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: foxtrotSurface,
+        borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
+        border: Border.all(color: foxtrotBorder),
+      ),
+      child: Text(
+        status.label,
+        style: Theme.of(context)
+            .textTheme
+            .bodySmall
+            ?.copyWith(color: foxtrotGoldLight, fontWeight: FontWeight.w600),
       ),
     );
   }
