@@ -28,6 +28,7 @@ import 'package:cafe_app/features/menu/presentation/favorite_menu_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
 import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
+import 'package:cafe_app/features/order/domain/order_models.dart';
 import 'package:cafe_app/features/order/presentation/order_history_screen.dart';
 import 'package:cafe_app/features/payment/data/local_payments_repository.dart';
 import 'package:cafe_app/features/payment/domain/payment_models.dart';
@@ -234,6 +235,10 @@ void main() {
             'couponDiscount': 3000,
             'paymentKey': 'preview-payment-key',
             'paymentMethod': '카드',
+            'fulfillmentMethod': 'delivery',
+            'recipient': '이단',
+            'recipientPhone': '010-1234-5678',
+            'shippingAddress': '서울 성동구 연무장길 47 101동 1001호',
             'status': 'roasting',
             'createdAt': '2026-08-03T16:40:00.000',
           },
@@ -252,7 +257,10 @@ void main() {
             'totalAmount': 16000,
             'usedPoints': 0,
             'earnedPoints': 1600,
-            'status': 'delivered',
+            'fulfillmentMethod': 'pickup',
+            'storeId': 'macheon',
+            'storeName': '폭스트롯 마천점',
+            'status': 'pickedUp',
             'createdAt': '2026-07-22T13:10:00.000',
           },
         ],
@@ -446,6 +454,32 @@ void main() {
     await fillBeanCart(tester, find.byType(BeanCartScreen));
 
     await expectGolden(find.byType(BeanCartScreen), 'bean_cart_screen');
+  });
+
+  testWidgets('원두 장바구니 픽업 선택 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const BeanCartScreen(),
+      overrides: [couponNowProvider.overrideWithValue(DateTime(2026, 8, 3))],
+    );
+
+    await fillBeanCart(tester, find.byType(BeanCartScreen));
+
+    final container = ProviderScope.containerOf(
+      tester.element(find.byType(BeanCartScreen)),
+    );
+    container
+        .read(beanFulfillmentMethodProvider.notifier)
+        .select(BeanFulfillmentMethod.pickup);
+    final stores = await LocalStoresRepository().loadStores();
+    container.read(beanPickupStoreProvider.notifier).select(stores.first);
+    await tester.pumpAndSettle();
+
+    await expectGolden(
+      find.byType(BeanCartScreen),
+      'bean_cart_screen_pickup',
+    );
   });
 
   testWidgets('원두 장바구니 쿠폰 선택 바텀시트 스크린샷', (WidgetTester tester) async {

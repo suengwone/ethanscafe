@@ -63,6 +63,12 @@ void main() {
       expect(order.couponTitle, isNull);
       expect(order.couponDiscount, 0);
       expect(order.status, BeanOrderStatus.received);
+      expect(order.fulfillmentMethod, BeanFulfillmentMethod.delivery);
+      expect(order.storeId, isNull);
+      expect(order.storeName, isNull);
+      expect(order.recipient, isNull);
+      expect(order.recipientPhone, isNull);
+      expect(order.shippingAddress, isNull);
     });
 
     test('orders 필드가 없으면 빈 목록을 반환한다', () {
@@ -127,6 +133,64 @@ void main() {
       ).first;
 
       expect(restored, original);
+    });
+
+    test('택배 배송 정보가 round trip 시 보존된다', () {
+      final original = BeanOrder(
+        id: 'order-4',
+        items: const [
+          BeanOrderItem(
+            beanId: 'ethiopia-yirgacheffe-aricha',
+            beanName: '에티오피아 예가체프 아리차 에이미 G1',
+            weight: BeanWeight.g200,
+            grind: GrindOption.handDrip,
+            quantity: 1,
+            unitPrice: 18000,
+          ),
+        ],
+        totalAmount: 18000,
+        recipient: '이단',
+        recipientPhone: '010-1234-5678',
+        shippingAddress: '서울 성동구 연무장길 47 101동 1001호',
+        createdAt: DateTime(2026, 8, 7, 10),
+      );
+
+      final restored = beanOrdersFromFirestore(
+        beanOrdersToFirestore([original]),
+      ).first;
+
+      expect(restored, original);
+      expect(restored.fulfillmentMethod, BeanFulfillmentMethod.delivery);
+    });
+
+    test('매장 픽업 정보가 round trip 시 보존된다', () {
+      final original = BeanOrder(
+        id: 'order-5',
+        items: const [
+          BeanOrderItem(
+            beanId: 'brazil-monte-belo-yellow-bourbon',
+            beanName: '브라질 몬테 벨로 옌로우버본',
+            weight: BeanWeight.g500,
+            grind: GrindOption.wholeBean,
+            quantity: 2,
+            unitPrice: 32000,
+          ),
+        ],
+        totalAmount: 64000,
+        fulfillmentMethod: BeanFulfillmentMethod.pickup,
+        storeId: 'macheon',
+        storeName: '폭스트롯 마천점',
+        status: BeanOrderStatus.ready,
+        createdAt: DateTime(2026, 8, 8, 14),
+      );
+
+      final restored = beanOrdersFromFirestore(
+        beanOrdersToFirestore([original]),
+      ).first;
+
+      expect(restored, original);
+      expect(restored.storeName, '폭스트롯 마천점');
+      expect(restored.status, BeanOrderStatus.ready);
     });
   });
 }

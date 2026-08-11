@@ -11,6 +11,8 @@ import 'package:cafe_app/features/order/presentation/order_providers.dart';
 import 'package:cafe_app/features/payment/domain/payment_models.dart';
 import 'package:cafe_app/features/points/domain/points_models.dart';
 import 'package:cafe_app/features/points/presentation/points_providers.dart';
+import 'package:cafe_app/features/profile/domain/delivery_address.dart';
+import 'package:cafe_app/features/store/domain/store_models.dart';
 
 Bean _bean(String id, {int price200 = 15000, int price500 = 32000}) {
   return Bean(
@@ -45,6 +47,27 @@ List<BeanCartItem> _cartItems() => [
         quantity: 1,
       ),
     ];
+
+const _address = DeliveryAddress(
+  id: 'seed-home',
+  label: '집',
+  recipient: '이단',
+  phone: '010-1234-5678',
+  address1: '서울 성동구 연무장길 47',
+  address2: '101동 1001호',
+  isDefault: true,
+);
+
+const _store = CafeStore(
+  id: 'macheon',
+  name: '폭스트롯 마천점',
+  address: '서울 송파구 마천로 일대',
+  phone: '02-000-0000',
+  latitude: 37.4949,
+  longitude: 127.1478,
+  weekdayHours: '09:00 - 21:00',
+  weekendHours: '10:00 - 21:00',
+);
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -149,6 +172,57 @@ void main() {
       controller.placeOrder(cartItems: _cartItems(), usedPoints: 62001),
       throwsArgumentError,
     );
+  });
+
+  test('택배 주문 시 배송지 스냅샷이 주문에 기록된다', () async {
+    final container = createContainer();
+    final controller = container.read(beanOrdersControllerProvider.notifier);
+
+    final order = await controller.placeOrder(
+      cartItems: _cartItems(),
+      deliveryAddress: _address,
+    );
+
+    expect(order.fulfillmentMethod, BeanFulfillmentMethod.delivery);
+    expect(order.recipient, '이단');
+    expect(order.recipientPhone, '010-1234-5678');
+    expect(order.shippingAddress, '서울 성동구 연무장길 47 101동 1001호');
+    expect(order.storeId, isNull);
+    expect(order.storeName, isNull);
+  });
+
+  test('픽업 주문 시 매장 정보가 기록되고 배송지는 저장되지 않는다', () async {
+    final container = createContainer();
+    final controller = container.read(beanOrdersControllerProvider.notifier);
+
+    final order = await controller.placeOrder(
+      cartItems: _cartItems(),
+      fulfillmentMethod: BeanFulfillmentMethod.pickup,
+      pickupStore: _store,
+      deliveryAddress: _address,
+    );
+
+    expect(order.fulfillmentMethod, BeanFulfillmentMethod.pickup);
+    expect(order.storeId, 'macheon');
+    expect(order.storeName, '폭스트롯 마천점');
+    expect(order.recipient, isNull);
+    expect(order.shippingAddress, isNull);
+  });
+
+  test('픽업 주문에 매장이 없으면 주문이 생성되지 않는다', () async {
+    final container = createContainer();
+    final controller = container.read(beanOrdersControllerProvider.notifier);
+
+    await expectLater(
+      controller.placeOrder(
+        cartItems: _cartItems(),
+        fulfillmentMethod: BeanFulfillmentMethod.pickup,
+      ),
+      throwsStateError,
+    );
+
+    final orders = await container.read(beanOrdersControllerProvider.future);
+    expect(orders, isEmpty);
   });
 
   test('빈 장바구니로는 주문할 수 없다', () async {

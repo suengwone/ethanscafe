@@ -89,6 +89,39 @@ void main() {
     expect(reloaded.first.items.first.beanId, _items.last.beanId);
   });
 
+  test('택배 배송 정보가 영속화된다', () async {
+    await repository.placeOrder(
+      items: _items,
+      recipient: '이단',
+      recipientPhone: '010-1234-5678',
+      shippingAddress: '서울 성동구 연무장길 47 101동 1001호',
+    );
+
+    final reloaded = await LocalBeanOrdersRepository().load();
+    final order = reloaded.first;
+    expect(order.fulfillmentMethod, BeanFulfillmentMethod.delivery);
+    expect(order.recipient, '이단');
+    expect(order.recipientPhone, '010-1234-5678');
+    expect(order.shippingAddress, '서울 성동구 연무장길 47 101동 1001호');
+    expect(order.storeId, isNull);
+  });
+
+  test('매장 픽업 정보가 영속화된다', () async {
+    await repository.placeOrder(
+      items: _items,
+      fulfillmentMethod: BeanFulfillmentMethod.pickup,
+      storeId: 'macheon',
+      storeName: '폭스트롯 마천점',
+    );
+
+    final reloaded = await LocalBeanOrdersRepository().load();
+    final order = reloaded.first;
+    expect(order.fulfillmentMethod, BeanFulfillmentMethod.pickup);
+    expect(order.storeId, 'macheon');
+    expect(order.storeName, '폭스트롯 마천점');
+    expect(order.shippingAddress, isNull);
+  });
+
   test('주문 요약과 옵션 라벨을 제공한다', () async {
     final order = await repository.placeOrder(items: _items);
 
