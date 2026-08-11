@@ -42,7 +42,7 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
   Future<BeanOrder> placeOrder({
     required List<BeanCartItem> cartItems,
     int usedPoints = 0,
-    Coupon? coupon,
+    List<Coupon> coupons = const [],
     PaymentApproval? payment,
     BeanFulfillmentMethod fulfillmentMethod = BeanFulfillmentMethod.delivery,
     DeliveryAddress? deliveryAddress,
@@ -70,14 +70,11 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
         .toList();
     final totalAmount = items.fold(0, (sum, item) => sum + item.totalPrice);
 
-    var couponDiscount = 0;
-    if (coupon != null) {
-      final now = ref.read(couponNowProvider);
-      if (!coupon.canApplyTo(orderAmount: totalAmount, now: now)) {
-        throw StateError('적용할 수 없는 쿠폰입니다.');
-      }
-      couponDiscount = coupon.discountFor(totalAmount);
-    }
+    final couponDiscount = validateCoupons(
+      coupons: coupons,
+      orderAmount: totalAmount,
+      now: ref.read(couponNowProvider),
+    );
 
     if (usedPoints < 0 || usedPoints > totalAmount - couponDiscount) {
       throw ArgumentError.value(
@@ -92,8 +89,11 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
       throw StateError('결제 승인 금액이 주문 금액과 일치하지 않습니다.');
     }
 
-    if (coupon != null) {
-      await ref.read(couponsRepositoryProvider).markUsed(coupon.id);
+    if (coupons.isNotEmpty) {
+      final couponsRepository = ref.read(couponsRepositoryProvider);
+      for (final coupon in coupons) {
+        await couponsRepository.markUsed(coupon.id);
+      }
       ref.invalidate(couponsControllerProvider);
     }
 
@@ -119,8 +119,8 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
           items: items,
           usedPoints: usedPoints,
           earnedPoints: earnedPoints,
-          couponId: coupon?.id,
-          couponTitle: coupon?.title,
+          couponId: couponIdsLabel(coupons),
+          couponTitle: couponTitlesLabel(coupons),
           couponDiscount: couponDiscount,
           paymentKey: payment?.paymentKey,
           paymentMethod: payment?.method,
