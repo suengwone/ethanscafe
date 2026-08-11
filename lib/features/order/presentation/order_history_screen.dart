@@ -197,9 +197,16 @@ class _BeanOrderCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    order.paymentMethod != null
-                        ? '원두 주문 · ${order.paymentMethod} · 총 ${order.itemCount}개'
-                        : '원두 주문 · 총 ${order.itemCount}개',
+                    [
+                      '원두 주문',
+                      order.fulfillmentMethod ==
+                                  BeanFulfillmentMethod.pickup &&
+                              order.storeName != null
+                          ? '${order.fulfillmentMethod.label} · ${order.storeName}'
+                          : order.fulfillmentMethod.label,
+                      if (order.paymentMethod != null) order.paymentMethod!,
+                      '총 ${order.itemCount}개',
+                    ].join(' · ').keepWord,
                     style: textTheme.bodySmall,
                   ),
                 ),
