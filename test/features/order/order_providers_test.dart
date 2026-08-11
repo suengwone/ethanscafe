@@ -247,7 +247,7 @@ void main() {
 
     final order = await controller.placeOrder(
       cartItems: _cartItems(),
-      coupon: coupon,
+      coupons: [coupon],
     );
 
     expect(order.couponId, 'bean-order-3000');
@@ -274,7 +274,7 @@ void main() {
 
     final order = await controller.placeOrder(
       cartItems: _cartItems(),
-      coupon: coupon,
+      coupons: [coupon],
     );
 
     expect(order.couponDiscount, 6200);
@@ -293,7 +293,7 @@ void main() {
     final order = await controller.placeOrder(
       cartItems: _cartItems(),
       usedPoints: 5000,
-      coupon: coupon,
+      coupons: [coupon],
     );
 
     expect(order.couponDiscount, 3000);
@@ -311,7 +311,7 @@ void main() {
       controller.placeOrder(
         cartItems: _cartItems(),
         usedPoints: 59001,
-        coupon: coupon,
+        coupons: [coupon],
       ),
       throwsArgumentError,
     );
@@ -331,7 +331,7 @@ void main() {
     ];
 
     await expectLater(
-      controller.placeOrder(cartItems: smallCart, coupon: coupon),
+      controller.placeOrder(cartItems: smallCart, coupons: [coupon]),
       throwsStateError,
     );
 
@@ -375,7 +375,7 @@ void main() {
     await expectLater(
       controller.placeOrder(
         cartItems: _cartItems(),
-        coupon: coupon,
+        coupons: [coupon],
         payment: const PaymentApproval(
           paymentKey: 'pk-123',
           orderId: 'bean-123456',
@@ -403,9 +403,68 @@ void main() {
     await expectLater(
       controller.placeOrder(
         cartItems: _cartItems(),
-        coupon: coupon.copyWith(isUsed: true),
+        coupons: [coupon.copyWith(isUsed: true)],
       ),
       throwsStateError,
     );
+  });
+
+  test('중복 사용 쿠폰은 일반 쿠폰과 함께 적용되고 모두 사용 처리된다', () async {
+    final container = createContainer();
+    final regular = await loadCoupon(container, 'bean-order-3000');
+    final stackable = await loadCoupon(container, 'stack-extra-1000');
+    final controller = container.read(beanOrdersControllerProvider.notifier);
+
+    final order = await controller.placeOrder(
+      cartItems: _cartItems(),
+      coupons: [regular, stackable],
+    );
+
+    expect(order.couponId, 'bean-order-3000,stack-extra-1000');
+    expect(order.couponTitle, '${regular.title} + ${stackable.title}');
+    expect(order.couponDiscount, 4000);
+    expect(order.paidAmount, 58000);
+    expect(order.earnedPoints, 5800);
+
+    final coupons = await container.read(couponsControllerProvider.future);
+    expect(
+      coupons.firstWhere((c) => c.id == 'bean-order-3000').isUsed,
+      isTrue,
+    );
+    expect(
+      coupons.firstWhere((c) => c.id == 'stack-extra-1000').isUsed,
+      isTrue,
+    );
+  });
+
+  test('일반 쿠폰 2장은 함께 적용할 수 없다', () async {
+    final container = createContainer();
+    final first = await loadCoupon(container, 'bean-order-3000');
+    final second = await loadCoupon(container, 'bean-order-10p');
+    final controller = container.read(beanOrdersControllerProvider.notifier);
+
+    await expectLater(
+      controller.placeOrder(cartItems: _cartItems(), coupons: [first, second]),
+      throwsStateError,
+    );
+
+    final orders = await container.read(beanOrdersControllerProvider.future);
+    expect(orders, isEmpty);
+    final coupons = await container.read(couponsControllerProvider.future);
+    expect(coupons.any((c) => c.isUsed && c.id != 'used-latte-free'), isFalse);
+  });
+
+  test('중복 사용 쿠폰 단독으로도 적용할 수 있다', () async {
+    final container = createContainer();
+    final stackable = await loadCoupon(container, 'stack-extra-1000');
+    final controller = container.read(beanOrdersControllerProvider.notifier);
+
+    final order = await controller.placeOrder(
+      cartItems: _cartItems(),
+      coupons: [stackable],
+    );
+
+    expect(order.couponDiscount, 1000);
+    expect(order.paidAmount, 61000);
   });
 }

@@ -30,5 +30,24 @@ void main() {
       expect(coupon.expiresAt, DateTime(2026, 8, 15, 23, 59));
       expect(coupon.isUsed, isTrue);
     });
+
+    test('isStackable 필드를 파싱하고 없으면 false다', () {
+      final stackable = couponFromFirestore('coupon-3', {
+        'title': '1,000원 중복 할인',
+        'description': '다른 쿠폰과 함께 사용 가능',
+        'expiresAt': '2026-12-31T23:59:00.000',
+        'discountAmount': 1000,
+        'isStackable': true,
+      });
+      final regular = couponFromFirestore('coupon-4', {
+        'title': '일반 쿠폰',
+        'description': '설명',
+        'expiresAt': '2026-12-31T23:59:00.000',
+      });
+
+      expect(stackable.isStackable, isTrue);
+      expect(stackable.discountAmount, 1000);
+      expect(regular.isStackable, isFalse);
+    });
   });
 }
