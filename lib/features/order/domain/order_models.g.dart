@@ -49,6 +49,17 @@ _BeanOrder _$BeanOrderFromJson(Map<String, dynamic> json) => _BeanOrder(
   couponDiscount: (json['couponDiscount'] as num?)?.toInt() ?? 0,
   paymentKey: json['paymentKey'] as String?,
   paymentMethod: json['paymentMethod'] as String?,
+  fulfillmentMethod:
+      $enumDecodeNullable(
+        _$BeanFulfillmentMethodEnumMap,
+        json['fulfillmentMethod'],
+      ) ??
+      BeanFulfillmentMethod.delivery,
+  storeId: json['storeId'] as String?,
+  storeName: json['storeName'] as String?,
+  recipient: json['recipient'] as String?,
+  recipientPhone: json['recipientPhone'] as String?,
+  shippingAddress: json['shippingAddress'] as String?,
   status:
       $enumDecodeNullable(_$BeanOrderStatusEnumMap, json['status']) ??
       BeanOrderStatus.received,
@@ -67,13 +78,27 @@ Map<String, dynamic> _$BeanOrderToJson(_BeanOrder instance) =>
       'couponDiscount': instance.couponDiscount,
       'paymentKey': instance.paymentKey,
       'paymentMethod': instance.paymentMethod,
+      'fulfillmentMethod':
+          _$BeanFulfillmentMethodEnumMap[instance.fulfillmentMethod]!,
+      'storeId': instance.storeId,
+      'storeName': instance.storeName,
+      'recipient': instance.recipient,
+      'recipientPhone': instance.recipientPhone,
+      'shippingAddress': instance.shippingAddress,
       'status': _$BeanOrderStatusEnumMap[instance.status]!,
       'createdAt': instance.createdAt.toIso8601String(),
     };
+
+const _$BeanFulfillmentMethodEnumMap = {
+  BeanFulfillmentMethod.delivery: 'delivery',
+  BeanFulfillmentMethod.pickup: 'pickup',
+};
 
 const _$BeanOrderStatusEnumMap = {
   BeanOrderStatus.received: 'received',
   BeanOrderStatus.roasting: 'roasting',
   BeanOrderStatus.shipped: 'shipped',
   BeanOrderStatus.delivered: 'delivered',
+  BeanOrderStatus.ready: 'ready',
+  BeanOrderStatus.pickedUp: 'pickedUp',
 };

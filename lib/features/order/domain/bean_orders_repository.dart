@@ -12,5 +12,11 @@ abstract class BeanOrdersRepository {
     int couponDiscount,
     String? paymentKey,
     String? paymentMethod,
+    BeanFulfillmentMethod fulfillmentMethod,
+    String? storeId,
+    String? storeName,
+    String? recipient,
+    String? recipientPhone,
+    String? shippingAddress,
   });
 }

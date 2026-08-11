@@ -12,9 +12,20 @@ enum BeanOrderStatus {
   received('주문 접수'),
   roasting('로스팅 중'),
   shipped('발송 완료'),
-  delivered('배송 완료');
+  delivered('배송 완료'),
+  ready('픽업 대기'),
+  pickedUp('픽업 완료');
 
   const BeanOrderStatus(this.label);
+
+  final String label;
+}
+
+enum BeanFulfillmentMethod {
+  delivery('택배 배송'),
+  pickup('매장 픽업');
+
+  const BeanFulfillmentMethod(this.label);
 
   final String label;
 }
@@ -55,6 +66,13 @@ abstract class BeanOrder with _$BeanOrder {
     @Default(0) int couponDiscount,
     String? paymentKey,
     String? paymentMethod,
+    @Default(BeanFulfillmentMethod.delivery)
+    BeanFulfillmentMethod fulfillmentMethod,
+    String? storeId,
+    String? storeName,
+    String? recipient,
+    String? recipientPhone,
+    String? shippingAddress,
     @Default(BeanOrderStatus.received) BeanOrderStatus status,
     required DateTime createdAt,
   }) = _BeanOrder;

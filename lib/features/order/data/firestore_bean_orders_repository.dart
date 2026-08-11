@@ -41,6 +41,12 @@ class FirestoreBeanOrdersRepository implements BeanOrdersRepository {
     int couponDiscount = 0,
     String? paymentKey,
     String? paymentMethod,
+    BeanFulfillmentMethod fulfillmentMethod = BeanFulfillmentMethod.delivery,
+    String? storeId,
+    String? storeName,
+    String? recipient,
+    String? recipientPhone,
+    String? shippingAddress,
   }) async {
     if (items.isEmpty) {
       throw ArgumentError.value(items, 'items', '주문 상품이 비어 있습니다.');
@@ -57,6 +63,12 @@ class FirestoreBeanOrdersRepository implements BeanOrdersRepository {
       couponDiscount: couponDiscount,
       paymentKey: paymentKey,
       paymentMethod: paymentMethod,
+      fulfillmentMethod: fulfillmentMethod,
+      storeId: storeId,
+      storeName: storeName,
+      recipient: recipient,
+      recipientPhone: recipientPhone,
+      shippingAddress: shippingAddress,
       createdAt: DateTime.now(),
     );
 
@@ -94,6 +106,14 @@ BeanOrder beanOrderFromFirestore(Map<String, dynamic> data) {
     couponDiscount: (data['couponDiscount'] as num? ?? 0).toInt(),
     paymentKey: data['paymentKey'] as String?,
     paymentMethod: data['paymentMethod'] as String?,
+    fulfillmentMethod:
+        BeanFulfillmentMethod.values.asNameMap()[data['fulfillmentMethod']] ??
+            BeanFulfillmentMethod.delivery,
+    storeId: data['storeId'] as String?,
+    storeName: data['storeName'] as String?,
+    recipient: data['recipient'] as String?,
+    recipientPhone: data['recipientPhone'] as String?,
+    shippingAddress: data['shippingAddress'] as String?,
     status: BeanOrderStatus.values.asNameMap()[data['status']] ??
         BeanOrderStatus.received,
     createdAt: firestoreDateTime(data['createdAt']),
@@ -128,6 +148,13 @@ Map<String, dynamic> beanOrderToFirestore(BeanOrder order) {
     'couponDiscount': order.couponDiscount,
     if (order.paymentKey != null) 'paymentKey': order.paymentKey,
     if (order.paymentMethod != null) 'paymentMethod': order.paymentMethod,
+    'fulfillmentMethod': order.fulfillmentMethod.name,
+    if (order.storeId != null) 'storeId': order.storeId,
+    if (order.storeName != null) 'storeName': order.storeName,
+    if (order.recipient != null) 'recipient': order.recipient,
+    if (order.recipientPhone != null) 'recipientPhone': order.recipientPhone,
+    if (order.shippingAddress != null)
+      'shippingAddress': order.shippingAddress,
     'status': order.status.name,
     'createdAt': Timestamp.fromDate(order.createdAt),
   };
