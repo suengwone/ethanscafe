@@ -194,6 +194,10 @@ Future<List<Map<String, dynamic>>> _buildWrites() async {
       'description': _s(coupon.description),
       'expiresAt': _t(coupon.expiresAt),
       'isUsed': _b(coupon.isUsed),
+      'discountAmount': _i(coupon.discountAmount),
+      'discountRate': _i(coupon.discountRate),
+      'minOrderAmount': _i(coupon.minOrderAmount),
+      'isStackable': _b(coupon.isStackable),
     }));
   }
 

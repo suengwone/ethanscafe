@@ -42,5 +42,6 @@ Coupon couponFromFirestore(String id, Map<String, dynamic> data) {
     discountAmount: (data['discountAmount'] as num? ?? 0).toInt(),
     discountRate: (data['discountRate'] as num? ?? 0).toInt(),
     minOrderAmount: (data['minOrderAmount'] as num? ?? 0).toInt(),
+    isStackable: data['isStackable'] as bool? ?? false,
   );
 }

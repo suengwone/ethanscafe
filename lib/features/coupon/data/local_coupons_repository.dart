@@ -52,6 +52,14 @@ class LocalCouponsRepository implements CouponsRepository {
       discountRate: 10,
     ),
     Coupon(
+      id: 'stack-extra-1000',
+      title: '1,000원 중복 할인',
+      description: '다른 쿠폰과 함께 쓸 수 있는 1,000원 추가 할인',
+      expiresAt: DateTime(2026, 12, 31, 23, 59),
+      discountAmount: 1000,
+      isStackable: true,
+    ),
+    Coupon(
       id: 'spring-drip-free',
       title: '드립 커피 1잔 무료',
       description: '봄 시즌 이벤트 드립 커피 무료 쿠폰',

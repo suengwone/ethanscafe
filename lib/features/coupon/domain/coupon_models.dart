@@ -15,6 +15,7 @@ abstract class Coupon with _$Coupon {
     @Default(0) int discountAmount,
     @Default(0) int discountRate,
     @Default(0) int minOrderAmount,
+    @Default(false) bool isStackable,
   }) = _Coupon;
 
   bool isExpired(DateTime now) => expiresAt.isBefore(now);
@@ -35,3 +36,39 @@ abstract class Coupon with _$Coupon {
     return discount.clamp(0, orderAmount);
   }
 }
+
+int totalCouponDiscount(List<Coupon> coupons, int orderAmount) {
+  final discount =
+      coupons.fold(0, (sum, coupon) => sum + coupon.discountFor(orderAmount));
+  return discount.clamp(0, orderAmount);
+}
+
+int validateCoupons({
+  required List<Coupon> coupons,
+  required int orderAmount,
+  required DateTime now,
+}) {
+  if (coupons.isEmpty) {
+    return 0;
+  }
+  final ids = coupons.map((coupon) => coupon.id).toSet();
+  if (ids.length != coupons.length) {
+    throw StateError('같은 쿠폰은 한 번만 적용할 수 있습니다.');
+  }
+  final regularCount = coupons.where((coupon) => !coupon.isStackable).length;
+  if (regularCount > 1) {
+    throw StateError('중복 사용이 불가능한 쿠폰은 1장만 적용할 수 있습니다.');
+  }
+  for (final coupon in coupons) {
+    if (!coupon.canApplyTo(orderAmount: orderAmount, now: now)) {
+      throw StateError('적용할 수 없는 쿠폰입니다.');
+    }
+  }
+  return totalCouponDiscount(coupons, orderAmount);
+}
+
+String? couponIdsLabel(List<Coupon> coupons) =>
+    coupons.isEmpty ? null : coupons.map((coupon) => coupon.id).join(',');
+
+String? couponTitlesLabel(List<Coupon> coupons) =>
+    coupons.isEmpty ? null : coupons.map((coupon) => coupon.title).join(' + ');
