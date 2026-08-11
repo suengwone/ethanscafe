@@ -22,6 +22,8 @@ import 'package:cafe_app/features/beans/presentation/bean_cart_screen.dart';
 import 'package:cafe_app/features/beans/presentation/bean_detail_screen.dart';
 import 'package:cafe_app/features/coupon/presentation/coupon_list_screen.dart';
 import 'package:cafe_app/features/coupon/presentation/coupons_providers.dart';
+import 'package:cafe_app/features/menu/data/local_menu_repository.dart';
+import 'package:cafe_app/features/menu/domain/menu_models.dart';
 import 'package:cafe_app/features/menu/presentation/favorite_menu_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
@@ -30,6 +32,9 @@ import 'package:cafe_app/features/order/presentation/order_history_screen.dart';
 import 'package:cafe_app/features/payment/data/local_payments_repository.dart';
 import 'package:cafe_app/features/payment/domain/payment_models.dart';
 import 'package:cafe_app/features/payment/presentation/toss_payment_screen.dart';
+import 'package:cafe_app/features/pickup/presentation/pickup_cart_providers.dart';
+import 'package:cafe_app/features/pickup/presentation/pickup_cart_screen.dart';
+import 'package:cafe_app/features/store/data/local_stores_repository.dart';
 import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/points/presentation/qr_scan_screen.dart';
@@ -164,6 +169,38 @@ void main() {
             'amount': 1200,
             'paymentAmount': 12000,
             'createdAt': '2026-07-20T09:12:00.000',
+          },
+        ],
+      }),
+      'pickup_orders': jsonEncode({
+        'orders': [
+          {
+            'id': 'pickup-1',
+            'storeId': 'macheon',
+            'storeName': '폭스트롯 마천점',
+            'pickupNumber': 3,
+            'items': [
+              {
+                'menuId': 'espresso-vanilla-latte',
+                'menuName': '바닐라 라떼',
+                'option': 'ICED',
+                'quantity': 2,
+                'unitPrice': 6000,
+              },
+              {
+                'menuId': 'dessert-croissant',
+                'menuName': '크루아상',
+                'quantity': 1,
+                'unitPrice': 4500,
+              },
+            ],
+            'totalAmount': 16500,
+            'usedPoints': 500,
+            'earnedPoints': 1600,
+            'paymentKey': 'preview-pickup-key',
+            'paymentMethod': '카드',
+            'status': 'ready',
+            'createdAt': '2026-08-05T11:20:00.000',
           },
         ],
       }),
@@ -445,6 +482,59 @@ void main() {
     await fillBeanCart(tester, find.byType(MenuScreen));
 
     await expectGolden(find.byType(MenuScreen), 'beans_list_cart_bar');
+  });
+
+  testWidgets('픽업 옵션 바텀시트 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const MenuDetailScreen(menuId: 'espresso-vanilla-latte'),
+    );
+
+    await tester.tap(find.text('주문하기'));
+    await tester.pumpAndSettle();
+
+    await expectGolden(find.byType(MaterialApp), 'pickup_option_sheet');
+  });
+
+  Future<void> fillPickupCart(WidgetTester tester, Finder finder) async {
+    final container = ProviderScope.containerOf(tester.element(finder));
+    final menuItems = await LocalMenuRepository().loadMenuItems();
+    final latte = menuItems.firstWhere(
+      (item) => item.id == 'espresso-vanilla-latte',
+    );
+    final dessert = menuItems.firstWhere(
+      (item) => item.category == MenuCategory.dessert,
+    );
+    final notifier = container.read(pickupCartProvider.notifier);
+    notifier.add(menuItem: latte, option: 'ICED', quantity: 2);
+    notifier.add(menuItem: dessert);
+    final stores = await LocalStoresRepository().loadStores();
+    container.read(pickupStoreProvider.notifier).select(stores.first);
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('픽업 장바구니 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const PickupCartScreen(),
+      overrides: [couponNowProvider.overrideWithValue(DateTime(2026, 8, 3))],
+    );
+
+    await fillPickupCart(tester, find.byType(PickupCartScreen));
+
+    await expectGolden(find.byType(PickupCartScreen), 'pickup_cart_screen');
+  });
+
+  testWidgets('픽업 장바구니 빈 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const PickupCartScreen());
+
+    await expectGolden(
+      find.byType(PickupCartScreen),
+      'pickup_cart_screen_empty',
+    );
   });
 
   testWidgets('토스 결제 화면 스크린샷', (WidgetTester tester) async {
