@@ -34,11 +34,19 @@ Future<String> _authorizeCode({
     'scope': 'openid',
   });
 
-  final popup = html.window.open(
-    authUrl.toString(),
-    'kakao_login',
-    'width=480,height=700',
-  );
+  final html.WindowBase? popup;
+  try {
+    popup = html.window.open(
+      authUrl.toString(),
+      'kakao_login',
+      'width=480,height=700',
+    );
+  } catch (_) {
+    throw const AuthException('팝업이 차단되어 있습니다. 브라우저의 팝업 차단을 해제한 뒤 다시 시도해주세요.');
+  }
+  if (_isPopupClosed(popup)) {
+    throw const AuthException('팝업이 차단되어 있습니다. 브라우저의 팝업 차단을 해제한 뒤 다시 시도해주세요.');
+  }
 
   final completer = Completer<String>();
   StreamSubscription<html.MessageEvent>? subscription;
@@ -67,13 +75,13 @@ Future<String> _authorizeCode({
       completer.complete(code);
     } else {
       completer.completeError(
-        const AuthException('카카오 로그인에 실패했습니다. 다시 시도해주세요.'),
+        AuthException(_errorMessage(data['error'], data['errorDescription'])),
       );
     }
   });
 
   closeWatcher = Timer.periodic(const Duration(milliseconds: 500), (_) {
-    if (popup.closed == true) {
+    if (_isPopupClosed(popup)) {
       cleanUp();
       if (!completer.isCompleted) {
         completer.completeError(const AuthException('로그인이 취소되었습니다.'));
@@ -82,6 +90,30 @@ Future<String> _authorizeCode({
   });
 
   return completer.future;
+}
+
+bool _isPopupClosed(html.WindowBase? popup) {
+  if (popup == null) {
+    return true;
+  }
+  try {
+    return popup.closed ?? true;
+  } catch (_) {
+    return true;
+  }
+}
+
+String _errorMessage(Object? error, Object? description) {
+  if (error is! String || error.isEmpty) {
+    return '카카오 로그인에 실패했습니다. 다시 시도해주세요.';
+  }
+  if (error == 'access_denied') {
+    return '로그인이 취소되었습니다.';
+  }
+  final detail = description is String && description.isNotEmpty
+      ? '$error: $description'
+      : error;
+  return '카카오 로그인에 실패했습니다. ($detail)';
 }
 
 String _generateState([int length = 32]) {
