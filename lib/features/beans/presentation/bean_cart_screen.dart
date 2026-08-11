@@ -7,6 +7,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../coupon/domain/coupon_models.dart';
+import '../../coupon/presentation/coupon_select_sheet.dart';
 import '../../coupon/presentation/coupons_providers.dart';
 import '../../order/domain/order_models.dart';
 import '../../order/presentation/order_providers.dart';
@@ -696,146 +697,6 @@ class _CartItemCard extends ConsumerWidget {
   }
 }
 
-class _CouponChoice {
-  const _CouponChoice(this.coupon);
-
-  final Coupon? coupon;
-}
-
-class _CouponSelectSheet extends StatelessWidget {
-  const _CouponSelectSheet({
-    required this.coupons,
-    required this.selected,
-    required this.orderAmount,
-  });
-
-  final List<Coupon> coupons;
-  final Coupon? selected;
-  final int orderAmount;
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(
-          foxtrotScreenHPadding,
-          20,
-          foxtrotScreenHPadding,
-          16,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text('쿠폰 선택', style: textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text(
-              '주문 금액에 맞는 쿠폰 1장을 적용할 수 있어요.',
-              style: textTheme.bodySmall,
-            ),
-            const SizedBox(height: 14),
-            _CouponOptionCard(
-              title: '쿠폰 적용 안함',
-              highlighted: selected == null,
-              onTap: () =>
-                  Navigator.pop(context, const _CouponChoice(null)),
-            ),
-            ...coupons.map(
-              (coupon) => _CouponOptionCard(
-                title: coupon.title,
-                description: coupon.description,
-                trailing: '-${_priceFormat.format(
-                  coupon.discountFor(orderAmount),
-                )}원',
-                highlighted: coupon.id == selected?.id,
-                onTap: () =>
-                    Navigator.pop(context, _CouponChoice(coupon)),
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('닫기'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CouponOptionCard extends StatelessWidget {
-  const _CouponOptionCard({
-    required this.title,
-    this.description,
-    this.trailing,
-    required this.highlighted,
-    required this.onTap,
-  });
-
-  final String title;
-  final String? description;
-  final String? trailing;
-  final bool highlighted;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-        side: BorderSide(
-          color: highlighted ? foxtrotGold : foxtrotBorder,
-        ),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Row(
-            children: [
-              Icon(
-                LucideIcons.ticket,
-                size: 20,
-                color: highlighted ? foxtrotGold : foxtrotMuted,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title.keepWord, style: textTheme.labelLarge),
-                    if (description != null) ...[
-                      const SizedBox(height: 3),
-                      Text(
-                        description!.keepWord,
-                        style: textTheme.bodySmall,
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              if (trailing != null) ...[
-                const SizedBox(width: 10),
-                Text(
-                  trailing!,
-                  style: textTheme.labelLarge?.copyWith(color: foxtrotGold),
-                ),
-              ],
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _QuantityButton extends StatelessWidget {
   const _QuantityButton({
     required this.icon,
@@ -880,26 +741,19 @@ class _CheckoutBar extends ConsumerStatefulWidget {
 class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
   bool _usePoints = false;
   bool _submitting = false;
-  Coupon? _coupon;
+  List<Coupon> _coupons = const [];
 
-  Future<void> _selectCoupon(List<Coupon> applicable, int total) async {
-    final selection = await showModalBottomSheet<_CouponChoice>(
+  Future<void> _selectCoupons(List<Coupon> applicable, int total) async {
+    final selection = await showCouponSelectSheet(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: foxtrotCard,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => _CouponSelectSheet(
-        coupons: applicable,
-        selected: _coupon,
-        orderAmount: total,
-      ),
+      coupons: applicable,
+      selected: _coupons,
+      orderAmount: total,
     );
     if (selection == null || !mounted) {
       return;
     }
-    setState(() => _coupon = selection.coupon);
+    setState(() => _coupons = selection);
   }
 
   String _orderName(List<BeanCartItem> items) => items.length == 1
@@ -908,7 +762,7 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
 
   Future<void> _placeOrder(
     int usedPoints,
-    Coupon? coupon,
+    List<Coupon> coupons,
     int payAmount,
     BeanFulfillmentMethod method,
     DeliveryAddress? address,
@@ -957,7 +811,7 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
           .placeOrder(
             cartItems: items,
             usedPoints: usedPoints,
-            coupon: coupon,
+            coupons: coupons,
             payment: payment,
             fulfillmentMethod: method,
             deliveryAddress: address,
@@ -999,18 +853,19 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
     final store = ref.watch(beanPickupStoreProvider);
     final balance =
         ref.watch(pointsControllerProvider).value?.balance ?? 0;
-    final coupons =
+    final allCoupons =
         ref.watch(couponsControllerProvider).value ?? const <Coupon>[];
     final now = ref.watch(couponNowProvider);
-    final applicable = coupons
+    final applicable = allCoupons
         .where((coupon) => coupon.canApplyTo(orderAmount: total, now: now))
         .toList();
-    final selected = _coupon;
-    final coupon = selected != null &&
-            applicable.any((candidate) => candidate.id == selected.id)
-        ? selected
-        : null;
-    final couponDiscount = coupon?.discountFor(total) ?? 0;
+    final coupons = _coupons
+        .where(
+          (coupon) =>
+              applicable.any((candidate) => candidate.id == coupon.id),
+        )
+        .toList();
+    final couponDiscount = totalCouponDiscount(coupons, total);
     final usablePoints = balance.clamp(0, total - couponDiscount);
     final usedPoints = _usePoints ? usablePoints : 0;
     final payAmount = total - couponDiscount - usedPoints;
@@ -1032,11 +887,13 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      coupon != null
-                          ? coupon.title
-                          : applicable.isEmpty
-                              ? '적용 가능한 쿠폰이 없어요'
-                              : '사용 가능한 쿠폰 ${applicable.length}장',
+                      coupons.length > 1
+                          ? '쿠폰 ${coupons.length}장 적용'
+                          : coupons.isNotEmpty
+                              ? coupons.first.title
+                              : applicable.isEmpty
+                                  ? '적용 가능한 쿠폰이 없어요'
+                                  : '사용 가능한 쿠폰 ${applicable.length}장',
                       style: Theme.of(context).textTheme.bodySmall,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -1052,8 +909,8 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                   TextButton(
                     onPressed: applicable.isEmpty || _submitting
                         ? null
-                        : () => _selectCoupon(applicable, total),
-                    child: Text(coupon == null ? '쿠폰 선택' : '변경'),
+                        : () => _selectCoupons(applicable, total),
+                    child: Text(coupons.isEmpty ? '쿠폰 선택' : '변경'),
                   ),
                 ],
               ),
@@ -1111,7 +968,7 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                         ? null
                         : () => _placeOrder(
                               usedPoints,
-                              coupon,
+                              coupons,
                               payAmount,
                               method,
                               address,

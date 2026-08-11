@@ -7,6 +7,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../domain/coupon_models.dart';
+import 'coupon_select_sheet.dart';
 import 'coupons_providers.dart';
 
 final _dateFormat = DateFormat('yyyy.MM.dd');
@@ -181,7 +182,20 @@ class _CouponCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(coupon.title.keepWord, style: textTheme.labelLarge),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              coupon.title.keepWord,
+                              style: textTheme.labelLarge,
+                            ),
+                          ),
+                          if (coupon.isStackable) ...[
+                            const SizedBox(width: 6),
+                            const CouponStackableBadge(),
+                          ],
+                        ],
+                      ),
                       const SizedBox(height: 4),
                       Text(
                         coupon.description.keepWord,
