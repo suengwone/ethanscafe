@@ -25,6 +25,29 @@ class NewBadge extends StatelessWidget {
   }
 }
 
+class BestBadge extends StatelessWidget {
+  const BestBadge({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: foxtrotGoldLight,
+        borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
+      ),
+      child: const Text(
+        'BEST',
+        style: TextStyle(
+          color: foxtrotBlack,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+}
+
 class HitBadge extends StatelessWidget {
   const HitBadge({super.key});
 

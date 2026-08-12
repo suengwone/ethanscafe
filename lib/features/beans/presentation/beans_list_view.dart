@@ -7,6 +7,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
+import '../../review/domain/review_models.dart';
+import '../../review/presentation/review_providers.dart';
 import '../domain/bean_models.dart';
 import 'bean_cart_providers.dart';
 import 'beans_providers.dart';
@@ -199,14 +201,17 @@ class _BeanSectionHeader extends StatelessWidget {
   }
 }
 
-class _BeanCard extends StatelessWidget {
+class _BeanCard extends ConsumerWidget {
   const _BeanCard({required this.bean});
 
   final Bean bean;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
+    final statsBadges = ref.watch(productBadgesProvider).value ??
+        const <String, Set<ProductBadge>>{};
+    final badges = statsBadges[bean.id] ?? const <ProductBadge>{};
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
@@ -247,6 +252,14 @@ class _BeanCard extends StatelessWidget {
                                 style: textTheme.labelLarge,
                               ),
                             ),
+                            if (badges.contains(ProductBadge.best)) ...[
+                              const SizedBox(width: 6),
+                              const BestBadge(),
+                            ],
+                            if (badges.contains(ProductBadge.hit)) ...[
+                              const SizedBox(width: 6),
+                              const HitBadge(),
+                            ],
                             if (bean.isNew) ...[
                               const SizedBox(width: 6),
                               const NewBadge(),

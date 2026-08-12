@@ -7,6 +7,8 @@ import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
 import '../../beans/presentation/beans_list_view.dart';
 import '../../pickup/presentation/pickup_cart_screen.dart';
+import '../../review/domain/review_models.dart';
+import '../../review/presentation/review_providers.dart';
 import '../domain/menu_models.dart';
 import 'menu_detail_screen.dart';
 import 'menu_providers.dart';
@@ -99,13 +101,21 @@ class _MenuList extends ConsumerWidget {
   }
 }
 
-class _MenuTile extends StatelessWidget {
+class _MenuTile extends ConsumerWidget {
   const _MenuTile({required this.item});
 
   final MenuItem item;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statsBadges = ref.watch(productBadgesProvider).value ??
+        const <String, Set<ProductBadge>>{};
+    final badges = statsBadges[item.id] ?? const <ProductBadge>{};
+    final showNew = item.badge == MenuBadge.isNew;
+    final showHit =
+        item.badge == MenuBadge.hit || badges.contains(ProductBadge.hit);
+    final showBest = badges.contains(ProductBadge.best);
+
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
@@ -129,8 +139,21 @@ class _MenuTile extends StatelessWidget {
                 fontSize: 16,
               ),
             ),
-            if (item.badge == MenuBadge.isNew) const NewBadge(),
-            if (item.badge == MenuBadge.hit) const HitBadge(),
+            if (showNew || showHit || showBest)
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (showBest) const BestBadge(),
+                  if (showHit) ...[
+                    if (showBest) const SizedBox(width: 4),
+                    const HitBadge(),
+                  ],
+                  if (showNew) ...[
+                    if (showBest || showHit) const SizedBox(width: 4),
+                    const NewBadge(),
+                  ],
+                ],
+              ),
           ],
         ),
         onTap: () => context.push('/menu/item/${item.id}'),
