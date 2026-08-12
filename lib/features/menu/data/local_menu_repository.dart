@@ -16,7 +16,6 @@ class LocalMenuRepository implements MenuRepository {
       description: '자스민, 레몬그라스, 복숭아, 청포도, 허니, 다즐링',
       category: MenuCategory.drip,
       price: 6800,
-      badge: MenuBadge.isNew,
       servingOptions: _hotIced,
       isRecommended: true,
       detail: '핀카 리브레 농장의 게이샤 품종을 정성껏 핸드드립으로 내려드립니다. '
@@ -28,7 +27,6 @@ class LocalMenuRepository implements MenuRepository {
       description: '실론티, 메이플 시럽, 오렌지, 베리, 미디엄 헤비 바디',
       category: MenuCategory.drip,
       price: 6300,
-      badge: MenuBadge.isNew,
       servingOptions: _hotIced,
       detail: '케냐 무랑가 지역의 AA TOP 등급 워시드 커피입니다. '
           '묵직한 바디감 위로 오렌지와 베리의 juicy한 산미가 살아있습니다.',
@@ -59,7 +57,6 @@ class LocalMenuRepository implements MenuRepository {
       description: '체리, 체리 콜라, 석류, 쥬시, 와인, 크림',
       category: MenuCategory.drip,
       price: 6800,
-      badge: MenuBadge.hit,
       servingOptions: _hotIced,
       detail: '레드베리즈 프로세싱으로 가공된 특별한 콜롬비아 커피입니다. '
           '체리 콜라 같은 유니크한 향미가 인기 비결입니다.',
@@ -70,7 +67,6 @@ class LocalMenuRepository implements MenuRepository {
       description: '아몬드, 바닐라, 카라멜, 사탕수수, 화이트초콜릿',
       category: MenuCategory.drip,
       price: 5300,
-      badge: MenuBadge.hit,
       servingOptions: _hotIced,
       detail: '고소한 아몬드와 카라멜의 단맛이 편안하게 이어지는 '
           '데일리 드립 커피의 스테디셀러입니다.',
@@ -122,7 +118,6 @@ class LocalMenuRepository implements MenuRepository {
       description: 'Cafe Latte',
       category: MenuCategory.espresso,
       price: 5500,
-      badge: MenuBadge.hit,
       servingOptions: _hotIced,
       detail: '진한 에스프레소와 부드러운 스팀 밀크의 조화. '
           '오트·아몬드·소이 밀크로 변경할 수 있습니다.',
@@ -133,7 +128,6 @@ class LocalMenuRepository implements MenuRepository {
       description: 'Flat White',
       category: MenuCategory.espresso,
       price: 5500,
-      badge: MenuBadge.hit,
       servingOptions: _hotIced,
       isRecommended: true,
       detail: '리스트레토 샷에 벨벳 같은 마이크로폼을 더해 '
@@ -163,7 +157,6 @@ class LocalMenuRepository implements MenuRepository {
       description: 'Vanilla Latte',
       category: MenuCategory.espresso,
       price: 5800,
-      badge: MenuBadge.hit,
       servingOptions: _hotIced,
       detail: '수제 바닐라 시럽을 사용해 은은하고 고급스러운 단맛을 살렸습니다.',
     ),
@@ -201,7 +194,6 @@ class LocalMenuRepository implements MenuRepository {
       category: MenuCategory.espresso,
       price: 6800,
       priceFrom: true,
-      badge: MenuBadge.hit,
       detail: '하겐다즈 바닐라 아이스크림 위에 갓 내린 에스프레소를 부어드립니다. '
           '말차·발로나 초콜릿 토핑으로 업그레이드할 수 있습니다.',
     ),
@@ -212,7 +204,6 @@ class LocalMenuRepository implements MenuRepository {
       description: 'Valrhona Chocolate Latte',
       category: MenuCategory.beverage,
       price: 7500,
-      badge: MenuBadge.hit,
       servingOptions: _hotIced,
       detail: '프랑스 발로나 초콜릿만을 사용해 진하고 깊은 카카오의 맛을 담았습니다.',
     ),
@@ -222,7 +213,6 @@ class LocalMenuRepository implements MenuRepository {
       description: 'Strawberry Latte',
       category: MenuCategory.beverage,
       price: 6000,
-      badge: MenuBadge.hit,
       servingOptions: ['ICED'],
       isRecommended: true,
       detail: '생딸기로 직접 만든 수제 딸기청과 우유의 조합. 샷 추가도 가능합니다.',
@@ -233,7 +223,6 @@ class LocalMenuRepository implements MenuRepository {
       description: 'Matcha Latte',
       category: MenuCategory.beverage,
       price: 6500,
-      badge: MenuBadge.hit,
       servingOptions: _hotIced,
       detail: '제주산 유기농 말차의 쌉싸름함과 우유의 부드러움이 어우러집니다.',
     ),
@@ -252,7 +241,6 @@ class LocalMenuRepository implements MenuRepository {
       description: '수박 · 오렌지 · 토마토',
       category: MenuCategory.beverage,
       price: 6000,
-      badge: MenuBadge.isNew,
       servingOptions: ['ICED'],
       isRecommended: true,
       detail: '매일 아침 손질한 제철 과일을 주문 즉시 갈아드립니다.',
@@ -390,7 +378,6 @@ class LocalMenuRepository implements MenuRepository {
       description: 'Blueberry Bagel',
       category: MenuCategory.dessert,
       price: 4300,
-      badge: MenuBadge.hit,
       isRecommended: true,
       detail: '반죽에 블루베리를 넣어 은은한 단맛이 도는 인기 베이글입니다.',
     ),

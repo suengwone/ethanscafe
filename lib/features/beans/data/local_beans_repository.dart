@@ -22,7 +22,6 @@ class LocalBeansRepository implements BeansRepository {
       recommendedBrews: ['핸드드립'],
       price200: 38000,
       price500: 82000,
-      isNew: true,
     ),
     Bean(
       id: 'kenya-muranga-thangaini-aa',
@@ -43,7 +42,6 @@ class LocalBeansRepository implements BeansRepository {
       recommendedBrews: ['핸드드립', '프렌치프레스'],
       price200: 19000,
       price500: 42000,
-      isNew: true,
     ),
     Bean(
       id: 'peru-el-babaco-bourbon',
