@@ -9,6 +9,9 @@ import '../../pickup/domain/pickup_order_models.dart';
 import '../../pickup/presentation/pickup_order_providers.dart';
 import '../../points/domain/points_models.dart';
 import '../../points/presentation/points_providers.dart';
+import '../../review/domain/review_models.dart';
+import '../../review/presentation/review_providers.dart';
+import '../../review/presentation/review_sheet.dart';
 import '../domain/order_models.dart';
 import 'order_providers.dart';
 
@@ -133,13 +136,17 @@ class _EmptyOrders extends StatelessWidget {
   }
 }
 
-class _BeanOrderCard extends StatelessWidget {
+class _BeanOrderCard extends ConsumerWidget {
   const _BeanOrderCard({required this.order});
 
   final BeanOrder order;
 
+  bool get _reviewable =>
+      order.status == BeanOrderStatus.delivered ||
+      order.status == BeanOrderStatus.pickedUp;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
     final pointsSummary = [
       if (order.couponDiscount > 0)
@@ -230,6 +237,18 @@ class _BeanOrderCard extends StatelessWidget {
                 ),
               ],
             ),
+            if (_reviewable) ...[
+              const SizedBox(height: 12),
+              Container(height: 1, color: foxtrotBorder.withValues(alpha: 0.5)),
+              for (final item in order.items)
+                _ReviewItemRow(
+                  orderId: order.id,
+                  productId: item.beanId,
+                  productType: ReviewProductType.bean,
+                  productName: item.beanName,
+                  optionLabel: item.optionLabel,
+                ),
+            ],
           ],
         ),
       ),
@@ -237,13 +256,15 @@ class _BeanOrderCard extends StatelessWidget {
   }
 }
 
-class _PickupOrderCard extends StatelessWidget {
+class _PickupOrderCard extends ConsumerWidget {
   const _PickupOrderCard({required this.order});
 
   final PickupOrder order;
 
+  bool get _reviewable => order.status == PickupOrderStatus.pickedUp;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
     final pointsSummary = [
       if (order.couponDiscount > 0)
@@ -326,8 +347,94 @@ class _PickupOrderCard extends StatelessWidget {
                 ),
               ],
             ),
+            if (_reviewable) ...[
+              const SizedBox(height: 12),
+              Container(height: 1, color: foxtrotBorder.withValues(alpha: 0.5)),
+              for (final item in order.items)
+                _ReviewItemRow(
+                  orderId: order.id,
+                  productId: item.menuId,
+                  productType: ReviewProductType.menu,
+                  productName: item.menuName,
+                  optionLabel: item.option,
+                ),
+            ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ReviewItemRow extends ConsumerWidget {
+  const _ReviewItemRow({
+    required this.orderId,
+    required this.productId,
+    required this.productType,
+    required this.productName,
+    this.optionLabel,
+  });
+
+  final String orderId;
+  final String productId;
+  final ReviewProductType productType;
+  final String productName;
+  final String? optionLabel;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textTheme = Theme.of(context).textTheme;
+    ref.watch(myReviewsControllerProvider);
+    final review = ref
+        .read(myReviewsControllerProvider.notifier)
+        .findReview(orderId: orderId, productId: productId);
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(productName.keepWord, style: textTheme.bodySmall),
+                if (review != null && review.comment.isNotEmpty) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    '“${review.comment}”'.keepWord,
+                    style: textTheme.bodySmall?.copyWith(color: foxtrotMuted),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          if (review != null)
+            ReviewRatingStars(rating: review.rating)
+          else
+            SizedBox(
+              height: 30,
+              child: OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  textStyle: textTheme.bodySmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onPressed: () => showReviewSheet(
+                  context,
+                  productId: productId,
+                  productType: productType,
+                  productName: optionLabel == null
+                      ? productName
+                      : '$productName ($optionLabel)',
+                  orderId: orderId,
+                ),
+                icon: const Icon(LucideIcons.star, size: 13),
+                label: const Text('리뷰 쓰기'),
+              ),
+            ),
+        ],
       ),
     );
   }
