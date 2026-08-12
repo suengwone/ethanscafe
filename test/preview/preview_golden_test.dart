@@ -200,8 +200,48 @@ void main() {
             'earnedPoints': 1600,
             'paymentKey': 'preview-pickup-key',
             'paymentMethod': '카드',
-            'status': 'ready',
+            'status': 'pickedUp',
             'createdAt': '2026-08-05T11:20:00.000',
+          },
+        ],
+      }),
+      'product_stats': jsonEncode({
+        'drip-indonesia-mandheling-g1': {
+          'productId': 'drip-indonesia-mandheling-g1',
+          'ratingSum': 15,
+          'ratingCount': 3,
+          'salesCount': 12,
+        },
+        'ethiopia-yirgacheffe-aricha': {
+          'productId': 'ethiopia-yirgacheffe-aricha',
+          'ratingSum': 10,
+          'ratingCount': 2,
+          'salesCount': 8,
+        },
+        'drip-peru-el-babaco-bourbon': {
+          'productId': 'drip-peru-el-babaco-bourbon',
+          'ratingSum': 12,
+          'ratingCount': 3,
+          'salesCount': 30,
+        },
+        'brazil-monte-belo-yellow-bourbon': {
+          'productId': 'brazil-monte-belo-yellow-bourbon',
+          'ratingSum': 8,
+          'ratingCount': 2,
+          'salesCount': 30,
+        },
+      }),
+      'product_reviews': jsonEncode({
+        'reviews': [
+          {
+            'id': 'review-1',
+            'productId': 'guatemala-antigua-la-gloria',
+            'productType': 'bean',
+            'productName': '과테말라 안티구아 라 글로리아 SHB',
+            'orderId': 'order-1',
+            'rating': 5,
+            'comment': '고소하고 묵직해서 매일 내려 마셔요',
+            'createdAt': '2026-07-23T10:00:00.000',
           },
         ],
       }),
@@ -618,6 +658,16 @@ void main() {
     await pumpScreen(tester, const OrderHistoryScreen());
 
     await expectGolden(find.byType(OrderHistoryScreen), 'order_history_screen');
+  });
+
+  testWidgets('리뷰 작성 바텀시트 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const OrderHistoryScreen());
+
+    await tester.tap(find.text('리뷰 쓰기').first);
+    await tester.pumpAndSettle();
+
+    await expectGolden(find.byType(MaterialApp), 'review_write_sheet');
   });
 
   testWidgets('쿠폰함 화면 스크린샷', (WidgetTester tester) async {
