@@ -8,6 +8,7 @@ import '../../coupon/presentation/coupons_providers.dart';
 import '../../payment/domain/payment_models.dart';
 import '../../points/presentation/points_providers.dart';
 import '../../profile/domain/delivery_address.dart';
+import '../../review/presentation/review_providers.dart';
 import '../../store/domain/store_models.dart';
 import '../data/firestore_bean_orders_repository.dart';
 import '../data/local_bean_orders_repository.dart';
@@ -142,6 +143,14 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
               : null,
         );
     state = AsyncValue.data([order, ...state.value ?? const []]);
+
+    final salesByBean = <String, int>{};
+    for (final item in items) {
+      salesByBean[item.beanId] = (salesByBean[item.beanId] ?? 0) + item.quantity;
+    }
+    await ref.read(reviewsRepositoryProvider).recordSales(salesByBean);
+    ref.invalidate(productStatsProvider);
+
     return order;
   }
 

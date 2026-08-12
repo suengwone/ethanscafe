@@ -6,6 +6,7 @@ import '../../coupon/domain/coupon_models.dart';
 import '../../coupon/presentation/coupons_providers.dart';
 import '../../payment/domain/payment_models.dart';
 import '../../points/presentation/points_providers.dart';
+import '../../review/presentation/review_providers.dart';
 import '../../store/domain/store_models.dart';
 import '../data/firestore_pickup_orders_repository.dart';
 import '../data/local_pickup_orders_repository.dart';
@@ -120,6 +121,14 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
           paymentMethod: payment?.method,
         );
     state = AsyncValue.data([order, ...state.value ?? const []]);
+
+    final salesByMenu = <String, int>{};
+    for (final item in items) {
+      salesByMenu[item.menuId] = (salesByMenu[item.menuId] ?? 0) + item.quantity;
+    }
+    await ref.read(reviewsRepositoryProvider).recordSales(salesByMenu);
+    ref.invalidate(productStatsProvider);
+
     return order;
   }
 }
