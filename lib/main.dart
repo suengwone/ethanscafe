@@ -9,6 +9,7 @@ import 'package:naver_login_sdk/naver_login_sdk.dart';
 import 'core/services/push_notification_providers.dart';
 import 'core/services/push_notification_service.dart';
 import 'core/theme/app_theme.dart';
+import 'features/coupon/presentation/auto_coupon_providers.dart';
 import 'firebase_options.dart';
 import 'router/app_router.dart';
 
@@ -66,6 +67,7 @@ class CafeApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(pushNotificationSetupProvider);
+    ref.watch(autoCouponSetupProvider);
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
