@@ -1,8 +1,9 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/widgets/app_shell.dart';
-import '../features/home/presentation/home_screen.dart';
+import '../features/home/presentation/role_home_screen.dart';
 import '../features/auth/presentation/auth_providers.dart';
+import '../features/auth/presentation/business_register_screen.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/beans/presentation/bean_cart_screen.dart';
 import '../features/beans/presentation/bean_detail_screen.dart';
@@ -25,6 +26,8 @@ import '../features/profile/presentation/profile_screen.dart';
 import '../features/profile/presentation/support_screen.dart';
 import '../features/store/presentation/store_list_screen.dart';
 import '../features/subscription/presentation/subscription_list_screen.dart';
+import '../features/wholesale/presentation/wholesale_quote_history_screen.dart';
+import '../features/wholesale/presentation/wholesale_quote_screen.dart';
 
 const publicPaths = {'/', '/login', '/menu', '/notices', '/stores'};
 
@@ -54,7 +57,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/',
-                builder: (context, state) => const HomeScreen(),
+                builder: (context, state) => const RoleHomeScreen(),
                 routes: [
                   GoRoute(
                     path: 'notices',
@@ -63,6 +66,17 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'stores',
                     builder: (context, state) => const StoreListScreen(),
+                  ),
+                  GoRoute(
+                    path: 'wholesale/quote',
+                    builder: (context, state) => WholesaleQuoteScreen(
+                      initialBeanId: state.uri.queryParameters['bean'],
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'wholesale/quotes',
+                    builder: (context, state) =>
+                        const WholesaleQuoteHistoryScreen(),
                   ),
                 ],
               ),
@@ -159,6 +173,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'addresses',
                     builder: (context, state) => const DeliveryAddressScreen(),
+                  ),
+                  GoRoute(
+                    path: 'business',
+                    builder: (context, state) =>
+                        const BusinessRegisterScreen(),
                   ),
                   GoRoute(
                     path: 'support',

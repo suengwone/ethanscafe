@@ -153,6 +153,11 @@ class ProfileScreen extends ConsumerWidget {
                 title: '배송지 관리',
                 onTap: () => context.push('/profile/addresses'),
               ),
+              _buildListTile(
+                icon: LucideIcons.briefcaseBusiness,
+                title: '사업자 계정 관리',
+                onTap: () => context.push('/profile/business'),
+              ),
             ],
           ),
           const SizedBox(height: 8),
