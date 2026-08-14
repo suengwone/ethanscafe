@@ -71,6 +71,11 @@ class _StreamPickupOrdersRepository implements PickupOrdersRepository {
   }) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<PickupOrder> cancelOrder(String orderId) {
+    throw UnimplementedError();
+  }
 }
 
 void main() {
@@ -110,7 +115,7 @@ void main() {
     expect(find.text('폭스트롯 마천점'), findsOneWidget);
     expect(find.text('주문번호 3번'), findsOneWidget);
     expect(find.text('바닐라 라떼 외 1건'.keepWord), findsOneWidget);
-    for (final status in PickupOrderStatus.values) {
+    for (final status in pickupOrderProgressSteps) {
       expect(find.text(status.label), findsOneWidget);
     }
     expect(find.text('진행 중'), findsOneWidget);
@@ -134,6 +139,39 @@ void main() {
 
     expect(find.byIcon(LucideIcons.check), findsNWidgets(2));
     expect(find.text('진행 중'), findsOneWidget);
+  });
+
+  testWidgets('접수 상태에서만 취소 버튼이 표시된다', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(800, 1600);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    final repository = _StreamPickupOrdersRepository();
+    addTearDown(repository.close);
+
+    await pumpTrackingScreen(tester, repository: repository);
+    repository.emit([_order(PickupOrderStatus.received)]);
+    await tester.pump();
+
+    expect(find.text('주문 취소하기'), findsOneWidget);
+
+    repository.emit([_order(PickupOrderStatus.preparing)]);
+    await tester.pump();
+
+    expect(find.text('주문 취소하기'), findsNothing);
+  });
+
+  testWidgets('취소된 주문은 취소 안내가 표시된다', (WidgetTester tester) async {
+    final repository = _StreamPickupOrdersRepository();
+    addTearDown(repository.close);
+
+    await pumpTrackingScreen(tester, repository: repository);
+    repository.emit([_order(PickupOrderStatus.cancelled)]);
+    await tester.pump();
+
+    expect(find.text('주문이 취소되었어요'), findsOneWidget);
+    expect(find.text('주문 취소하기'), findsNothing);
+    expect(find.text('진행 중'), findsNothing);
   });
 
   testWidgets('주문을 찾을 수 없으면 안내 문구가 표시된다', (WidgetTester tester) async {

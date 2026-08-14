@@ -6,6 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../core/widgets/order_cancel_dialog.dart';
 import '../../pickup/domain/pickup_order_models.dart';
 import '../../pickup/presentation/pickup_order_providers.dart';
 import '../../points/domain/points_models.dart';
@@ -236,6 +237,23 @@ class _BeanOrderCard extends ConsumerWidget {
                 ),
               ],
             ),
+            if (order.isCancellable) ...[
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 36,
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: foxtrotMuted,
+                    textStyle: textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  onPressed: () => _cancelOrder(context, ref),
+                  child: const Text('주문 취소'),
+                ),
+              ),
+            ],
             if (_reviewable) ...[
               const SizedBox(height: 12),
               Container(height: 1, color: foxtrotBorder.withValues(alpha: 0.5)),
@@ -252,6 +270,36 @@ class _BeanOrderCard extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _cancelOrder(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showOrderCancelDialog(
+      context,
+      title: '원두 주문을 취소할까요?',
+      refundSummary: orderCancelRefundSummary(
+        usedPoints: order.usedPoints,
+        earnedPoints: order.earnedPoints,
+        couponTitle: order.couponTitle,
+      ),
+    );
+    if (confirmed != true || !context.mounted) {
+      return;
+    }
+    try {
+      await ref.read(beanOrdersControllerProvider.notifier).cancelOrder(
+            order.id,
+          );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('주문이 취소되었어요. 사용한 쿠폰과 포인트는 복구됩니다.')),
+        );
+      }
+    } on StateError catch (error) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(error.message)));
+      }
+    }
   }
 }
 
@@ -354,7 +402,8 @@ class _PickupOrderCard extends ConsumerWidget {
                   ),
                 ],
               ),
-              if (order.status != PickupOrderStatus.pickedUp) ...[
+              if (order.status != PickupOrderStatus.pickedUp &&
+                  !order.isCancelled) ...[
                 const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -488,7 +537,9 @@ class _PickupStatusChip extends StatelessWidget {
       child: Text(
         status.label,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: foxtrotGoldLight,
+          color: status == PickupOrderStatus.cancelled
+              ? foxtrotMuted
+              : foxtrotGoldLight,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -513,7 +564,9 @@ class _StatusChip extends StatelessWidget {
       child: Text(
         status.label,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: foxtrotGoldLight,
+          color: status == BeanOrderStatus.cancelled
+              ? foxtrotMuted
+              : foxtrotGoldLight,
           fontWeight: FontWeight.w600,
         ),
       ),

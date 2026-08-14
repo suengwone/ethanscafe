@@ -222,7 +222,7 @@ void main() {
             'earnedPoints': 1200,
             'paymentKey': 'preview-pickup-key-2',
             'paymentMethod': '카드',
-            'status': 'preparing',
+            'status': 'received',
             'createdAt': '2026-08-14T10:05:00.000',
           },
           {
@@ -431,7 +431,7 @@ void main() {
             'recipient': '이단',
             'recipientPhone': '010-1234-5678',
             'shippingAddress': '서울 성동구 연무장길 47 101동 1001호',
-            'status': 'roasting',
+            'status': 'received',
             'createdAt': '2026-08-03T16:40:00.000',
           },
           {

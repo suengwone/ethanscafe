@@ -5,6 +5,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../core/widgets/order_cancel_dialog.dart';
 import '../domain/pickup_order_models.dart';
 import 'pickup_order_providers.dart';
 
@@ -47,25 +48,33 @@ class PickupOrderTrackingScreen extends ConsumerWidget {
             children: [
               _OrderSummaryCard(order: order),
               const SizedBox(height: 12),
-              _StatusTimelineCard(status: order.status),
+              if (order.isCancelled)
+                const _CancelledCard()
+              else
+                _StatusTimelineCard(status: order.status),
               const SizedBox(height: 12),
               _OrderItemsCard(order: order),
+              if (order.isCancellable) ...[
+                const SizedBox(height: 12),
+                _CancelOrderButton(order: order),
+              ],
               const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    LucideIcons.refreshCw,
-                    size: 12,
-                    color: foxtrotMuted,
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    '주문 상태가 바뀌면 실시간으로 반영돼요.',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
-              ),
+              if (!order.isCancelled)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      LucideIcons.refreshCw,
+                      size: 12,
+                      color: foxtrotMuted,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      '주문 상태가 바뀌면 실시간으로 반영돼요.',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ),
             ],
           );
         },
@@ -152,7 +161,7 @@ class _StatusTimelineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final steps = PickupOrderStatus.values;
+    const steps = pickupOrderProgressSteps;
     final currentIndex = steps.indexOf(status);
 
     return Card(
@@ -293,6 +302,91 @@ class _StatusStep extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _CancelledCard extends StatelessWidget {
+  const _CancelledCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            const Icon(LucideIcons.circleX, size: 40, color: foxtrotMuted),
+            const SizedBox(height: 12),
+            Text('주문이 취소되었어요', style: textTheme.titleSmall),
+            const SizedBox(height: 6),
+            Text(
+              '사용한 쿠폰과 포인트는 복구되었어요. 결제 환불은 수단에 따라 3~5일 소요될 수 있어요.'
+                  .keepWord,
+              style: textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CancelOrderButton extends ConsumerWidget {
+  const _CancelOrderButton({required this.order});
+
+  final PickupOrder order;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return SizedBox(
+      width: double.infinity,
+      height: 44,
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: foxtrotMuted,
+          textStyle: textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+        ),
+        onPressed: () => _cancelOrder(context, ref),
+        child: const Text('주문 취소하기'),
+      ),
+    );
+  }
+
+  Future<void> _cancelOrder(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showOrderCancelDialog(
+      context,
+      title: '픽업 주문을 취소할까요?',
+      refundSummary: orderCancelRefundSummary(
+        usedPoints: order.usedPoints,
+        earnedPoints: order.earnedPoints,
+        couponTitle: order.couponTitle,
+      ),
+    );
+    if (confirmed != true || !context.mounted) {
+      return;
+    }
+    try {
+      await ref
+          .read(pickupOrdersControllerProvider.notifier)
+          .cancelOrder(order.id);
+      ref.invalidate(pickupOrderTrackingProvider(order.id));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('주문이 취소되었어요. 사용한 쿠폰과 포인트는 복구됩니다.')),
+        );
+      }
+    } on StateError catch (error) {
+      ref.invalidate(pickupOrderTrackingProvider(order.id));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(error.message)));
+      }
+    }
   }
 }
 
