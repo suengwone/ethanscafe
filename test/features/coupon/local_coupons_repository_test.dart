@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:cafe_app/features/coupon/data/local_coupons_repository.dart';
+import 'package:cafe_app/features/coupon/domain/coupon_models.dart';
 
 void main() {
   test('쿠폰 목록이 비어있지 않다', () async {
@@ -91,6 +92,41 @@ void main() {
       repository.markUnused('unknown-coupon'),
       throwsArgumentError,
     );
+  });
+
+  test('issueCoupon은 새 쿠폰을 추가하고 true를 반환한다', () async {
+    final repository = LocalCouponsRepository();
+    final coupon = Coupon(
+      id: 'welcome-user-1',
+      title: '웰컴 3,000원 할인',
+      description: '가입 축하 쿠폰',
+      expiresAt: DateTime(2026, 9, 12, 23, 59),
+      discountAmount: 3000,
+    );
+
+    final issued = await repository.issueCoupon(coupon);
+
+    expect(issued, isTrue);
+    final coupons = await repository.loadCoupons();
+    expect(coupons.any((c) => c.id == 'welcome-user-1'), isTrue);
+  });
+
+  test('issueCoupon은 같은 id 쿠폰을 중복 발급하지 않는다', () async {
+    final repository = LocalCouponsRepository();
+    final coupon = Coupon(
+      id: 'welcome-user-1',
+      title: '웰컴 3,000원 할인',
+      description: '가입 축하 쿠폰',
+      expiresAt: DateTime(2026, 9, 12, 23, 59),
+      discountAmount: 3000,
+    );
+    await repository.issueCoupon(coupon);
+
+    final reissued = await repository.issueCoupon(coupon);
+
+    expect(reissued, isFalse);
+    final coupons = await repository.loadCoupons();
+    expect(coupons.where((c) => c.id == 'welcome-user-1').length, 1);
   });
 
   test('사용 처리는 다른 인스턴스에 영향을 주지 않는다', () async {

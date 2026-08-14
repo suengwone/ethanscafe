@@ -1,8 +1,38 @@
 import 'package:cafe_app/features/coupon/data/firestore_coupons_repository.dart';
+import 'package:cafe_app/features/coupon/domain/coupon_models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  group('couponToFirestore', () {
+    test('쿠폰 필드를 Firestore 데이터로 변환한다', () {
+      final expiresAt = DateTime(2026, 9, 12, 23, 59);
+      final data = couponToFirestore(
+        Coupon(
+          id: 'welcome-user-1',
+          title: '웰컴 3,000원 할인',
+          description: '가입 축하 쿠폰',
+          expiresAt: expiresAt,
+          discountAmount: 3000,
+        ),
+      );
+
+      expect(data['title'], '웰컴 3,000원 할인');
+      expect(data['expiresAt'], Timestamp.fromDate(expiresAt));
+      expect(data['isUsed'], isFalse);
+      expect(data['discountAmount'], 3000);
+      expect(data['discountRate'], 0);
+      expect(data['isStackable'], isFalse);
+
+      final restored = couponFromFirestore(
+        'welcome-user-1',
+        data,
+      );
+      expect(restored.expiresAt, expiresAt);
+      expect(restored.discountAmount, 3000);
+    });
+  });
+
   group('couponFromFirestore', () {
     test('Timestamp 만료일을 DateTime으로 변환한다', () {
       final expiresAt = DateTime(2026, 8, 31, 23, 59);

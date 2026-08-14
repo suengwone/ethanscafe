@@ -12,6 +12,15 @@ class LocalCouponsRepository implements CouponsRepository {
   }
 
   @override
+  Future<bool> issueCoupon(Coupon coupon) async {
+    if (_coupons.any((existing) => existing.id == coupon.id)) {
+      return false;
+    }
+    _coupons.add(coupon);
+    return true;
+  }
+
+  @override
   Future<void> markUsed(String couponId) async {
     final index = _coupons.indexWhere((coupon) => coupon.id == couponId);
     if (index == -1) {

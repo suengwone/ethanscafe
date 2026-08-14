@@ -24,6 +24,19 @@ class FirestoreCouponsRepository implements CouponsRepository {
   }
 
   @override
+  Future<bool> issueCoupon(Coupon coupon) {
+    final doc = _firestore.collection(collectionPath).doc(coupon.id);
+    return _firestore.runTransaction((transaction) async {
+      final snapshot = await transaction.get(doc);
+      if (snapshot.exists) {
+        return false;
+      }
+      transaction.set(doc, couponToFirestore(coupon));
+      return true;
+    });
+  }
+
+  @override
   Future<void> markUsed(String couponId) {
     return _firestore
         .collection(collectionPath)
@@ -38,6 +51,19 @@ class FirestoreCouponsRepository implements CouponsRepository {
         .doc(couponId)
         .update({'isUsed': false});
   }
+}
+
+Map<String, dynamic> couponToFirestore(Coupon coupon) {
+  return {
+    'title': coupon.title,
+    'description': coupon.description,
+    'expiresAt': Timestamp.fromDate(coupon.expiresAt),
+    'isUsed': coupon.isUsed,
+    'discountAmount': coupon.discountAmount,
+    'discountRate': coupon.discountRate,
+    'minOrderAmount': coupon.minOrderAmount,
+    'isStackable': coupon.isStackable,
+  };
 }
 
 Coupon couponFromFirestore(String id, Map<String, dynamic> data) {
