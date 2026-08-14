@@ -7,6 +7,7 @@ part 'order_models.g.dart';
 
 const beanOrderPaymentDescription = '원두 주문';
 const beanOrderPointsUseDescription = '원두 주문 포인트 사용';
+const beanOrderCancelDescription = '원두 주문 취소';
 
 enum BeanOrderStatus {
   received('주문 접수'),
@@ -14,7 +15,8 @@ enum BeanOrderStatus {
   shipped('발송 완료'),
   delivered('배송 완료'),
   ready('픽업 대기'),
-  pickedUp('픽업 완료');
+  pickedUp('픽업 완료'),
+  cancelled('주문 취소');
 
   const BeanOrderStatus(this.label);
 
@@ -83,6 +85,10 @@ abstract class BeanOrder with _$BeanOrder {
   int get paidAmount => totalAmount - couponDiscount - usedPoints;
 
   int get itemCount => items.fold(0, (sum, item) => sum + item.quantity);
+
+  bool get isCancellable => status == BeanOrderStatus.received;
+
+  bool get isCancelled => status == BeanOrderStatus.cancelled;
 
   String get summary => items.length == 1
       ? items.first.beanName

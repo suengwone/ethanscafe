@@ -101,4 +101,5 @@ const _$BeanOrderStatusEnumMap = {
   BeanOrderStatus.delivered: 'delivered',
   BeanOrderStatus.ready: 'ready',
   BeanOrderStatus.pickedUp: 'pickedUp',
+  BeanOrderStatus.cancelled: 'cancelled',
 };

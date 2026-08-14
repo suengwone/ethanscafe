@@ -70,4 +70,5 @@ const _$PickupOrderStatusEnumMap = {
   PickupOrderStatus.preparing: 'preparing',
   PickupOrderStatus.ready: 'ready',
   PickupOrderStatus.pickedUp: 'pickedUp',
+  PickupOrderStatus.cancelled: 'cancelled',
 };

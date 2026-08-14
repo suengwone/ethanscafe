@@ -5,17 +5,26 @@ part 'pickup_order_models.g.dart';
 
 const pickupOrderPaymentDescription = '픽업 주문';
 const pickupOrderPointsUseDescription = '픽업 주문 포인트 사용';
+const pickupOrderCancelDescription = '픽업 주문 취소';
 
 enum PickupOrderStatus {
   received('주문 접수'),
   preparing('제조 중'),
   ready('픽업 대기'),
-  pickedUp('픽업 완료');
+  pickedUp('픽업 완료'),
+  cancelled('주문 취소');
 
   const PickupOrderStatus(this.label);
 
   final String label;
 }
+
+const pickupOrderProgressSteps = [
+  PickupOrderStatus.received,
+  PickupOrderStatus.preparing,
+  PickupOrderStatus.ready,
+  PickupOrderStatus.pickedUp,
+];
 
 @freezed
 abstract class PickupOrderItem with _$PickupOrderItem {
@@ -66,6 +75,10 @@ abstract class PickupOrder with _$PickupOrder {
   int get paidAmount => totalAmount - couponDiscount - usedPoints;
 
   int get itemCount => items.fold(0, (sum, item) => sum + item.quantity);
+
+  bool get isCancellable => status == PickupOrderStatus.received;
+
+  bool get isCancelled => status == PickupOrderStatus.cancelled;
 
   String get summary => items.length == 1
       ? items.first.menuName
