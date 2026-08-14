@@ -12,8 +12,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cafe_app/core/theme/app_theme.dart';
 import 'package:cafe_app/core/utils/text_utils.dart';
 import 'package:cafe_app/core/widgets/app_shell.dart';
+import 'package:cafe_app/features/auth/domain/account_models.dart';
 import 'package:cafe_app/features/auth/domain/auth_models.dart';
+import 'package:cafe_app/features/auth/presentation/account_providers.dart';
 import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
+import 'package:cafe_app/features/auth/presentation/business_register_screen.dart';
 import 'package:cafe_app/features/auth/presentation/login_screen.dart';
 import 'package:cafe_app/features/beans/data/local_beans_repository.dart';
 import 'package:cafe_app/features/beans/domain/bean_models.dart';
@@ -40,6 +43,9 @@ import 'package:cafe_app/features/pickup/presentation/pickup_cart_screen.dart';
 import 'package:cafe_app/features/store/data/local_stores_repository.dart';
 import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
 import 'package:cafe_app/features/subscription/presentation/subscription_list_screen.dart';
+import 'package:cafe_app/features/wholesale/presentation/business_home_screen.dart';
+import 'package:cafe_app/features/wholesale/presentation/wholesale_quote_history_screen.dart';
+import 'package:cafe_app/features/wholesale/presentation/wholesale_quote_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/points/presentation/qr_scan_screen.dart';
 import 'package:cafe_app/features/profile/presentation/delivery_address_screen.dart';
@@ -50,6 +56,7 @@ import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
 import 'package:cafe_app/features/profile/presentation/support_screen.dart';
 import 'package:cafe_app/router/app_router.dart';
 
+import '../features/auth/fake_account_repository.dart';
 import '../features/auth/fake_auth_repository.dart';
 
 Future<void> _loadFont(String family, String path) async {
@@ -120,6 +127,16 @@ Future<void> expectGolden(Finder finder, String name) async {
   }
   await expectLater(finder, matchesGoldenFile('../../preview/$name.png'));
 }
+
+const _previewBusinessProfile = AccountProfile(
+  type: AccountType.business,
+  business: BusinessProfile(
+    companyName: '카페 어라운드',
+    businessNumber: '123-45-67890',
+    managerName: '김사장',
+    phone: '010-1234-5678',
+  ),
+);
 
 const _previewUser = AppUser(
   uid: 'preview-user',
@@ -307,6 +324,46 @@ void main() {
             'message': '',
             'status': 'redeemed',
             'createdAt': '2026-07-18T11:05:00.000',
+          },
+        ],
+      }),
+      'wholesale_quotes': jsonEncode({
+        'quotes': [
+          {
+            'id': 'quote-2',
+            'companyName': '카페 어라운드',
+            'items': [
+              {
+                'beanId': 'peru-el-babaco-bourbon',
+                'beanName': '페루 엘 바바코 버번',
+                'kg': 30,
+                'pricePerKg': 39000,
+              },
+              {
+                'beanId': 'ethiopia-yirgacheffe-aricha',
+                'beanName': '에티오피아 예가체프 아리차 에이미 G1',
+                'kg': 10,
+                'pricePerKg': 52000,
+              },
+            ],
+            'memo': '매주 월요일 오전 납품 부탁드립니다.',
+            'status': 'quoted',
+            'createdAt': '2026-08-10T09:30:00.000',
+          },
+          {
+            'id': 'quote-1',
+            'companyName': '카페 어라운드',
+            'items': [
+              {
+                'beanId': 'brazil-monte-belo-yellow-bourbon',
+                'beanName': '브라질 몬테 벨로 옐로우버본',
+                'kg': 10,
+                'pricePerKg': 37000,
+              },
+            ],
+            'memo': '',
+            'status': 'confirmed',
+            'createdAt': '2026-07-28T15:10:00.000',
           },
         ],
       }),
@@ -881,6 +938,59 @@ void main() {
     await tester.pumpAndSettle();
 
     await expectGolden(find.byType(ProfileScreen), 'profile_screen_logged_in');
+  });
+
+  testWidgets('사업자 홈 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const BusinessHomeScreen(),
+      overrides: [
+        accountRepositoryProvider.overrideWithValue(
+          FakeAccountRepository(profile: _previewBusinessProfile),
+        ),
+      ],
+    );
+
+    await expectGolden(find.byType(BusinessHomeScreen), 'business_home_screen');
+  });
+
+  testWidgets('도매 견적 요청 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const WholesaleQuoteScreen(initialBeanId: 'peru-el-babaco-bourbon'),
+      overrides: [
+        accountRepositoryProvider.overrideWithValue(
+          FakeAccountRepository(profile: _previewBusinessProfile),
+        ),
+      ],
+    );
+
+    await expectGolden(
+      find.byType(WholesaleQuoteScreen),
+      'wholesale_quote_screen',
+    );
+  });
+
+  testWidgets('도매 견적 내역 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const WholesaleQuoteHistoryScreen());
+
+    await expectGolden(
+      find.byType(WholesaleQuoteHistoryScreen),
+      'wholesale_quote_history_screen',
+    );
+  });
+
+  testWidgets('사업자 계정 관리 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const BusinessRegisterScreen());
+
+    await expectGolden(
+      find.byType(BusinessRegisterScreen),
+      'business_register_screen',
+    );
   });
 
   testWidgets('회원 탈퇴 확인 다이얼로그 스크린샷', (WidgetTester tester) async {
