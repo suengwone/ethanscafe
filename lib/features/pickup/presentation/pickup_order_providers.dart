@@ -148,4 +148,34 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
 
     return order;
   }
+
+  Future<PickupOrder> cancelOrder(String orderId) async {
+    final cancelled = await ref
+        .read(pickupOrdersRepositoryProvider)
+        .cancelOrder(orderId);
+
+    final couponId = cancelled.couponId;
+    if (couponId != null && couponId.isNotEmpty) {
+      final couponsRepository = ref.read(couponsRepositoryProvider);
+      for (final id in couponId.split(',')) {
+        await couponsRepository.markUnused(id);
+      }
+      ref.invalidate(couponsControllerProvider);
+    }
+
+    if (cancelled.usedPoints > 0 || cancelled.earnedPoints > 0) {
+      await ref.read(pointsRepositoryProvider).refundOrderPoints(
+        usedPoints: cancelled.usedPoints,
+        earnedPoints: cancelled.earnedPoints,
+        description: pickupOrderCancelDescription,
+      );
+      ref.invalidate(pointsControllerProvider);
+    }
+
+    state = AsyncValue.data([
+      for (final order in state.value ?? const <PickupOrder>[])
+        if (order.id == orderId) cancelled else order,
+    ]);
+    return cancelled;
+  }
 }

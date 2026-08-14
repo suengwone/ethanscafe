@@ -467,4 +467,61 @@ void main() {
     expect(order.couponDiscount, 1000);
     expect(order.paidAmount, 61000);
   });
+
+  test('주문 취소 시 쿠폰이 복구되고 포인트가 환급·회수된다', () async {
+    final container = createContainer();
+    await container
+        .read(pointsRepositoryProvider)
+        .recordPayment(paymentAmount: 50000);
+    final coupon = await loadCoupon(container, 'bean-order-3000');
+    final controller = container.read(beanOrdersControllerProvider.notifier);
+
+    final order = await controller.placeOrder(
+      cartItems: _cartItems(),
+      usedPoints: 5000,
+      coupons: [coupon],
+    );
+    expect(order.paidAmount, 54000);
+    expect(order.earnedPoints, 5400);
+
+    final cancelled = await controller.cancelOrder(order.id);
+
+    expect(cancelled.status, BeanOrderStatus.cancelled);
+    final orders = await container.read(beanOrdersControllerProvider.future);
+    expect(orders.single.isCancelled, isTrue);
+
+    final coupons = await container.read(couponsControllerProvider.future);
+    expect(
+      coupons.firstWhere((c) => c.id == 'bean-order-3000').isUsed,
+      isFalse,
+    );
+
+    final points = await container.read(pointsRepositoryProvider).load();
+    expect(points.balance, 5000);
+    expect(
+      points.history.map((entry) => entry.description),
+      containsAll([
+        '$beanOrderCancelDescription 포인트 환급',
+        '$beanOrderCancelDescription 적립 회수',
+      ]),
+    );
+  });
+
+  test('포인트·쿠폰 없이 결제한 주문 취소 시 적립 포인트만 회수된다', () async {
+    final container = createContainer();
+    final controller = container.read(beanOrdersControllerProvider.notifier);
+
+    final order = await controller.placeOrder(cartItems: _cartItems());
+    expect(order.earnedPoints, 6200);
+
+    await controller.cancelOrder(order.id);
+
+    final points = await container.read(pointsRepositoryProvider).load();
+    expect(points.balance, 0);
+    expect(
+      points.history.first.description,
+      '$beanOrderCancelDescription 적립 회수',
+    );
+    expect(points.history.first.amount, -6200);
+  });
 }

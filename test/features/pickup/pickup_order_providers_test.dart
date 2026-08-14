@@ -385,4 +385,65 @@ void main() {
     final coupons = await container.read(couponsControllerProvider.future);
     expect(coupons.any((c) => c.isUsed && c.id != 'used-latte-free'), isFalse);
   });
+
+  test('주문 취소 시 쿠폰이 복구되고 포인트가 환급·회수된다', () async {
+    final container = createContainer();
+    await container
+        .read(pointsRepositoryProvider)
+        .recordPayment(paymentAmount: 50000);
+    final coupon = await loadCoupon(container, 'bean-order-10p');
+    final controller = container.read(pickupOrdersControllerProvider.notifier);
+
+    final order = await controller.placeOrder(
+      cartItems: _cartItems(),
+      store: _store,
+      usedPoints: 5000,
+      coupons: [coupon],
+    );
+    expect(order.paidAmount, 13000);
+    expect(order.earnedPoints, 1300);
+
+    final cancelled = await controller.cancelOrder(order.id);
+
+    expect(cancelled.status, PickupOrderStatus.cancelled);
+    final orders = await container.read(pickupOrdersControllerProvider.future);
+    expect(orders.single.isCancelled, isTrue);
+
+    final coupons = await container.read(couponsControllerProvider.future);
+    expect(
+      coupons.firstWhere((c) => c.id == 'bean-order-10p').isUsed,
+      isFalse,
+    );
+
+    final points = await container.read(pointsRepositoryProvider).load();
+    expect(points.balance, 5000);
+    expect(
+      points.history.map((entry) => entry.description),
+      containsAll([
+        '$pickupOrderCancelDescription 포인트 환급',
+        '$pickupOrderCancelDescription 적립 회수',
+      ]),
+    );
+  });
+
+  test('포인트·쿠폰 없이 결제한 주문 취소 시 적립 포인트만 회수된다', () async {
+    final container = createContainer();
+    final controller = container.read(pickupOrdersControllerProvider.notifier);
+
+    final order = await controller.placeOrder(
+      cartItems: _cartItems(),
+      store: _store,
+    );
+    expect(order.earnedPoints, 2000);
+
+    await controller.cancelOrder(order.id);
+
+    final points = await container.read(pointsRepositoryProvider).load();
+    expect(points.balance, 0);
+    expect(
+      points.history.first.description,
+      '$pickupOrderCancelDescription 적립 회수',
+    );
+    expect(points.history.first.amount, -2000);
+  });
 }

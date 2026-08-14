@@ -154,6 +154,35 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
     return order;
   }
 
+  Future<BeanOrder> cancelOrder(String orderId) async {
+    final cancelled =
+        await ref.read(beanOrdersRepositoryProvider).cancelOrder(orderId);
+
+    final couponId = cancelled.couponId;
+    if (couponId != null && couponId.isNotEmpty) {
+      final couponsRepository = ref.read(couponsRepositoryProvider);
+      for (final id in couponId.split(',')) {
+        await couponsRepository.markUnused(id);
+      }
+      ref.invalidate(couponsControllerProvider);
+    }
+
+    if (cancelled.usedPoints > 0 || cancelled.earnedPoints > 0) {
+      await ref.read(pointsRepositoryProvider).refundOrderPoints(
+        usedPoints: cancelled.usedPoints,
+        earnedPoints: cancelled.earnedPoints,
+        description: beanOrderCancelDescription,
+      );
+      ref.invalidate(pointsControllerProvider);
+    }
+
+    state = AsyncValue.data([
+      for (final order in state.value ?? const <BeanOrder>[])
+        if (order.id == orderId) cancelled else order,
+    ]);
+    return cancelled;
+  }
+
   String? _fullAddress(DeliveryAddress? address) {
     if (address == null) {
       return null;
