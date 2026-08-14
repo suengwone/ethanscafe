@@ -89,6 +89,50 @@ class LocalPointsRepository implements PointsRepository {
     return data;
   }
 
+  @override
+  Future<PointsData> refundOrderPoints({
+    int usedPoints = 0,
+    int earnedPoints = 0,
+    String description = '주문 취소',
+  }) async {
+    if (usedPoints < 0 || earnedPoints < 0) {
+      throw ArgumentError('환급/회수 포인트는 0 이상이어야 합니다.');
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    var data = await load();
+    if (usedPoints == 0 && earnedPoints == 0) {
+      return data;
+    }
+
+    final reclaimed = min(earnedPoints, data.balance + usedPoints);
+    data = data.copyWith(
+      balance: data.balance + usedPoints - reclaimed,
+      history: [
+        if (reclaimed > 0)
+          PointHistoryEntry(
+            id: _generateId(),
+            type: PointHistoryType.use,
+            description: '$description 적립 회수',
+            amount: -reclaimed,
+            createdAt: DateTime.now(),
+          ),
+        if (usedPoints > 0)
+          PointHistoryEntry(
+            id: _generateId(),
+            type: PointHistoryType.earn,
+            description: '$description 포인트 환급',
+            amount: usedPoints,
+            createdAt: DateTime.now(),
+          ),
+        ...data.history,
+      ],
+    );
+
+    await _save(prefs, data);
+    return data;
+  }
+
   String _migrateLegacyMembershipId(SharedPreferences prefs) {
     final legacyRaw = prefs.getString(_legacyStorageKey);
     if (legacyRaw != null) {

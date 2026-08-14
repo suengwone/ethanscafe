@@ -12,4 +12,10 @@ abstract class PointsRepository {
     required int amount,
     String description,
   });
+
+  Future<PointsData> refundOrderPoints({
+    int usedPoints,
+    int earnedPoints,
+    String description,
+  });
 }

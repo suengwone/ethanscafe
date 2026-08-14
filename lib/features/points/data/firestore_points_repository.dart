@@ -98,6 +98,49 @@ class FirestorePointsRepository implements PointsRepository {
     });
   }
 
+  @override
+  Future<PointsData> refundOrderPoints({
+    int usedPoints = 0,
+    int earnedPoints = 0,
+    String description = '주문 취소',
+  }) async {
+    if (usedPoints < 0 || earnedPoints < 0) {
+      throw ArgumentError('환급/회수 포인트는 0 이상이어야 합니다.');
+    }
+    if (usedPoints == 0 && earnedPoints == 0) {
+      return load();
+    }
+
+    return _firestore.runTransaction((transaction) async {
+      final data = await _loadInTransaction(transaction);
+      final reclaimed = min(earnedPoints, data.balance + usedPoints);
+      final updated = data.copyWith(
+        balance: data.balance + usedPoints - reclaimed,
+        history: [
+          if (reclaimed > 0)
+            PointHistoryEntry(
+              id: generateEntryId(),
+              type: PointHistoryType.use,
+              description: '$description 적립 회수',
+              amount: -reclaimed,
+              createdAt: DateTime.now(),
+            ),
+          if (usedPoints > 0)
+            PointHistoryEntry(
+              id: generateEntryId(),
+              type: PointHistoryType.earn,
+              description: '$description 포인트 환급',
+              amount: usedPoints,
+              createdAt: DateTime.now(),
+            ),
+          ...data.history,
+        ],
+      );
+      transaction.set(_doc, pointsDataToFirestore(updated));
+      return updated;
+    });
+  }
+
   Future<PointsData> _loadInTransaction(Transaction transaction) async {
     final snapshot = await transaction.get(_doc);
     final data = snapshot.data();
