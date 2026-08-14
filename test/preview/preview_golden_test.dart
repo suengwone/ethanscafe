@@ -40,6 +40,7 @@ import 'package:cafe_app/features/payment/domain/payment_models.dart';
 import 'package:cafe_app/features/payment/presentation/toss_payment_screen.dart';
 import 'package:cafe_app/features/pickup/presentation/pickup_cart_providers.dart';
 import 'package:cafe_app/features/pickup/presentation/pickup_cart_screen.dart';
+import 'package:cafe_app/features/pickup/presentation/pickup_order_tracking_screen.dart';
 import 'package:cafe_app/features/store/data/local_stores_repository.dart';
 import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
 import 'package:cafe_app/features/subscription/presentation/subscription_list_screen.dart';
@@ -195,6 +196,35 @@ void main() {
       }),
       'pickup_orders': jsonEncode({
         'orders': [
+          {
+            'id': 'pickup-2',
+            'storeId': 'macheon',
+            'storeName': '폭스트롯 마천점',
+            'pickupNumber': 5,
+            'items': [
+              {
+                'menuId': 'espresso-cafe-latte',
+                'menuName': '카페 라떼',
+                'option': 'HOT',
+                'quantity': 1,
+                'unitPrice': 5500,
+              },
+              {
+                'menuId': 'beverage-matcha-latte',
+                'menuName': '말차 라떼',
+                'option': 'ICED',
+                'quantity': 1,
+                'unitPrice': 6500,
+              },
+            ],
+            'totalAmount': 12000,
+            'usedPoints': 0,
+            'earnedPoints': 1200,
+            'paymentKey': 'preview-pickup-key-2',
+            'paymentMethod': '카드',
+            'status': 'preparing',
+            'createdAt': '2026-08-14T10:05:00.000',
+          },
           {
             'id': 'pickup-1',
             'storeId': 'macheon',
@@ -820,6 +850,19 @@ void main() {
     await pumpScreen(tester, const OrderHistoryScreen());
 
     await expectGolden(find.byType(OrderHistoryScreen), 'order_history_screen');
+  });
+
+  testWidgets('주문 상태 추적 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const PickupOrderTrackingScreen(orderId: 'pickup-2'),
+    );
+
+    await expectGolden(
+      find.byType(PickupOrderTrackingScreen),
+      'pickup_order_tracking_screen',
+    );
   });
 
   testWidgets('리뷰 작성 바텀시트 스크린샷', (WidgetTester tester) async {

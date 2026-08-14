@@ -16,6 +16,7 @@ import '../features/menu/presentation/menu_screen.dart';
 import '../features/notice/presentation/notice_list_screen.dart';
 import '../features/order/presentation/order_history_screen.dart';
 import '../features/pickup/presentation/pickup_cart_screen.dart';
+import '../features/pickup/presentation/pickup_order_tracking_screen.dart';
 import '../features/points/presentation/points_screen.dart';
 import '../features/points/presentation/qr_scan_screen.dart';
 import '../features/profile/presentation/delivery_address_screen.dart';
@@ -156,6 +157,14 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'orders',
                     builder: (context, state) => const OrderHistoryScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'track/:orderId',
+                        builder: (context, state) => PickupOrderTrackingScreen(
+                          orderId: state.pathParameters['orderId']!,
+                        ),
+                      ),
+                    ],
                   ),
                   GoRoute(
                     path: 'subscriptions',

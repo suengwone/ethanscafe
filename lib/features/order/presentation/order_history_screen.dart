@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -121,10 +122,7 @@ class _EmptyOrders extends StatelessWidget {
         children: [
           const Icon(LucideIcons.receiptText, size: 48, color: foxtrotMuted),
           const SizedBox(height: 16),
-          Text(
-            '주문 내역이 없어요',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text('주문 내역이 없어요', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
           Text(
             '매장 결제나 픽업 · 원두 주문을 하면 내역이 쌓여요.',
@@ -151,7 +149,8 @@ class _BeanOrderCard extends ConsumerWidget {
     final pointsSummary = [
       if (order.couponDiscount > 0)
         '쿠폰 -${_amountFormat.format(order.couponDiscount)}원',
-      if (order.usedPoints > 0) '-${_amountFormat.format(order.usedPoints)}P 사용',
+      if (order.usedPoints > 0)
+        '-${_amountFormat.format(order.usedPoints)}P 사용',
       if (order.earnedPoints > 0)
         '+${_amountFormat.format(order.earnedPoints)}P 적립',
     ].join(' · ');
@@ -206,8 +205,7 @@ class _BeanOrderCard extends ConsumerWidget {
                   child: Text(
                     [
                       '원두 주문',
-                      order.fulfillmentMethod ==
-                                  BeanFulfillmentMethod.pickup &&
+                      order.fulfillmentMethod == BeanFulfillmentMethod.pickup &&
                               order.storeName != null
                           ? '${order.fulfillmentMethod.label} · ${order.storeName}'
                           : order.fulfillmentMethod.label,
@@ -229,8 +227,9 @@ class _BeanOrderCard extends ConsumerWidget {
                       const SizedBox(height: 4),
                       Text(
                         pointsSummary,
-                        style:
-                            textTheme.bodySmall?.copyWith(color: foxtrotGold),
+                        style: textTheme.bodySmall?.copyWith(
+                          color: foxtrotGold,
+                        ),
                       ),
                     ],
                   ],
@@ -269,97 +268,129 @@ class _PickupOrderCard extends ConsumerWidget {
     final pointsSummary = [
       if (order.couponDiscount > 0)
         '쿠폰 -${_amountFormat.format(order.couponDiscount)}원',
-      if (order.usedPoints > 0) '-${_amountFormat.format(order.usedPoints)}P 사용',
+      if (order.usedPoints > 0)
+        '-${_amountFormat.format(order.usedPoints)}P 사용',
       if (order.earnedPoints > 0)
         '+${_amountFormat.format(order.earnedPoints)}P 적립',
     ].join(' · ');
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: foxtrotSurface,
-                    borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-                    border: Border.all(color: foxtrotBorder),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => context.push('/profile/orders/track/${order.id}'),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: foxtrotSurface,
+                      borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
+                      border: Border.all(color: foxtrotBorder),
+                    ),
+                    child: const Icon(
+                      LucideIcons.coffee,
+                      color: foxtrotGold,
+                      size: 22,
+                    ),
                   ),
-                  child: const Icon(
-                    LucideIcons.coffee,
-                    color: foxtrotGold,
-                    size: 22,
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          order.summary.keepWord,
+                          style: textTheme.labelLarge,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _dateFormat.format(order.createdAt),
+                          style: textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  const SizedBox(width: 10),
+                  _PickupStatusChip(status: order.status),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Text(
+                      '픽업 주문 · ${order.storeName} · 주문번호 ${order.pickupNumber}번 · 총 ${order.itemCount}개'
+                          .keepWord,
+                      style: textTheme.bodySmall,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(order.summary.keepWord, style: textTheme.labelLarge),
-                      const SizedBox(height: 4),
                       Text(
-                        _dateFormat.format(order.createdAt),
-                        style: textTheme.bodySmall,
+                        '${_amountFormat.format(order.paidAmount)}원',
+                        style: textTheme.labelLarge,
                       ),
+                      if (pointsSummary.isNotEmpty) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          pointsSummary,
+                          style: textTheme.bodySmall?.copyWith(
+                            color: foxtrotGold,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
-                ),
-                const SizedBox(width: 10),
-                _PickupStatusChip(status: order.status),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: Text(
-                    '픽업 주문 · ${order.storeName} · 주문번호 ${order.pickupNumber}번 · 총 ${order.itemCount}개'
-                        .keepWord,
-                    style: textTheme.bodySmall,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                ],
+              ),
+              if (order.status != PickupOrderStatus.pickedUp) ...[
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      '${_amountFormat.format(order.paidAmount)}원',
-                      style: textTheme.labelLarge,
-                    ),
-                    if (pointsSummary.isNotEmpty) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        pointsSummary,
-                        style:
-                            textTheme.bodySmall?.copyWith(color: foxtrotGold),
+                      '주문 현황 보기',
+                      style: textTheme.bodySmall?.copyWith(
+                        color: foxtrotGold,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ],
+                    ),
+                    const Icon(
+                      LucideIcons.chevronRight,
+                      size: 14,
+                      color: foxtrotGold,
+                    ),
                   ],
                 ),
               ],
-            ),
-            if (_reviewable) ...[
-              const SizedBox(height: 12),
-              Container(height: 1, color: foxtrotBorder.withValues(alpha: 0.5)),
-              for (final item in order.items)
-                _ReviewItemRow(
-                  orderId: order.id,
-                  productId: item.menuId,
-                  productType: ReviewProductType.menu,
-                  productName: item.menuName,
-                  optionLabel: item.option,
+              if (_reviewable) ...[
+                const SizedBox(height: 12),
+                Container(
+                  height: 1,
+                  color: foxtrotBorder.withValues(alpha: 0.5),
                 ),
+                for (final item in order.items)
+                  _ReviewItemRow(
+                    orderId: order.id,
+                    productId: item.menuId,
+                    productType: ReviewProductType.menu,
+                    productName: item.menuName,
+                    optionLabel: item.option,
+                  ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
@@ -456,10 +487,10 @@ class _PickupStatusChip extends StatelessWidget {
       ),
       child: Text(
         status.label,
-        style: Theme.of(context)
-            .textTheme
-            .bodySmall
-            ?.copyWith(color: foxtrotGoldLight, fontWeight: FontWeight.w600),
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: foxtrotGoldLight,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
@@ -481,10 +512,10 @@ class _StatusChip extends StatelessWidget {
       ),
       child: Text(
         status.label,
-        style: Theme.of(context)
-            .textTheme
-            .bodySmall
-            ?.copyWith(color: foxtrotGoldLight, fontWeight: FontWeight.w600),
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: foxtrotGoldLight,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
