@@ -7,6 +7,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
 import '../../pickup/presentation/pickup_cart_providers.dart';
+import '../../review/presentation/product_review_section.dart';
 import '../../pickup/presentation/pickup_cart_screen.dart';
 import '../../pickup/presentation/pickup_option_sheet.dart';
 import '../domain/menu_models.dart';
@@ -209,6 +210,8 @@ class _MenuDetailBody extends StatelessWidget {
               ),
             ),
           ],
+          const SizedBox(height: 16),
+          ProductReviewSection(productId: item.id),
         ],
       ),
     );
