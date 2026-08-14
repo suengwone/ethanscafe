@@ -4,4 +4,6 @@ abstract class CouponsRepository {
   Future<List<Coupon>> loadCoupons();
 
   Future<void> markUsed(String couponId);
+
+  Future<void> markUnused(String couponId);
 }

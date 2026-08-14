@@ -23,6 +23,15 @@ class LocalCouponsRepository implements CouponsRepository {
     _coupons[index] = _coupons[index].copyWith(isUsed: true);
   }
 
+  @override
+  Future<void> markUnused(String couponId) async {
+    final index = _coupons.indexWhere((coupon) => coupon.id == couponId);
+    if (index == -1) {
+      throw ArgumentError.value(couponId, 'couponId', '쿠폰을 찾을 수 없습니다.');
+    }
+    _coupons[index] = _coupons[index].copyWith(isUsed: false);
+  }
+
   static final _seedCoupons = <Coupon>[
     Coupon(
       id: 'welcome-americano',

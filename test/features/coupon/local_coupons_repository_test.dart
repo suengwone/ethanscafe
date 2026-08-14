@@ -71,6 +71,28 @@ void main() {
     );
   });
 
+  test('markUnused는 사용된 쿠폰을 다시 사용 가능하게 복구한다', () async {
+    final repository = LocalCouponsRepository();
+    await repository.markUsed('welcome-americano');
+
+    await repository.markUnused('welcome-americano');
+
+    final coupons = await repository.loadCoupons();
+    expect(
+      coupons.firstWhere((c) => c.id == 'welcome-americano').isUsed,
+      isFalse,
+    );
+  });
+
+  test('존재하지 않는 쿠폰 복구 처리는 실패한다', () async {
+    final repository = LocalCouponsRepository();
+
+    await expectLater(
+      repository.markUnused('unknown-coupon'),
+      throwsArgumentError,
+    );
+  });
+
   test('사용 처리는 다른 인스턴스에 영향을 주지 않는다', () async {
     final repository = LocalCouponsRepository();
     await repository.markUsed('welcome-americano');
