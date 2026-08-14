@@ -22,6 +22,8 @@ import 'package:cafe_app/features/beans/presentation/bean_cart_screen.dart';
 import 'package:cafe_app/features/beans/presentation/bean_detail_screen.dart';
 import 'package:cafe_app/features/coupon/presentation/coupon_list_screen.dart';
 import 'package:cafe_app/features/coupon/presentation/coupons_providers.dart';
+import 'package:cafe_app/features/gift/presentation/bean_gift_screen.dart';
+import 'package:cafe_app/features/gift/presentation/gift_history_screen.dart';
 import 'package:cafe_app/features/menu/data/local_menu_repository.dart';
 import 'package:cafe_app/features/menu/domain/menu_models.dart';
 import 'package:cafe_app/features/menu/presentation/favorite_menu_screen.dart';
@@ -37,6 +39,7 @@ import 'package:cafe_app/features/pickup/presentation/pickup_cart_providers.dart
 import 'package:cafe_app/features/pickup/presentation/pickup_cart_screen.dart';
 import 'package:cafe_app/features/store/data/local_stores_repository.dart';
 import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
+import 'package:cafe_app/features/subscription/presentation/subscription_list_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/points/presentation/qr_scan_screen.dart';
 import 'package:cafe_app/features/profile/presentation/delivery_address_screen.dart';
@@ -245,6 +248,68 @@ void main() {
           },
         ],
       }),
+      'bean_subscriptions': jsonEncode({
+        'subscriptions': [
+          {
+            'id': 'subscription-2',
+            'beanId': 'ethiopia-yirgacheffe-aricha',
+            'beanName': '에티오피아 예가체프 아리차 에이미 G1',
+            'weight': 'g200',
+            'grind': 'handDrip',
+            'quantity': 1,
+            'cycle': 'biweekly',
+            'unitPrice': 18000,
+            'status': 'active',
+            'nextDeliveryDate': '2026-08-17T09:00:00.000',
+            'createdAt': '2026-07-20T10:00:00.000',
+          },
+          {
+            'id': 'subscription-1',
+            'beanId': 'brazil-monte-belo-yellow-bourbon',
+            'beanName': '브라질 몬테 벨로 옌로우버본',
+            'weight': 'g500',
+            'grind': 'wholeBean',
+            'quantity': 2,
+            'cycle': 'monthly',
+            'unitPrice': 32000,
+            'status': 'paused',
+            'nextDeliveryDate': '2026-08-30T09:00:00.000',
+            'createdAt': '2026-06-15T14:30:00.000',
+          },
+        ],
+      }),
+      'bean_gifts': jsonEncode({
+        'gifts': [
+          {
+            'id': 'gift-2',
+            'beanId': 'ethiopia-yirgacheffe-aricha',
+            'beanName': '에티오피아 예가체프 아리차 에이미 G1',
+            'weight': 'g200',
+            'grind': 'wholeBean',
+            'quantity': 1,
+            'unitPrice': 18000,
+            'recipientName': '김선물',
+            'recipientPhone': '010-9876-5432',
+            'message': '생일 축하해! 향긋한 아침 되길 바라요.',
+            'status': 'sent',
+            'createdAt': '2026-08-04T18:20:00.000',
+          },
+          {
+            'id': 'gift-1',
+            'beanId': 'drip-peru-el-babaco-bourbon',
+            'beanName': '페루 엘 바바코 버본',
+            'weight': 'g500',
+            'grind': 'handDrip',
+            'quantity': 2,
+            'unitPrice': 30000,
+            'recipientName': '박원두',
+            'recipientPhone': '010-2222-3333',
+            'message': '',
+            'status': 'redeemed',
+            'createdAt': '2026-07-18T11:05:00.000',
+          },
+        ],
+      }),
       'bean_orders': jsonEncode({
         'orders': [
           {
@@ -450,6 +515,46 @@ void main() {
     );
 
     await expectGolden(find.byType(BeanDetailScreen), 'bean_detail_screen');
+  });
+
+  testWidgets('원두 구독 바텀시트 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const BeanDetailScreen(beanId: 'ethiopia-yirgacheffe-aricha'),
+    );
+
+    await tester.tap(find.text('구독'));
+    await tester.pumpAndSettle();
+
+    await expectGolden(find.byType(MaterialApp), 'bean_subscribe_sheet');
+  });
+
+  testWidgets('구독 관리 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const SubscriptionListScreen());
+
+    await expectGolden(
+      find.byType(SubscriptionListScreen),
+      'subscription_list_screen',
+    );
+  });
+
+  testWidgets('원두 선물하기 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const BeanGiftScreen(beanId: 'ethiopia-yirgacheffe-aricha'),
+    );
+
+    await expectGolden(find.byType(BeanGiftScreen), 'bean_gift_screen');
+  });
+
+  testWidgets('선물 내역 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const GiftHistoryScreen());
+
+    await expectGolden(find.byType(GiftHistoryScreen), 'gift_history_screen');
   });
 
   testWidgets('원두 주문 바텀시트 스크린샷', (WidgetTester tester) async {
