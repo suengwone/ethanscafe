@@ -7,6 +7,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
+import '../../subscription/presentation/bean_subscribe_sheet.dart';
 import '../domain/bean_models.dart';
 import 'bean_cart_providers.dart';
 import 'beans_providers.dart';
@@ -459,13 +460,39 @@ class _OrderBar extends ConsumerWidget {
                   ],
                 ),
               ),
+              IconButton(
+                onPressed: () =>
+                    context.push('/menu/beans/${bean.id}/gift'),
+                tooltip: '선물하기',
+                icon: const Icon(LucideIcons.gift, size: 20),
+                style: IconButton.styleFrom(
+                  side: const BorderSide(color: foxtrotBorder),
+                  foregroundColor: foxtrotGoldLight,
+                ),
+              ),
+              const SizedBox(width: 8),
+              OutlinedButton.icon(
+                onPressed: () =>
+                    showBeanSubscribeSheet(context, ref, bean: bean),
+                icon: const Icon(LucideIcons.repeat, size: 16),
+                label: const Text('구독'),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 14,
+                  ),
+                  side: const BorderSide(color: foxtrotGold),
+                  foregroundColor: foxtrotGoldLight,
+                ),
+              ),
+              const SizedBox(width: 8),
               FilledButton.icon(
                 onPressed: () => _showOrderSheet(context, ref),
                 icon: const Icon(LucideIcons.shoppingBag, size: 18),
                 label: const Text('주문하기'),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 28,
+                    horizontal: 16,
                     vertical: 14,
                   ),
                 ),

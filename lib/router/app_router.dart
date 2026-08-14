@@ -7,6 +7,8 @@ import '../features/auth/presentation/login_screen.dart';
 import '../features/beans/presentation/bean_cart_screen.dart';
 import '../features/beans/presentation/bean_detail_screen.dart';
 import '../features/coupon/presentation/coupon_list_screen.dart';
+import '../features/gift/presentation/bean_gift_screen.dart';
+import '../features/gift/presentation/gift_history_screen.dart';
 import '../features/menu/presentation/favorite_menu_screen.dart';
 import '../features/menu/presentation/menu_detail_screen.dart';
 import '../features/menu/presentation/menu_screen.dart';
@@ -22,6 +24,7 @@ import '../features/profile/presentation/policy_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
 import '../features/profile/presentation/support_screen.dart';
 import '../features/store/presentation/store_list_screen.dart';
+import '../features/subscription/presentation/subscription_list_screen.dart';
 
 const publicPaths = {'/', '/login', '/menu', '/notices', '/stores'};
 
@@ -84,6 +87,14 @@ final routerProvider = Provider<GoRouter>((ref) {
                     builder: (context, state) => BeanDetailScreen(
                       beanId: state.pathParameters['beanId']!,
                     ),
+                    routes: [
+                      GoRoute(
+                        path: 'gift',
+                        builder: (context, state) => BeanGiftScreen(
+                          beanId: state.pathParameters['beanId']!,
+                        ),
+                      ),
+                    ],
                   ),
                   GoRoute(
                     path: 'item/:menuId',
@@ -131,6 +142,15 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'orders',
                     builder: (context, state) => const OrderHistoryScreen(),
+                  ),
+                  GoRoute(
+                    path: 'subscriptions',
+                    builder: (context, state) =>
+                        const SubscriptionListScreen(),
+                  ),
+                  GoRoute(
+                    path: 'gifts',
+                    builder: (context, state) => const GiftHistoryScreen(),
                   ),
                   GoRoute(
                     path: 'payment-methods',

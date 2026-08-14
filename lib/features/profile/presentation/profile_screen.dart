@@ -8,6 +8,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../auth/domain/auth_models.dart';
 import '../../auth/presentation/auth_providers.dart';
 import '../../coupon/presentation/coupons_providers.dart';
+import '../../subscription/presentation/subscription_providers.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -51,6 +52,7 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authStateProvider).value;
     final usableCouponCount = ref.watch(usableCouponCountProvider).value ?? 0;
+    final subscriptionCount = ref.watch(activeSubscriptionCountProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -93,6 +95,36 @@ class ProfileScreen extends ConsumerWidget {
                       )
                     : null,
                 onTap: () => context.push('/profile/coupons'),
+              ),
+              _buildListTile(
+                icon: LucideIcons.repeat,
+                title: '원두 정기구독',
+                trailing: subscriptionCount > 0
+                    ? Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: foxtrotGold,
+                          borderRadius:
+                              BorderRadius.circular(foxtrotRadiusMedium),
+                        ),
+                        child: Text(
+                          '$subscriptionCount',
+                          style: const TextStyle(
+                            color: foxtrotBlack,
+                            fontSize: 12,
+                          ),
+                        ),
+                      )
+                    : null,
+                onTap: () => context.push('/profile/subscriptions'),
+              ),
+              _buildListTile(
+                icon: LucideIcons.gift,
+                title: '선물 내역',
+                onTap: () => context.push('/profile/gifts'),
               ),
               _buildListTile(
                 icon: LucideIcons.heart,
