@@ -6,6 +6,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../auth/domain/auth_models.dart';
+import '../../auth/presentation/account_providers.dart';
 import '../../auth/presentation/auth_providers.dart';
 import '../../coupon/presentation/coupons_providers.dart';
 import '../../subscription/presentation/subscription_providers.dart';
@@ -48,9 +49,37 @@ class ProfileScreen extends ConsumerWidget {
     }
   }
 
+  Future<void> _pickBirthDate(BuildContext context, WidgetRef ref) async {
+    final birthDate =
+        ref.read(accountProfileControllerProvider).value?.birthDate;
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: birthDate ?? DateTime(2000, 1, 1),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+      helpText: '생일을 선택하세요',
+    );
+    if (picked == null || !context.mounted) {
+      return;
+    }
+    await ref
+        .read(accountProfileControllerProvider.notifier)
+        .saveBirthDate(picked);
+    if (!context.mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('생일이 등록되었습니다. 생일 주간에 축하 쿠폰이 자동 발급됩니다.'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authStateProvider).value;
+    final birthDate =
+        ref.watch(accountProfileControllerProvider).value?.birthDate;
     final usableCouponCount = ref.watch(usableCouponCountProvider).value ?? 0;
     final subscriptionCount = ref.watch(activeSubscriptionCountProvider);
 
@@ -142,6 +171,17 @@ class ProfileScreen extends ConsumerWidget {
                 icon: LucideIcons.bell,
                 title: '알림 설정',
                 onTap: () => context.push('/profile/notifications'),
+              ),
+              _buildListTile(
+                icon: LucideIcons.cake,
+                title: '생일 등록',
+                trailing: birthDate != null
+                    ? Text(
+                        '${birthDate.year}년 ${birthDate.month}월 ${birthDate.day}일',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      )
+                    : null,
+                onTap: () => _pickBirthDate(context, ref),
               ),
               _buildListTile(
                 icon: LucideIcons.creditCard,
