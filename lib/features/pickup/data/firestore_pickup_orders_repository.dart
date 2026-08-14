@@ -87,6 +87,33 @@ class FirestorePickupOrdersRepository implements PickupOrdersRepository {
     return order;
   }
 
+  @override
+  Future<PickupOrder> cancelOrder(String orderId) async {
+    late PickupOrder cancelled;
+    await _firestore.runTransaction((transaction) async {
+      final snapshot = await transaction.get(_doc);
+      final data = snapshot.data();
+      final orders = data != null
+          ? pickupOrdersFromFirestore(data)
+          : const <PickupOrder>[];
+      final index = orders.indexWhere((order) => order.id == orderId);
+      if (index == -1) {
+        throw ArgumentError.value(orderId, 'orderId', '주문을 찾을 수 없습니다.');
+      }
+      final order = orders[index];
+      if (order.isCancelled) {
+        throw StateError('이미 취소된 주문입니다.');
+      }
+      if (!order.isCancellable) {
+        throw StateError('제조가 시작된 주문은 취소할 수 없습니다.');
+      }
+      cancelled = order.copyWith(status: PickupOrderStatus.cancelled);
+      final updated = [...orders]..[index] = cancelled;
+      transaction.set(_doc, pickupOrdersToFirestore(updated));
+    });
+    return cancelled;
+  }
+
   String _generateId() =>
       '${DateTime.now().microsecondsSinceEpoch}-${Random().nextInt(0xFFFF)}';
 }

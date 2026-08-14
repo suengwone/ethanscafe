@@ -82,6 +82,32 @@ class FirestoreBeanOrdersRepository implements BeanOrdersRepository {
     return order;
   }
 
+  @override
+  Future<BeanOrder> cancelOrder(String orderId) async {
+    late BeanOrder cancelled;
+    await _firestore.runTransaction((transaction) async {
+      final snapshot = await transaction.get(_doc);
+      final data = snapshot.data();
+      final orders =
+          data != null ? beanOrdersFromFirestore(data) : const <BeanOrder>[];
+      final index = orders.indexWhere((order) => order.id == orderId);
+      if (index == -1) {
+        throw ArgumentError.value(orderId, 'orderId', '주문을 찾을 수 없습니다.');
+      }
+      final order = orders[index];
+      if (order.isCancelled) {
+        throw StateError('이미 취소된 주문입니다.');
+      }
+      if (!order.isCancellable) {
+        throw StateError('로스팅이 시작된 주문은 취소할 수 없습니다.');
+      }
+      cancelled = order.copyWith(status: BeanOrderStatus.cancelled);
+      final updated = [...orders]..[index] = cancelled;
+      transaction.set(_doc, beanOrdersToFirestore(updated));
+    });
+    return cancelled;
+  }
+
   String _generateId() =>
       '${DateTime.now().microsecondsSinceEpoch}-${Random().nextInt(0xFFFF)}';
 }

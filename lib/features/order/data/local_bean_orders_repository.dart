@@ -74,6 +74,33 @@ class LocalBeanOrdersRepository implements BeanOrdersRepository {
     return order;
   }
 
+  @override
+  Future<BeanOrder> cancelOrder(String orderId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final orders = await load();
+    final index = orders.indexWhere((order) => order.id == orderId);
+    if (index == -1) {
+      throw ArgumentError.value(orderId, 'orderId', '주문을 찾을 수 없습니다.');
+    }
+    final order = orders[index];
+    if (order.isCancelled) {
+      throw StateError('이미 취소된 주문입니다.');
+    }
+    if (!order.isCancellable) {
+      throw StateError('로스팅이 시작된 주문은 취소할 수 없습니다.');
+    }
+
+    final cancelled = order.copyWith(status: BeanOrderStatus.cancelled);
+    final updated = [...orders]..[index] = cancelled;
+    await prefs.setString(
+      _storageKey,
+      jsonEncode({
+        'orders': updated.map((order) => order.toJson()).toList(),
+      }),
+    );
+    return cancelled;
+  }
+
   String _generateId() =>
       '${DateTime.now().microsecondsSinceEpoch}-${Random().nextInt(0xFFFF)}';
 }

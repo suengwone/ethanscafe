@@ -111,6 +111,37 @@ void main() {
     );
   });
 
+  test('접수 상태 주문은 취소할 수 있다', () async {
+    final repository = LocalPickupOrdersRepository();
+
+    final order = await repository.placeOrder(
+      items: _items,
+      storeId: 'macheon',
+      storeName: '폭스트롯 마천점',
+    );
+
+    final cancelled = await repository.cancelOrder(order.id);
+    expect(cancelled.status, PickupOrderStatus.cancelled);
+    expect(cancelled.isCancelled, isTrue);
+
+    final loaded = await LocalPickupOrdersRepository().load();
+    expect(loaded.single.status, PickupOrderStatus.cancelled);
+  });
+
+  test('없는 주문이나 이미 취소된 주문은 취소할 수 없다', () async {
+    final repository = LocalPickupOrdersRepository();
+
+    await expectLater(repository.cancelOrder('unknown'), throwsArgumentError);
+
+    final order = await repository.placeOrder(
+      items: _items,
+      storeId: 'macheon',
+      storeName: '폭스트롯 마천점',
+    );
+    await repository.cancelOrder(order.id);
+    await expectLater(repository.cancelOrder(order.id), throwsStateError);
+  });
+
   test('주문번호는 당일 주문 수 기준으로 계산된다', () {
     final now = DateTime(2026, 8, 11, 14);
     final orders = [

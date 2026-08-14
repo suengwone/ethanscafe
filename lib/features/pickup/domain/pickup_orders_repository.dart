@@ -17,4 +17,6 @@ abstract class PickupOrdersRepository {
     String? paymentKey,
     String? paymentMethod,
   });
+
+  Future<PickupOrder> cancelOrder(String orderId);
 }

@@ -122,6 +122,25 @@ void main() {
     expect(order.shippingAddress, isNull);
   });
 
+  test('접수 상태 주문은 취소할 수 있다', () async {
+    final order = await repository.placeOrder(items: _items);
+
+    final cancelled = await repository.cancelOrder(order.id);
+    expect(cancelled.status, BeanOrderStatus.cancelled);
+    expect(cancelled.isCancelled, isTrue);
+
+    final reloaded = await LocalBeanOrdersRepository().load();
+    expect(reloaded.single.status, BeanOrderStatus.cancelled);
+  });
+
+  test('없는 주문이나 이미 취소된 주문은 취소할 수 없다', () async {
+    await expectLater(repository.cancelOrder('unknown'), throwsArgumentError);
+
+    final order = await repository.placeOrder(items: _items);
+    await repository.cancelOrder(order.id);
+    await expectLater(repository.cancelOrder(order.id), throwsStateError);
+  });
+
   test('주문 요약과 옵션 라벨을 제공한다', () async {
     final order = await repository.placeOrder(items: _items);
 

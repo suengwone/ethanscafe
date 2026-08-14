@@ -19,4 +19,6 @@ abstract class BeanOrdersRepository {
     String? recipientPhone,
     String? shippingAddress,
   });
+
+  Future<BeanOrder> cancelOrder(String orderId);
 }
