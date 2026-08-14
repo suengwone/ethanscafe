@@ -31,6 +31,17 @@ class FirestorePickupOrdersRepository implements PickupOrdersRepository {
   }
 
   @override
+  Stream<List<PickupOrder>> watchOrders() {
+    return _doc.snapshots().map((snapshot) {
+      final data = snapshot.data();
+      if (data == null) {
+        return const [];
+      }
+      return pickupOrdersFromFirestore(data);
+    });
+  }
+
+  @override
   Future<PickupOrder> placeOrder({
     required List<PickupOrderItem> items,
     required String storeId,

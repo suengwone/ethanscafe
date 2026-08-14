@@ -64,6 +64,22 @@ void main() {
     expect(loaded.first.paymentKey, 'pk-1');
   });
 
+  test('watchOrders는 저장된 주문 목록을 방출한다', () async {
+    final repository = LocalPickupOrdersRepository();
+
+    expect(await repository.watchOrders().first, isEmpty);
+
+    final order = await repository.placeOrder(
+      items: _items,
+      storeId: 'macheon',
+      storeName: '폭스트롯 마천점',
+    );
+
+    final orders = await repository.watchOrders().first;
+    expect(orders, hasLength(1));
+    expect(orders.first.id, order.id);
+  });
+
   test('같은 날 주문마다 주문번호가 1씩 증가한다', () async {
     final repository = LocalPickupOrdersRepository();
 

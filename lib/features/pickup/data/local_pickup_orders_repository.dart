@@ -23,6 +23,9 @@ class LocalPickupOrdersRepository implements PickupOrdersRepository {
   }
 
   @override
+  Stream<List<PickupOrder>> watchOrders() => Stream.fromFuture(load());
+
+  @override
   Future<PickupOrder> placeOrder({
     required List<PickupOrderItem> items,
     required String storeId,
