@@ -32,6 +32,16 @@ class FirestoreReviewsRepository implements ReviewsRepository {
   }
 
   @override
+  Future<List<ProductReview>> loadProductReviews(String productId) async {
+    final snapshot = await _firestore.collection(reviewsCollectionPath).get();
+    return [
+      for (final doc in snapshot.docs)
+        ...productReviewsFromFirestore(doc.data())
+            .where((review) => review.productId == productId),
+    ]..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  }
+
+  @override
   Future<ProductReview> addReview({
     required String productId,
     required ReviewProductType productType,

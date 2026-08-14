@@ -24,6 +24,15 @@ class LocalReviewsRepository implements ReviewsRepository {
   }
 
   @override
+  Future<List<ProductReview>> loadProductReviews(String productId) async {
+    final reviews = await loadMyReviews();
+    return reviews
+        .where((review) => review.productId == productId)
+        .toList()
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  }
+
+  @override
   Future<ProductReview> addReview({
     required String productId,
     required ReviewProductType productType,

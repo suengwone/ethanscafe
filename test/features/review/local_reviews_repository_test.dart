@@ -96,6 +96,50 @@ void main() {
     );
   });
 
+  test('상품별 리뷰를 최신순으로 조회한다', () async {
+    final repository = LocalReviewsRepository();
+
+    await repository.addReview(
+      productId: 'espresso-cafe-latte',
+      productType: ReviewProductType.menu,
+      productName: '카페 라떼',
+      orderId: 'order-1',
+      rating: 5,
+      comment: '첫 번째 리뷰',
+    );
+    await repository.addReview(
+      productId: 'espresso-americano',
+      productType: ReviewProductType.menu,
+      productName: '아메리카노',
+      orderId: 'order-1',
+      rating: 4,
+    );
+    await repository.addReview(
+      productId: 'espresso-cafe-latte',
+      productType: ReviewProductType.menu,
+      productName: '카페 라떼',
+      orderId: 'order-2',
+      rating: 3,
+      comment: '두 번째 리뷰',
+    );
+
+    final reviews =
+        await repository.loadProductReviews('espresso-cafe-latte');
+    expect(reviews, hasLength(2));
+    expect(reviews.first.comment, '두 번째 리뷰');
+    expect(reviews.last.comment, '첫 번째 리뷰');
+    expect(
+      reviews.every((review) => review.productId == 'espresso-cafe-latte'),
+      isTrue,
+    );
+  });
+
+  test('리뷰가 없는 상품은 빈 목록을 반환한다', () async {
+    final repository = LocalReviewsRepository();
+
+    expect(await repository.loadProductReviews('unknown'), isEmpty);
+  });
+
   test('판매량을 누적 기록한다', () async {
     final repository = LocalReviewsRepository();
 

@@ -48,6 +48,7 @@ class MyReviewsController extends AsyncNotifier<List<ProductReview>> {
         );
     state = AsyncValue.data([review, ...state.value ?? const []]);
     ref.invalidate(productStatsProvider);
+    ref.invalidate(productReviewsProvider(productId));
     return review;
   }
 
@@ -67,6 +68,11 @@ class MyReviewsController extends AsyncNotifier<List<ProductReview>> {
 final productStatsProvider =
     FutureProvider<Map<String, ProductStats>>((ref) {
   return ref.watch(reviewsRepositoryProvider).loadStats();
+});
+
+final productReviewsProvider =
+    FutureProvider.family<List<ProductReview>, String>((ref, productId) {
+  return ref.watch(reviewsRepositoryProvider).loadProductReviews(productId);
 });
 
 final productBadgesProvider =

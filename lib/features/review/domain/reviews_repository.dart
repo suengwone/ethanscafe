@@ -3,6 +3,8 @@ import 'review_models.dart';
 abstract class ReviewsRepository {
   Future<List<ProductReview>> loadMyReviews();
 
+  Future<List<ProductReview>> loadProductReviews(String productId);
+
   Future<ProductReview> addReview({
     required String productId,
     required ReviewProductType productType,
