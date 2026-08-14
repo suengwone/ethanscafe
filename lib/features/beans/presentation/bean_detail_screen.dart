@@ -7,6 +7,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
+import '../../review/presentation/product_review_section.dart';
 import '../../subscription/presentation/bean_subscribe_sheet.dart';
 import '../domain/bean_models.dart';
 import 'bean_cart_providers.dart';
@@ -77,6 +78,8 @@ class _BeanDetailBody extends StatelessWidget {
           _StorySection(bean: bean),
           const SizedBox(height: 16),
           _InfoSection(bean: bean),
+          const SizedBox(height: 16),
+          ProductReviewSection(productId: bean.id),
         ],
       ),
     );
@@ -516,15 +519,16 @@ class _OrderBar extends ConsumerWidget {
     );
     if (result == null || !context.mounted) return;
 
+    ref
+        .read(beanCartProvider.notifier)
+        .add(
+          bean: bean,
+          weight: result.weight,
+          grind: result.grind,
+          quantity: result.quantity,
+        );
+
     if (result.action == BeanOrderAction.addToCart) {
-      ref
-          .read(beanCartProvider.notifier)
-          .add(
-            bean: bean,
-            weight: result.weight,
-            grind: result.grind,
-            quantity: result.quantity,
-          );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('${bean.name}을(를) 장바구니에 담았습니다.'),
@@ -537,14 +541,7 @@ class _OrderBar extends ConsumerWidget {
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          '${bean.name} ${result.weight.label} · ${result.grind.label} '
-          '${result.quantity}개 주문이 접수되었습니다.',
-        ),
-      ),
-    );
+    context.push('/menu/beans-cart');
   }
 }
 
