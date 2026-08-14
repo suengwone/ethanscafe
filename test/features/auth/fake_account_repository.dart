@@ -12,7 +12,7 @@ class FakeAccountRepository implements AccountRepository {
   @override
   Future<AccountProfile> registerBusiness(BusinessProfile business) async {
     validateBusinessProfile(business);
-    profile = AccountProfile(
+    profile = profile.copyWith(
       type: AccountType.business,
       business: normalizeBusinessProfile(business),
     );
@@ -21,7 +21,13 @@ class FakeAccountRepository implements AccountRepository {
 
   @override
   Future<AccountProfile> switchToCustomer() async {
-    profile = const AccountProfile();
+    profile = AccountProfile(birthDate: profile.birthDate);
+    return profile;
+  }
+
+  @override
+  Future<AccountProfile> saveBirthDate(DateTime birthDate) async {
+    profile = profile.copyWith(birthDate: normalizeBirthDate(birthDate));
     return profile;
   }
 }

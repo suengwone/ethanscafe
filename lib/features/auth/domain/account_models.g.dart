@@ -30,12 +30,16 @@ _AccountProfile _$AccountProfileFromJson(Map<String, dynamic> json) =>
       business: json['business'] == null
           ? null
           : BusinessProfile.fromJson(json['business'] as Map<String, dynamic>),
+      birthDate: json['birthDate'] == null
+          ? null
+          : DateTime.parse(json['birthDate'] as String),
     );
 
 Map<String, dynamic> _$AccountProfileToJson(_AccountProfile instance) =>
     <String, dynamic>{
       'type': _$AccountTypeEnumMap[instance.type]!,
       'business': instance.business,
+      'birthDate': instance.birthDate?.toIso8601String(),
     };
 
 const _$AccountTypeEnumMap = {

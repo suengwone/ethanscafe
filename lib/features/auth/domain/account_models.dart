@@ -32,6 +32,7 @@ abstract class AccountProfile with _$AccountProfile {
   const factory AccountProfile({
     @Default(AccountType.customer) AccountType type,
     BusinessProfile? business,
+    DateTime? birthDate,
   }) = _AccountProfile;
 
   factory AccountProfile.fromJson(Map<String, dynamic> json) =>

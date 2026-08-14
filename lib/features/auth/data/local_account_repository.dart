@@ -21,7 +21,8 @@ class LocalAccountRepository implements AccountRepository {
   @override
   Future<AccountProfile> registerBusiness(BusinessProfile business) async {
     validateBusinessProfile(business);
-    final profile = AccountProfile(
+    final current = await load();
+    final profile = current.copyWith(
       type: AccountType.business,
       business: normalizeBusinessProfile(business),
     );
@@ -31,7 +32,16 @@ class LocalAccountRepository implements AccountRepository {
 
   @override
   Future<AccountProfile> switchToCustomer() async {
-    const profile = AccountProfile();
+    final current = await load();
+    final profile = AccountProfile(birthDate: current.birthDate);
+    await _save(profile);
+    return profile;
+  }
+
+  @override
+  Future<AccountProfile> saveBirthDate(DateTime birthDate) async {
+    final current = await load();
+    final profile = current.copyWith(birthDate: normalizeBirthDate(birthDate));
     await _save(profile);
     return profile;
   }

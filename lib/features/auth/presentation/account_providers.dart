@@ -43,6 +43,13 @@ class AccountProfileController extends AsyncNotifier<AccountProfile> {
     state = AsyncValue.data(profile);
     return profile;
   }
+
+  Future<AccountProfile> saveBirthDate(DateTime birthDate) async {
+    final profile =
+        await ref.read(accountRepositoryProvider).saveBirthDate(birthDate);
+    state = AsyncValue.data(profile);
+    return profile;
+  }
 }
 
 final accountTypeProvider = Provider<AccountType>((ref) {

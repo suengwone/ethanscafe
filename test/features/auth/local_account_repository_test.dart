@@ -70,4 +70,29 @@ void main() {
     final reloaded = await LocalAccountRepository().load();
     expect(reloaded.isBusiness, isFalse);
   });
+
+  test('생일을 저장하면 시간이 제거된 날짜로 영속화된다', () async {
+    final profile =
+        await repository.saveBirthDate(DateTime(1994, 8, 14, 10, 30));
+
+    expect(profile.birthDate, DateTime(1994, 8, 14));
+
+    final reloaded = await LocalAccountRepository().load();
+    expect(reloaded.birthDate, DateTime(1994, 8, 14));
+  });
+
+  test('사업자 등록·전환 후에도 생일은 유지된다', () async {
+    await repository.saveBirthDate(DateTime(1994, 8, 14));
+
+    final registered = await repository.registerBusiness(
+      const BusinessProfile(companyName: '카페', businessNumber: '123'),
+    );
+    expect(registered.birthDate, DateTime(1994, 8, 14));
+
+    final switched = await repository.switchToCustomer();
+    expect(switched.birthDate, DateTime(1994, 8, 14));
+
+    final reloaded = await LocalAccountRepository().load();
+    expect(reloaded.birthDate, DateTime(1994, 8, 14));
+  });
 }

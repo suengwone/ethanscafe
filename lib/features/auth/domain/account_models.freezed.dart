@@ -287,7 +287,7 @@ as String,
 /// @nodoc
 mixin _$AccountProfile {
 
- AccountType get type; BusinessProfile? get business;
+ AccountType get type; BusinessProfile? get business; DateTime? get birthDate;
 /// Create a copy of AccountProfile
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -300,16 +300,16 @@ $AccountProfileCopyWith<AccountProfile> get copyWith => _$AccountProfileCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountProfile&&(identical(other.type, type) || other.type == type)&&(identical(other.business, business) || other.business == business));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountProfile&&(identical(other.type, type) || other.type == type)&&(identical(other.business, business) || other.business == business)&&(identical(other.birthDate, birthDate) || other.birthDate == birthDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,business);
+int get hashCode => Object.hash(runtimeType,type,business,birthDate);
 
 @override
 String toString() {
-  return 'AccountProfile(type: $type, business: $business)';
+  return 'AccountProfile(type: $type, business: $business, birthDate: $birthDate)';
 }
 
 
@@ -320,7 +320,7 @@ abstract mixin class $AccountProfileCopyWith<$Res>  {
   factory $AccountProfileCopyWith(AccountProfile value, $Res Function(AccountProfile) _then) = _$AccountProfileCopyWithImpl;
 @useResult
 $Res call({
- AccountType type, BusinessProfile? business
+ AccountType type, BusinessProfile? business, DateTime? birthDate
 });
 
 
@@ -337,11 +337,12 @@ class _$AccountProfileCopyWithImpl<$Res>
 
 /// Create a copy of AccountProfile
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? business = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? business = freezed,Object? birthDate = freezed,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as AccountType,business: freezed == business ? _self.business : business // ignore: cast_nullable_to_non_nullable
-as BusinessProfile?,
+as BusinessProfile?,birthDate: freezed == birthDate ? _self.birthDate : birthDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 /// Create a copy of AccountProfile
@@ -438,10 +439,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( AccountType type,  BusinessProfile? business)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( AccountType type,  BusinessProfile? business,  DateTime? birthDate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AccountProfile() when $default != null:
-return $default(_that.type,_that.business);case _:
+return $default(_that.type,_that.business,_that.birthDate);case _:
   return orElse();
 
 }
@@ -459,10 +460,10 @@ return $default(_that.type,_that.business);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( AccountType type,  BusinessProfile? business)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( AccountType type,  BusinessProfile? business,  DateTime? birthDate)  $default,) {final _that = this;
 switch (_that) {
 case _AccountProfile():
-return $default(_that.type,_that.business);case _:
+return $default(_that.type,_that.business,_that.birthDate);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -479,10 +480,10 @@ return $default(_that.type,_that.business);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( AccountType type,  BusinessProfile? business)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( AccountType type,  BusinessProfile? business,  DateTime? birthDate)?  $default,) {final _that = this;
 switch (_that) {
 case _AccountProfile() when $default != null:
-return $default(_that.type,_that.business);case _:
+return $default(_that.type,_that.business,_that.birthDate);case _:
   return null;
 
 }
@@ -494,11 +495,12 @@ return $default(_that.type,_that.business);case _:
 @JsonSerializable()
 
 class _AccountProfile extends AccountProfile {
-  const _AccountProfile({this.type = AccountType.customer, this.business}): super._();
+  const _AccountProfile({this.type = AccountType.customer, this.business, this.birthDate}): super._();
   factory _AccountProfile.fromJson(Map<String, dynamic> json) => _$AccountProfileFromJson(json);
 
 @override@JsonKey() final  AccountType type;
 @override final  BusinessProfile? business;
+@override final  DateTime? birthDate;
 
 /// Create a copy of AccountProfile
 /// with the given fields replaced by the non-null parameter values.
@@ -513,16 +515,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountProfile&&(identical(other.type, type) || other.type == type)&&(identical(other.business, business) || other.business == business));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountProfile&&(identical(other.type, type) || other.type == type)&&(identical(other.business, business) || other.business == business)&&(identical(other.birthDate, birthDate) || other.birthDate == birthDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,business);
+int get hashCode => Object.hash(runtimeType,type,business,birthDate);
 
 @override
 String toString() {
-  return 'AccountProfile(type: $type, business: $business)';
+  return 'AccountProfile(type: $type, business: $business, birthDate: $birthDate)';
 }
 
 
@@ -533,7 +535,7 @@ abstract mixin class _$AccountProfileCopyWith<$Res> implements $AccountProfileCo
   factory _$AccountProfileCopyWith(_AccountProfile value, $Res Function(_AccountProfile) _then) = __$AccountProfileCopyWithImpl;
 @override @useResult
 $Res call({
- AccountType type, BusinessProfile? business
+ AccountType type, BusinessProfile? business, DateTime? birthDate
 });
 
 
@@ -550,11 +552,12 @@ class __$AccountProfileCopyWithImpl<$Res>
 
 /// Create a copy of AccountProfile
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? business = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? business = freezed,Object? birthDate = freezed,}) {
   return _then(_AccountProfile(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as AccountType,business: freezed == business ? _self.business : business // ignore: cast_nullable_to_non_nullable
-as BusinessProfile?,
+as BusinessProfile?,birthDate: freezed == birthDate ? _self.birthDate : birthDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

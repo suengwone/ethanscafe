@@ -6,6 +6,12 @@ abstract class AccountRepository {
   Future<AccountProfile> registerBusiness(BusinessProfile business);
 
   Future<AccountProfile> switchToCustomer();
+
+  Future<AccountProfile> saveBirthDate(DateTime birthDate);
+}
+
+DateTime normalizeBirthDate(DateTime birthDate) {
+  return DateTime(birthDate.year, birthDate.month, birthDate.day);
 }
 
 void validateBusinessProfile(BusinessProfile business) {

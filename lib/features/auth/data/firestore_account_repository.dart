@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../core/firebase/firestore_converters.dart';
 import '../domain/account_models.dart';
 import '../domain/account_repository.dart';
 
@@ -30,7 +31,8 @@ class FirestoreAccountRepository implements AccountRepository {
   @override
   Future<AccountProfile> registerBusiness(BusinessProfile business) async {
     validateBusinessProfile(business);
-    final profile = AccountProfile(
+    final current = await load();
+    final profile = current.copyWith(
       type: AccountType.business,
       business: normalizeBusinessProfile(business),
     );
@@ -40,6 +42,7 @@ class FirestoreAccountRepository implements AccountRepository {
 
   @override
   Future<AccountProfile> switchToCustomer() async {
+    final current = await load();
     await _doc.set(
       {
         'accountType': AccountType.customer.name,
@@ -47,15 +50,28 @@ class FirestoreAccountRepository implements AccountRepository {
       },
       SetOptions(merge: true),
     );
-    return const AccountProfile();
+    return AccountProfile(birthDate: current.birthDate);
+  }
+
+  @override
+  Future<AccountProfile> saveBirthDate(DateTime birthDate) async {
+    final normalized = normalizeBirthDate(birthDate);
+    final current = await load();
+    await _doc.set(
+      {'birthDate': Timestamp.fromDate(normalized)},
+      SetOptions(merge: true),
+    );
+    return current.copyWith(birthDate: normalized);
   }
 }
 
 AccountProfile accountProfileFromFirestore(Map<String, dynamic> data) {
   final business = data['business'];
+  final birthDate = data['birthDate'];
   return AccountProfile(
     type: AccountType.values.asNameMap()[data['accountType']] ??
         AccountType.customer,
+    birthDate: birthDate == null ? null : firestoreDateTime(birthDate),
     business: business is Map<String, dynamic>
         ? BusinessProfile(
             companyName: business['companyName'] as String? ?? '',
