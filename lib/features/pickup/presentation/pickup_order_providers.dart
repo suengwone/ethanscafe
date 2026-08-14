@@ -26,6 +26,20 @@ final pickupOrdersRepositoryProvider = Provider<PickupOrdersRepository>((ref) {
   return LocalPickupOrdersRepository();
 });
 
+final pickupOrderTrackingProvider = StreamProvider.autoDispose
+    .family<PickupOrder?, String>((ref, orderId) {
+      return ref.watch(pickupOrdersRepositoryProvider).watchOrders().map((
+        orders,
+      ) {
+        for (final order in orders) {
+          if (order.id == orderId) {
+            return order;
+          }
+        }
+        return null;
+      });
+    });
+
 final pickupOrdersControllerProvider =
     AsyncNotifierProvider<PickupOrdersController, List<PickupOrder>>(
       PickupOrdersController.new,
@@ -108,7 +122,9 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
     }
     ref.invalidate(pointsControllerProvider);
 
-    final order = await ref.read(pickupOrdersRepositoryProvider).placeOrder(
+    final order = await ref
+        .read(pickupOrdersRepositoryProvider)
+        .placeOrder(
           items: items,
           storeId: store.id,
           storeName: store.name,
@@ -124,7 +140,8 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
 
     final salesByMenu = <String, int>{};
     for (final item in items) {
-      salesByMenu[item.menuId] = (salesByMenu[item.menuId] ?? 0) + item.quantity;
+      salesByMenu[item.menuId] =
+          (salesByMenu[item.menuId] ?? 0) + item.quantity;
     }
     await ref.read(reviewsRepositoryProvider).recordSales(salesByMenu);
     ref.invalidate(productStatsProvider);
