@@ -4,14 +4,18 @@ import 'package:cafe_app/features/auth/domain/auth_repository.dart';
 class FakeAuthRepository implements AuthRepository {
   AppUser? user;
   final AuthException? failure;
+  final bool admin;
 
-  FakeAuthRepository({this.user, this.failure});
+  FakeAuthRepository({this.user, this.failure, this.admin = false});
 
   @override
   Stream<AppUser?> authStateChanges() => Stream<AppUser?>.value(user);
 
   @override
   AppUser? get currentUser => user;
+
+  @override
+  Future<bool> isAdmin() async => admin;
 
   @override
   Future<AppUser> signInWith(AuthProviderType provider) async {

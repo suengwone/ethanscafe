@@ -19,6 +19,14 @@ final authStateProvider = StreamProvider<AppUser?>((ref) {
   return ref.watch(authRepositoryProvider).authStateChanges();
 });
 
+final isAdminProvider = FutureProvider<bool>((ref) async {
+  final user = ref.watch(authStateProvider).value;
+  if (user == null) {
+    return false;
+  }
+  return ref.watch(authRepositoryProvider).isAdmin();
+});
+
 final authControllerProvider =
     AsyncNotifierProvider<AuthController, void>(AuthController.new);
 

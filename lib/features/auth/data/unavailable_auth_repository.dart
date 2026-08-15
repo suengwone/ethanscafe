@@ -11,6 +11,9 @@ class UnavailableAuthRepository implements AuthRepository {
   AppUser? get currentUser => null;
 
   @override
+  Future<bool> isAdmin() async => false;
+
+  @override
   Future<AppUser> signInWith(AuthProviderType provider) {
     throw const AuthException('로그인 기능이 아직 준비되지 않았습니다. Firebase 설정 후 이용해주세요.');
   }

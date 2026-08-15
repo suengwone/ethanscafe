@@ -14,6 +14,8 @@ abstract class AuthRepository {
 
   AppUser? get currentUser;
 
+  Future<bool> isAdmin();
+
   Future<AppUser> signInWith(AuthProviderType provider);
 
   Future<void> signOut();

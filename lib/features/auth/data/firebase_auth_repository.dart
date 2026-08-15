@@ -39,6 +39,20 @@ class FirebaseAuthRepository implements AuthRepository {
   AppUser? get currentUser => _toAppUser(_auth.currentUser);
 
   @override
+  Future<bool> isAdmin() async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      return false;
+    }
+    try {
+      final token = await user.getIdTokenResult();
+      return token.claims?['admin'] == true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  @override
   Future<AppUser> signInWith(AuthProviderType provider) {
     switch (provider) {
       case AuthProviderType.kakao:
