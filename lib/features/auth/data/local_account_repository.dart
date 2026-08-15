@@ -33,7 +33,18 @@ class LocalAccountRepository implements AccountRepository {
   @override
   Future<AccountProfile> switchToCustomer() async {
     final current = await load();
-    final profile = AccountProfile(birthDate: current.birthDate);
+    final profile = current.copyWith(type: AccountType.customer);
+    await _save(profile);
+    return profile;
+  }
+
+  @override
+  Future<AccountProfile> switchToBusiness() async {
+    final current = await load();
+    if (current.business == null) {
+      throw StateError('저장된 사업자 정보가 없습니다.');
+    }
+    final profile = current.copyWith(type: AccountType.business);
     await _save(profile);
     return profile;
   }

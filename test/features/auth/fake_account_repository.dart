@@ -21,7 +21,16 @@ class FakeAccountRepository implements AccountRepository {
 
   @override
   Future<AccountProfile> switchToCustomer() async {
-    profile = AccountProfile(birthDate: profile.birthDate);
+    profile = profile.copyWith(type: AccountType.customer);
+    return profile;
+  }
+
+  @override
+  Future<AccountProfile> switchToBusiness() async {
+    if (profile.business == null) {
+      throw StateError('저장된 사업자 정보가 없습니다.');
+    }
+    profile = profile.copyWith(type: AccountType.business);
     return profile;
   }
 

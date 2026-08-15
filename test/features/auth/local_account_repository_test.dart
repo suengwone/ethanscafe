@@ -24,7 +24,7 @@ void main() {
     final profile = await repository.registerBusiness(
       const BusinessProfile(
         companyName: ' 카페 어라운드 ',
-        businessNumber: ' 123-45-67890 ',
+        businessNumber: ' 2208162517 ',
         managerName: '김사장',
         phone: '010-1234-5678',
       ),
@@ -32,7 +32,7 @@ void main() {
 
     expect(profile.isBusiness, isTrue);
     expect(profile.business?.companyName, '카페 어라운드');
-    expect(profile.business?.businessNumber, '123-45-67890');
+    expect(profile.business?.businessNumber, '220-81-62517');
 
     final reloaded = await LocalAccountRepository().load();
     expect(reloaded.type, AccountType.business);
@@ -42,7 +42,10 @@ void main() {
   test('상호명이 없으면 사업자 등록에 실패한다', () async {
     expect(
       () => repository.registerBusiness(
-        const BusinessProfile(companyName: '  ', businessNumber: '123'),
+        const BusinessProfile(
+          companyName: '  ',
+          businessNumber: '220-81-62517',
+        ),
       ),
       throwsArgumentError,
     );
@@ -57,18 +60,56 @@ void main() {
     );
   });
 
-  test('일반 고객으로 다시 전환할 수 있다', () async {
+  test('체크섬이 틀린 사업자등록번호는 등록에 실패한다', () async {
+    expect(
+      () => repository.registerBusiness(
+        const BusinessProfile(
+          companyName: '카페',
+          businessNumber: '123-45-67890',
+        ),
+      ),
+      throwsArgumentError,
+    );
+  });
+
+  test('일반 고객으로 전환해도 사업자 정보는 보존된다', () async {
     await repository.registerBusiness(
-      const BusinessProfile(companyName: '카페', businessNumber: '123'),
+      const BusinessProfile(
+        companyName: '카페',
+        businessNumber: '220-81-62517',
+      ),
     );
 
     final profile = await repository.switchToCustomer();
 
     expect(profile.type, AccountType.customer);
-    expect(profile.business, isNull);
+    expect(profile.business?.companyName, '카페');
 
     final reloaded = await LocalAccountRepository().load();
     expect(reloaded.isBusiness, isFalse);
+    expect(reloaded.business?.businessNumber, '220-81-62517');
+  });
+
+  test('저장된 사업자 정보로 재입력 없이 다시 전환할 수 있다', () async {
+    await repository.registerBusiness(
+      const BusinessProfile(
+        companyName: '카페',
+        businessNumber: '220-81-62517',
+      ),
+    );
+    await repository.switchToCustomer();
+
+    final profile = await repository.switchToBusiness();
+
+    expect(profile.type, AccountType.business);
+    expect(profile.business?.businessNumber, '220-81-62517');
+
+    final reloaded = await LocalAccountRepository().load();
+    expect(reloaded.isBusiness, isTrue);
+  });
+
+  test('저장된 사업자 정보가 없으면 사업자 전환에 실패한다', () async {
+    expect(repository.switchToBusiness, throwsStateError);
   });
 
   test('생일을 저장하면 시간이 제거된 날짜로 영속화된다', () async {
@@ -85,7 +126,10 @@ void main() {
     await repository.saveBirthDate(DateTime(1994, 8, 14));
 
     final registered = await repository.registerBusiness(
-      const BusinessProfile(companyName: '카페', businessNumber: '123'),
+      const BusinessProfile(
+        companyName: '카페',
+        businessNumber: '220-81-62517',
+      ),
     );
     expect(registered.birthDate, DateTime(1994, 8, 14));
 

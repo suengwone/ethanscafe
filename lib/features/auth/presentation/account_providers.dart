@@ -44,6 +44,13 @@ class AccountProfileController extends AsyncNotifier<AccountProfile> {
     return profile;
   }
 
+  Future<AccountProfile> switchToBusiness() async {
+    final profile =
+        await ref.read(accountRepositoryProvider).switchToBusiness();
+    state = AsyncValue.data(profile);
+    return profile;
+  }
+
   Future<AccountProfile> saveBirthDate(DateTime birthDate) async {
     final profile =
         await ref.read(accountRepositoryProvider).saveBirthDate(birthDate);

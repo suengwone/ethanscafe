@@ -7,11 +7,37 @@ abstract class AccountRepository {
 
   Future<AccountProfile> switchToCustomer();
 
+  Future<AccountProfile> switchToBusiness();
+
   Future<AccountProfile> saveBirthDate(DateTime birthDate);
 }
 
 DateTime normalizeBirthDate(DateTime birthDate) {
   return DateTime(birthDate.year, birthDate.month, birthDate.day);
+}
+
+bool isValidBusinessNumber(String value) {
+  final digits = value.replaceAll(RegExp(r'[^0-9]'), '');
+  if (digits.length != 10) {
+    return false;
+  }
+  const weights = [1, 3, 7, 1, 3, 7, 1, 3, 5];
+  var sum = 0;
+  for (var i = 0; i < 9; i++) {
+    sum += int.parse(digits[i]) * weights[i];
+  }
+  sum += (int.parse(digits[8]) * 5) ~/ 10;
+  return (10 - sum % 10) % 10 == int.parse(digits[9]);
+}
+
+String formatBusinessNumber(String value) {
+  final digits = value.replaceAll(RegExp(r'[^0-9]'), '');
+  if (digits.length != 10) {
+    return value.trim();
+  }
+  return '${digits.substring(0, 3)}-'
+      '${digits.substring(3, 5)}-'
+      '${digits.substring(5)}';
 }
 
 void validateBusinessProfile(BusinessProfile business) {
@@ -29,12 +55,19 @@ void validateBusinessProfile(BusinessProfile business) {
       '사업자등록번호가 비어 있습니다.',
     );
   }
+  if (!isValidBusinessNumber(business.businessNumber)) {
+    throw ArgumentError.value(
+      business.businessNumber,
+      'businessNumber',
+      '유효하지 않은 사업자등록번호입니다.',
+    );
+  }
 }
 
 BusinessProfile normalizeBusinessProfile(BusinessProfile business) {
   return BusinessProfile(
     companyName: business.companyName.trim(),
-    businessNumber: business.businessNumber.trim(),
+    businessNumber: formatBusinessNumber(business.businessNumber),
     managerName: business.managerName.trim(),
     phone: business.phone.trim(),
   );
