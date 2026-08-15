@@ -45,6 +45,10 @@ void main() {
     expect(find.text('1,200P'), findsOneWidget);
     expect(find.text('+1,200P'), findsOneWidget);
     expect(find.text('결제 12,000원'), findsOneWidget);
+    expect(
+      find.text('1,200P가 적립되었어요. 현재 포인트 1,200P'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('적립된 포인트를 사용하면 잔액이 차감된다', (WidgetTester tester) async {
@@ -64,6 +68,10 @@ void main() {
 
     expect(find.text('300P'), findsOneWidget);
     expect(find.text('-700P'), findsOneWidget);
+    expect(
+      find.text('700P를 사용했어요. 남은 포인트 300P'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('잔액보다 많은 포인트는 사용할 수 없다', (WidgetTester tester) async {

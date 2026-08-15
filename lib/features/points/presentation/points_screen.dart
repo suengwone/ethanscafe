@@ -137,9 +137,24 @@ class _BalanceSection extends ConsumerWidget {
     );
     if (amount == null) return;
 
+    final before = ref.read(pointsControllerProvider).value?.balance ?? 0;
     await ref
         .read(pointsControllerProvider.notifier)
         .recordPayment(paymentAmount: amount);
+    final after = ref.read(pointsControllerProvider).value;
+    if (after == null || !context.mounted) return;
+
+    final earned = after.balance - before;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            '${_pointFormat.format(earned)}P가 적립되었어요. '
+            '현재 포인트 ${_pointFormat.format(after.balance)}P',
+          ),
+        ),
+      );
   }
 
   Future<void> _showUsePointsDialog(
@@ -160,6 +175,19 @@ class _BalanceSection extends ConsumerWidget {
     if (amount == null) return;
 
     await ref.read(pointsControllerProvider.notifier).usePoints(amount: amount);
+    final after = ref.read(pointsControllerProvider).value;
+    if (after == null || !context.mounted) return;
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            '${_pointFormat.format(amount)}P를 사용했어요. '
+            '남은 포인트 ${_pointFormat.format(after.balance)}P',
+          ),
+        ),
+      );
   }
 }
 
