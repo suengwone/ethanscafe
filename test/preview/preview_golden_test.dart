@@ -133,7 +133,7 @@ const _previewBusinessProfile = AccountProfile(
   type: AccountType.business,
   business: BusinessProfile(
     companyName: '카페 어라운드',
-    businessNumber: '123-45-67890',
+    businessNumber: '220-81-62517',
     managerName: '김사장',
     phone: '010-1234-5678',
   ),
@@ -1033,6 +1033,28 @@ void main() {
     await expectGolden(
       find.byType(BusinessRegisterScreen),
       'business_register_screen',
+    );
+  });
+
+  testWidgets('사업자 계정 관리 화면(저장된 정보) 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const BusinessRegisterScreen(),
+      overrides: [
+        accountRepositoryProvider.overrideWithValue(
+          FakeAccountRepository(
+            profile: AccountProfile(
+              business: _previewBusinessProfile.business,
+            ),
+          ),
+        ),
+      ],
+    );
+
+    await expectGolden(
+      find.byType(BusinessRegisterScreen),
+      'business_register_screen_saved',
     );
   });
 
