@@ -93,7 +93,8 @@ class _EmptyCart extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           FilledButton.tonal(
-            onPressed: () => context.pop(),
+            onPressed: () =>
+                context.canPop() ? context.pop() : context.go('/menu'),
             child: const Text('원두 보러 가기'),
           ),
         ],
@@ -832,7 +833,11 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
           ),
         ),
       );
-      context.pop();
+      if (context.canPop()) {
+        context.pop();
+      } else {
+        context.go('/menu');
+      }
     } catch (_) {
       if (!mounted) {
         return;
