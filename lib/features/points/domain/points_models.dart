@@ -39,27 +39,14 @@ abstract class PointHistoryEntry with _$PointHistoryEntry {
 }
 
 @freezed
-abstract class IssuedQrToken with _$IssuedQrToken {
-  const factory IssuedQrToken({
-    required String code,
-    required String storeName,
-    required int paymentAmount,
-    required DateTime expiresAt,
-  }) = _IssuedQrToken;
-
-  factory IssuedQrToken.fromJson(Map<String, dynamic> json) =>
-      _$IssuedQrTokenFromJson(json);
-}
-
-@freezed
-abstract class QrEarnResult with _$QrEarnResult {
-  const factory QrEarnResult({
-    required String storeName,
+abstract class PointsEarnResult with _$PointsEarnResult {
+  const factory PointsEarnResult({
+    required String membershipId,
     required int paymentAmount,
     required int earned,
     required int balance,
-  }) = _QrEarnResult;
+  }) = _PointsEarnResult;
 
-  factory QrEarnResult.fromJson(Map<String, dynamic> json) =>
-      _$QrEarnResultFromJson(json);
+  factory PointsEarnResult.fromJson(Map<String, dynamic> json) =>
+      _$PointsEarnResultFromJson(json);
 }

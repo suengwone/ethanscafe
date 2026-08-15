@@ -48,33 +48,17 @@ const _$PointHistoryTypeEnumMap = {
   PointHistoryType.use: 'use',
 };
 
-_IssuedQrToken _$IssuedQrTokenFromJson(Map<String, dynamic> json) =>
-    _IssuedQrToken(
-      code: json['code'] as String,
-      storeName: json['storeName'] as String,
-      paymentAmount: (json['paymentAmount'] as num).toInt(),
-      expiresAt: DateTime.parse(json['expiresAt'] as String),
-    );
-
-Map<String, dynamic> _$IssuedQrTokenToJson(_IssuedQrToken instance) =>
-    <String, dynamic>{
-      'code': instance.code,
-      'storeName': instance.storeName,
-      'paymentAmount': instance.paymentAmount,
-      'expiresAt': instance.expiresAt.toIso8601String(),
-    };
-
-_QrEarnResult _$QrEarnResultFromJson(Map<String, dynamic> json) =>
-    _QrEarnResult(
-      storeName: json['storeName'] as String,
+_PointsEarnResult _$PointsEarnResultFromJson(Map<String, dynamic> json) =>
+    _PointsEarnResult(
+      membershipId: json['membershipId'] as String,
       paymentAmount: (json['paymentAmount'] as num).toInt(),
       earned: (json['earned'] as num).toInt(),
       balance: (json['balance'] as num).toInt(),
     );
 
-Map<String, dynamic> _$QrEarnResultToJson(_QrEarnResult instance) =>
+Map<String, dynamic> _$PointsEarnResultToJson(_PointsEarnResult instance) =>
     <String, dynamic>{
-      'storeName': instance.storeName,
+      'membershipId': instance.membershipId,
       'paymentAmount': instance.paymentAmount,
       'earned': instance.earned,
       'balance': instance.balance,

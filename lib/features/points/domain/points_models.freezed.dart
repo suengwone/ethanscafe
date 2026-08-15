@@ -566,42 +566,42 @@ as DateTime,
 
 
 /// @nodoc
-mixin _$IssuedQrToken {
+mixin _$PointsEarnResult {
 
- String get code; String get storeName; int get paymentAmount; DateTime get expiresAt;
-/// Create a copy of IssuedQrToken
+ String get membershipId; int get paymentAmount; int get earned; int get balance;
+/// Create a copy of PointsEarnResult
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$IssuedQrTokenCopyWith<IssuedQrToken> get copyWith => _$IssuedQrTokenCopyWithImpl<IssuedQrToken>(this as IssuedQrToken, _$identity);
+$PointsEarnResultCopyWith<PointsEarnResult> get copyWith => _$PointsEarnResultCopyWithImpl<PointsEarnResult>(this as PointsEarnResult, _$identity);
 
-  /// Serializes this IssuedQrToken to a JSON map.
+  /// Serializes this PointsEarnResult to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is IssuedQrToken&&(identical(other.code, code) || other.code == code)&&(identical(other.storeName, storeName) || other.storeName == storeName)&&(identical(other.paymentAmount, paymentAmount) || other.paymentAmount == paymentAmount)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PointsEarnResult&&(identical(other.membershipId, membershipId) || other.membershipId == membershipId)&&(identical(other.paymentAmount, paymentAmount) || other.paymentAmount == paymentAmount)&&(identical(other.earned, earned) || other.earned == earned)&&(identical(other.balance, balance) || other.balance == balance));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,storeName,paymentAmount,expiresAt);
+int get hashCode => Object.hash(runtimeType,membershipId,paymentAmount,earned,balance);
 
 @override
 String toString() {
-  return 'IssuedQrToken(code: $code, storeName: $storeName, paymentAmount: $paymentAmount, expiresAt: $expiresAt)';
+  return 'PointsEarnResult(membershipId: $membershipId, paymentAmount: $paymentAmount, earned: $earned, balance: $balance)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $IssuedQrTokenCopyWith<$Res>  {
-  factory $IssuedQrTokenCopyWith(IssuedQrToken value, $Res Function(IssuedQrToken) _then) = _$IssuedQrTokenCopyWithImpl;
+abstract mixin class $PointsEarnResultCopyWith<$Res>  {
+  factory $PointsEarnResultCopyWith(PointsEarnResult value, $Res Function(PointsEarnResult) _then) = _$PointsEarnResultCopyWithImpl;
 @useResult
 $Res call({
- String code, String storeName, int paymentAmount, DateTime expiresAt
+ String membershipId, int paymentAmount, int earned, int balance
 });
 
 
@@ -609,290 +609,18 @@ $Res call({
 
 }
 /// @nodoc
-class _$IssuedQrTokenCopyWithImpl<$Res>
-    implements $IssuedQrTokenCopyWith<$Res> {
-  _$IssuedQrTokenCopyWithImpl(this._self, this._then);
+class _$PointsEarnResultCopyWithImpl<$Res>
+    implements $PointsEarnResultCopyWith<$Res> {
+  _$PointsEarnResultCopyWithImpl(this._self, this._then);
 
-  final IssuedQrToken _self;
-  final $Res Function(IssuedQrToken) _then;
+  final PointsEarnResult _self;
+  final $Res Function(PointsEarnResult) _then;
 
-/// Create a copy of IssuedQrToken
+/// Create a copy of PointsEarnResult
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? storeName = null,Object? paymentAmount = null,Object? expiresAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? membershipId = null,Object? paymentAmount = null,Object? earned = null,Object? balance = null,}) {
   return _then(_self.copyWith(
-code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
-as String,storeName: null == storeName ? _self.storeName : storeName // ignore: cast_nullable_to_non_nullable
-as String,paymentAmount: null == paymentAmount ? _self.paymentAmount : paymentAmount // ignore: cast_nullable_to_non_nullable
-as int,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
-  ));
-}
-
-}
-
-
-/// Adds pattern-matching-related methods to [IssuedQrToken].
-extension IssuedQrTokenPatterns on IssuedQrToken {
-/// A variant of `map` that fallback to returning `orElse`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _IssuedQrToken value)?  $default,{required TResult orElse(),}){
-final _that = this;
-switch (_that) {
-case _IssuedQrToken() when $default != null:
-return $default(_that);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// Callbacks receives the raw object, upcasted.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case final Subclass2 value:
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _IssuedQrToken value)  $default,){
-final _that = this;
-switch (_that) {
-case _IssuedQrToken():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `map` that fallback to returning `null`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _IssuedQrToken value)?  $default,){
-final _that = this;
-switch (_that) {
-case _IssuedQrToken() when $default != null:
-return $default(_that);case _:
-  return null;
-
-}
-}
-/// A variant of `when` that fallback to an `orElse` callback.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String storeName,  int paymentAmount,  DateTime expiresAt)?  $default,{required TResult orElse(),}) {final _that = this;
-switch (_that) {
-case _IssuedQrToken() when $default != null:
-return $default(_that.code,_that.storeName,_that.paymentAmount,_that.expiresAt);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// As opposed to `map`, this offers destructuring.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case Subclass2(:final field2):
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String storeName,  int paymentAmount,  DateTime expiresAt)  $default,) {final _that = this;
-switch (_that) {
-case _IssuedQrToken():
-return $default(_that.code,_that.storeName,_that.paymentAmount,_that.expiresAt);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `when` that fallback to returning `null`
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String storeName,  int paymentAmount,  DateTime expiresAt)?  $default,) {final _that = this;
-switch (_that) {
-case _IssuedQrToken() when $default != null:
-return $default(_that.code,_that.storeName,_that.paymentAmount,_that.expiresAt);case _:
-  return null;
-
-}
-}
-
-}
-
-/// @nodoc
-@JsonSerializable()
-
-class _IssuedQrToken implements IssuedQrToken {
-  const _IssuedQrToken({required this.code, required this.storeName, required this.paymentAmount, required this.expiresAt});
-  factory _IssuedQrToken.fromJson(Map<String, dynamic> json) => _$IssuedQrTokenFromJson(json);
-
-@override final  String code;
-@override final  String storeName;
-@override final  int paymentAmount;
-@override final  DateTime expiresAt;
-
-/// Create a copy of IssuedQrToken
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$IssuedQrTokenCopyWith<_IssuedQrToken> get copyWith => __$IssuedQrTokenCopyWithImpl<_IssuedQrToken>(this, _$identity);
-
-@override
-Map<String, dynamic> toJson() {
-  return _$IssuedQrTokenToJson(this, );
-}
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IssuedQrToken&&(identical(other.code, code) || other.code == code)&&(identical(other.storeName, storeName) || other.storeName == storeName)&&(identical(other.paymentAmount, paymentAmount) || other.paymentAmount == paymentAmount)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,code,storeName,paymentAmount,expiresAt);
-
-@override
-String toString() {
-  return 'IssuedQrToken(code: $code, storeName: $storeName, paymentAmount: $paymentAmount, expiresAt: $expiresAt)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$IssuedQrTokenCopyWith<$Res> implements $IssuedQrTokenCopyWith<$Res> {
-  factory _$IssuedQrTokenCopyWith(_IssuedQrToken value, $Res Function(_IssuedQrToken) _then) = __$IssuedQrTokenCopyWithImpl;
-@override @useResult
-$Res call({
- String code, String storeName, int paymentAmount, DateTime expiresAt
-});
-
-
-
-
-}
-/// @nodoc
-class __$IssuedQrTokenCopyWithImpl<$Res>
-    implements _$IssuedQrTokenCopyWith<$Res> {
-  __$IssuedQrTokenCopyWithImpl(this._self, this._then);
-
-  final _IssuedQrToken _self;
-  final $Res Function(_IssuedQrToken) _then;
-
-/// Create a copy of IssuedQrToken
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? storeName = null,Object? paymentAmount = null,Object? expiresAt = null,}) {
-  return _then(_IssuedQrToken(
-code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
-as String,storeName: null == storeName ? _self.storeName : storeName // ignore: cast_nullable_to_non_nullable
-as String,paymentAmount: null == paymentAmount ? _self.paymentAmount : paymentAmount // ignore: cast_nullable_to_non_nullable
-as int,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
-  ));
-}
-
-
-}
-
-
-/// @nodoc
-mixin _$QrEarnResult {
-
- String get storeName; int get paymentAmount; int get earned; int get balance;
-/// Create a copy of QrEarnResult
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$QrEarnResultCopyWith<QrEarnResult> get copyWith => _$QrEarnResultCopyWithImpl<QrEarnResult>(this as QrEarnResult, _$identity);
-
-  /// Serializes this QrEarnResult to a JSON map.
-  Map<String, dynamic> toJson();
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is QrEarnResult&&(identical(other.storeName, storeName) || other.storeName == storeName)&&(identical(other.paymentAmount, paymentAmount) || other.paymentAmount == paymentAmount)&&(identical(other.earned, earned) || other.earned == earned)&&(identical(other.balance, balance) || other.balance == balance));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,storeName,paymentAmount,earned,balance);
-
-@override
-String toString() {
-  return 'QrEarnResult(storeName: $storeName, paymentAmount: $paymentAmount, earned: $earned, balance: $balance)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $QrEarnResultCopyWith<$Res>  {
-  factory $QrEarnResultCopyWith(QrEarnResult value, $Res Function(QrEarnResult) _then) = _$QrEarnResultCopyWithImpl;
-@useResult
-$Res call({
- String storeName, int paymentAmount, int earned, int balance
-});
-
-
-
-
-}
-/// @nodoc
-class _$QrEarnResultCopyWithImpl<$Res>
-    implements $QrEarnResultCopyWith<$Res> {
-  _$QrEarnResultCopyWithImpl(this._self, this._then);
-
-  final QrEarnResult _self;
-  final $Res Function(QrEarnResult) _then;
-
-/// Create a copy of QrEarnResult
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? storeName = null,Object? paymentAmount = null,Object? earned = null,Object? balance = null,}) {
-  return _then(_self.copyWith(
-storeName: null == storeName ? _self.storeName : storeName // ignore: cast_nullable_to_non_nullable
+membershipId: null == membershipId ? _self.membershipId : membershipId // ignore: cast_nullable_to_non_nullable
 as String,paymentAmount: null == paymentAmount ? _self.paymentAmount : paymentAmount // ignore: cast_nullable_to_non_nullable
 as int,earned: null == earned ? _self.earned : earned // ignore: cast_nullable_to_non_nullable
 as int,balance: null == balance ? _self.balance : balance // ignore: cast_nullable_to_non_nullable
@@ -903,8 +631,8 @@ as int,
 }
 
 
-/// Adds pattern-matching-related methods to [QrEarnResult].
-extension QrEarnResultPatterns on QrEarnResult {
+/// Adds pattern-matching-related methods to [PointsEarnResult].
+extension PointsEarnResultPatterns on PointsEarnResult {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -917,10 +645,10 @@ extension QrEarnResultPatterns on QrEarnResult {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _QrEarnResult value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PointsEarnResult value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _QrEarnResult() when $default != null:
+case _PointsEarnResult() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -939,10 +667,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _QrEarnResult value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PointsEarnResult value)  $default,){
 final _that = this;
 switch (_that) {
-case _QrEarnResult():
+case _PointsEarnResult():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -960,10 +688,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _QrEarnResult value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PointsEarnResult value)?  $default,){
 final _that = this;
 switch (_that) {
-case _QrEarnResult() when $default != null:
+case _PointsEarnResult() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -981,10 +709,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String storeName,  int paymentAmount,  int earned,  int balance)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String membershipId,  int paymentAmount,  int earned,  int balance)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _QrEarnResult() when $default != null:
-return $default(_that.storeName,_that.paymentAmount,_that.earned,_that.balance);case _:
+case _PointsEarnResult() when $default != null:
+return $default(_that.membershipId,_that.paymentAmount,_that.earned,_that.balance);case _:
   return orElse();
 
 }
@@ -1002,10 +730,10 @@ return $default(_that.storeName,_that.paymentAmount,_that.earned,_that.balance);
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String storeName,  int paymentAmount,  int earned,  int balance)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String membershipId,  int paymentAmount,  int earned,  int balance)  $default,) {final _that = this;
 switch (_that) {
-case _QrEarnResult():
-return $default(_that.storeName,_that.paymentAmount,_that.earned,_that.balance);case _:
+case _PointsEarnResult():
+return $default(_that.membershipId,_that.paymentAmount,_that.earned,_that.balance);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1022,10 +750,10 @@ return $default(_that.storeName,_that.paymentAmount,_that.earned,_that.balance);
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String storeName,  int paymentAmount,  int earned,  int balance)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String membershipId,  int paymentAmount,  int earned,  int balance)?  $default,) {final _that = this;
 switch (_that) {
-case _QrEarnResult() when $default != null:
-return $default(_that.storeName,_that.paymentAmount,_that.earned,_that.balance);case _:
+case _PointsEarnResult() when $default != null:
+return $default(_that.membershipId,_that.paymentAmount,_that.earned,_that.balance);case _:
   return null;
 
 }
@@ -1036,49 +764,49 @@ return $default(_that.storeName,_that.paymentAmount,_that.earned,_that.balance);
 /// @nodoc
 @JsonSerializable()
 
-class _QrEarnResult implements QrEarnResult {
-  const _QrEarnResult({required this.storeName, required this.paymentAmount, required this.earned, required this.balance});
-  factory _QrEarnResult.fromJson(Map<String, dynamic> json) => _$QrEarnResultFromJson(json);
+class _PointsEarnResult implements PointsEarnResult {
+  const _PointsEarnResult({required this.membershipId, required this.paymentAmount, required this.earned, required this.balance});
+  factory _PointsEarnResult.fromJson(Map<String, dynamic> json) => _$PointsEarnResultFromJson(json);
 
-@override final  String storeName;
+@override final  String membershipId;
 @override final  int paymentAmount;
 @override final  int earned;
 @override final  int balance;
 
-/// Create a copy of QrEarnResult
+/// Create a copy of PointsEarnResult
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$QrEarnResultCopyWith<_QrEarnResult> get copyWith => __$QrEarnResultCopyWithImpl<_QrEarnResult>(this, _$identity);
+_$PointsEarnResultCopyWith<_PointsEarnResult> get copyWith => __$PointsEarnResultCopyWithImpl<_PointsEarnResult>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$QrEarnResultToJson(this, );
+  return _$PointsEarnResultToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _QrEarnResult&&(identical(other.storeName, storeName) || other.storeName == storeName)&&(identical(other.paymentAmount, paymentAmount) || other.paymentAmount == paymentAmount)&&(identical(other.earned, earned) || other.earned == earned)&&(identical(other.balance, balance) || other.balance == balance));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PointsEarnResult&&(identical(other.membershipId, membershipId) || other.membershipId == membershipId)&&(identical(other.paymentAmount, paymentAmount) || other.paymentAmount == paymentAmount)&&(identical(other.earned, earned) || other.earned == earned)&&(identical(other.balance, balance) || other.balance == balance));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,storeName,paymentAmount,earned,balance);
+int get hashCode => Object.hash(runtimeType,membershipId,paymentAmount,earned,balance);
 
 @override
 String toString() {
-  return 'QrEarnResult(storeName: $storeName, paymentAmount: $paymentAmount, earned: $earned, balance: $balance)';
+  return 'PointsEarnResult(membershipId: $membershipId, paymentAmount: $paymentAmount, earned: $earned, balance: $balance)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$QrEarnResultCopyWith<$Res> implements $QrEarnResultCopyWith<$Res> {
-  factory _$QrEarnResultCopyWith(_QrEarnResult value, $Res Function(_QrEarnResult) _then) = __$QrEarnResultCopyWithImpl;
+abstract mixin class _$PointsEarnResultCopyWith<$Res> implements $PointsEarnResultCopyWith<$Res> {
+  factory _$PointsEarnResultCopyWith(_PointsEarnResult value, $Res Function(_PointsEarnResult) _then) = __$PointsEarnResultCopyWithImpl;
 @override @useResult
 $Res call({
- String storeName, int paymentAmount, int earned, int balance
+ String membershipId, int paymentAmount, int earned, int balance
 });
 
 
@@ -1086,18 +814,18 @@ $Res call({
 
 }
 /// @nodoc
-class __$QrEarnResultCopyWithImpl<$Res>
-    implements _$QrEarnResultCopyWith<$Res> {
-  __$QrEarnResultCopyWithImpl(this._self, this._then);
+class __$PointsEarnResultCopyWithImpl<$Res>
+    implements _$PointsEarnResultCopyWith<$Res> {
+  __$PointsEarnResultCopyWithImpl(this._self, this._then);
 
-  final _QrEarnResult _self;
-  final $Res Function(_QrEarnResult) _then;
+  final _PointsEarnResult _self;
+  final $Res Function(_PointsEarnResult) _then;
 
-/// Create a copy of QrEarnResult
+/// Create a copy of PointsEarnResult
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? storeName = null,Object? paymentAmount = null,Object? earned = null,Object? balance = null,}) {
-  return _then(_QrEarnResult(
-storeName: null == storeName ? _self.storeName : storeName // ignore: cast_nullable_to_non_nullable
+@override @pragma('vm:prefer-inline') $Res call({Object? membershipId = null,Object? paymentAmount = null,Object? earned = null,Object? balance = null,}) {
+  return _then(_PointsEarnResult(
+membershipId: null == membershipId ? _self.membershipId : membershipId // ignore: cast_nullable_to_non_nullable
 as String,paymentAmount: null == paymentAmount ? _self.paymentAmount : paymentAmount // ignore: cast_nullable_to_non_nullable
 as int,earned: null == earned ? _self.earned : earned // ignore: cast_nullable_to_non_nullable
 as int,balance: null == balance ? _self.balance : balance // ignore: cast_nullable_to_non_nullable
