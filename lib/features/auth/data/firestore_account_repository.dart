@@ -94,7 +94,7 @@ AccountProfile accountProfileFromFirestore(Map<String, dynamic> data) {
     type: AccountType.values.asNameMap()[data['accountType']] ??
         AccountType.customer,
     birthDate: birthDate == null ? null : firestoreDateTime(birthDate),
-    business: business is Map<String, dynamic>
+    business: business is Map
         ? BusinessProfile(
             companyName: business['companyName'] as String? ?? '',
             businessNumber: business['businessNumber'] as String? ?? '',
