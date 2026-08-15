@@ -48,6 +48,22 @@ const _$PointHistoryTypeEnumMap = {
   PointHistoryType.use: 'use',
 };
 
+_IssuedQrToken _$IssuedQrTokenFromJson(Map<String, dynamic> json) =>
+    _IssuedQrToken(
+      code: json['code'] as String,
+      storeName: json['storeName'] as String,
+      paymentAmount: (json['paymentAmount'] as num).toInt(),
+      expiresAt: DateTime.parse(json['expiresAt'] as String),
+    );
+
+Map<String, dynamic> _$IssuedQrTokenToJson(_IssuedQrToken instance) =>
+    <String, dynamic>{
+      'code': instance.code,
+      'storeName': instance.storeName,
+      'paymentAmount': instance.paymentAmount,
+      'expiresAt': instance.expiresAt.toIso8601String(),
+    };
+
 _QrEarnResult _$QrEarnResultFromJson(Map<String, dynamic> json) =>
     _QrEarnResult(
       storeName: json['storeName'] as String,

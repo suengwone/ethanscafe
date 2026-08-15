@@ -566,6 +566,278 @@ as DateTime,
 
 
 /// @nodoc
+mixin _$IssuedQrToken {
+
+ String get code; String get storeName; int get paymentAmount; DateTime get expiresAt;
+/// Create a copy of IssuedQrToken
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$IssuedQrTokenCopyWith<IssuedQrToken> get copyWith => _$IssuedQrTokenCopyWithImpl<IssuedQrToken>(this as IssuedQrToken, _$identity);
+
+  /// Serializes this IssuedQrToken to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is IssuedQrToken&&(identical(other.code, code) || other.code == code)&&(identical(other.storeName, storeName) || other.storeName == storeName)&&(identical(other.paymentAmount, paymentAmount) || other.paymentAmount == paymentAmount)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,code,storeName,paymentAmount,expiresAt);
+
+@override
+String toString() {
+  return 'IssuedQrToken(code: $code, storeName: $storeName, paymentAmount: $paymentAmount, expiresAt: $expiresAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $IssuedQrTokenCopyWith<$Res>  {
+  factory $IssuedQrTokenCopyWith(IssuedQrToken value, $Res Function(IssuedQrToken) _then) = _$IssuedQrTokenCopyWithImpl;
+@useResult
+$Res call({
+ String code, String storeName, int paymentAmount, DateTime expiresAt
+});
+
+
+
+
+}
+/// @nodoc
+class _$IssuedQrTokenCopyWithImpl<$Res>
+    implements $IssuedQrTokenCopyWith<$Res> {
+  _$IssuedQrTokenCopyWithImpl(this._self, this._then);
+
+  final IssuedQrToken _self;
+  final $Res Function(IssuedQrToken) _then;
+
+/// Create a copy of IssuedQrToken
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? storeName = null,Object? paymentAmount = null,Object? expiresAt = null,}) {
+  return _then(_self.copyWith(
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,storeName: null == storeName ? _self.storeName : storeName // ignore: cast_nullable_to_non_nullable
+as String,paymentAmount: null == paymentAmount ? _self.paymentAmount : paymentAmount // ignore: cast_nullable_to_non_nullable
+as int,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [IssuedQrToken].
+extension IssuedQrTokenPatterns on IssuedQrToken {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _IssuedQrToken value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _IssuedQrToken() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _IssuedQrToken value)  $default,){
+final _that = this;
+switch (_that) {
+case _IssuedQrToken():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _IssuedQrToken value)?  $default,){
+final _that = this;
+switch (_that) {
+case _IssuedQrToken() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String storeName,  int paymentAmount,  DateTime expiresAt)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _IssuedQrToken() when $default != null:
+return $default(_that.code,_that.storeName,_that.paymentAmount,_that.expiresAt);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String storeName,  int paymentAmount,  DateTime expiresAt)  $default,) {final _that = this;
+switch (_that) {
+case _IssuedQrToken():
+return $default(_that.code,_that.storeName,_that.paymentAmount,_that.expiresAt);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String storeName,  int paymentAmount,  DateTime expiresAt)?  $default,) {final _that = this;
+switch (_that) {
+case _IssuedQrToken() when $default != null:
+return $default(_that.code,_that.storeName,_that.paymentAmount,_that.expiresAt);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _IssuedQrToken implements IssuedQrToken {
+  const _IssuedQrToken({required this.code, required this.storeName, required this.paymentAmount, required this.expiresAt});
+  factory _IssuedQrToken.fromJson(Map<String, dynamic> json) => _$IssuedQrTokenFromJson(json);
+
+@override final  String code;
+@override final  String storeName;
+@override final  int paymentAmount;
+@override final  DateTime expiresAt;
+
+/// Create a copy of IssuedQrToken
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$IssuedQrTokenCopyWith<_IssuedQrToken> get copyWith => __$IssuedQrTokenCopyWithImpl<_IssuedQrToken>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$IssuedQrTokenToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IssuedQrToken&&(identical(other.code, code) || other.code == code)&&(identical(other.storeName, storeName) || other.storeName == storeName)&&(identical(other.paymentAmount, paymentAmount) || other.paymentAmount == paymentAmount)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,code,storeName,paymentAmount,expiresAt);
+
+@override
+String toString() {
+  return 'IssuedQrToken(code: $code, storeName: $storeName, paymentAmount: $paymentAmount, expiresAt: $expiresAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$IssuedQrTokenCopyWith<$Res> implements $IssuedQrTokenCopyWith<$Res> {
+  factory _$IssuedQrTokenCopyWith(_IssuedQrToken value, $Res Function(_IssuedQrToken) _then) = __$IssuedQrTokenCopyWithImpl;
+@override @useResult
+$Res call({
+ String code, String storeName, int paymentAmount, DateTime expiresAt
+});
+
+
+
+
+}
+/// @nodoc
+class __$IssuedQrTokenCopyWithImpl<$Res>
+    implements _$IssuedQrTokenCopyWith<$Res> {
+  __$IssuedQrTokenCopyWithImpl(this._self, this._then);
+
+  final _IssuedQrToken _self;
+  final $Res Function(_IssuedQrToken) _then;
+
+/// Create a copy of IssuedQrToken
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? storeName = null,Object? paymentAmount = null,Object? expiresAt = null,}) {
+  return _then(_IssuedQrToken(
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String,storeName: null == storeName ? _self.storeName : storeName // ignore: cast_nullable_to_non_nullable
+as String,paymentAmount: null == paymentAmount ? _self.paymentAmount : paymentAmount // ignore: cast_nullable_to_non_nullable
+as int,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$QrEarnResult {
 
  String get storeName; int get paymentAmount; int get earned; int get balance;
