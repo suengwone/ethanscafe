@@ -1058,6 +1058,51 @@ void main() {
     );
   });
 
+  testWidgets('로그아웃 확인 다이얼로그 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(
+            FakeAuthRepository(user: _previewUser),
+          ),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: buildAppTheme(),
+          home: const ProfileScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.text('로그아웃'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('로그아웃'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('로그아웃'));
+    await tester.pumpAndSettle();
+
+    await expectGolden(find.byType(MaterialApp), 'sign_out_dialog');
+  });
+
+  testWidgets('포인트 적립 스낵바 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const PointsScreen());
+
+    await tester.tap(find.text('결제 적립'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField), '12000');
+    await tester.tap(find.text('적립'));
+    await tester.pumpAndSettle();
+
+    await expectGolden(find.byType(MaterialApp), 'points_earn_snackbar');
+  });
+
   testWidgets('회원 탈퇴 확인 다이얼로그 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
 
