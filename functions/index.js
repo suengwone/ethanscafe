@@ -31,6 +31,7 @@ const {
   toApprovalPayload,
   basicAuthHeader,
 } = require('./toss_payment');
+const {validateBusinessRegisterRequest} = require('./business_profile');
 
 setGlobalOptions({region: 'asia-northeast3'});
 initializeApp();
@@ -40,6 +41,31 @@ const naverClientId = defineSecret('NAVER_CLIENT_ID');
 const naverClientSecret = defineSecret('NAVER_CLIENT_SECRET');
 const kakaoJsAppKey = defineSecret('KAKAO_JS_APP_KEY');
 const kakaoClientSecret = defineSecret('KAKAO_CLIENT_SECRET');
+
+exports.registerBusinessProfile = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', '로그인이 필요합니다.');
+  }
+
+  let business;
+  try {
+    business = validateBusinessRegisterRequest(request.data);
+  } catch (error) {
+    throw new HttpsError('invalid-argument', error.message);
+  }
+
+  await getFirestore()
+    .collection('users')
+    .doc(request.auth.uid)
+    .set(
+      {
+        accountType: 'business',
+        business: {...business, verifiedAt: FieldValue.serverTimestamp()},
+      },
+      {merge: true},
+    );
+  return business;
+});
 
 exports.confirmTossPayment = onCall(
   {secrets: [tossSecretKey]},
