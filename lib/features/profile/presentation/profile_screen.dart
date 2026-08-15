@@ -15,6 +15,13 @@ class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   Future<void> _signOut(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => const _SignOutDialog(),
+    );
+    if (confirmed != true || !context.mounted) {
+      return;
+    }
     await ref.read(authControllerProvider.notifier).signOut();
     if (!context.mounted) {
       return;
@@ -309,6 +316,28 @@ class ProfileScreen extends ConsumerWidget {
       ),
       trailing: trailing ?? const Icon(LucideIcons.chevronRight, size: 18),
       onTap: onTap,
+    );
+  }
+}
+
+class _SignOutDialog extends StatelessWidget {
+  const _SignOutDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('로그아웃'),
+      content: const Text('정말 로그아웃하시겠어요?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: const Text('취소'),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: const Text('로그아웃'),
+        ),
+      ],
     );
   }
 }
