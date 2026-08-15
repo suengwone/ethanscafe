@@ -97,14 +97,19 @@ class OrderHistoryScreen extends ConsumerWidget {
           if (records.isEmpty) {
             return const _EmptyOrders();
           }
-          return ListView.builder(
-            padding: foxtrotListPadding,
-            itemCount: records.length,
-            itemBuilder: (context, index) => switch (records[index]) {
-              BeanOrderRecord(:final order) => _BeanOrderCard(order: order),
-              PickupOrderRecord(:final order) => _PickupOrderCard(order: order),
-              StorePaymentRecord(:final entry) => _OrderCard(entry: entry),
-            },
+          return RefreshIndicator(
+            onRefresh: () => ref.refresh(orderHistoryProvider.future),
+            child: ListView.builder(
+              padding: foxtrotListPadding,
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: records.length,
+              itemBuilder: (context, index) => switch (records[index]) {
+                BeanOrderRecord(:final order) => _BeanOrderCard(order: order),
+                PickupOrderRecord(:final order) =>
+                  _PickupOrderCard(order: order),
+                StorePaymentRecord(:final entry) => _OrderCard(entry: entry),
+              },
+            ),
           );
         },
       ),
