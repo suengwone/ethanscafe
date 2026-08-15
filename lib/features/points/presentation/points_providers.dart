@@ -2,16 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/presentation/auth_providers.dart';
+import '../data/firestore_points_admin_repository.dart';
 import '../data/firestore_points_repository.dart';
-import '../data/firestore_qr_issue_repository.dart';
-import '../data/firestore_qr_points_repository.dart';
+import '../data/local_points_admin_repository.dart';
 import '../data/local_points_repository.dart';
-import '../data/local_qr_issue_repository.dart';
-import '../data/local_qr_points_repository.dart';
+import '../domain/points_admin_repository.dart';
 import '../domain/points_models.dart';
 import '../domain/points_repository.dart';
-import '../domain/qr_issue_repository.dart';
-import '../domain/qr_points_repository.dart';
 
 final pointsRepositoryProvider = Provider<PointsRepository>((ref) {
   try {
@@ -25,28 +22,16 @@ final pointsRepositoryProvider = Provider<PointsRepository>((ref) {
   return LocalPointsRepository();
 });
 
-final qrPointsRepositoryProvider = Provider<QrPointsRepository>((ref) {
+final pointsAdminRepositoryProvider = Provider<PointsAdminRepository>((ref) {
   try {
     if (Firebase.apps.isNotEmpty) {
       final user = ref.watch(authStateProvider).value;
       if (user != null) {
-        return FirestoreQrPointsRepository(uid: user.uid);
+        return FirestorePointsAdminRepository();
       }
     }
   } catch (_) {}
-  return LocalQrPointsRepository(ref.watch(pointsRepositoryProvider));
-});
-
-final qrIssueRepositoryProvider = Provider<QrIssueRepository>((ref) {
-  try {
-    if (Firebase.apps.isNotEmpty) {
-      final user = ref.watch(authStateProvider).value;
-      if (user != null) {
-        return FirestoreQrIssueRepository(uid: user.uid);
-      }
-    }
-  } catch (_) {}
-  return LocalQrIssueRepository();
+  return LocalPointsAdminRepository(ref.watch(pointsRepositoryProvider));
 });
 
 final pointsControllerProvider =
@@ -68,11 +53,16 @@ class PointsController extends AsyncNotifier<PointsData> {
     );
   }
 
-  Future<QrEarnResult> earnFromQr(String code) async {
-    final result = await ref.read(qrPointsRepositoryProvider).earnFromQr(code);
-    state = await AsyncValue.guard(
-      () => ref.read(pointsRepositoryProvider).load(),
-    );
+  Future<PointsEarnResult> earnByMembershipId({
+    required String membershipId,
+    required int paymentAmount,
+  }) async {
+    final result =
+        await ref.read(pointsAdminRepositoryProvider).earnByMembershipId(
+              membershipId: membershipId,
+              paymentAmount: paymentAmount,
+            );
+    ref.invalidateSelf();
     return result;
   }
 }
