@@ -61,7 +61,6 @@ void main() {
     expect(find.text('나의 포인트'), findsOneWidget);
     expect(find.text('0P'), findsOneWidget);
     expect(find.text('적립/사용 내역이 없습니다.'), findsOneWidget);
-    expect(find.text('매장 QR 스캔 적립'), findsOneWidget);
     expect(
       tester
           .widget<OutlinedButton>(find.widgetWithText(OutlinedButton, '포인트 사용'))
@@ -78,11 +77,12 @@ void main() {
     expect(find.text('적립 QR 발급'), findsNothing);
   });
 
-  testWidgets('직원 계정에는 적립 QR 발급 진입점이 보인다', (WidgetTester tester) async {
+  testWidgets('직원 계정에는 회원 QR 스캔 적립 진입점이 보인다', (WidgetTester tester) async {
     await pumpPointsScreen(tester, admin: true);
 
     expect(find.text('직원 모드'), findsOneWidget);
-    expect(find.text('적립 QR 발급'), findsOneWidget);
+    expect(find.text('회원 QR 스캔 포인트 적립'), findsOneWidget);
+    expect(find.text('회원 QR 스캔 스탬프 적립'), findsOneWidget);
   });
 
   testWidgets('적립된 포인트를 사용하면 잔액이 차감된다', (WidgetTester tester) async {

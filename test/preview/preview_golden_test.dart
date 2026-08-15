@@ -47,9 +47,8 @@ import 'package:cafe_app/features/subscription/presentation/subscription_list_sc
 import 'package:cafe_app/features/wholesale/presentation/business_home_screen.dart';
 import 'package:cafe_app/features/wholesale/presentation/wholesale_quote_history_screen.dart';
 import 'package:cafe_app/features/wholesale/presentation/wholesale_quote_screen.dart';
+import 'package:cafe_app/features/points/presentation/admin_points_scan_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
-import 'package:cafe_app/features/points/presentation/qr_scan_screen.dart';
-import 'package:cafe_app/features/points/presentation/staff_qr_issue_screen.dart';
 import 'package:cafe_app/features/stamp/presentation/admin_stamp_scan_screen.dart';
 import 'package:cafe_app/features/profile/presentation/delivery_address_screen.dart';
 import 'package:cafe_app/features/profile/presentation/notification_settings_screen.dart';
@@ -564,19 +563,6 @@ void main() {
     await pumpScreen(tester, const PointsScreen());
 
     await expectGolden(find.byType(PointsScreen), 'points_screen');
-  });
-
-  testWidgets('QR 스캔 적립 화면 스크린샷', (WidgetTester tester) async {
-    await configureView(tester);
-    await pumpScreen(
-      tester,
-      QrScanScreen(
-        scannerBuilder: (context, onDetect) =>
-            const ColoredBox(color: Color(0xFF1C1B1A)),
-      ),
-    );
-
-    await expectGolden(find.byType(QrScanScreen), 'qr_scan_screen');
   });
 
   testWidgets('메뉴 화면 스크린샷', (WidgetTester tester) async {
@@ -1110,7 +1096,9 @@ void main() {
     await expectGolden(find.byType(MaterialApp), 'sign_out_dialog');
   });
 
-  Future<void> pumpStaffQrIssueScreen(WidgetTester tester) async {
+  testWidgets('회원 포인트 적립 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -1121,37 +1109,18 @@ void main() {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: buildAppTheme(),
-          home: const StaffQrIssueScreen(),
+          home: AdminPointsScanScreen(
+            scannerBuilder: (context, onDetect) =>
+                const ColoredBox(color: Color(0xFF1C1B1A)),
+          ),
         ),
       ),
     );
     await tester.pumpAndSettle();
-  }
-
-  testWidgets('직원 적립 QR 발급 화면 스크린샷', (WidgetTester tester) async {
-    await configureView(tester);
-    await pumpStaffQrIssueScreen(tester);
 
     await expectGolden(
-      find.byType(StaffQrIssueScreen),
-      'staff_qr_issue_screen',
-    );
-  });
-
-  testWidgets('직원 적립 QR 발급 결과 스크린샷', (WidgetTester tester) async {
-    await configureView(tester);
-    await pumpStaffQrIssueScreen(tester);
-
-    await tester.enterText(
-      find.widgetWithText(TextFormField, '결제 금액 (원)'),
-      '12000',
-    );
-    await tester.tap(find.widgetWithText(FilledButton, '적립 QR 발급'));
-    await tester.pumpAndSettle();
-
-    await expectGolden(
-      find.byType(StaffQrIssueScreen),
-      'staff_qr_issue_screen_result',
+      find.byType(AdminPointsScanScreen),
+      'admin_points_scan_screen',
     );
   });
 
