@@ -49,6 +49,7 @@ import 'package:cafe_app/features/wholesale/presentation/wholesale_quote_history
 import 'package:cafe_app/features/wholesale/presentation/wholesale_quote_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/points/presentation/qr_scan_screen.dart';
+import 'package:cafe_app/features/points/presentation/staff_qr_issue_screen.dart';
 import 'package:cafe_app/features/profile/presentation/delivery_address_screen.dart';
 import 'package:cafe_app/features/profile/presentation/notification_settings_screen.dart';
 import 'package:cafe_app/features/profile/presentation/payment_methods_screen.dart';
@@ -1090,17 +1091,49 @@ void main() {
     await expectGolden(find.byType(MaterialApp), 'sign_out_dialog');
   });
 
-  testWidgets('포인트 적립 스낵바 스크린샷', (WidgetTester tester) async {
+  Future<void> pumpStaffQrIssueScreen(WidgetTester tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(
+            FakeAuthRepository(user: _previewUser, admin: true),
+          ),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: buildAppTheme(),
+          home: const StaffQrIssueScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('직원 적립 QR 발급 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
-    await pumpScreen(tester, const PointsScreen());
+    await pumpStaffQrIssueScreen(tester);
 
-    await tester.tap(find.text('결제 적립'));
-    await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextFormField), '12000');
-    await tester.tap(find.text('적립'));
+    await expectGolden(
+      find.byType(StaffQrIssueScreen),
+      'staff_qr_issue_screen',
+    );
+  });
+
+  testWidgets('직원 적립 QR 발급 결과 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpStaffQrIssueScreen(tester);
+
+    await tester.enterText(
+      find.widgetWithText(TextFormField, '결제 금액 (원)'),
+      '12000',
+    );
+    await tester.tap(find.widgetWithText(FilledButton, '적립 QR 발급'));
     await tester.pumpAndSettle();
 
-    await expectGolden(find.byType(MaterialApp), 'points_earn_snackbar');
+    await expectGolden(
+      find.byType(StaffQrIssueScreen),
+      'staff_qr_issue_screen_result',
+    );
   });
 
   testWidgets('회원 탈퇴 확인 다이얼로그 스크린샷', (WidgetTester tester) async {

@@ -1,19 +1,55 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:cafe_app/features/auth/domain/auth_models.dart';
+import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
+
+import 'features/auth/fake_auth_repository.dart';
 
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  Future<void> pumpPointsScreen(WidgetTester tester) async {
+  void seedBalance(int balance) {
+    SharedPreferences.setMockInitialValues({
+      'points_data': jsonEncode({
+        'membershipId': 'MEMBER-12345678',
+        'balance': balance,
+        'history': [
+          {
+            'id': 'h1',
+            'type': 'earn',
+            'description': '폭스트롯',
+            'amount': balance,
+            'paymentAmount': balance * 10,
+            'createdAt': '2026-08-01T10:30:00.000',
+          },
+        ],
+      }),
+    });
+  }
+
+  Future<void> pumpPointsScreen(
+    WidgetTester tester, {
+    bool admin = false,
+  }) async {
     await tester.pumpWidget(
-      const ProviderScope(
-        child: MaterialApp(home: PointsScreen()),
+      ProviderScope(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(
+            FakeAuthRepository(
+              user: const AppUser(uid: 'test-uid'),
+              admin: admin,
+            ),
+          ),
+        ],
+        child: const MaterialApp(home: PointsScreen()),
       ),
     );
     await tester.pumpAndSettle();
@@ -25,6 +61,7 @@ void main() {
     expect(find.text('나의 포인트'), findsOneWidget);
     expect(find.text('0P'), findsOneWidget);
     expect(find.text('적립/사용 내역이 없습니다.'), findsOneWidget);
+    expect(find.text('매장 QR 스캔 적립'), findsOneWidget);
     expect(
       tester
           .widget<OutlinedButton>(find.widgetWithText(OutlinedButton, '포인트 사용'))
@@ -33,32 +70,24 @@ void main() {
     );
   });
 
-  testWidgets('결제 금액을 입력하면 10%가 적립된다', (WidgetTester tester) async {
+  testWidgets('사용자가 직접 적립할 수 있는 버튼이 없다', (WidgetTester tester) async {
     await pumpPointsScreen(tester);
 
-    await tester.tap(find.text('결제 적립'));
-    await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextFormField), '12000');
-    await tester.tap(find.text('적립'));
-    await tester.pumpAndSettle();
+    expect(find.text('결제 적립'), findsNothing);
+    expect(find.text('직원 모드'), findsNothing);
+    expect(find.text('적립 QR 발급'), findsNothing);
+  });
 
-    expect(find.text('1,200P'), findsOneWidget);
-    expect(find.text('+1,200P'), findsOneWidget);
-    expect(find.text('결제 12,000원'), findsOneWidget);
-    expect(
-      find.text('1,200P가 적립되었어요. 현재 포인트 1,200P'),
-      findsOneWidget,
-    );
+  testWidgets('직원 계정에는 적립 QR 발급 진입점이 보인다', (WidgetTester tester) async {
+    await pumpPointsScreen(tester, admin: true);
+
+    expect(find.text('직원 모드'), findsOneWidget);
+    expect(find.text('적립 QR 발급'), findsOneWidget);
   });
 
   testWidgets('적립된 포인트를 사용하면 잔액이 차감된다', (WidgetTester tester) async {
+    seedBalance(1000);
     await pumpPointsScreen(tester);
-
-    await tester.tap(find.text('결제 적립'));
-    await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextFormField), '10000');
-    await tester.tap(find.text('적립'));
-    await tester.pumpAndSettle();
 
     await tester.tap(find.text('포인트 사용'));
     await tester.pumpAndSettle();
@@ -75,13 +104,8 @@ void main() {
   });
 
   testWidgets('잔액보다 많은 포인트는 사용할 수 없다', (WidgetTester tester) async {
+    seedBalance(1000);
     await pumpPointsScreen(tester);
-
-    await tester.tap(find.text('결제 적립'));
-    await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextFormField), '10000');
-    await tester.tap(find.text('적립'));
-    await tester.pumpAndSettle();
 
     await tester.tap(find.text('포인트 사용'));
     await tester.pumpAndSettle();

@@ -3,11 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/presentation/auth_providers.dart';
 import '../data/firestore_points_repository.dart';
+import '../data/firestore_qr_issue_repository.dart';
 import '../data/firestore_qr_points_repository.dart';
 import '../data/local_points_repository.dart';
+import '../data/local_qr_issue_repository.dart';
 import '../data/local_qr_points_repository.dart';
 import '../domain/points_models.dart';
 import '../domain/points_repository.dart';
+import '../domain/qr_issue_repository.dart';
 import '../domain/qr_points_repository.dart';
 
 final pointsRepositoryProvider = Provider<PointsRepository>((ref) {
@@ -34,6 +37,18 @@ final qrPointsRepositoryProvider = Provider<QrPointsRepository>((ref) {
   return LocalQrPointsRepository(ref.watch(pointsRepositoryProvider));
 });
 
+final qrIssueRepositoryProvider = Provider<QrIssueRepository>((ref) {
+  try {
+    if (Firebase.apps.isNotEmpty) {
+      final user = ref.watch(authStateProvider).value;
+      if (user != null) {
+        return FirestoreQrIssueRepository(uid: user.uid);
+      }
+    }
+  } catch (_) {}
+  return LocalQrIssueRepository();
+});
+
 final pointsControllerProvider =
     AsyncNotifierProvider<PointsController, PointsData>(PointsController.new);
 
@@ -41,19 +56,6 @@ class PointsController extends AsyncNotifier<PointsData> {
   @override
   Future<PointsData> build() {
     return ref.watch(pointsRepositoryProvider).load();
-  }
-
-  Future<void> recordPayment({
-    required int paymentAmount,
-    String description = '매장 결제',
-  }) async {
-    final repository = ref.read(pointsRepositoryProvider);
-    state = await AsyncValue.guard(
-      () => repository.recordPayment(
-        paymentAmount: paymentAmount,
-        description: description,
-      ),
-    );
   }
 
   Future<void> usePoints({

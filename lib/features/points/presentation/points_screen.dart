@@ -7,6 +7,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../auth/presentation/auth_providers.dart';
 import '../domain/points_models.dart';
 import 'points_providers.dart';
 
@@ -44,6 +45,7 @@ class PointsScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _BalanceSection(data: data),
+              const _StaffSection(),
               const SizedBox(height: 24),
               const _SectionHeader(title: '멤버십 바코드'),
               _MembershipQrSection(membershipId: data.membershipId),
@@ -85,76 +87,27 @@ class _BalanceSection extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '결제 금액의 10%가 포인트로 적립됩니다.\n적립된 포인트는 현금처럼 사용할 수 있어요.',
+              '매장 결제 후 직원이 발급한 적립 QR을 스캔하면 결제 금액의 10%가 적립됩니다.\n적립된 포인트는 현금처럼 사용할 수 있어요.',
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: FilledButton.icon(
-                    onPressed: () => _showRecordPaymentDialog(context, ref),
-                    icon: const Icon(LucideIcons.plus600, size: 18),
-                    label: const Text('결제 적립'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: data.balance > 0
-                        ? () => _showUsePointsDialog(context, ref, data.balance)
-                        : null,
-                    icon: const Icon(LucideIcons.handCoins, size: 20),
-                    label: const Text('포인트 사용'),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            FilledButton.tonalIcon(
+            FilledButton.icon(
               onPressed: () => context.push('/points/scan'),
               icon: const Icon(LucideIcons.scanLine, size: 18),
               label: const Text('매장 QR 스캔 적립'),
+            ),
+            const SizedBox(height: 12),
+            OutlinedButton.icon(
+              onPressed: data.balance > 0
+                  ? () => _showUsePointsDialog(context, ref, data.balance)
+                  : null,
+              icon: const Icon(LucideIcons.handCoins, size: 20),
+              label: const Text('포인트 사용'),
             ),
           ],
         ),
       ),
     );
-  }
-
-  Future<void> _showRecordPaymentDialog(
-    BuildContext context,
-    WidgetRef ref,
-  ) async {
-    final amount = await showDialog<int>(
-      context: context,
-      builder: (context) => const _AmountInputDialog(
-        title: '결제 적립',
-        helperText: '결제 금액의 10%가 적립됩니다.',
-        labelText: '결제 금액 (원)',
-        confirmText: '적립',
-      ),
-    );
-    if (amount == null) return;
-
-    final before = ref.read(pointsControllerProvider).value?.balance ?? 0;
-    await ref
-        .read(pointsControllerProvider.notifier)
-        .recordPayment(paymentAmount: amount);
-    final after = ref.read(pointsControllerProvider).value;
-    if (after == null || !context.mounted) return;
-
-    final earned = after.balance - before;
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(
-            '${_pointFormat.format(earned)}P가 적립되었어요. '
-            '현재 포인트 ${_pointFormat.format(after.balance)}P',
-          ),
-        ),
-      );
   }
 
   Future<void> _showUsePointsDialog(
@@ -262,6 +215,44 @@ class _AmountInputDialogState extends State<_AmountInputDialog> {
           child: Text(widget.confirmText),
         ),
       ],
+    );
+  }
+}
+
+class _StaffSection extends ConsumerWidget {
+  const _StaffSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isAdmin = ref.watch(isAdminProvider).value ?? false;
+    if (!isAdmin) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('직원 모드', style: Theme.of(context).textTheme.titleSmall),
+              const SizedBox(height: 8),
+              Text(
+                '결제 금액을 입력해 고객에게 적립 QR을 발급해주세요.',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(height: 16),
+              FilledButton.tonalIcon(
+                onPressed: () => context.push('/points/issue'),
+                icon: const Icon(LucideIcons.qrCode, size: 18),
+                label: const Text('적립 QR 발급'),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
