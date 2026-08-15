@@ -181,7 +181,10 @@ ThemeData buildAppTheme() {
     ),
     snackBarTheme: SnackBarThemeData(
       backgroundColor: foxtrotCard,
-      contentTextStyle: const TextStyle(color: foxtrotCream),
+      contentTextStyle: const TextStyle(
+        fontFamily: 'Pretendard',
+        color: foxtrotCream,
+      ),
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
