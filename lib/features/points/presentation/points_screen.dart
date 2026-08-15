@@ -90,16 +90,10 @@ class _BalanceSection extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '매장 결제 후 직원이 발급한 적립 QR을 스캔하면 결제 금액의 10%가 적립됩니다.\n적립된 포인트는 현금처럼 사용할 수 있어요.',
+              '매장 결제 후 아래 멤버십 QR을 직원에게 보여주시면 결제 금액의 10%가 자동 적립됩니다.\n앱에서 주문하면 별도 절차 없이 자동으로 적립돼요.',
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 16),
-            FilledButton.icon(
-              onPressed: () => context.push('/points/scan'),
-              icon: const Icon(LucideIcons.scanLine, size: 18),
-              label: const Text('매장 QR 스캔 적립'),
-            ),
-            const SizedBox(height: 12),
             OutlinedButton.icon(
               onPressed: data.balance > 0
                   ? () => _showUsePointsDialog(context, ref, data.balance)
@@ -243,14 +237,14 @@ class _StaffSection extends ConsumerWidget {
               Text('직원 모드', style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 8),
               Text(
-                '결제 금액 적립 QR을 발급하거나, 고객 멤버십 QR을 스캔해 스탬프를 적립해주세요.',
+                '고객 멤버십 QR을 스캔해 결제 금액 포인트 적립 또는 스탬프 적립을 진행해주세요.',
                 style: Theme.of(context).textTheme.bodySmall,
               ),
               const SizedBox(height: 16),
               FilledButton.tonalIcon(
-                onPressed: () => context.push('/points/issue'),
-                icon: const Icon(LucideIcons.qrCode, size: 18),
-                label: const Text('적립 QR 발급'),
+                onPressed: () => context.push('/points/earn-scan'),
+                icon: const Icon(LucideIcons.scanLine, size: 18),
+                label: const Text('회원 QR 스캔 포인트 적립'),
               ),
               const SizedBox(height: 8),
               FilledButton.tonalIcon(

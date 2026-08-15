@@ -6,7 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../../points/presentation/qr_scan_screen.dart' show QrScannerBuilder;
+import '../../../core/widgets/qr_scanner_builder.dart';
 import '../domain/stamp_models.dart';
 import '../domain/stamp_reward.dart';
 import 'stamp_providers.dart';

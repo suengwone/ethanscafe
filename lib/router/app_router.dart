@@ -17,9 +17,8 @@ import '../features/notice/presentation/notice_list_screen.dart';
 import '../features/order/presentation/order_history_screen.dart';
 import '../features/pickup/presentation/pickup_cart_screen.dart';
 import '../features/pickup/presentation/pickup_order_tracking_screen.dart';
+import '../features/points/presentation/admin_points_scan_screen.dart';
 import '../features/points/presentation/points_screen.dart';
-import '../features/points/presentation/qr_scan_screen.dart';
-import '../features/points/presentation/staff_qr_issue_screen.dart';
 import '../features/stamp/presentation/admin_stamp_scan_screen.dart';
 import '../features/profile/presentation/delivery_address_screen.dart';
 import '../features/profile/presentation/notification_settings_screen.dart';
@@ -130,12 +129,9 @@ final routerProvider = Provider<GoRouter>((ref) {
                 builder: (context, state) => const PointsScreen(),
                 routes: [
                   GoRoute(
-                    path: 'scan',
-                    builder: (context, state) => const QrScanScreen(),
-                  ),
-                  GoRoute(
-                    path: 'issue',
-                    builder: (context, state) => const StaffQrIssueScreen(),
+                    path: 'earn-scan',
+                    builder: (context, state) =>
+                        const AdminPointsScanScreen(),
                   ),
                   GoRoute(
                     path: 'stamp-scan',
