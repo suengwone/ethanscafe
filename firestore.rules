@@ -14,7 +14,15 @@ service cloud.firestore {
     }
 
     match /points/{userId} {
-      allow read, write: if isSignedIn() && request.auth.uid == userId;
+      allow read: if isAdmin()
+        || (isSignedIn() && request.auth.uid == userId);
+      allow write: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    match /stamps/{userId} {
+      allow read: if isAdmin()
+        || (isSignedIn() && request.auth.uid == userId);
+      allow write: if isAdmin();
     }
 
     match /favorites/{userId} {
