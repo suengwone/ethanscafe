@@ -50,6 +50,7 @@ import 'package:cafe_app/features/wholesale/presentation/wholesale_quote_screen.
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/points/presentation/qr_scan_screen.dart';
 import 'package:cafe_app/features/points/presentation/staff_qr_issue_screen.dart';
+import 'package:cafe_app/features/stamp/presentation/admin_stamp_scan_screen.dart';
 import 'package:cafe_app/features/profile/presentation/delivery_address_screen.dart';
 import 'package:cafe_app/features/profile/presentation/notification_settings_screen.dart';
 import 'package:cafe_app/features/profile/presentation/payment_methods_screen.dart';
@@ -192,6 +193,24 @@ void main() {
             'amount': 1200,
             'paymentAmount': 12000,
             'createdAt': '2026-07-20T09:12:00.000',
+          },
+        ],
+      }),
+      'stamp_data': jsonEncode({
+        'count': 7,
+        'totalEarned': 17,
+        'history': [
+          {
+            'id': 's2',
+            'cups': 2,
+            'rewards': 1,
+            'createdAt': '2026-08-10T12:40:00.000',
+          },
+          {
+            'id': 's1',
+            'cups': 3,
+            'rewards': 0,
+            'createdAt': '2026-07-28T15:20:00.000',
           },
         ],
       }),
@@ -1133,6 +1152,34 @@ void main() {
     await expectGolden(
       find.byType(StaffQrIssueScreen),
       'staff_qr_issue_screen_result',
+    );
+  });
+
+  testWidgets('회원 스탬프 적립 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(
+            FakeAuthRepository(user: _previewUser, admin: true),
+          ),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: buildAppTheme(),
+          home: AdminStampScanScreen(
+            scannerBuilder: (context, onDetect) =>
+                const ColoredBox(color: Color(0xFF1C1B1A)),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await expectGolden(
+      find.byType(AdminStampScanScreen),
+      'admin_stamp_scan_screen',
     );
   });
 
