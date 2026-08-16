@@ -8,7 +8,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../auth/presentation/auth_providers.dart';
-import '../../stamp/presentation/stamp_card.dart';
 import '../domain/membership_tier.dart';
 import '../domain/points_models.dart';
 import 'points_providers.dart';
@@ -49,8 +48,6 @@ class PointsScreen extends ConsumerWidget {
               _BalanceSection(data: data),
               const SizedBox(height: 16),
               _TierSection(data: data),
-              const SizedBox(height: 16),
-              const StampCardSection(),
               const _StaffSection(),
               const SizedBox(height: 24),
               const _SectionHeader(title: '멤버십 바코드'),
@@ -337,7 +334,7 @@ class _StaffSection extends ConsumerWidget {
               Text('직원 모드', style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 8),
               Text(
-                '고객 멤버십 QR을 스캔해 결제 금액 포인트 적립 또는 스탬프 적립을 진행해주세요.',
+                '고객 멤버십 QR을 스캔해 결제 금액 포인트 적립을 진행해주세요.',
                 style: Theme.of(context).textTheme.bodySmall,
               ),
               const SizedBox(height: 16),
@@ -345,12 +342,6 @@ class _StaffSection extends ConsumerWidget {
                 onPressed: () => context.push('/points/earn-scan'),
                 icon: const Icon(LucideIcons.scanLine, size: 18),
                 label: const Text('회원 QR 스캔 포인트 적립'),
-              ),
-              const SizedBox(height: 8),
-              FilledButton.tonalIcon(
-                onPressed: () => context.push('/points/stamp-scan'),
-                icon: const Icon(LucideIcons.scanLine, size: 18),
-                label: const Text('회원 QR 스캔 스탬프 적립'),
               ),
             ],
           ),

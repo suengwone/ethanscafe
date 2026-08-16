@@ -86,7 +86,7 @@ class LocalCouponsRepository implements CouponsRepository {
     Coupon(
       id: 'used-latte-free',
       title: '카페 라떼 1잔 무료',
-      description: '스탬프 보상 카페 라떼 무료 쿠폰',
+      description: '이벤트 보상 카페 라떼 무료 쿠폰',
       expiresAt: DateTime(2026, 9, 30, 23, 59),
       isUsed: true,
     ),

@@ -20,7 +20,6 @@ import '../features/pickup/presentation/pickup_order_tracking_screen.dart';
 import '../features/points/presentation/admin_points_scan_screen.dart';
 import '../features/points/presentation/points_charge_screen.dart';
 import '../features/points/presentation/points_screen.dart';
-import '../features/stamp/presentation/admin_stamp_scan_screen.dart';
 import '../features/profile/presentation/delivery_address_screen.dart';
 import '../features/profile/presentation/notification_settings_screen.dart';
 import '../features/profile/presentation/payment_methods_screen.dart';
@@ -137,11 +136,6 @@ final routerProvider = Provider<GoRouter>((ref) {
                     path: 'earn-scan',
                     builder: (context, state) =>
                         const AdminPointsScanScreen(),
-                  ),
-                  GoRoute(
-                    path: 'stamp-scan',
-                    builder: (context, state) =>
-                        const AdminStampScanScreen(),
                   ),
                 ],
               ),
