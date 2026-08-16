@@ -56,6 +56,39 @@ class LocalPointsRepository implements PointsRepository {
     return data;
   }
 
+  Future<PointsData> charge({
+    required int paymentAmount,
+    required int bonus,
+    String? paymentKey,
+    String description = '선불권 충전',
+  }) async {
+    if (paymentAmount <= 0 || bonus < 0) {
+      throw ArgumentError('충전 금액이 올바르지 않습니다.');
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    var data = await load();
+    data = data.copyWith(
+      balance: data.balance + paymentAmount + bonus,
+      history: [
+        PointHistoryEntry(
+          id: _generateId(),
+          type: PointHistoryType.charge,
+          description: description,
+          amount: paymentAmount + bonus,
+          paymentAmount: paymentAmount,
+          bonusAmount: bonus > 0 ? bonus : null,
+          paymentKey: paymentKey,
+          createdAt: DateTime.now(),
+        ),
+        ...data.history,
+      ],
+    );
+
+    await _save(prefs, data);
+    return data;
+  }
+
   @override
   Future<PointsData> usePoints({
     required int amount,

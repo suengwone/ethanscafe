@@ -2,9 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/presentation/auth_providers.dart';
+import '../../payment/presentation/payment_providers.dart';
+import '../data/cloud_functions_points_charge_repository.dart';
 import '../data/firestore_points_admin_repository.dart';
 import '../data/firestore_points_repository.dart';
 import '../data/local_points_admin_repository.dart';
+import '../data/local_points_charge_repository.dart';
 import '../data/local_points_repository.dart';
 import '../domain/points_admin_repository.dart';
 import '../domain/points_models.dart';
@@ -32,6 +35,24 @@ final pointsAdminRepositoryProvider = Provider<PointsAdminRepository>((ref) {
     }
   } catch (_) {}
   return LocalPointsAdminRepository(ref.watch(pointsRepositoryProvider));
+});
+
+final pointsChargeGatewayProvider = Provider<PaymentGateway>((ref) {
+  try {
+    if (Firebase.apps.isNotEmpty &&
+        ref.watch(authStateProvider).value != null) {
+      return TossPaymentGateway(
+        repository: CloudFunctionsPointsChargeRepository(),
+      );
+    }
+  } catch (_) {}
+  final pointsRepository = ref.watch(pointsRepositoryProvider);
+  return LocalPaymentGateway(
+    repository: LocalPointsChargeRepository(
+      pointsRepository:
+          pointsRepository is LocalPointsRepository ? pointsRepository : null,
+    ),
+  );
 });
 
 final pointsControllerProvider =

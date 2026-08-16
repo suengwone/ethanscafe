@@ -170,6 +170,8 @@ PointHistoryEntry pointHistoryEntryFromFirestore(Map<String, dynamic> data) {
     description: data['description'] as String? ?? '',
     amount: (data['amount'] as num? ?? 0).toInt(),
     paymentAmount: (data['paymentAmount'] as num?)?.toInt(),
+    bonusAmount: (data['bonusAmount'] as num?)?.toInt(),
+    paymentKey: data['paymentKey'] as String?,
     createdAt: firestoreDateTime(data['createdAt']),
   );
 }
@@ -189,6 +191,8 @@ Map<String, dynamic> pointHistoryEntryToFirestore(PointHistoryEntry entry) {
     'description': entry.description,
     'amount': entry.amount,
     if (entry.paymentAmount != null) 'paymentAmount': entry.paymentAmount,
+    if (entry.bonusAmount != null) 'bonusAmount': entry.bonusAmount,
+    if (entry.paymentKey != null) 'paymentKey': entry.paymentKey,
     'createdAt': Timestamp.fromDate(entry.createdAt),
   };
 }
