@@ -158,7 +158,7 @@ class _AdminPointsScanScreenState extends ConsumerState<AdminPointsScanScreen> {
                 ),
                 const SizedBox(height: 24),
                 const Text(
-                  '고객의 멤버십 QR 코드를 스캔한 뒤\n결제 금액을 입력하면 10%가 적립됩니다.',
+                  '고객의 멤버십 QR 코드를 스캔한 뒤\n결제 금액을 입력하면 등급별 적립률만큼 적립됩니다.',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white, fontSize: 14),
                 ),
