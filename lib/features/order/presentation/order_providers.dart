@@ -106,8 +106,9 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
       );
     }
 
+    final isMember = ref.read(authStateProvider).value != null;
     var earnedPoints = 0;
-    if (paidAmount > 0) {
+    if (paidAmount > 0 && isMember) {
       await pointsRepository.recordPayment(
         paymentAmount: paidAmount,
         description: beanOrderPaymentDescription,

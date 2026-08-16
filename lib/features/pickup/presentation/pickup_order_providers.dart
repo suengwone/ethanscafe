@@ -112,8 +112,9 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
       );
     }
 
+    final isMember = ref.read(authStateProvider).value != null;
     var earnedPoints = 0;
-    if (paidAmount > 0) {
+    if (paidAmount > 0 && isMember) {
       await pointsRepository.recordPayment(
         paymentAmount: paidAmount,
         description: pickupOrderPaymentDescription,
