@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:cafe_app/features/auth/domain/auth_models.dart';
+import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
 import 'package:cafe_app/features/coupon/domain/coupon_models.dart';
 import 'package:cafe_app/features/coupon/presentation/coupons_providers.dart';
 import 'package:cafe_app/features/menu/domain/menu_models.dart';
@@ -12,6 +14,8 @@ import 'package:cafe_app/features/pickup/presentation/pickup_order_providers.dar
 import 'package:cafe_app/features/points/domain/points_models.dart';
 import 'package:cafe_app/features/points/presentation/points_providers.dart';
 import 'package:cafe_app/features/store/domain/store_models.dart';
+
+import '../auth/fake_auth_repository.dart';
 
 MenuItem _menuItem(String id, {int price = 6000}) {
   return MenuItem(
@@ -43,9 +47,21 @@ const _store = CafeStore(
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  ProviderContainer createContainer() {
-    final container = ProviderContainer();
+  Future<ProviderContainer> createContainer({bool member = true}) async {
+    final container = ProviderContainer(
+      overrides: [
+        authRepositoryProvider.overrideWithValue(
+          FakeAuthRepository(
+            user: member ? const AppUser(uid: 'test-uid') : null,
+          ),
+        ),
+      ],
+    );
     addTearDown(container.dispose);
+    final subscription =
+        container.listen(authStateProvider.future, (previous, next) {});
+    await subscription.read();
+    subscription.close();
     return container;
   }
 
@@ -54,7 +70,7 @@ void main() {
   });
 
   test('주문 생성 시 결제 금액의 10%가 적립되고 주문이 저장된다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     final controller = container.read(pickupOrdersControllerProvider.notifier);
 
     final order = await controller.placeOrder(
@@ -78,8 +94,26 @@ void main() {
     expect(points.history.first.paymentAmount, 20000);
   });
 
+  test('비회원 주문은 포인트가 적립되지 않는다', () async {
+    final container = await createContainer(member: false);
+    final controller = container.read(pickupOrdersControllerProvider.notifier);
+
+    final order = await controller.placeOrder(
+      cartItems: _cartItems(),
+      store: _store,
+    );
+
+    expect(order.totalAmount, 20000);
+    expect(order.earnedPoints, 0);
+    expect(order.paidAmount, 20000);
+
+    final points = await container.read(pointsRepositoryProvider).load();
+    expect(points.balance, 0);
+    expect(points.history, isEmpty);
+  });
+
   test('포인트 사용 시 잔액이 차감되고 결제 금액 기준으로 적립된다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     await container
         .read(pointsRepositoryProvider)
         .recordPayment(paymentAmount: 50000);
@@ -112,7 +146,7 @@ void main() {
   });
 
   test('전액 포인트 결제 시 적립이 발생하지 않는다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     await container
         .read(pointsRepositoryProvider)
         .recordPayment(paymentAmount: 300000);
@@ -132,7 +166,7 @@ void main() {
   });
 
   test('잔액을 초과한 포인트 사용은 실패하고 주문이 생성되지 않는다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     final controller = container.read(pickupOrdersControllerProvider.notifier);
 
     await expectLater(
@@ -149,7 +183,7 @@ void main() {
   });
 
   test('결제 금액을 초과한 포인트 지정은 거부된다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     final controller = container.read(pickupOrdersControllerProvider.notifier);
 
     await expectLater(
@@ -163,7 +197,7 @@ void main() {
   });
 
   test('빈 장바구니로는 주문할 수 없다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     final controller = container.read(pickupOrdersControllerProvider.notifier);
 
     await expectLater(
@@ -178,7 +212,7 @@ void main() {
   }
 
   test('정률 쿠폰 적용 시 할인되고 쿠폰이 사용 처리된다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     final coupon = await loadCoupon(container, 'bean-order-10p');
     final controller = container.read(pickupOrdersControllerProvider.notifier);
 
@@ -206,7 +240,7 @@ void main() {
   });
 
   test('쿠폰과 포인트를 함께 사용하면 할인 후 금액에서 차감된다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     await container
         .read(pointsRepositoryProvider)
         .recordPayment(paymentAmount: 50000);
@@ -227,7 +261,7 @@ void main() {
   });
 
   test('할인 후 금액을 초과한 포인트 지정은 거부된다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     final coupon = await loadCoupon(container, 'bean-order-10p');
     final controller = container.read(pickupOrdersControllerProvider.notifier);
 
@@ -243,7 +277,7 @@ void main() {
   });
 
   test('최소 주문 금액 미달 쿠폰은 거부되고 주문이 생성되지 않는다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     final coupon = await loadCoupon(container, 'bean-order-3000');
     final controller = container.read(pickupOrdersControllerProvider.notifier);
     final smallCart = [
@@ -269,7 +303,7 @@ void main() {
   });
 
   test('결제 승인 정보가 주문에 기록된다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     final controller = container.read(pickupOrdersControllerProvider.notifier);
 
     final order = await controller.placeOrder(
@@ -293,7 +327,7 @@ void main() {
   });
 
   test('결제 승인 금액이 주문 금액과 다르면 거부된다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     final coupon = await loadCoupon(container, 'bean-order-10p');
     final controller = container.read(pickupOrdersControllerProvider.notifier);
 
@@ -322,7 +356,7 @@ void main() {
   });
 
   test('이미 사용된 쿠폰은 적용할 수 없다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     final coupon = await loadCoupon(container, 'bean-order-10p');
     final controller = container.read(pickupOrdersControllerProvider.notifier);
 
@@ -337,7 +371,7 @@ void main() {
   });
 
   test('중복 사용 쿠폰은 일반 쿠폰과 함께 적용되고 모두 사용 처리된다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     final regular = await loadCoupon(container, 'bean-order-10p');
     final stackable = await loadCoupon(container, 'stack-extra-1000');
     final controller = container.read(pickupOrdersControllerProvider.notifier);
@@ -366,7 +400,7 @@ void main() {
   });
 
   test('일반 쿠폰 2장은 함께 적용할 수 없다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     final first = await loadCoupon(container, 'bean-order-10p');
     final second = await loadCoupon(container, 'bean-order-3000');
     final controller = container.read(pickupOrdersControllerProvider.notifier);
@@ -387,7 +421,7 @@ void main() {
   });
 
   test('주문 취소 시 쿠폰이 복구되고 포인트가 환급·회수된다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     await container
         .read(pointsRepositoryProvider)
         .recordPayment(paymentAmount: 50000);
@@ -427,7 +461,7 @@ void main() {
   });
 
   test('포인트·쿠폰 없이 결제한 주문 취소 시 적립 포인트만 회수된다', () async {
-    final container = createContainer();
+    final container = await createContainer();
     final controller = container.read(pickupOrdersControllerProvider.notifier);
 
     final order = await controller.placeOrder(
