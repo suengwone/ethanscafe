@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
 import '../../../core/firebase/firestore_converters.dart';
 import '../domain/points_models.dart';
@@ -10,12 +11,18 @@ class FirestorePointsRepository implements PointsRepository {
   FirestorePointsRepository({
     required this.uid,
     FirebaseFirestore? firestore,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance;
+    FirebaseFunctions? functions,
+  })  : _firestore = firestore ?? FirebaseFirestore.instance,
+        _functions =
+            functions ?? FirebaseFunctions.instanceFor(region: _region);
 
   final String uid;
   final FirebaseFirestore _firestore;
+  final FirebaseFunctions _functions;
 
   static const collectionPath = 'points';
+  static const _region = 'asia-northeast3';
+  static const usePointsCallableName = 'usePoints';
 
   DocumentReference<Map<String, dynamic>> get _doc =>
       _firestore.collection(collectionPath).doc(uid);
@@ -37,32 +44,8 @@ class FirestorePointsRepository implements PointsRepository {
   Future<PointsData> recordPayment({
     required int paymentAmount,
     String description = '매장 결제',
-  }) async {
-    if (paymentAmount <= 0) {
-      throw ArgumentError.value(
-          paymentAmount, 'paymentAmount', '결제 금액은 0보다 커야 합니다.');
-    }
-
-    return _firestore.runTransaction((transaction) async {
-      final data = await _loadInTransaction(transaction);
-      final earned = earnPointsForPayment(paymentAmount);
-      final updated = data.copyWith(
-        balance: data.balance + earned,
-        history: [
-          PointHistoryEntry(
-            id: generateEntryId(),
-            type: PointHistoryType.earn,
-            description: description,
-            amount: earned,
-            paymentAmount: paymentAmount,
-            createdAt: DateTime.now(),
-          ),
-          ...data.history,
-        ],
-      );
-      transaction.set(_doc, pointsDataToFirestore(updated));
-      return updated;
-    });
+  }) {
+    throw UnsupportedError('포인트 적립은 서버(Cloud Functions)에서만 처리됩니다.');
   }
 
   @override
@@ -74,27 +57,11 @@ class FirestorePointsRepository implements PointsRepository {
       throw ArgumentError.value(amount, 'amount', '사용 포인트는 0보다 커야 합니다.');
     }
 
-    return _firestore.runTransaction((transaction) async {
-      final data = await _loadInTransaction(transaction);
-      if (amount > data.balance) {
-        throw StateError('포인트 잔액이 부족합니다.');
-      }
-      final updated = data.copyWith(
-        balance: data.balance - amount,
-        history: [
-          PointHistoryEntry(
-            id: generateEntryId(),
-            type: PointHistoryType.use,
-            description: description,
-            amount: -amount,
-            createdAt: DateTime.now(),
-          ),
-          ...data.history,
-        ],
-      );
-      transaction.set(_doc, pointsDataToFirestore(updated));
-      return updated;
+    await _functions.httpsCallable(usePointsCallableName).call({
+      'amount': amount,
+      'description': description,
     });
+    return load();
   }
 
   @override
@@ -102,51 +69,8 @@ class FirestorePointsRepository implements PointsRepository {
     int usedPoints = 0,
     int earnedPoints = 0,
     String description = '주문 취소',
-  }) async {
-    if (usedPoints < 0 || earnedPoints < 0) {
-      throw ArgumentError('환급/회수 포인트는 0 이상이어야 합니다.');
-    }
-    if (usedPoints == 0 && earnedPoints == 0) {
-      return load();
-    }
-
-    return _firestore.runTransaction((transaction) async {
-      final data = await _loadInTransaction(transaction);
-      final reclaimed = min(earnedPoints, data.balance + usedPoints);
-      final updated = data.copyWith(
-        balance: data.balance + usedPoints - reclaimed,
-        history: [
-          if (reclaimed > 0)
-            PointHistoryEntry(
-              id: generateEntryId(),
-              type: PointHistoryType.use,
-              description: '$description 적립 회수',
-              amount: -reclaimed,
-              createdAt: DateTime.now(),
-            ),
-          if (usedPoints > 0)
-            PointHistoryEntry(
-              id: generateEntryId(),
-              type: PointHistoryType.earn,
-              description: '$description 포인트 환급',
-              amount: usedPoints,
-              createdAt: DateTime.now(),
-            ),
-          ...data.history,
-        ],
-      );
-      transaction.set(_doc, pointsDataToFirestore(updated));
-      return updated;
-    });
-  }
-
-  Future<PointsData> _loadInTransaction(Transaction transaction) async {
-    final snapshot = await transaction.get(_doc);
-    final data = snapshot.data();
-    if (data != null) {
-      return pointsDataFromFirestore(data);
-    }
-    return PointsData(membershipId: generateMembershipId());
+  }) {
+    throw UnsupportedError('포인트 환급은 서버(Cloud Functions)에서만 처리됩니다.');
   }
 }
 

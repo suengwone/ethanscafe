@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/presentation/auth_providers.dart';
 import '../../payment/presentation/payment_providers.dart';
+import '../data/cloud_functions_points_admin_repository.dart';
 import '../data/cloud_functions_points_charge_repository.dart';
-import '../data/firestore_points_admin_repository.dart';
 import '../data/firestore_points_repository.dart';
 import '../data/local_points_admin_repository.dart';
 import '../data/local_points_charge_repository.dart';
@@ -30,7 +30,7 @@ final pointsAdminRepositoryProvider = Provider<PointsAdminRepository>((ref) {
     if (Firebase.apps.isNotEmpty) {
       final user = ref.watch(authStateProvider).value;
       if (user != null) {
-        return FirestorePointsAdminRepository();
+        return CloudFunctionsPointsAdminRepository();
       }
     }
   } catch (_) {}
