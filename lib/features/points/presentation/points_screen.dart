@@ -97,12 +97,26 @@ class _BalanceSection extends ConsumerWidget {
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 16),
-            OutlinedButton.icon(
-              onPressed: data.balance > 0
-                  ? () => _showUsePointsDialog(context, ref, data.balance)
-                  : null,
-              icon: const Icon(LucideIcons.handCoins, size: 20),
-              label: const Text('포인트 사용'),
+            Row(
+              children: [
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: () => context.push('/points/charge'),
+                    icon: const Icon(LucideIcons.batteryCharging, size: 20),
+                    label: const Text('충전하기'),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: data.balance > 0
+                        ? () => _showUsePointsDialog(context, ref, data.balance)
+                        : null,
+                    icon: const Icon(LucideIcons.handCoins, size: 20),
+                    label: const Text('포인트 사용'),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -434,6 +448,7 @@ class _HistoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final paymentAmount = entry.paymentAmount;
+    final bonusAmount = entry.bonusAmount;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -450,19 +465,22 @@ class _HistoryItem extends StatelessWidget {
                 Text(entry.description),
                 if (paymentAmount != null)
                   Text(
-                    '결제 ${_pointFormat.format(paymentAmount)}원',
+                    bonusAmount != null
+                        ? '결제 ${_pointFormat.format(paymentAmount)}원 · '
+                            '보너스 +${_pointFormat.format(bonusAmount)}P'
+                        : '결제 ${_pointFormat.format(paymentAmount)}원',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
               ],
             ),
           ),
           Text(
-            entry.isEarn
+            entry.isIncrease
                 ? '+${_pointFormat.format(entry.amount)}P'
                 : '${_pointFormat.format(entry.amount)}P',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: entry.isEarn
+              color: entry.isIncrease
                   ? foxtrotGold
                   : Theme.of(context).colorScheme.error,
             ),
