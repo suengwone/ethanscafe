@@ -8,6 +8,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/qr_scanner_builder.dart';
+import '../domain/membership_qr_token.dart';
 import '../domain/points_models.dart';
 import 'points_providers.dart';
 
@@ -31,14 +32,19 @@ class _AdminPointsScanScreenState extends ConsumerState<AdminPointsScanScreen> {
     setState(() => _processing = true);
 
     try {
-      final paymentAmount = await _showAmountDialog(code);
+      final membershipId = decodeMembershipQrToken(code);
+
+      final paymentAmount = await _showAmountDialog(membershipId);
       if (paymentAmount == null) {
         return;
       }
 
       final result = await ref
           .read(pointsControllerProvider.notifier)
-          .earnByMembershipId(membershipId: code, paymentAmount: paymentAmount);
+          .earnByMembershipId(
+            membershipId: membershipId,
+            paymentAmount: paymentAmount,
+          );
       if (!mounted) return;
       await _showResultDialog(result);
     } catch (error) {

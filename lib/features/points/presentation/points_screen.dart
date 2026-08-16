@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +10,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../auth/presentation/auth_providers.dart';
+import '../domain/membership_qr_token.dart';
 import '../domain/points_models.dart';
 import 'points_providers.dart';
 
@@ -279,10 +282,45 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-class _MembershipQrSection extends StatelessWidget {
+class _MembershipQrSection extends StatefulWidget {
   const _MembershipQrSection({required this.membershipId});
 
   final String membershipId;
+
+  @override
+  State<_MembershipQrSection> createState() => _MembershipQrSectionState();
+}
+
+class _MembershipQrSectionState extends State<_MembershipQrSection> {
+  late String _token;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _token = encodeMembershipQrToken(widget.membershipId);
+    _timer = Timer.periodic(membershipQrValidity, (_) => _refreshToken());
+  }
+
+  @override
+  void didUpdateWidget(covariant _MembershipQrSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.membershipId != widget.membershipId) {
+      _refreshToken();
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _refreshToken() {
+    setState(() {
+      _token = encodeMembershipQrToken(widget.membershipId);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -298,14 +336,19 @@ class _MembershipQrSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
               ),
               child: QrImageView(
-                data: membershipId,
+                data: _token,
                 version: QrVersions.auto,
                 size: 200.0,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              membershipId,
+              widget.membershipId,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '보안을 위해 QR 코드는 3분마다 자동으로 갱신됩니다.',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
