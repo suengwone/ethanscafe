@@ -6,6 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../auth/presentation/auth_providers.dart';
 import '../../beans/domain/bean_models.dart';
 import '../domain/subscription_models.dart';
 import 'subscription_providers.dart';
@@ -17,6 +18,19 @@ Future<void> showBeanSubscribeSheet(
   WidgetRef ref, {
   required Bean bean,
 }) async {
+  if (ref.read(authStateProvider).value == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('원두 구독은 회원가입 후 이용할 수 있어요.'),
+        action: SnackBarAction(
+          label: '로그인',
+          onPressed: () => context.push('/login'),
+        ),
+      ),
+    );
+    return;
+  }
+
   final selection = await showModalBottomSheet<BeanSubscribeSelection>(
     context: context,
     isScrollControlled: true,
