@@ -69,9 +69,11 @@ class PointsController extends AsyncNotifier<PointsData> {
     String description = '포인트 결제',
   }) async {
     final repository = ref.read(pointsRepositoryProvider);
-    state = await AsyncValue.guard(
-      () => repository.usePoints(amount: amount, description: description),
+    final updated = await repository.usePoints(
+      amount: amount,
+      description: description,
     );
+    state = AsyncValue.data(updated);
   }
 
   Future<PointsEarnResult> earnByMembershipId({

@@ -138,7 +138,23 @@ class _BalanceSection extends ConsumerWidget {
     );
     if (amount == null) return;
 
-    await ref.read(pointsControllerProvider.notifier).usePoints(amount: amount);
+    try {
+      await ref
+          .read(pointsControllerProvider.notifier)
+          .usePoints(amount: amount);
+    } catch (error) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(
+              error is StateError ? error.message : '포인트 사용에 실패했어요. 다시 시도해주세요.',
+            ),
+          ),
+        );
+      return;
+    }
     final after = ref.read(pointsControllerProvider).value;
     if (after == null || !context.mounted) return;
 
@@ -299,7 +315,8 @@ class _MembershipQrSectionState extends State<_MembershipQrSection> {
   void initState() {
     super.initState();
     _token = encodeMembershipQrToken(widget.membershipId);
-    _timer = Timer.periodic(membershipQrValidity, (_) => _refreshToken());
+    _timer =
+        Timer.periodic(membershipQrRefreshInterval, (_) => _refreshToken());
   }
 
   @override
@@ -348,7 +365,7 @@ class _MembershipQrSectionState extends State<_MembershipQrSection> {
             ),
             const SizedBox(height: 4),
             Text(
-              '보안을 위해 QR 코드는 3분마다 자동으로 갱신됩니다.',
+              '보안을 위해 QR 코드는 1분마다 자동으로 갱신됩니다.',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],

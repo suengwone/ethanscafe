@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 const Duration membershipQrValidity = Duration(minutes: 3);
+const Duration membershipQrRefreshInterval = Duration(minutes: 1);
 
 const String _tokenPrefix = 'MQR1';
 const String _tokenSalt = 'foxtrot-membership-qr';
