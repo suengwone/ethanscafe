@@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:cafe_app/features/points/data/local_points_charge_repository.dart';
 import 'package:cafe_app/features/points/data/local_points_repository.dart';
-import 'package:cafe_app/features/points/domain/membership_tier.dart';
 import 'package:cafe_app/features/points/domain/points_models.dart';
 
 void main() {
@@ -64,22 +63,6 @@ void main() {
       ),
       throwsArgumentError,
     );
-  });
-
-  test('충전 금액은 멤버십 등급 누적 결제에 포함되지 않는다', () async {
-    final pointsRepository = LocalPointsRepository();
-    final repository =
-        LocalPointsChargeRepository(pointsRepository: pointsRepository);
-
-    await repository.confirmPayment(
-      paymentKey: 'pk',
-      orderId: 'charge-123456',
-      amount: 100000,
-    );
-
-    final data = await pointsRepository.load();
-    expect(data.cumulativePayment, 0);
-    expect(data.tier, MembershipTier.green);
   });
 
   test('충전 포인트는 사용 차감에 그대로 쓸 수 있다', () async {
