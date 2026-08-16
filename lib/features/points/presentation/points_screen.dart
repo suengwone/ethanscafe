@@ -8,7 +8,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../auth/presentation/auth_providers.dart';
-import '../domain/membership_tier.dart';
 import '../domain/points_models.dart';
 import 'points_providers.dart';
 
@@ -46,8 +45,6 @@ class PointsScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _BalanceSection(data: data),
-              const SizedBox(height: 16),
-              _TierSection(data: data),
               const _StaffSection(),
               const SizedBox(height: 24),
               const _SectionHeader(title: '멤버십 바코드'),
@@ -90,7 +87,7 @@ class _BalanceSection extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '매장 결제 후 아래 멤버십 QR을 직원에게 보여주시면 등급별 적립률만큼 자동 적립됩니다.\n앱에서 주문하면 별도 절차 없이 자동으로 적립돼요.',
+              '매장 결제 후 아래 멤버십 QR을 직원에게 보여주시면 결제 금액의 $pointsEarnRatePercent%가 자동 적립됩니다.\n앱에서 주문하면 별도 절차 없이 자동으로 적립돼요.',
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 16),
@@ -152,89 +149,6 @@ class _BalanceSection extends ConsumerWidget {
           ),
         ),
       );
-  }
-}
-
-class _TierSection extends StatelessWidget {
-  const _TierSection({required this.data});
-
-  final PointsData data;
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final tier = data.tier;
-    final next = tier.next;
-    final remaining = data.remainingToNextTier;
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text('멤버십 등급', style: textTheme.titleSmall),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 5,
-                  ),
-                  decoration: BoxDecoration(
-                    color: foxtrotGold.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-                    border: Border.all(color: foxtrotGold),
-                  ),
-                  child: Text(
-                    tier.label,
-                    style: textTheme.bodySmall?.copyWith(
-                      color: foxtrotGoldLight,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '적립률 ${tier.earnRatePercent}% · 누적 결제 '
-              '${_pointFormat.format(data.cumulativePayment)}원',
-              style: textTheme.bodySmall,
-            ),
-            if (next != null && remaining != null) ...[
-              const SizedBox(height: 12),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: (data.cumulativePayment / next.threshold)
-                      .clamp(0.0, 1.0)
-                      .toDouble(),
-                  minHeight: 6,
-                  backgroundColor: foxtrotBorder,
-                  valueColor:
-                      const AlwaysStoppedAnimation<Color>(foxtrotGold),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '${_pointFormat.format(remaining)}원 더 결제하면 '
-                '${next.label} 등급(적립률 ${next.earnRatePercent}%)으로 올라가요.',
-                style: textTheme.bodySmall,
-              ),
-            ] else ...[
-              const SizedBox(height: 8),
-              Text(
-                '최고 등급이에요. 최대 적립률이 적용되고 있어요.',
-                style: textTheme.bodySmall?.copyWith(color: foxtrotGold),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
   }
 }
 

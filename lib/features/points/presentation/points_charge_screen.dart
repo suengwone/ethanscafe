@@ -65,7 +65,7 @@ class _PointsChargeScreenState extends ConsumerState<PointsChargeScreen> {
             ),
             const SizedBox(height: 12),
             Text(
-              '충전 결제 금액은 멤버십 등급 산정에 포함되지 않으며, 환불은 고객센터를 통해 처리됩니다.',
+              '충전 금액의 환불은 고객센터를 통해 처리됩니다.',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
