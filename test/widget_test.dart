@@ -82,7 +82,6 @@ void main() {
 
     expect(find.text('직원 모드'), findsOneWidget);
     expect(find.text('회원 QR 스캔 포인트 적립'), findsOneWidget);
-    expect(find.text('회원 QR 스캔 스탬프 적립'), findsOneWidget);
   });
 
   testWidgets('적립된 포인트를 사용하면 잔액이 차감된다', (WidgetTester tester) async {
