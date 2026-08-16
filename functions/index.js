@@ -5,7 +5,7 @@ const {onCall, HttpsError} = require('firebase-functions/v2/https');
 const {defineSecret} = require('firebase-functions/params');
 const {initializeApp} = require('firebase-admin/app');
 const {getAuth} = require('firebase-admin/auth');
-const {getFirestore, FieldValue} = require('firebase-admin/firestore');
+const {getFirestore, FieldValue, Timestamp} = require('firebase-admin/firestore');
 const {getMessaging} = require('firebase-admin/messaging');
 
 const {collectStatusChangeNotifications} = require('./order_status');
@@ -31,6 +31,13 @@ const {
   toApprovalPayload,
   basicAuthHeader,
 } = require('./toss_payment');
+const {
+  validateChargeRequest,
+  chargeBonus,
+  chargeHistoryEntry,
+  chargeResultPayload,
+  newMembershipId,
+} = require('./points_charge');
 const {validateBusinessRegisterRequest} = require('./business_profile');
 
 setGlobalOptions({region: 'asia-northeast3'});
@@ -102,6 +109,100 @@ exports.confirmTossPayment = onCall(
     } catch (error) {
       throw new HttpsError('failed-precondition', error.message);
     }
+  },
+);
+
+exports.chargePoints = onCall(
+  {secrets: [tossSecretKey]},
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', '로그인이 필요합니다.');
+    }
+
+    let chargeRequest;
+    try {
+      chargeRequest = validateChargeRequest(request.data);
+    } catch (error) {
+      throw new HttpsError('invalid-argument', error.message);
+    }
+
+    const {paymentKey, orderId, amount} = chargeRequest;
+    const firestore = getFirestore();
+    const pointsRef = firestore.collection('points').doc(request.auth.uid);
+    const chargeRef = pointsRef.collection('charges').doc(orderId);
+
+    const existing = await chargeRef.get();
+    if (existing.exists && existing.data().result) {
+      return existing.data().result;
+    }
+
+    const response = await fetch(TOSS_CONFIRM_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': basicAuthHeader(tossSecretKey.value()),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({paymentKey, orderId, amount}),
+    });
+    const payment = await response.json();
+    if (!response.ok) {
+      throw new HttpsError(
+        'failed-precondition',
+        payment && payment.message ? payment.message : '결제 승인에 실패했습니다.',
+      );
+    }
+
+    let approval;
+    try {
+      approval = toApprovalPayload(payment, amount);
+    } catch (error) {
+      throw new HttpsError('failed-precondition', error.message);
+    }
+
+    const bonus = chargeBonus(amount);
+    return firestore.runTransaction(async (transaction) => {
+      const chargeSnapshot = await transaction.get(chargeRef);
+      if (chargeSnapshot.exists && chargeSnapshot.data().result) {
+        return chargeSnapshot.data().result;
+      }
+
+      const pointsSnapshot = await transaction.get(pointsRef);
+      const data = pointsSnapshot.data() || {
+        membershipId: newMembershipId(),
+        balance: 0,
+        history: [],
+      };
+      const balance = (data.balance || 0) + amount + bonus;
+      const entry = chargeHistoryEntry({
+        orderId,
+        paymentKey,
+        amount,
+        bonus,
+        createdAt: Timestamp.now(),
+      });
+      transaction.set(pointsRef, {
+        ...data,
+        balance,
+        history: [entry, ...(Array.isArray(data.history) ? data.history : [])],
+      });
+
+      const result = chargeResultPayload({
+        paymentKey,
+        orderId,
+        amount,
+        bonus,
+        method: approval.method,
+        balance,
+      });
+      transaction.set(chargeRef, {
+        paymentKey,
+        amount,
+        bonus,
+        createdAt: Timestamp.now(),
+        result,
+      });
+      return result;
+    });
   },
 );
 

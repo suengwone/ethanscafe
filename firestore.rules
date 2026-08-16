@@ -18,6 +18,12 @@ service cloud.firestore {
         || (isSignedIn() && request.auth.uid == userId);
       allow write: if isAdmin()
         || (isSignedIn() && request.auth.uid == userId);
+
+      match /charges/{chargeId} {
+        allow read: if isAdmin()
+          || (isSignedIn() && request.auth.uid == userId);
+        allow write: if false;
+      }
     }
 
     match /stamps/{userId} {
