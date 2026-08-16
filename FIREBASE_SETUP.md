@@ -45,7 +45,7 @@ flutterfire configure
 ```xml
 <!-- 카메라 (QR 스캔) -->
 <key>NSCameraUsageDescription</key>
-<string>스탬프 QR코드 스캔을 위해 카메라 접근이 필요합니다.</string>
+<string>포인트 적립 QR코드 스캔을 위해 카메라 접근이 필요합니다.</string>
 
 <!-- 위치 (매장 찾기) -->
 <key>NSLocationWhenInUseUsageDescription</key>
@@ -186,11 +186,6 @@ service cloud.firestore {
     match /menus/{document=**} {
       allow read: if true;
       allow write: if request.auth != null && request.auth.token.admin == true;
-    }
-    
-    // 스탬프는 본인 것만
-    match /stamps/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
   }
 }
