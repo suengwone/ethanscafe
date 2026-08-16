@@ -290,7 +290,7 @@ as List<PointHistoryEntry>,
 /// @nodoc
 mixin _$PointHistoryEntry {
 
- String get id; PointHistoryType get type; String get description; int get amount; int? get paymentAmount; DateTime get createdAt;
+ String get id; PointHistoryType get type; String get description; int get amount; int? get paymentAmount; int? get bonusAmount; String? get paymentKey; DateTime get createdAt;
 /// Create a copy of PointHistoryEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -303,16 +303,16 @@ $PointHistoryEntryCopyWith<PointHistoryEntry> get copyWith => _$PointHistoryEntr
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PointHistoryEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.description, description) || other.description == description)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.paymentAmount, paymentAmount) || other.paymentAmount == paymentAmount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PointHistoryEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.description, description) || other.description == description)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.paymentAmount, paymentAmount) || other.paymentAmount == paymentAmount)&&(identical(other.bonusAmount, bonusAmount) || other.bonusAmount == bonusAmount)&&(identical(other.paymentKey, paymentKey) || other.paymentKey == paymentKey)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,description,amount,paymentAmount,createdAt);
+int get hashCode => Object.hash(runtimeType,id,type,description,amount,paymentAmount,bonusAmount,paymentKey,createdAt);
 
 @override
 String toString() {
-  return 'PointHistoryEntry(id: $id, type: $type, description: $description, amount: $amount, paymentAmount: $paymentAmount, createdAt: $createdAt)';
+  return 'PointHistoryEntry(id: $id, type: $type, description: $description, amount: $amount, paymentAmount: $paymentAmount, bonusAmount: $bonusAmount, paymentKey: $paymentKey, createdAt: $createdAt)';
 }
 
 
@@ -323,7 +323,7 @@ abstract mixin class $PointHistoryEntryCopyWith<$Res>  {
   factory $PointHistoryEntryCopyWith(PointHistoryEntry value, $Res Function(PointHistoryEntry) _then) = _$PointHistoryEntryCopyWithImpl;
 @useResult
 $Res call({
- String id, PointHistoryType type, String description, int amount, int? paymentAmount, DateTime createdAt
+ String id, PointHistoryType type, String description, int amount, int? paymentAmount, int? bonusAmount, String? paymentKey, DateTime createdAt
 });
 
 
@@ -340,14 +340,16 @@ class _$PointHistoryEntryCopyWithImpl<$Res>
 
 /// Create a copy of PointHistoryEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? description = null,Object? amount = null,Object? paymentAmount = freezed,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? description = null,Object? amount = null,Object? paymentAmount = freezed,Object? bonusAmount = freezed,Object? paymentKey = freezed,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as PointHistoryType,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as int,paymentAmount: freezed == paymentAmount ? _self.paymentAmount : paymentAmount // ignore: cast_nullable_to_non_nullable
-as int?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as int?,bonusAmount: freezed == bonusAmount ? _self.bonusAmount : bonusAmount // ignore: cast_nullable_to_non_nullable
+as int?,paymentKey: freezed == paymentKey ? _self.paymentKey : paymentKey // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }
@@ -433,10 +435,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  PointHistoryType type,  String description,  int amount,  int? paymentAmount,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  PointHistoryType type,  String description,  int amount,  int? paymentAmount,  int? bonusAmount,  String? paymentKey,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PointHistoryEntry() when $default != null:
-return $default(_that.id,_that.type,_that.description,_that.amount,_that.paymentAmount,_that.createdAt);case _:
+return $default(_that.id,_that.type,_that.description,_that.amount,_that.paymentAmount,_that.bonusAmount,_that.paymentKey,_that.createdAt);case _:
   return orElse();
 
 }
@@ -454,10 +456,10 @@ return $default(_that.id,_that.type,_that.description,_that.amount,_that.payment
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  PointHistoryType type,  String description,  int amount,  int? paymentAmount,  DateTime createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  PointHistoryType type,  String description,  int amount,  int? paymentAmount,  int? bonusAmount,  String? paymentKey,  DateTime createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _PointHistoryEntry():
-return $default(_that.id,_that.type,_that.description,_that.amount,_that.paymentAmount,_that.createdAt);case _:
+return $default(_that.id,_that.type,_that.description,_that.amount,_that.paymentAmount,_that.bonusAmount,_that.paymentKey,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -474,10 +476,10 @@ return $default(_that.id,_that.type,_that.description,_that.amount,_that.payment
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  PointHistoryType type,  String description,  int amount,  int? paymentAmount,  DateTime createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  PointHistoryType type,  String description,  int amount,  int? paymentAmount,  int? bonusAmount,  String? paymentKey,  DateTime createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _PointHistoryEntry() when $default != null:
-return $default(_that.id,_that.type,_that.description,_that.amount,_that.paymentAmount,_that.createdAt);case _:
+return $default(_that.id,_that.type,_that.description,_that.amount,_that.paymentAmount,_that.bonusAmount,_that.paymentKey,_that.createdAt);case _:
   return null;
 
 }
@@ -489,7 +491,7 @@ return $default(_that.id,_that.type,_that.description,_that.amount,_that.payment
 @JsonSerializable()
 
 class _PointHistoryEntry extends PointHistoryEntry {
-  const _PointHistoryEntry({required this.id, required this.type, required this.description, required this.amount, this.paymentAmount, required this.createdAt}): super._();
+  const _PointHistoryEntry({required this.id, required this.type, required this.description, required this.amount, this.paymentAmount, this.bonusAmount, this.paymentKey, required this.createdAt}): super._();
   factory _PointHistoryEntry.fromJson(Map<String, dynamic> json) => _$PointHistoryEntryFromJson(json);
 
 @override final  String id;
@@ -497,6 +499,8 @@ class _PointHistoryEntry extends PointHistoryEntry {
 @override final  String description;
 @override final  int amount;
 @override final  int? paymentAmount;
+@override final  int? bonusAmount;
+@override final  String? paymentKey;
 @override final  DateTime createdAt;
 
 /// Create a copy of PointHistoryEntry
@@ -512,16 +516,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PointHistoryEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.description, description) || other.description == description)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.paymentAmount, paymentAmount) || other.paymentAmount == paymentAmount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PointHistoryEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.description, description) || other.description == description)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.paymentAmount, paymentAmount) || other.paymentAmount == paymentAmount)&&(identical(other.bonusAmount, bonusAmount) || other.bonusAmount == bonusAmount)&&(identical(other.paymentKey, paymentKey) || other.paymentKey == paymentKey)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,description,amount,paymentAmount,createdAt);
+int get hashCode => Object.hash(runtimeType,id,type,description,amount,paymentAmount,bonusAmount,paymentKey,createdAt);
 
 @override
 String toString() {
-  return 'PointHistoryEntry(id: $id, type: $type, description: $description, amount: $amount, paymentAmount: $paymentAmount, createdAt: $createdAt)';
+  return 'PointHistoryEntry(id: $id, type: $type, description: $description, amount: $amount, paymentAmount: $paymentAmount, bonusAmount: $bonusAmount, paymentKey: $paymentKey, createdAt: $createdAt)';
 }
 
 
@@ -532,7 +536,7 @@ abstract mixin class _$PointHistoryEntryCopyWith<$Res> implements $PointHistoryE
   factory _$PointHistoryEntryCopyWith(_PointHistoryEntry value, $Res Function(_PointHistoryEntry) _then) = __$PointHistoryEntryCopyWithImpl;
 @override @useResult
 $Res call({
- String id, PointHistoryType type, String description, int amount, int? paymentAmount, DateTime createdAt
+ String id, PointHistoryType type, String description, int amount, int? paymentAmount, int? bonusAmount, String? paymentKey, DateTime createdAt
 });
 
 
@@ -549,14 +553,16 @@ class __$PointHistoryEntryCopyWithImpl<$Res>
 
 /// Create a copy of PointHistoryEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? description = null,Object? amount = null,Object? paymentAmount = freezed,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? description = null,Object? amount = null,Object? paymentAmount = freezed,Object? bonusAmount = freezed,Object? paymentKey = freezed,Object? createdAt = null,}) {
   return _then(_PointHistoryEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as PointHistoryType,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as int,paymentAmount: freezed == paymentAmount ? _self.paymentAmount : paymentAmount // ignore: cast_nullable_to_non_nullable
-as int?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as int?,bonusAmount: freezed == bonusAmount ? _self.bonusAmount : bonusAmount // ignore: cast_nullable_to_non_nullable
+as int?,paymentKey: freezed == paymentKey ? _self.paymentKey : paymentKey // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }

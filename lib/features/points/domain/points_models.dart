@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'points_models.freezed.dart';
 part 'points_models.g.dart';
 
-enum PointHistoryType { earn, use }
+enum PointHistoryType { earn, use, charge }
 
 @freezed
 abstract class PointsData with _$PointsData {
@@ -29,6 +29,8 @@ abstract class PointHistoryEntry with _$PointHistoryEntry {
     required String description,
     required int amount,
     int? paymentAmount,
+    int? bonusAmount,
+    String? paymentKey,
     required DateTime createdAt,
   }) = _PointHistoryEntry;
 
@@ -36,6 +38,8 @@ abstract class PointHistoryEntry with _$PointHistoryEntry {
       _$PointHistoryEntryFromJson(json);
 
   bool get isEarn => type == PointHistoryType.earn;
+
+  bool get isIncrease => type != PointHistoryType.use;
 }
 
 @freezed

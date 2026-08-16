@@ -30,6 +30,8 @@ _PointHistoryEntry _$PointHistoryEntryFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String,
       amount: (json['amount'] as num).toInt(),
       paymentAmount: (json['paymentAmount'] as num?)?.toInt(),
+      bonusAmount: (json['bonusAmount'] as num?)?.toInt(),
+      paymentKey: json['paymentKey'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
 
@@ -40,12 +42,15 @@ Map<String, dynamic> _$PointHistoryEntryToJson(_PointHistoryEntry instance) =>
       'description': instance.description,
       'amount': instance.amount,
       'paymentAmount': instance.paymentAmount,
+      'bonusAmount': instance.bonusAmount,
+      'paymentKey': instance.paymentKey,
       'createdAt': instance.createdAt.toIso8601String(),
     };
 
 const _$PointHistoryTypeEnumMap = {
   PointHistoryType.earn: 'earn',
   PointHistoryType.use: 'use',
+  PointHistoryType.charge: 'charge',
 };
 
 _PointsEarnResult _$PointsEarnResultFromJson(Map<String, dynamic> json) =>
