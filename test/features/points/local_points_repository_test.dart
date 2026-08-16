@@ -57,6 +57,24 @@ void main() {
     expect(data.balance, 99);
   });
 
+  test('누적 결제 30만원 이상이면 골드 적립률 12%가 적용된다', () async {
+    await repository.recordPayment(paymentAmount: 150000);
+    await repository.recordPayment(paymentAmount: 150000);
+
+    final data = await repository.recordPayment(paymentAmount: 10000);
+
+    expect(data.history.first.amount, 1200);
+    expect(data.balance, 15000 + 15000 + 1200);
+  });
+
+  test('누적 결제 100만원 이상이면 플래티넘 적립률 15%가 적용된다', () async {
+    await repository.recordPayment(paymentAmount: 1000000);
+
+    final data = await repository.recordPayment(paymentAmount: 10000);
+
+    expect(data.history.first.amount, 1500);
+  });
+
   test('0 이하 결제 금액은 적립할 수 없다', () async {
     expect(
       () => repository.recordPayment(paymentAmount: 0),

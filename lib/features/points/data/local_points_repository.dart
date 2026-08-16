@@ -3,13 +3,13 @@ import 'dart:math';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../domain/membership_tier.dart';
 import '../domain/points_models.dart';
 import '../domain/points_repository.dart';
 
 class LocalPointsRepository implements PointsRepository {
   static const _storageKey = 'points_data';
   static const _legacyStorageKey = 'membership_data';
-  static const earnRate = 0.1;
 
   @override
   Future<PointsData> load() async {
@@ -35,7 +35,7 @@ class LocalPointsRepository implements PointsRepository {
 
     final prefs = await SharedPreferences.getInstance();
     var data = await load();
-    final earned = (paymentAmount * earnRate).floor();
+    final earned = membershipTierOf(data.history).earnPoints(paymentAmount);
 
     data = data.copyWith(
       balance: data.balance + earned,

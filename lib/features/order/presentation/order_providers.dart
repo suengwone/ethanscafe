@@ -33,7 +33,6 @@ final beanOrdersControllerProvider =
     );
 
 class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
-  static const _earnRate = 0.1;
 
   @override
   Future<List<BeanOrder>> build() {
@@ -109,11 +108,13 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
     final isMember = ref.read(authStateProvider).value != null;
     var earnedPoints = 0;
     if (paidAmount > 0 && isMember) {
-      await pointsRepository.recordPayment(
+      final pointsData = await pointsRepository.recordPayment(
         paymentAmount: paidAmount,
         description: beanOrderPaymentDescription,
       );
-      earnedPoints = (paidAmount * _earnRate).floor();
+      final entry =
+          pointsData.history.isEmpty ? null : pointsData.history.first;
+      earnedPoints = entry != null && entry.isEarn ? entry.amount : 0;
     }
     ref.invalidate(pointsControllerProvider);
 
