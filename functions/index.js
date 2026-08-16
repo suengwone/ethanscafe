@@ -30,7 +30,27 @@ const {
   validateConfirmRequest,
   toApprovalPayload,
   basicAuthHeader,
+  paymentLookupUrl,
+  paymentCancelUrl,
+  verifyPaymentForOrder,
 } = require('./toss_payment');
+const {
+  validatePlaceOrderRequest,
+  validateCancelOrderRequest,
+  validateUsePointsRequest,
+  validateEarnByMembershipRequest,
+  orderTotalAmount,
+  validateCouponsForOrder,
+  couponTitlesLabel,
+  normalizePointsData,
+  applyOrderToPoints,
+  applyCancelToPoints,
+  nextPickupNumber,
+  buildOrderDoc,
+  serializeOrder,
+  newOrderEntryId,
+} = require('./order_checkout');
+const {collectCouponBackfills} = require('./coupon_backfill');
 const {
   validateChargeRequest,
   chargeBonus,
@@ -205,6 +225,396 @@ exports.chargePoints = onCall(
     });
   },
 );
+
+const ORDER_COLLECTIONS = {bean: 'orders', pickup: 'pickup_orders'};
+const ORDER_DESCRIPTIONS = {
+  bean: {use: '원두 주문 포인트 사용', earn: '원두 주문', cancel: '원두 주문 취소'},
+  pickup: {use: '픽업 주문 포인트 사용', earn: '픽업 주문', cancel: '픽업 주문 취소'},
+};
+
+async function cancelTossPayment(secretKey, paymentKey, cancelReason) {
+  try {
+    await fetch(paymentCancelUrl(paymentKey), {
+      method: 'POST',
+      headers: {
+        'Authorization': basicAuthHeader(secretKey),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({cancelReason}),
+    });
+  } catch (error) {
+    console.error('결제 자동 취소에 실패했습니다.', paymentKey, error);
+  }
+}
+
+exports.placeOrder = onCall(
+  {secrets: [tossSecretKey]},
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', '로그인이 필요합니다.');
+    }
+
+    let orderRequest;
+    try {
+      orderRequest = validatePlaceOrderRequest(request.data);
+    } catch (error) {
+      throw new HttpsError('invalid-argument', error.message);
+    }
+
+    const uid = request.auth.uid;
+    const firestore = getFirestore();
+    const couponRefs = orderRequest.couponIds.map(
+        (id) => firestore.collection('coupons').doc(id));
+
+    const couponSnapshots = couponRefs.length > 0 ?
+      await firestore.getAll(...couponRefs) :
+      [];
+    const coupons = couponSnapshots.map((snapshot) => {
+      if (!snapshot.exists) {
+        throw new HttpsError('failed-precondition', '적용할 수 없는 쿠폰입니다.');
+      }
+      return snapshot.data();
+    });
+
+    const totalAmount = orderTotalAmount(orderRequest.items);
+    let couponDiscount;
+    try {
+      couponDiscount = validateCouponsForOrder({
+        coupons,
+        uid,
+        orderAmount: totalAmount,
+        nowMillis: Date.now(),
+      });
+    } catch (error) {
+      throw new HttpsError('failed-precondition', error.message);
+    }
+
+    if (orderRequest.usedPoints > totalAmount - couponDiscount) {
+      throw new HttpsError(
+          'failed-precondition', '사용 포인트가 결제 금액을 벗어났습니다.');
+    }
+    const paidAmount =
+        totalAmount - couponDiscount - orderRequest.usedPoints;
+
+    let approvedPayment = null;
+    if (paidAmount > 0) {
+      if (!orderRequest.payment ||
+          orderRequest.payment.amount !== paidAmount) {
+        throw new HttpsError(
+            'failed-precondition', '결제 승인 금액이 주문 금액과 일치하지 않습니다.');
+      }
+      const response = await fetch(
+          paymentLookupUrl(orderRequest.payment.paymentKey), {
+            headers: {'Authorization': basicAuthHeader(tossSecretKey.value())},
+          });
+      const payment = await response.json().catch(() => null);
+      if (!response.ok) {
+        throw new HttpsError('failed-precondition', '결제 정보를 확인하지 못했습니다.');
+      }
+      try {
+        approvedPayment = verifyPaymentForOrder(payment, {
+          orderId: orderRequest.payment.orderId,
+          amount: paidAmount,
+        });
+      } catch (error) {
+        throw new HttpsError('failed-precondition', error.message);
+      }
+    } else if (orderRequest.payment) {
+      throw new HttpsError('failed-precondition', '결제가 필요 없는 주문입니다.');
+    }
+
+    const descriptions = ORDER_DESCRIPTIONS[orderRequest.orderType];
+    const ordersRef = firestore
+        .collection(ORDER_COLLECTIONS[orderRequest.orderType])
+        .doc(uid);
+    const pointsRef = firestore.collection('points').doc(uid);
+    const usageRef = approvedPayment ?
+      firestore.collection('payment_usages').doc(approvedPayment.paymentKey) :
+      null;
+
+    try {
+      const result = await firestore.runTransaction(async (transaction) => {
+        const ordersSnapshot = await transaction.get(ordersRef);
+        const pointsSnapshot = await transaction.get(pointsRef);
+        if (usageRef) {
+          const usageSnapshot = await transaction.get(usageRef);
+          if (usageSnapshot.exists) {
+            throw new Error('이미 처리된 결제입니다.');
+          }
+        }
+        const transactionCoupons = [];
+        for (const ref of couponRefs) {
+          const snapshot = await transaction.get(ref);
+          const data = snapshot.exists ? snapshot.data() : null;
+          if (!data || data.uid !== uid || data.isUsed === true) {
+            throw new Error('적용할 수 없는 쿠폰입니다.');
+          }
+          transactionCoupons.push(data);
+        }
+
+        const now = Timestamp.now();
+        const pointsData =
+            normalizePointsData(pointsSnapshot.data(), newMembershipId);
+        const {earned, data: updatedPoints} = applyOrderToPoints({
+          pointsData,
+          usedPoints: orderRequest.usedPoints,
+          paidAmount,
+          useDescription: descriptions.use,
+          earnDescription: descriptions.earn,
+          createdAt: now,
+        });
+
+        const ordersData = ordersSnapshot.data();
+        const existingOrders =
+            ordersData && Array.isArray(ordersData.orders) ?
+              ordersData.orders :
+              [];
+        const order = buildOrderDoc({
+          request: orderRequest,
+          orderId: newOrderEntryId(),
+          earnedPoints: earned,
+          couponTitle: couponTitlesLabel(transactionCoupons),
+          couponDiscount,
+          paymentMethod: approvedPayment ? approvedPayment.method : null,
+          pickupNumber: orderRequest.orderType === 'pickup' ?
+            nextPickupNumber(existingOrders, new Date()) :
+            null,
+          createdAt: now,
+        });
+
+        transaction.set(pointsRef, updatedPoints);
+        for (const ref of couponRefs) {
+          transaction.update(ref, {isUsed: true});
+        }
+        transaction.set(ordersRef, {orders: [order, ...existingOrders]});
+        if (usageRef) {
+          transaction.set(usageRef, {
+            uid,
+            orderId: order.id,
+            createdAt: now,
+          });
+        }
+        return {order, earnedPoints: earned, balance: updatedPoints.balance};
+      });
+      return {...result, order: serializeOrder(result.order)};
+    } catch (error) {
+      if (approvedPayment) {
+        await cancelTossPayment(
+            tossSecretKey.value(),
+            approvedPayment.paymentKey,
+            '주문 저장 실패 자동 취소',
+        );
+        throw new HttpsError(
+            'aborted',
+            `주문 저장에 실패해 결제를 자동 취소(환불)했습니다. (${error.message})`,
+        );
+      }
+      throw new HttpsError(
+          'failed-precondition', error.message || '주문 처리에 실패했습니다.');
+    }
+  },
+);
+
+exports.cancelOrder = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', '로그인이 필요합니다.');
+  }
+
+  let cancelRequest;
+  try {
+    cancelRequest = validateCancelOrderRequest(request.data);
+  } catch (error) {
+    throw new HttpsError('invalid-argument', error.message);
+  }
+
+  const uid = request.auth.uid;
+  const firestore = getFirestore();
+  const descriptions = ORDER_DESCRIPTIONS[cancelRequest.orderType];
+  const ordersRef = firestore
+      .collection(ORDER_COLLECTIONS[cancelRequest.orderType])
+      .doc(uid);
+  const pointsRef = firestore.collection('points').doc(uid);
+
+  try {
+    const cancelled = await firestore.runTransaction(async (transaction) => {
+      const ordersSnapshot = await transaction.get(ordersRef);
+      const ordersData = ordersSnapshot.data();
+      const orders = ordersData && Array.isArray(ordersData.orders) ?
+        ordersData.orders :
+        [];
+      const index = orders.findIndex(
+          (order) => order && order.id === cancelRequest.orderId);
+      if (index === -1) {
+        throw new Error('주문을 찾을 수 없습니다.');
+      }
+      const order = orders[index];
+      if (order.status === 'cancelled') {
+        throw new Error('이미 취소된 주문입니다.');
+      }
+      if (order.status !== 'received') {
+        throw new Error(cancelRequest.orderType === 'bean' ?
+          '로스팅이 시작된 주문은 취소할 수 없습니다.' :
+          '제조가 시작된 주문은 취소할 수 없습니다.');
+      }
+
+      const couponIds =
+          typeof order.couponId === 'string' && order.couponId.length > 0 ?
+            order.couponId.split(',') :
+            [];
+      const couponRefs = couponIds.map(
+          (id) => firestore.collection('coupons').doc(id));
+      const couponSnapshots = [];
+      for (const ref of couponRefs) {
+        couponSnapshots.push(await transaction.get(ref));
+      }
+
+      const usedPoints =
+          Number.isInteger(order.usedPoints) ? order.usedPoints : 0;
+      const earnedPoints =
+          Number.isInteger(order.earnedPoints) ? order.earnedPoints : 0;
+      let updatedPoints = null;
+      if (usedPoints > 0 || earnedPoints > 0) {
+        const pointsSnapshot = await transaction.get(pointsRef);
+        updatedPoints = applyCancelToPoints({
+          pointsData:
+              normalizePointsData(pointsSnapshot.data(), newMembershipId),
+          usedPoints,
+          earnedPoints,
+          description: descriptions.cancel,
+          createdAt: Timestamp.now(),
+        });
+      }
+
+      const cancelledOrder = {...order, status: 'cancelled'};
+      const updatedOrders = [...orders];
+      updatedOrders[index] = cancelledOrder;
+      transaction.set(ordersRef, {orders: updatedOrders});
+      couponSnapshots.forEach((snapshot, couponIndex) => {
+        if (snapshot.exists && snapshot.data().uid === uid) {
+          transaction.update(couponRefs[couponIndex], {isUsed: false});
+        }
+      });
+      if (updatedPoints) {
+        transaction.set(pointsRef, updatedPoints);
+      }
+      return cancelledOrder;
+    });
+    return {order: serializeOrder(cancelled)};
+  } catch (error) {
+    throw new HttpsError(
+        'failed-precondition', error.message || '주문 취소에 실패했습니다.');
+  }
+});
+
+exports.usePoints = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', '로그인이 필요합니다.');
+  }
+
+  let usePointsRequest;
+  try {
+    usePointsRequest = validateUsePointsRequest(request.data);
+  } catch (error) {
+    throw new HttpsError('invalid-argument', error.message);
+  }
+
+  const firestore = getFirestore();
+  const pointsRef = firestore.collection('points').doc(request.auth.uid);
+  try {
+    return await firestore.runTransaction(async (transaction) => {
+      const snapshot = await transaction.get(pointsRef);
+      const pointsData = normalizePointsData(snapshot.data(), newMembershipId);
+      if (usePointsRequest.amount > pointsData.balance) {
+        throw new Error('포인트 잔액이 부족합니다.');
+      }
+      const balance = pointsData.balance - usePointsRequest.amount;
+      transaction.set(pointsRef, {
+        ...pointsData,
+        balance,
+        history: [
+          {
+            id: newOrderEntryId(),
+            type: 'use',
+            description: usePointsRequest.description,
+            amount: -usePointsRequest.amount,
+            createdAt: Timestamp.now(),
+          },
+          ...pointsData.history,
+        ],
+      });
+      return {balance};
+    });
+  } catch (error) {
+    throw new HttpsError(
+        'failed-precondition', error.message || '포인트 사용에 실패했습니다.');
+  }
+});
+
+exports.earnPointsByMembership = onCall(async (request) => {
+  if (!request.auth || request.auth.token.admin !== true) {
+    throw new HttpsError('permission-denied', '관리자만 사용할 수 있습니다.');
+  }
+
+  let earnRequest;
+  try {
+    earnRequest = validateEarnByMembershipRequest(request.data);
+  } catch (error) {
+    throw new HttpsError('invalid-argument', error.message);
+  }
+
+  const firestore = getFirestore();
+  const query = await firestore
+      .collection('points')
+      .where('membershipId', '==', earnRequest.membershipId)
+      .limit(1)
+      .get();
+  if (query.empty) {
+    throw new HttpsError('not-found', '등록되지 않은 회원 QR 코드입니다.');
+  }
+  const pointsRef = query.docs[0].ref;
+
+  return firestore.runTransaction(async (transaction) => {
+    const snapshot = await transaction.get(pointsRef);
+    const pointsData = normalizePointsData(snapshot.data(), newMembershipId);
+    const {earned, data: updatedPoints} = applyOrderToPoints({
+      pointsData,
+      usedPoints: 0,
+      paidAmount: earnRequest.paymentAmount,
+      useDescription: '',
+      earnDescription: '매장 결제',
+      createdAt: Timestamp.now(),
+    });
+    transaction.set(pointsRef, updatedPoints);
+    return {
+      membershipId: earnRequest.membershipId,
+      paymentAmount: earnRequest.paymentAmount,
+      earned,
+      balance: updatedPoints.balance,
+    };
+  });
+});
+
+exports.backfillCouponUids = onCall(async (request) => {
+  if (!request.auth || request.auth.token.admin !== true) {
+    throw new HttpsError('permission-denied', '관리자만 사용할 수 있습니다.');
+  }
+
+  const firestore = getFirestore();
+  const snapshot = await firestore.collection('coupons').get();
+  const {updates, skipped} = collectCouponBackfills(
+      snapshot.docs.map((doc) => ({id: doc.id, uid: doc.data().uid})));
+
+  const chunkSize = 400;
+  for (let start = 0; start < updates.length; start += chunkSize) {
+    const batch = firestore.batch();
+    for (const update of updates.slice(start, start + chunkSize)) {
+      batch.update(
+          firestore.collection('coupons').doc(update.id), {uid: update.uid});
+    }
+    await batch.commit();
+  }
+  return {updated: updates.length, skipped};
+});
 
 exports.signInWithKakao = onCall(
   {secrets: [kakaoJsAppKey, kakaoClientSecret]},
