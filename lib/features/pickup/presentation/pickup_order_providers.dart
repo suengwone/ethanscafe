@@ -8,6 +8,7 @@ import '../../payment/domain/payment_models.dart';
 import '../../points/presentation/points_providers.dart';
 import '../../review/presentation/review_providers.dart';
 import '../../store/domain/store_models.dart';
+import '../data/cloud_functions_pickup_checkout_repository.dart';
 import '../data/firestore_pickup_orders_repository.dart';
 import '../data/local_pickup_orders_repository.dart';
 import '../domain/pickup_cart_models.dart';
@@ -24,6 +25,17 @@ final pickupOrdersRepositoryProvider = Provider<PickupOrdersRepository>((ref) {
     }
   } catch (_) {}
   return LocalPickupOrdersRepository();
+});
+
+final pickupCloudCheckoutProvider =
+    Provider<CloudFunctionsPickupCheckoutRepository?>((ref) {
+  try {
+    if (Firebase.apps.isNotEmpty &&
+        ref.watch(authStateProvider).value != null) {
+      return CloudFunctionsPickupCheckoutRepository();
+    }
+  } catch (_) {}
+  return null;
 });
 
 final pickupOrderTrackingProvider = StreamProvider.autoDispose
@@ -95,6 +107,25 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
       throw StateError('결제 승인 금액이 주문 금액과 일치하지 않습니다.');
     }
 
+    final cloudCheckout = ref.read(pickupCloudCheckoutProvider);
+    if (cloudCheckout != null) {
+      final order = await cloudCheckout.placeOrder(
+        items: items,
+        storeId: store.id,
+        storeName: store.name,
+        usedPoints: usedPoints,
+        couponIds: [for (final coupon in coupons) coupon.id],
+        payment: payment,
+      );
+      if (coupons.isNotEmpty) {
+        ref.invalidate(couponsControllerProvider);
+      }
+      ref.invalidate(pointsControllerProvider);
+      state = AsyncValue.data([order, ...state.value ?? const []]);
+      await _recordSales(items);
+      return order;
+    }
+
     if (coupons.isNotEmpty) {
       final couponsRepository = ref.read(couponsRepositoryProvider);
       for (final coupon in coupons) {
@@ -139,7 +170,11 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
           paymentMethod: payment?.method,
         );
     state = AsyncValue.data([order, ...state.value ?? const []]);
+    await _recordSales(items);
+    return order;
+  }
 
+  Future<void> _recordSales(List<PickupOrderItem> items) async {
     final salesByMenu = <String, int>{};
     for (final item in items) {
       salesByMenu[item.menuId] =
@@ -147,11 +182,21 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
     }
     await ref.read(reviewsRepositoryProvider).recordSales(salesByMenu);
     ref.invalidate(productStatsProvider);
-
-    return order;
   }
 
   Future<PickupOrder> cancelOrder(String orderId) async {
+    final cloudCheckout = ref.read(pickupCloudCheckoutProvider);
+    if (cloudCheckout != null) {
+      final cancelled = await cloudCheckout.cancelOrder(orderId);
+      ref.invalidate(couponsControllerProvider);
+      ref.invalidate(pointsControllerProvider);
+      state = AsyncValue.data([
+        for (final order in state.value ?? const <PickupOrder>[])
+          if (order.id == orderId) cancelled else order,
+      ]);
+      return cancelled;
+    }
+
     final cancelled = await ref
         .read(pickupOrdersRepositoryProvider)
         .cancelOrder(orderId);

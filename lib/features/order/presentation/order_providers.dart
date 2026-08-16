@@ -10,6 +10,7 @@ import '../../points/presentation/points_providers.dart';
 import '../../profile/domain/delivery_address.dart';
 import '../../review/presentation/review_providers.dart';
 import '../../store/domain/store_models.dart';
+import '../data/cloud_functions_bean_checkout_repository.dart';
 import '../data/firestore_bean_orders_repository.dart';
 import '../data/local_bean_orders_repository.dart';
 import '../domain/bean_orders_repository.dart';
@@ -25,6 +26,17 @@ final beanOrdersRepositoryProvider = Provider<BeanOrdersRepository>((ref) {
     }
   } catch (_) {}
   return LocalBeanOrdersRepository();
+});
+
+final beanCloudCheckoutProvider =
+    Provider<CloudFunctionsBeanCheckoutRepository?>((ref) {
+  try {
+    if (Firebase.apps.isNotEmpty &&
+        ref.watch(authStateProvider).value != null) {
+      return CloudFunctionsBeanCheckoutRepository();
+    }
+  } catch (_) {}
+  return null;
 });
 
 final beanOrdersControllerProvider =
@@ -89,6 +101,39 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
       throw StateError('결제 승인 금액이 주문 금액과 일치하지 않습니다.');
     }
 
+    final cloudCheckout = ref.read(beanCloudCheckoutProvider);
+    if (cloudCheckout != null) {
+      final order = await cloudCheckout.placeOrder(
+        items: items,
+        usedPoints: usedPoints,
+        couponIds: [for (final coupon in coupons) coupon.id],
+        payment: payment,
+        fulfillmentMethod: fulfillmentMethod,
+        storeId: fulfillmentMethod == BeanFulfillmentMethod.pickup
+            ? pickupStore?.id
+            : null,
+        storeName: fulfillmentMethod == BeanFulfillmentMethod.pickup
+            ? pickupStore?.name
+            : null,
+        recipient: fulfillmentMethod == BeanFulfillmentMethod.delivery
+            ? deliveryAddress?.recipient
+            : null,
+        recipientPhone: fulfillmentMethod == BeanFulfillmentMethod.delivery
+            ? deliveryAddress?.phone
+            : null,
+        shippingAddress: fulfillmentMethod == BeanFulfillmentMethod.delivery
+            ? _fullAddress(deliveryAddress)
+            : null,
+      );
+      if (coupons.isNotEmpty) {
+        ref.invalidate(couponsControllerProvider);
+      }
+      ref.invalidate(pointsControllerProvider);
+      state = AsyncValue.data([order, ...state.value ?? const []]);
+      await _recordSales(items);
+      return order;
+    }
+
     if (coupons.isNotEmpty) {
       final couponsRepository = ref.read(couponsRepositoryProvider);
       for (final coupon in coupons) {
@@ -145,18 +190,32 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
               : null,
         );
     state = AsyncValue.data([order, ...state.value ?? const []]);
+    await _recordSales(items);
+    return order;
+  }
 
+  Future<void> _recordSales(List<BeanOrderItem> items) async {
     final salesByBean = <String, int>{};
     for (final item in items) {
       salesByBean[item.beanId] = (salesByBean[item.beanId] ?? 0) + item.quantity;
     }
     await ref.read(reviewsRepositoryProvider).recordSales(salesByBean);
     ref.invalidate(productStatsProvider);
-
-    return order;
   }
 
   Future<BeanOrder> cancelOrder(String orderId) async {
+    final cloudCheckout = ref.read(beanCloudCheckoutProvider);
+    if (cloudCheckout != null) {
+      final cancelled = await cloudCheckout.cancelOrder(orderId);
+      ref.invalidate(couponsControllerProvider);
+      ref.invalidate(pointsControllerProvider);
+      state = AsyncValue.data([
+        for (final order in state.value ?? const <BeanOrder>[])
+          if (order.id == orderId) cancelled else order,
+      ]);
+      return cancelled;
+    }
+
     final cancelled =
         await ref.read(beanOrdersRepositoryProvider).cancelOrder(orderId);
 
