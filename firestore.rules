@@ -110,18 +110,19 @@ service cloud.firestore {
             + request.auth.uid;
       }
 
-      allow read: if true;
+      allow read: if isAdmin()
+        || (isSignedIn() && resource.data.uid == request.auth.uid);
       allow create: if isAdmin()
         || (isSignedIn()
           && isOwnAutoCouponId()
+          && request.resource.data.uid == request.auth.uid
           && request.resource.data.isUsed == false
           && request.resource.data.discountAmount <= 3000
           && request.resource.data.discountRate <= 20);
       allow delete: if isAdmin();
       allow update: if isAdmin()
         || (isSignedIn()
-          && resource.data.isUsed != true
-          && request.resource.data.isUsed == true
+          && resource.data.uid == request.auth.uid
           && request.resource.data.diff(resource.data).affectedKeys()
             .hasOnly(['isUsed']));
     }

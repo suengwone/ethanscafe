@@ -5,9 +5,10 @@ import '../domain/coupon_models.dart';
 import '../domain/coupons_repository.dart';
 
 class FirestoreCouponsRepository implements CouponsRepository {
-  FirestoreCouponsRepository({FirebaseFirestore? firestore})
+  FirestoreCouponsRepository({required this.uid, FirebaseFirestore? firestore})
       : _firestore = firestore ?? FirebaseFirestore.instance;
 
+  final String uid;
   final FirebaseFirestore _firestore;
 
   static const collectionPath = 'coupons';
@@ -16,11 +17,12 @@ class FirestoreCouponsRepository implements CouponsRepository {
   Future<List<Coupon>> loadCoupons() async {
     final snapshot = await _firestore
         .collection(collectionPath)
-        .orderBy('expiresAt')
+        .where('uid', isEqualTo: uid)
         .get();
     return snapshot.docs
         .map((doc) => couponFromFirestore(doc.id, doc.data()))
-        .toList();
+        .toList()
+      ..sort((a, b) => a.expiresAt.compareTo(b.expiresAt));
   }
 
   @override
@@ -31,7 +33,7 @@ class FirestoreCouponsRepository implements CouponsRepository {
       if (snapshot.exists) {
         return false;
       }
-      transaction.set(doc, couponToFirestore(coupon));
+      transaction.set(doc, {...couponToFirestore(coupon), 'uid': uid});
       return true;
     });
   }

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../auth/presentation/auth_providers.dart';
 import '../data/firestore_coupons_repository.dart';
 import '../data/local_coupons_repository.dart';
 import '../domain/coupon_models.dart';
@@ -9,7 +10,10 @@ import '../domain/coupons_repository.dart';
 final couponsRepositoryProvider = Provider<CouponsRepository>((ref) {
   try {
     if (Firebase.apps.isNotEmpty) {
-      return FirestoreCouponsRepository();
+      final user = ref.watch(authStateProvider).value;
+      if (user != null) {
+        return FirestoreCouponsRepository(uid: user.uid);
+      }
     }
   } catch (_) {}
   return LocalCouponsRepository();
