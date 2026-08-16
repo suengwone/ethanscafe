@@ -7,7 +7,11 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/order_cancel_dialog.dart';
+import '../../beans/presentation/bean_cart_providers.dart';
+import '../../beans/presentation/beans_providers.dart';
+import '../../menu/presentation/menu_providers.dart';
 import '../../pickup/domain/pickup_order_models.dart';
+import '../../pickup/presentation/pickup_cart_providers.dart';
 import '../../pickup/presentation/pickup_order_providers.dart';
 import '../../points/domain/points_models.dart';
 import '../../points/presentation/points_providers.dart';
@@ -15,6 +19,7 @@ import '../../review/domain/review_models.dart';
 import '../../review/presentation/review_providers.dart';
 import '../../review/presentation/review_sheet.dart';
 import '../domain/order_models.dart';
+import '../domain/reorder.dart';
 import 'order_providers.dart';
 
 final _amountFormat = NumberFormat('#,###');
@@ -242,8 +247,24 @@ class _BeanOrderCard extends ConsumerWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              height: 36,
+              child: OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: foxtrotGoldLight,
+                  textStyle: textTheme.bodySmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onPressed: () => _reorder(context, ref),
+                icon: const Icon(LucideIcons.rotateCcw, size: 13),
+                label: const Text('재주문'),
+              ),
+            ),
             if (order.isCancellable) ...[
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               SizedBox(
                 width: double.infinity,
                 height: 36,
@@ -275,6 +296,39 @@ class _BeanOrderCard extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _reorder(BuildContext context, WidgetRef ref) async {
+    final beans = await ref.read(beansProvider.future);
+    if (!context.mounted) {
+      return;
+    }
+    final result = buildBeanReorder(order: order, beans: beans);
+    if (!result.hasItems) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('지금은 판매하지 않는 상품이라 재주문할 수 없어요.')),
+      );
+      return;
+    }
+    final notifier = ref.read(beanCartProvider.notifier);
+    for (final item in result.items) {
+      notifier.add(
+        bean: item.bean,
+        weight: item.weight,
+        grind: item.grind,
+        quantity: item.quantity,
+      );
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          result.hasMissing
+              ? '판매 종료된 ${result.missingNames.join(', ')} 상품은 제외하고 장바구니에 담았어요.'
+              : '이전 주문 구성을 장바구니에 담았어요.',
+        ),
+      ),
+    );
+    context.go('/menu/beans-cart');
   }
 
   Future<void> _cancelOrder(BuildContext context, WidgetRef ref) async {
@@ -428,6 +482,22 @@ class _PickupOrderCard extends ConsumerWidget {
                   ],
                 ),
               ],
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 36,
+                child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: foxtrotGoldLight,
+                    textStyle: textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  onPressed: () => _reorder(context, ref),
+                  icon: const Icon(LucideIcons.rotateCcw, size: 13),
+                  label: const Text('재주문'),
+                ),
+              ),
               if (_reviewable) ...[
                 const SizedBox(height: 12),
                 Container(
@@ -448,6 +518,38 @@ class _PickupOrderCard extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _reorder(BuildContext context, WidgetRef ref) async {
+    final menuItems = await ref.read(menuItemsProvider.future);
+    if (!context.mounted) {
+      return;
+    }
+    final result = buildPickupReorder(order: order, menuItems: menuItems);
+    if (!result.hasItems) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('지금은 판매하지 않는 메뉴라 재주문할 수 없어요.')),
+      );
+      return;
+    }
+    final notifier = ref.read(pickupCartProvider.notifier);
+    for (final item in result.items) {
+      notifier.add(
+        menuItem: item.menuItem,
+        option: item.option,
+        quantity: item.quantity,
+      );
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          result.hasMissing
+              ? '판매 종료된 ${result.missingNames.join(', ')} 메뉴는 제외하고 장바구니에 담았어요.'
+              : '이전 주문 구성을 장바구니에 담았어요.',
+        ),
+      ),
+    );
+    context.go('/menu/cart');
   }
 }
 
