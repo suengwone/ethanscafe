@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../core/firebase/firestore_converters.dart';
-import '../domain/membership_tier.dart';
 import '../domain/points_models.dart';
 import '../domain/points_repository.dart';
 
@@ -46,7 +45,7 @@ class FirestorePointsRepository implements PointsRepository {
 
     return _firestore.runTransaction((transaction) async {
       final data = await _loadInTransaction(transaction);
-      final earned = membershipTierOf(data.history).earnPoints(paymentAmount);
+      final earned = earnPointsForPayment(paymentAmount);
       final updated = data.copyWith(
         balance: data.balance + earned,
         history: [

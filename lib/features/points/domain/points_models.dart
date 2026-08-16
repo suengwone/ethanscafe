@@ -5,6 +5,11 @@ part 'points_models.g.dart';
 
 enum PointHistoryType { earn, use, charge }
 
+const int pointsEarnRatePercent = 10;
+
+int earnPointsForPayment(int paymentAmount) =>
+    paymentAmount * pointsEarnRatePercent ~/ 100;
+
 @freezed
 abstract class PointsData with _$PointsData {
   const PointsData._();

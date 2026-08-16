@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../domain/membership_tier.dart';
 import '../domain/points_admin_repository.dart';
 import '../domain/points_models.dart';
 import 'firestore_points_repository.dart';
@@ -38,7 +37,7 @@ class FirestorePointsAdminRepository implements PointsAdminRepository {
     return _firestore.runTransaction((transaction) async {
       final snapshot = await transaction.get(doc);
       final data = pointsDataFromFirestore(snapshot.data() ?? const {});
-      final earned = membershipTierOf(data.history).earnPoints(paymentAmount);
+      final earned = earnPointsForPayment(paymentAmount);
       final updated = data.copyWith(
         balance: data.balance + earned,
         history: [
