@@ -48,6 +48,7 @@ import 'package:cafe_app/features/wholesale/presentation/business_home_screen.da
 import 'package:cafe_app/features/wholesale/presentation/wholesale_quote_history_screen.dart';
 import 'package:cafe_app/features/wholesale/presentation/wholesale_quote_screen.dart';
 import 'package:cafe_app/features/points/presentation/admin_points_scan_screen.dart';
+import 'package:cafe_app/features/points/presentation/points_charge_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/stamp/presentation/admin_stamp_scan_screen.dart';
 import 'package:cafe_app/features/profile/presentation/delivery_address_screen.dart';
@@ -168,8 +169,18 @@ void main() {
       ],
       'points_data': jsonEncode({
         'membershipId': 'MEMBER-12345678',
-        'balance': 1250,
+        'balance': 32250,
         'history': [
+          {
+            'id': 'h4',
+            'type': 'charge',
+            'description': '선불권 충전',
+            'amount': 31000,
+            'paymentAmount': 30000,
+            'bonusAmount': 1000,
+            'paymentKey': 'preview-charge-key',
+            'createdAt': '2026-08-12T09:00:00.000',
+          },
           {
             'id': 'h3',
             'type': 'earn',
@@ -564,6 +575,16 @@ void main() {
     await pumpScreen(tester, const PointsScreen());
 
     await expectGolden(find.byType(PointsScreen), 'points_screen');
+  });
+
+  testWidgets('포인트 충전 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const PointsChargeScreen(), user: _previewUser);
+
+    await expectGolden(
+      find.byType(PointsChargeScreen),
+      'points_charge_screen',
+    );
   });
 
   testWidgets('메뉴 화면 스크린샷', (WidgetTester tester) async {
