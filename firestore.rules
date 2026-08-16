@@ -16,8 +16,12 @@ service cloud.firestore {
     match /points/{userId} {
       allow read: if isAdmin()
         || (isSignedIn() && request.auth.uid == userId);
-      allow write: if isAdmin()
-        || (isSignedIn() && request.auth.uid == userId);
+      allow create: if isAdmin()
+        || (isSignedIn()
+          && request.auth.uid == userId
+          && request.resource.data.balance == 0
+          && request.resource.data.history.size() == 0);
+      allow update, delete: if isAdmin();
 
       match /charges/{chargeId} {
         allow read: if isAdmin()
@@ -47,11 +51,15 @@ service cloud.firestore {
     }
 
     match /orders/{userId} {
-      allow read, write: if isSignedIn() && request.auth.uid == userId;
+      allow read: if isAdmin()
+        || (isSignedIn() && request.auth.uid == userId);
+      allow write: if isAdmin();
     }
 
     match /pickup_orders/{userId} {
-      allow read, write: if isSignedIn() && request.auth.uid == userId;
+      allow read: if isAdmin()
+        || (isSignedIn() && request.auth.uid == userId);
+      allow write: if isAdmin();
     }
 
     match /subscriptions/{userId} {
