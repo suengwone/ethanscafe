@@ -37,6 +37,10 @@ import 'package:cafe_app/features/menu/presentation/menu_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
 import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
 import 'package:cafe_app/features/order/domain/order_models.dart';
+import 'package:cafe_app/features/order/domain/admin_order_models.dart';
+import 'package:cafe_app/features/order/presentation/admin_orders_providers.dart';
+import 'package:cafe_app/features/order/presentation/admin_orders_screen.dart';
+import 'package:cafe_app/features/pickup/domain/pickup_order_models.dart';
 import 'package:cafe_app/features/order/presentation/order_history_screen.dart';
 import 'package:cafe_app/features/payment/data/local_payments_repository.dart';
 import 'package:cafe_app/features/payment/domain/payment_models.dart';
@@ -548,6 +552,67 @@ void main() {
     await pumpApp(tester, isOnline: false);
 
     await expectGolden(find.byType(OfflineBanner), 'offline_banner');
+  });
+
+  testWidgets('관리자 주문 관리 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const AdminOrdersScreen(),
+      user: _previewUser,
+      overrides: [
+        activePickupOrdersProvider.overrideWith((ref) async => [
+              AdminPickupOrder(
+                uid: 'u1',
+                order: PickupOrder(
+                  id: 'p1',
+                  storeId: 's1',
+                  storeName: '폭스트롯 마천점',
+                  pickupNumber: 12,
+                  items: const [
+                    PickupOrderItem(
+                      menuId: 'm1',
+                      menuName: '바닐라 라떼',
+                      option: 'ICE',
+                      quantity: 2,
+                      unitPrice: 5800,
+                    ),
+                  ],
+                  totalAmount: 11600,
+                  createdAt: DateTime(2026, 8, 18, 9, 41),
+                ),
+              ),
+              AdminPickupOrder(
+                uid: 'u2',
+                order: PickupOrder(
+                  id: 'p2',
+                  storeId: 's1',
+                  storeName: '폭스트롯 마천점',
+                  pickupNumber: 13,
+                  items: const [
+                    PickupOrderItem(
+                      menuId: 'm2',
+                      menuName: '플레인 베이글',
+                      quantity: 1,
+                      unitPrice: 3800,
+                    ),
+                    PickupOrderItem(
+                      menuId: 'm3',
+                      menuName: '아메리카노',
+                      quantity: 1,
+                      unitPrice: 4500,
+                    ),
+                  ],
+                  totalAmount: 8300,
+                  status: PickupOrderStatus.preparing,
+                  createdAt: DateTime(2026, 8, 18, 9, 52),
+                ),
+              ),
+            ]),
+      ],
+    );
+
+    await expectGolden(find.byType(AdminOrdersScreen), 'admin_orders_screen');
   });
 
   testWidgets('업데이트 안내 화면 스크린샷', (WidgetTester tester) async {
