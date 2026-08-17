@@ -26,6 +26,7 @@ import 'package:cafe_app/features/beans/domain/bean_models.dart';
 import 'package:cafe_app/features/beans/presentation/bean_cart_providers.dart';
 import 'package:cafe_app/features/beans/presentation/bean_cart_screen.dart';
 import 'package:cafe_app/features/beans/presentation/bean_detail_screen.dart';
+import 'package:cafe_app/features/catalog/presentation/catalog_admin_screen.dart';
 import 'package:cafe_app/features/coupon/presentation/coupon_list_screen.dart';
 import 'package:cafe_app/features/coupon/presentation/coupons_providers.dart';
 import 'package:cafe_app/features/gift/presentation/bean_gift_screen.dart';
@@ -34,6 +35,7 @@ import 'package:cafe_app/features/menu/data/local_menu_repository.dart';
 import 'package:cafe_app/features/menu/domain/menu_models.dart';
 import 'package:cafe_app/features/menu/presentation/favorite_menu_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_detail_screen.dart';
+import 'package:cafe_app/features/menu/presentation/menu_providers.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
 import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
 import 'package:cafe_app/features/order/domain/order_models.dart';
@@ -613,6 +615,43 @@ void main() {
     );
 
     await expectGolden(find.byType(AdminOrdersScreen), 'admin_orders_screen');
+  });
+
+  testWidgets('품절 관리 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const CatalogAdminScreen(),
+      user: _previewUser,
+      overrides: [
+        menuItemsProvider.overrideWith((ref) async => const [
+              MenuItem(
+                id: 'm1',
+                name: '바닐라 라떼',
+                description: '',
+                category: MenuCategory.espresso,
+                price: 5800,
+              ),
+              MenuItem(
+                id: 'm2',
+                name: '플레인 베이글',
+                description: '',
+                category: MenuCategory.dessert,
+                price: 3800,
+                soldOut: true,
+              ),
+              MenuItem(
+                id: 'm3',
+                name: '아메리카노',
+                description: '',
+                category: MenuCategory.espresso,
+                price: 4500,
+              ),
+            ]),
+      ],
+    );
+
+    await expectGolden(find.byType(CatalogAdminScreen), 'catalog_admin_screen');
   });
 
   testWidgets('업데이트 안내 화면 스크린샷', (WidgetTester tester) async {
