@@ -1,228 +1,321 @@
 # Ethan's Cafe 앱 요구사항 정의서
 
+> 이 문서는 **실제 코드를 기준으로** 재정리되었다 (2026-08-17).
+> 각 항목의 상태는 `✅ 구현됨` / `⬜ 미구현(백로그)`로 표기한다.
+
 ## 1. 개요
 
 | 항목 | 내용 |
 |------|------|
-| 앱 이름 | Ethan's Cafe |
-| 플랫폼 | iOS, Android (Flutter) |
-| 목적 | 카페 고객용 멤버십/포인트 적립 및 메뉴 안내 앱 |
-| 번들 ID | Android: com.ethanscafe.cafe_app / iOS: com.ethanscafe.cafeApp |
+| 앱 이름 | Ethan's Cafe (표시명: 폭스트롯) |
+| 플랫폼 | iOS, Android, Web (Flutter) |
+| 목적 | 카페 고객용 주문·멤버십·포인트 앱 **+ 사업자(B2B) 도매 견적 창구** |
+| 번들 ID | Android: `com.ethanscafe.cafe_app` / iOS: `com.ethanscafe.cafeApp` |
+| Firebase 프로젝트 | `foxtrot-3bdba` (리전 `asia-northeast3`) |
 
-## 2. 기술 스택
+## 2. 사용자 유형
+
+앱은 계정 유형에 따라 **홈 화면이 분기**된다 (`RoleHomeScreen`).
+
+| 유형 | 판별 | 진입 화면 | 권한 |
+|------|------|-----------|------|
+| 게스트 | 미로그인 | `HomeScreen` | 공개 경로만 열람. 주문·포인트 불가 (로컬 폴백 저장소로 둘러보기) |
+| 고객 (`AccountType.personal`) | 로그인 | `HomeScreen` | 주문·결제·포인트·쿠폰 전 기능 |
+| 사업자 (`AccountType.business`) | 로그인 + 사업자 등록 | `BusinessHomeScreen` | 도매 견적 요청/내역 |
+| 관리자 | Firebase Auth 커스텀 클레임 `admin: true` | 앱 내 전용 화면 | 포인트 적립 스캔, 마스터 데이터 쓰기 |
+
+## 3. 기술 스택
 
 | 구분 | 기술 |
 |------|------|
 | 프레임워크 | Flutter (Dart SDK ^3.12.2) |
-| 상태 관리 | Riverpod (flutter_riverpod, riverpod_annotation) |
-| 라우팅 | go_router (StatefulShellRoute 탭 셸 + 로그인 리다이렉트) |
-| 백엔드 | Firebase (Auth, Firestore, Messaging, Analytics, Crashlytics) |
+| 상태 관리 | Riverpod (`flutter_riverpod`, `riverpod_annotation`) |
+| 라우팅 | go_router (`StatefulShellRoute` 탭 셸 + 로그인 리다이렉트) |
+| 백엔드 | Firebase — Auth, Firestore, Functions, Messaging, Analytics, Crashlytics, Remote Config, Performance |
+| 결제 | 토스페이먼츠 (결제창 WebView + 서버 승인) |
 | 모델/직렬화 | freezed, json_serializable |
 | 로컬 저장소 | shared_preferences (게스트/오프라인 폴백) |
-| 아키텍처 | Feature-first 구조 (`lib/features/{기능}/{data,domain,presentation}` + `lib/core/{constants,firebase,services,theme,utils,widgets}`) |
+| 아키텍처 | Feature-first (`lib/features/{기능}/{data,domain,presentation}` + `lib/core/{constants,firebase,services,theme,utils,widgets}`) |
 
-> 데이터 레이어 공통 패턴: 기능별 repository 인터페이스(domain)에 대해 Firestore 구현과 로컬 구현을 두고, Firebase 초기화·로그인 여부에 따라 provider에서 선택한다.
+> **데이터 레이어 공통 패턴**: 기능별 repository 인터페이스(domain)에 대해 Firestore 구현과 로컬 구현을 두고, Firebase 초기화 여부·로그인 여부에 따라 provider가 선택한다.
+>
+> **쓰기 경로 원칙**: 금액이 걸린 쓰기(주문 생성/취소, 포인트 적립/사용/충전, 쿠폰 사용, 판매량 집계)는 **전부 Cloud Functions 콜러블을 경유**한다. 클라이언트 직접 쓰기는 보안 규칙에서 차단한다.
 
-## 3. 기능 요구사항
+## 4. 기능 요구사항
 
-### 3.1 인증 (auth)
-- [x] 로그인 화면 UI (`/login`)
-- [x] 카카오 로그인 (kakao_flutter_sdk_user, Firebase OIDC `oidc.kakao` 연동)
-- [x] 네이버 로그인 (naver_login_sdk + Functions `signInWithNaver` 커스텀 토큰)
-- [x] 구글 로그인 (google_sign_in)
-- [x] Apple 로그인 (iOS 네이티브 sign_in_with_apple, 기타 플랫폼은 Firebase provider 플로우)
-- [x] 비로그인(게스트) 모드로 둘러보기 (공개 경로 외 접근 시 `/login` 리다이렉트)
-- [x] Firebase Auth 연동 및 로그인 상태 유지 (`authStateChanges` 기반)
-- [x] 로그아웃
+### 4.1 인증 (auth)
+- ✅ 로그인 화면 (`/login`)
+- ✅ 카카오 로그인 (`kakao_flutter_sdk_user` + Functions `signInWithKakao` 커스텀 토큰, 웹은 OIDC `oidc.kakao`)
+- ✅ 네이버 로그인 (`naver_login_sdk` + Functions `signInWithNaver`, 웹은 OAuth 팝업 + 콜백 페이지)
+- ✅ 구글 로그인 (`google_sign_in`)
+- ✅ Apple 로그인 (iOS 네이티브 / 기타 플랫폼은 Firebase provider 플로우)
+- ✅ 게스트 모드 둘러보기 (공개 경로 외 접근 시 `/login` 리다이렉트)
+- ✅ 로그인 상태 유지 (`authStateChanges`)
+- ✅ 로그아웃 / 회원 탈퇴 (탈퇴 시 Functions `cleanUpDeletedUserData`가 사용자 데이터 정리)
+- ✅ 사업자 계정 등록 (`/profile/business`, Functions `registerBusinessProfile`)
 
-### 3.2 홈 (home)
-- [x] 메인 화면 (`/`) — 스타벅스 스타일 홈
-  - 인사말 헤더 (로그인 시 닉네임 표시, 게스트는 로그인 버튼)
-  - 리워드 카드 (포인트 잔액, 탭 시 포인트 이동)
-  - 이벤트 배너 캐러셀 (Firestore `banners` + 로컬 폴백)
-  - 추천 메뉴 가로 스크롤 (전체보기 → 메뉴)
-- [x] 하단 탭 내비게이션 (홈/주문/페이/마이, StatefulShellRoute)
-- [x] 이벤트 배너 (carousel_slider 활용)
-- [x] 매장 찾기 화면 (`/stores`, geolocator 현재 위치 기반)
-- [x] 알림(공지) 목록 화면 (`/notices`)
-- [x] 원두 쇼핑 — 메뉴 원두 탭 + 원두 상세 + 장바구니 (3.3, 3.7 참고)
+### 4.2 홈 (home)
+- ✅ 계정 유형별 홈 분기 (`RoleHomeScreen` → 고객 `HomeScreen` / 사업자 `BusinessHomeScreen`)
+- ✅ 고객 홈: 인사말 헤더, 리워드 카드(포인트 잔액), 이벤트 배너 캐러셀(`banners`), 추천 메뉴 가로 스크롤
+- ✅ 하단 탭 내비게이션 (홈 / 주문 / 페이 / 마이 — `StatefulShellRoute`)
 
-### 3.3 메뉴 (menu)
-- [x] 메뉴 화면 (`/menu`) — 카테고리 탭 4개 (커피/논커피/디저트/원두)
-- [x] 메뉴 리스트 (이름, 설명, 가격, NEW 뱃지, 이미지)
-- [x] 메뉴 상세 페이지 (`/menu/item/:menuId`)
-- [x] Firestore 연동 (`menus` 컬렉션 + 로컬 폴백)
-- [x] 메뉴 이미지 표시 (카테고리별 로컬 asset 이미지, `assets/images/menu/`)
-- [x] 즐겨찾기 메뉴 등록 (로그인 시 Firestore `favorites`, 게스트는 로컬 저장 / 목록: `/profile/favorites`)
+### 4.3 메뉴 (menu)
+- ✅ 메뉴 화면 (`/menu`) — 카테고리 **5종**: 드립 커피 / 에스프레소 / 음료 / 티 / 디저트
+- ✅ 메뉴 리스트 (이름·설명·가격·NEW 뱃지·이미지)
+- ✅ 메뉴 상세 (`/menu/item/:menuId`)
+- ✅ Firestore `menus` 연동 (Firebase 미초기화 시 로컬 폴백)
+- ✅ 메뉴 이미지 (로컬 asset, `assets/images/menu/`)
+- ✅ 즐겨찾기 (`favorites`, 목록 `/profile/favorites`)
 
-### 3.4 포인트 (points)
-- [x] 포인트 화면 (`/points`)
-- [x] 결제 1회당 결제 금액의 10% 포인트 적립 (원 단위 내림)
-- [x] 적립 포인트를 현금처럼 사용 (잔액 한도 내 차감, 잔액 초과 사용 방지)
-- [x] 포인트 잔액 표시
-- [x] 멤버십 QR 코드 표시 (qr_flutter, 로컬 생성 멤버십 ID)
-- [x] 포인트 히스토리 (적립/사용 내역, 결제 금액 기록)
-- [x] 매장측 QR 스캔을 통한 적립 (`/points/scan`, mobile_scanner + Firestore `qrTokens` 1회용 토큰 검증)
-- [x] Firestore 연동 (로그인 시 `points` 컬렉션, 게스트는 shared_preferences + 기존 스탬프 멤버십 ID 마이그레이션)
+### 4.4 픽업 주문 (pickup)
+- ✅ 픽업 장바구니 (`/menu/cart`) — 매장 선택, 수량 편집, 쿠폰·포인트 적용
+- ✅ 주문 생성 — Functions `placeOrder` (`orderType: 'pickup'`)
+- ✅ 픽업 번호 자동 채번 (당일 주문 수 기준)
+- ✅ 주문 상태: 주문 접수 → 제조 중 → 픽업 대기 → 픽업 완료 / 주문 취소
+- ✅ 주문 취소 — Functions `cancelOrder` (`received` 상태에서만 가능, 포인트 환급·적립 회수·쿠폰 복원 포함)
+- ✅ 주문 상태 추적 (`/profile/orders/track/:orderId`)
 
-> 변경 이력: 기존 스탬프 적립(10개당 무료 음료 쿠폰) 기능은 폐지되고 포인트 적립/사용 기능으로 대체됨. 멤버십 등급제(그린/골드/플래티넘 적립률 차등)는 폐지되고 고정 10% 적립률로 환원됨 (2026-08-16).
+### 4.5 원두 쇼핑 · 주문 (beans / order)
+- ✅ 원두 목록 (메뉴 원두 탭, `beans`) / 원두 상세 (`/menu/beans/:beanId`)
+- ✅ 원두 장바구니 (`/menu/beans-cart`) — 용량(200g/500g)·분쇄도 옵션, 수량 편집
+- ✅ 수령 방법 선택: 배송 / 매장 픽업
+- ✅ 주문 생성 — Functions `placeOrder` (`orderType: 'bean'`)
+- ✅ 주문 상태: 주문 접수 → 로스팅 중 → 발송 완료 → 배송 완료 (픽업 시 픽업 대기 → 픽업 완료) / 주문 취소
+- ✅ 주문 내역 (`/profile/orders`) — 원두·픽업 통합 표시
+- ✅ 재주문 (주문 내역에서 동일 구성 장바구니 담기, 판매 종료 상품 제외 안내)
 
-### 3.5 내 정보 (profile)
-- [x] 프로필 화면 (`/profile`)
-- [x] 프로필 헤더 (아바타, 닉네임, 로그인 유도)
-- [x] 나의 활동: 주문 내역(`/profile/orders`, 원두 주문 + 매장 결제 기록 통합), 쿠폰함(`/profile/coupons`, 뱃지 카운트), 즐겨찾기 메뉴(`/profile/favorites`)
-- [x] 쿠폰 매장 사용 처리 플로우 (사용 가능 쿠폰 탭 → 바텀시트에서 직원 확인 후 사용 처리, Firestore `coupons.isUsed` 1회 사용 규칙)
-- [x] 설정: 알림 설정(`/profile/notifications`), 결제 수단 관리(`/profile/payment-methods`), 배송지 관리(`/profile/addresses`)
-- [x] 기타: 고객센터(`/profile/support`), 이용약관(`/profile/terms`), 개인정보처리방침(`/profile/privacy`), 사업자 정보
-- [x] 계정: 로그아웃
-- [x] 앱 버전 동적 표시 (package_info_plus)
+### 4.6 결제 (payment)
+- ✅ 토스페이먼츠 결제창 (WebView) → Functions 서버 승인
+- ✅ 주문 결제: `placeOrder`가 토스 API로 결제 건을 조회·검증한 뒤 주문 확정
+- ✅ 멱등 처리: `payment_usages/{paymentKey}` 문서로 동일 결제 중복 사용 차단
+- ✅ 실패 시 자동 취소: 주문 저장 실패 시 승인된 결제를 자동 환불
+- ✅ 결제 수단 관리 (`/profile/payment-methods`)
+- ✅ 서버 가격 검증: 주문 항목 단가를 `menus`/`beans` 카탈로그와 대조 (클라이언트 가격 신뢰 금지)
 
-> 변경 이력: 프로필 사진 변경(image_picker) 요구사항은 폐지됨 (2026-08-07).
+### 4.7 포인트 (points)
+- ✅ 포인트 화면 (`/points`) — 잔액, 히스토리, 멤버십 QR
+- ✅ 적립: 결제 금액의 **고정 10%** (원 단위 내림). 포인트 사용분 제외한 실결제액 기준
+- ✅ 사용: 잔액 한도 내 차감 — Functions `usePoints`
+- ✅ 멤버십 QR 표시 (`MEMBER-########`, 1분마다 갱신)
+- ✅ 매장 적립: 관리자가 회원 QR을 스캔 (`/points/earn-scan`) → Functions `earnPointsByMembership` (**admin 클레임 필수**)
+- ✅ 포인트 히스토리 (적립/사용/충전 구분, 결제 금액·보너스 기록)
+- ✅ 선불권 충전 (`/points/charge`) — Functions `chargePoints`
 
-### 3.6 알림 (notification)
-- [x] 푸시 알림 수신 (firebase_messaging, 백그라운드 핸들러 포함)
-- [x] 로컬 알림 표시 (flutter_local_notifications, 포그라운드 수신 시)
-- [x] 알림 권한 요청
-- [x] FCM 토큰 Firestore 저장 (`fcmTokens`, 로그인 사용자 본인만 관리)
-- [x] Android/iOS 네이티브 푸시 설정
-- [x] 원두 주문 상태 변경 푸시 발송 (Cloud Functions `orders/{uid}` 트리거, 로스팅/발송/배송 완료 시 FCM 멀티캐스트 + `/profile/orders` 딥링크, 알림 설정 `pushEnabled` 존중, 무효 토큰 정리)
+  | 선불권 금액 | 충전 포인트 | 보너스 |
+  |---|---|---|
+  | 10,000원 | 10,000P | — |
+  | 30,000원 | 31,000P | +1,000P |
+  | 50,000원 | 52,500P | +2,500P |
+  | 100,000원 | 107,000P | +7,000P |
 
-### 3.7 원두 쇼핑 (beans)
-- [x] 원두 목록 (메뉴 원두 탭, Firestore `beans` + 로컬 폴백)
-- [x] 원두 상세 화면 (`/menu/beans/:beanId`, 주문 수량/옵션 바텀시트)
-- [x] 원두 장바구니 (`/menu/beans-cart`, 수량 편집·합계·포인트 사용 토글)
-- [x] 원두 주문/결제 백엔드 연동 (주문하기 시 Firestore `orders` 주문 생성 + 포인트 사용/결제 금액 10% 적립 연동, 게스트는 로컬 저장)
-- [x] 장바구니 쿠폰 할인 적용 (결제 바에서 쿠폰 선택 바텀시트 → 정액/정률 할인·최소 주문 금액 조건, 할인 후 금액 기준 포인트 사용/적립, 주문 시 쿠폰 1회 사용 처리 및 주문 기록 저장)
-- [x] 주문 내역 표시 (`/profile/orders`, 주문 상태·쿠폰 할인·포인트 사용/적립·결제 수단 표시)
-- [x] 실결제(PG) 연동 (토스페이먼츠 결제창 WebView + Cloud Functions `confirmTossPayment` 서버 승인, 결제 금액 검증 후 주문 생성·`paymentKey` 기록, 게스트/로컬 모드는 모의 승인 폴백)
+  - 보너스 매핑은 클라이언트 상수와 서버에 동일 정의하되 **서버 값을 기준으로 지급**
+  - 멱등성: `paymentKey`를 충전 기록(`points/{uid}/charges`)에 저장해 중복 충전 차단
+  - 환불: 앱 내 미지원 (고객센터 응대). 게스트 충전 불가
 
-## 4. 비기능 요구사항
+### 4.8 쿠폰 (coupon)
+- ✅ 쿠폰함 (`/profile/coupons`) — 사용 가능/사용 완료 탭, 뱃지 카운트
+- ✅ 매장 사용 처리 플로우 (바텀시트에서 직원 확인 후 사용 처리)
+- ✅ 주문 시 쿠폰 적용 — 정액/정률 할인, 최소 주문 금액 조건, 중복 사용 불가 쿠폰은 1장 제한
+- ✅ 웰컴/생일 쿠폰 자동 발급 (`welcome-{uid}`, `birthday-{연도}-{uid}` — 규칙상 자기 소유 ID만, 할인 상한 3,000원 / 20%)
+- ✅ 주문 취소 시 쿠폰 복원 — **서버만 수행**. 클라이언트는 `isUsed`를 `true`로만 변경 가능
 
-### 4.1 백엔드/데이터
-- Firestore 컬렉션: `users`, `points`, `favorites`, `notificationSettings`, `fcmTokens`, `paymentMethods`, `deliveryAddresses`, `orders`, `qrTokens`, `menus`, `beans`, `banners`, `notices`, `stores`, `coupons`
-- 보안 규칙 (`firestore.rules`):
-  - 사용자별 데이터(`users`, `points`, `favorites`, `notificationSettings`, `fcmTokens`, `paymentMethods`, `deliveryAddresses`, `orders`): 본인만 읽기/쓰기
-  - 공개 콘텐츠(`menus`, `beans`, `banners`, `notices`, `stores`, `coupons`): 공개 읽기, 쓰기는 admin 커스텀 클레임
-  - `qrTokens`: 생성/삭제는 admin, 사용자는 미사용 토큰을 1회 사용 처리만 가능
-  - `coupons`: 생성/삭제는 admin, 로그인 사용자는 미사용 쿠폰을 `isUsed`만 1회 사용 처리 가능
-- Cloud Functions (`functions/`, Node 20, v2): `sendBeanOrderStatusPush` — `orders/{uid}` 문서 변경 시 주문 상태 변화를 감지해 FCM 푸시 발송 / `confirmTossPayment` — 토스페이먼츠 결제 승인 콜러블 (로그인 필수, `TOSS_SECRET_KEY` 시크릿, 승인 금액 검증) / `signInWithNaver` — 네이버 액세스 토큰 검증 후 Firebase 커스텀 토큰 발급
-- 리전: asia-northeast3 (서울)
+### 4.9 구독 (subscription)
+- ✅ 원두 정기구독 (`/profile/subscriptions`) — 주기 **매주 / 격주 / 매월**
+- ✅ 구독 상태 관리 (구독 중 / 일시정지 / 해지됨)
 
-### 4.2 권한
-| 권한 | 용도 |
+### 4.10 선물 (gift)
+- ✅ 원두 선물하기 (`/menu/gift`)
+- ✅ 선물 내역 (`/profile/gifts`)
+
+### 4.11 리뷰 (review)
+- ✅ 메뉴/원두 리뷰 작성 및 별점
+- ✅ 상세 화면 리뷰 노출
+- ✅ 판매량 집계 (`product_stats.salesCount`) — **주문 트랜잭션에서 서버가 집계**
+
+### 4.12 매장 (store)
+- ✅ 매장 찾기 (`/stores`) — geolocator 현재 위치 기반 정렬
+
+### 4.13 공지 · 알림 (notice / notification)
+- ✅ 공지 목록 (`/notices`)
+- ✅ 푸시 알림 수신 (`firebase_messaging`, 백그라운드 핸들러 포함)
+- ✅ 포그라운드 로컬 알림 (`flutter_local_notifications`)
+- ✅ FCM 토큰 Firestore 저장 (`fcmTokens`)
+- ✅ 알림 설정 (`/profile/notifications`, `pushEnabled` 존중)
+- ✅ 주문 상태 변경 푸시 — Functions `sendBeanOrderStatusPush` (`orders/{uid}` 트리거, FCM 멀티캐스트 + `/profile/orders` 딥링크, 무효 토큰 정리)
+
+### 4.14 내 정보 (profile)
+- ✅ 프로필 화면 (`/profile`) — 아바타·닉네임·로그인 유도
+- ✅ 나의 활동: 주문 내역, 쿠폰함, 즐겨찾기, 구독, 선물 내역
+- ✅ 설정: 알림 설정, 결제 수단, 배송지 관리 (`/profile/addresses`)
+- ✅ 기타: 고객센터, 이용약관, 개인정보처리방침, 사업자 정보
+- ✅ 계정: 로그아웃, 회원 탈퇴
+- ✅ 앱 버전 동적 표시 (`package_info_plus`)
+
+### 4.15 사업자 · 도매 (wholesale)
+- ✅ 사업자 홈 (`BusinessHomeScreen`) — 사업자 계정 로그인 시 기본 진입
+- ✅ 사업자 계정 등록 (`/profile/business`) — 상호·사업자번호·담당자·연락처, Functions `registerBusinessProfile`
+- ✅ 도매 견적 요청 (`/wholesale/quote`)
+- ✅ 견적 내역 (`/wholesale/quotes`)
+
+### 4.16 앱 운영 (core)
+- ✅ 오프라인 감지 배너 (`connectivity_plus` — 연결 끊기면 상단 안내)
+- ✅ 원격 최소 지원 버전 차단 (`firebase_remote_config` — 구버전이면 업데이트 화면으로 차단)
+- ✅ 원격 공지 플래그 (`notice_enabled` / `notice_message`)
+- ✅ 스토어 리뷰 요청 (`in_app_review` — 주문 3회 달성 시 1회)
+- ✅ 성능 모니터링 (`firebase_performance` — 릴리스 빌드에서만 수집)
+- ✅ 크래시 리포팅 (Crashlytics 전역 에러 핸들러), 이벤트 분석 (Analytics)
+
+## 5. 비기능 요구사항
+
+### 5.1 Firestore 컬렉션
+
+| 컬렉션 | 용도 | 클라이언트 접근 |
+|--------|------|-----------------|
+| `users` | 계정 프로필 | 본인 읽기/쓰기 |
+| `points` | 포인트 잔액·히스토리 | 본인 읽기 / **생성만 가능**(잔액 0·히스토리 비어있을 때) / 수정·삭제는 서버 |
+| `points/{uid}/charges` | 충전 기록 | 본인 읽기, 쓰기 전면 차단 |
+| `favorites` · `notificationSettings` · `fcmTokens` · `paymentMethods` · `deliveryAddresses` | 사용자별 설정 | 본인 읽기/쓰기 |
+| `orders` · `pickup_orders` | 주문 (사용자당 1문서에 배열) | 본인 읽기 / 쓰기는 admin·서버만 |
+| `subscriptions` · `gifts` · `wholesale_quotes` | 구독·선물·견적 | 본인 읽기/쓰기 |
+| `reviews` | 리뷰 | 로그인 사용자 읽기 / 본인만 쓰기 |
+| `product_stats` | 판매량 집계 | 공개 읽기 / 쓰기는 admin·서버만 |
+| `coupons` | 쿠폰 | 소유자 읽기 / 자동 쿠폰 생성·`isUsed: true` 처리만 |
+| `menus` · `beans` · `banners` · `notices` · `stores` | 마스터 데이터 | 공개 읽기 / 쓰기는 admin |
+| `payment_usages` | 결제 멱등 키 | **규칙 미정의 → 전면 차단**. 서버(Admin SDK) 전용 |
+
+> 규칙 최하단에 `match /{document=**} { allow read, write: if false; }` 캐치올이 있어, 명시되지 않은 경로는 기본 차단된다.
+
+### 5.2 Cloud Functions (`functions/`, Node 20, v2, `asia-northeast3`)
+
+| 함수 | 종류 | 역할 |
+|------|------|------|
+| `placeOrder` | callable | 주문 생성 — 가격 카탈로그 대조, 쿠폰 검증, 포인트 차감·적립, 결제 검증·멱등, 판매량 집계 |
+| `cancelOrder` | callable | 주문 취소 — 포인트 환급·적립 회수, 쿠폰 복원 |
+| `usePoints` | callable | 포인트 사용 (잔액 검증) |
+| `chargePoints` | callable | 선불권 충전 (금액·보너스 검증, 멱등) |
+| `earnPointsByMembership` | callable | 매장 적립 — **admin 클레임 필수** |
+| `confirmTossPayment` | callable | 토스 결제 승인 (금액 검증) |
+| `registerBusinessProfile` | callable | 사업자 계정 등록 |
+| `signInWithKakao` / `signInWithNaver` | callable | 소셜 토큰 검증 → Firebase 커스텀 토큰 발급 |
+| `backfillCouponUids` | callable | 쿠폰 `uid` 백필 (운영 도구, admin) |
+| `sendBeanOrderStatusPush` | Firestore 트리거 | 주문 상태 변경 시 FCM 푸시 |
+| `cleanUpDeletedUserData` | Auth 트리거 (v1 `onDelete`) | 탈퇴 사용자 데이터 정리 |
+
+### 5.3 권한
+
+| 권한 | 용도 | 선언 위치 |
+|------|------|-----------|
+| 알림 | 푸시 알림 | Android `POST_NOTIFICATIONS`, iOS APNs |
+| 카메라 | 관리자 회원 QR 스캔 | iOS `NSCameraUsageDescription` (Android는 `mobile_scanner` 매니페스트 병합) |
+| 위치 | 매장 찾기 | iOS `NSLocationWhenInUseUsageDescription` (Android는 `geolocator` 병합) |
+
+### 5.4 환경 설정
+
+- Firebase 설정: `lib/firebase_options.dart` (초기화 실패 시 로컬 폴백 동작)
+- 소셜 로그인 키 (`--dart-define`): `KAKAO_NATIVE_APP_KEY`, `KAKAO_JS_APP_KEY`, `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET`, `NAVER_URL_SCHEME`
+  - ⚠️ `NAVER_CLIENT_SECRET`은 **웹 빌드에 주입 금지** (번들에 포함될 수 있음. 네이버 SDK 초기화는 `!kIsWeb` 가드)
+  - iOS 스킴은 `ios/Flutter/SocialLogin.xcconfig`에서 관리
+- 토스페이먼츠: `TOSS_CLIENT_KEY` (dart-define), `TOSS_SECRET_KEY` (Functions 시크릿)
+- Remote Config 키 (Firebase 콘솔에서 설정 필요): `min_supported_version`, `store_url`, `notice_enabled`, `notice_message` — 미설정 시 기본값이 비어 있어 아무것도 차단하지 않음
+- Android: minSdk 23, compileSdk 37, AGP 9.0.1
+- 자산: `assets/images/menu/`, Pretendard 폰트
+
+## 6. 화면 및 라우팅
+
+`/login`을 제외한 모든 화면은 하단 탭 셸(`AppShell`) 내부에 표시된다.
+공개 경로: `/`, `/login`, `/menu`(하위 포함), `/notices`, `/stores` — 그 외는 로그인 필요.
+
+| 경로 | 화면 | 탭 |
+|------|------|-----|
+| `/` | 홈 (계정 유형별 분기) | 홈 |
+| `/notices` | 공지 목록 | 홈 |
+| `/stores` | 매장 찾기 | 홈 |
+| `/wholesale/quote` | 도매 견적 요청 | 홈 |
+| `/wholesale/quotes` | 도매 견적 내역 | 홈 |
+| `/login` | 로그인 | — |
+| `/menu` | 메뉴 | 주문 |
+| `/menu/item/:menuId` | 메뉴 상세 | 주문 |
+| `/menu/cart` | 픽업 장바구니 | 주문 |
+| `/menu/beans/:beanId` | 원두 상세 | 주문 |
+| `/menu/beans-cart` | 원두 장바구니 | 주문 |
+| `/menu/gift` | 원두 선물하기 | 주문 |
+| `/points` | 포인트 | 페이 |
+| `/points/charge` | 선불권 충전 | 페이 |
+| `/points/earn-scan` | 관리자 회원 QR 스캔 적립 | 페이 |
+| `/profile` | 내 정보 | 마이 |
+| `/profile/orders` | 주문 내역 | 마이 |
+| `/profile/orders/track/:orderId` | 주문 상태 추적 | 마이 |
+| `/profile/coupons` | 쿠폰함 | 마이 |
+| `/profile/favorites` | 즐겨찾기 메뉴 | 마이 |
+| `/profile/subscriptions` | 정기구독 관리 | 마이 |
+| `/profile/gifts` | 선물 내역 | 마이 |
+| `/profile/notifications` | 알림 설정 | 마이 |
+| `/profile/payment-methods` | 결제 수단 관리 | 마이 |
+| `/profile/addresses` | 배송지 관리 | 마이 |
+| `/profile/business` | 사업자 계정 등록 | 마이 |
+| `/profile/support` | 고객센터 | 마이 |
+| `/profile/terms` | 이용약관 | 마이 |
+| `/profile/privacy` | 개인정보처리방침 | 마이 |
+
+## 7. 백로그 (미구현)
+
+### 7.1 기능
+
+| 추천도 | 기능 | 설명 |
+|--------|------|------|
+| ★ | 다크 모드 | 시스템 설정 연동 (현재는 다크 테마 고정) |
+| ★ | 다국어 지원 | 영어 로케일 (`flutter_localizations`) |
+| ★ | 친구 초대 리퍼럴 | 초대 코드 입력 시 양측 포인트/쿠폰 지급 |
+| ★ | 매장 상세 강화 | 영업시간·편의시설·혼잡도, 매장별 공지 |
+
+### 7.2 기술 · 운영
+
+1. ⬜ **미사용 의존성 정리** — 코드에서 전혀 참조되지 않음: `image_picker`, `flutter_dotenv`, `shimmer`, `cached_network_image`, `logger`, `permission_handler`, `google_fonts`
+   - 함께 정리: iOS `NSPhotoLibraryUsageDescription` (사진 라이브러리 미사용)
+2. ⬜ 주문 상태 전환(로스팅/발송/배송 완료, 제조/픽업) 관리자 도구
+3. ⬜ 메뉴·배너·매장 마스터 데이터 관리 도구
+4. ⬜ Cloud Functions / 보안 규칙 배포 파이프라인
+5. ⬜ 토스페이먼츠 운영 키 발급 및 등록 (미설정 시 테스트 키·모의 결제로 동작)
+6. ⬜ Remote Config 키 4종 콘솔 등록 (`min_supported_version`, `store_url`, `notice_enabled`, `notice_message`)
+7. ⬜ 생체 인증(`local_auth`) 적용 여부 결정 — 적용 시 결제/포인트 사용 중 어디에 걸지 정해야 함
+8. ⬜ 매장 지도 SDK 도입 검토 (네이버/카카오 지도 — API 키 및 네이티브 설정 필요)
+
+## 8. 이번 정리에서 반영한 문서-코드 차이
+
+### 8.1 코드에 있으나 문서에 없던 것 (추가함)
+
+- **사업자(B2B) 라인 전체** — 사업자 계정 유형, 역할별 홈 분기, 도매 견적 요청/내역, `registerBusinessProfile`. 기존 문서에 `도매`라는 단어가 한 번도 없었음
+- **픽업 주문(사이렌 오더)** 상세 — 픽업 번호 채번, 상태 5단계, 취소 규칙
+- **구독 / 선물 / 리뷰** — 백로그에 "구현 완료" 취소선으로만 남아 있던 것을 기능 항목으로 승격
+- **Cloud Functions 9개** — 문서에는 3개만 기재되어 있었음 (실제 12개)
+- **Firestore 컬렉션 7종** — `pickup_orders`, `subscriptions`, `gifts`, `wholesale_quotes`, `reviews`, `product_stats`, `payment_usages`, `points/{uid}/charges`
+- **앱 운영 기능** — 오프라인 배너, 원격 강제 업데이트, 스토어 리뷰 요청, 성능 모니터링
+- **회원 탈퇴 및 데이터 정리**, **재주문**, **주문 상태 추적 화면**
+- **서버 경유 쓰기 원칙** — 금액이 걸린 모든 쓰기가 콜러블을 지나도록 바뀐 구조
+
+### 8.2 문서에 있으나 코드에 없던 것 (삭제함)
+
+- **`qrTokens` 1회용 토큰 방식** — 컬렉션·보안 규칙 모두 존재하지 않음. 매장 적립은 **회원 멤버십 QR을 관리자가 스캔**하는 방식(`earnPointsByMembership`)으로 대체됨
+- **"카테고리 탭 4개 (커피/논커피/디저트/원두)"** — 실제는 5종(드립 커피/에스프레소/음료/티/디저트)
+- **"구독 주기 2주/4주"** — 실제는 매주/격주/매월
+- **§6.3 선불권 포인트 충전 상세 기획서** — 구현이 끝나 기획 문서로서의 역할을 다함. 정책·금액표만 §4.7로 옮기고 플로우/체크리스트는 삭제
+- **완료된 백로그 7건의 취소선 항목** — 기능 섹션으로 이동
+- **"프로필 사진 변경 폐지" 이력** — 관련 기능·의존성이 모두 정리 대상이 되어 §7.2로 통합
+
+### 8.3 판단이 필요한 항목 (미결)
+
+아래는 코드와 문서를 맞추는 것만으로 정리되지 않는, **제품 결정이 필요한** 사항이다.
+
+1. **`webview_flutter`의 위치** — 토스 결제창 전용으로 1개 파일에서만 쓰인다. 결제 SDK 전환 시 제거 대상
+2. **게스트 로컬 폴백의 유지 여부** — 로컬 저장소 기반 주문/포인트 경로가 남아 있으나, 서버 경유 원칙과 이원화되어 유지 비용이 있다. 게스트에게 어디까지 허용할지 결정 필요
+3. **`FirestoreBeanOrdersRepository` / `FirestorePickupOrdersRepository`의 쓰기 메서드** — 보안 규칙상 클라이언트 쓰기가 차단되어 실행될 수 없는 죽은 경로. 읽기 전용으로 정리할지 결정 필요
+4. **다크 모드** — 현재 다크 테마 고정. 라이트 테마를 지원할 계획이 있는지
+
+## 9. 변경 이력
+
+| 날짜 | 내용 |
 |------|------|
-| 카메라 | 포인트 적립 QR 스캔 |
-| 위치 | 매장 찾기 |
-| 알림 | 푸시 알림 |
-
-### 4.3 환경 설정
-- Firebase 설정: `lib/firebase_options.dart` 생성 완료 (초기화 실패 시 로컬 폴백으로 동작)
-- 카카오 앱 키: `--dart-define=KAKAO_NATIVE_APP_KEY=...`, `--dart-define=KAKAO_JS_APP_KEY=...` 로 주입 (미주입 시 카카오 SDK 초기화 생략, Android 매니페스트 스킴에도 자동 반영)
-- 네이버 로그인 키: `--dart-define=NAVER_CLIENT_ID=...`, `--dart-define=NAVER_CLIENT_SECRET=...`, `--dart-define=NAVER_URL_SCHEME=...` 로 주입 (미주입 시 네이버 SDK 초기화 생략, iOS 스킴은 `ios/Flutter/SocialLogin.xcconfig`에서 관리)
-- Android minSdk 23 이상 적용됨
-- 앱 자산: `assets/images/menu/` (메뉴 이미지), Pretendard 폰트 등록됨
-- 모니터링: Crashlytics(전역 에러 핸들러 연결), Analytics
-
-## 5. 화면 및 라우팅
-
-| 경로 | 화면 | 상태 |
-|------|------|------|
-| `/` | 홈 (탭: 홈) | 구현됨 |
-| `/notices` | 알림(공지) 목록 | 구현됨 |
-| `/stores` | 매장 찾기 | 구현됨 |
-| `/login` | 로그인 | 구현됨 (카카오/네이버/구글/Apple) |
-| `/menu` | 메뉴 (탭: 주문) | 구현됨 |
-| `/menu/item/:menuId` | 메뉴 상세 | 구현됨 |
-| `/menu/beans/:beanId` | 원두 상세 | 구현됨 |
-| `/menu/beans-cart` | 원두 장바구니 | 구현됨 |
-| `/points` | 포인트 (탭: 페이) | 구현됨 |
-| `/points/scan` | QR 스캔 적립 | 구현됨 |
-| `/profile` | 내 정보 (탭: 마이) | 구현됨 |
-| `/profile/orders` | 주문 내역 | 구현됨 |
-| `/profile/coupons` | 쿠폰함 | 구현됨 |
-| `/profile/favorites` | 즐겨찾기 메뉴 | 구현됨 |
-| `/profile/notifications` | 알림 설정 | 구현됨 |
-| `/profile/payment-methods` | 결제 수단 관리 | 구현됨 |
-| `/profile/addresses` | 배송지 관리 | 구현됨 |
-| `/profile/support` | 고객센터 | 구현됨 |
-| `/profile/terms` | 이용약관 | 구현됨 |
-| `/profile/privacy` | 개인정보처리방침 | 구현됨 |
-
-- `/login`을 제외한 화면은 하단 탭 셸(`AppShell`, 홈/주문/페이/마이) 내부에서 표시된다.
-- 공개 경로: `/`, `/login`, `/menu`(하위 포함), `/notices`, `/stores` — 그 외는 로그인 필요.
-
-## 6. 향후 작업 (제안 백로그)
-
-추천도: ★★★ 강력 추천(기존 기능과 직접 연결) / ★★ 권장 / ★ 여유 시
-
-### 6.1 기능 백로그
-
-| 추천도 | 기능 | 설명 | 연관 기능/인프라 |
-|--------|------|------|------------------|
-| ★★★ | ~~매장 픽업 주문 (사이렌 오더)~~ ✔ 구현 완료 | 메뉴에서 음료/디저트 주문 후 매장 픽업. 주문 상태(접수/제조중/완료) 표시 | `features/pickup` |
-| ★★★ | ~~웰컴/생일 쿠폰 자동 발급~~ ✔ 구현 완료 | 가입/생일 시 쿠폰 자동 지급 | `features/coupon` `auto_coupons.dart` |
-| ★★★ | ~~선불권 포인트 충전~~ ✔ 구현 완료 | 정액 선불권 결제 시 포인트 충전 + 보너스 지급 (상세 기획: 6.3) | `features/points` `charge_plans.dart`, Cloud Functions `chargePoints` |
-| ★★ | ~~재주문~~ ✔ 구현 완료 | 주문 내역에서 동일 구성으로 장바구니 담기 (원두·픽업 주문 모두, 판매 종료 상품 제외 안내) | `features/order` `reorder.dart` |
-| ★★ | ~~원두 정기구독~~ ✔ 구현 완료 | 주기(2주/4주) 선택 정기 배송, 구독 관리 화면 | `features/subscription` |
-| ★★ | ~~선물하기~~ ✔ 구현 완료 | 금액권/쿠폰을 카카오톡 등으로 선물 | `features/gift` |
-| ★★ | ~~메뉴 리뷰/별점~~ ✔ 구현 완료 | 구매자 리뷰 작성 및 메뉴 상세 노출 | `features/review` |
-| ★ | 다크 모드 | 시스템 설정 연동 다크 테마 | `core/theme` |
-| ★ | 다국어 지원 | 영어 로케일 추가 (flutter_localizations) | 전역 |
-| ★ | 친구 초대 리퍼럴 | 초대 코드 입력 시 양측 포인트/쿠폰 지급 | 포인트, 쿠폰 |
-| ★ | 매장 상세 강화 | 영업시간·편의시설·혼잡도 표시, 매장별 공지 | 매장 찾기(`stores`) |
-
-### 6.2 기술/운영 작업
-
-1. 원두 주문 상태 전환(로스팅/발송/배송 완료) 관리자 도구
-2. 미사용 의존성 정리 (image_picker, flutter_dotenv, webview_flutter 등 사용 여부 재검토)
-3. 관리자용 QR 토큰 발급 도구 / 메뉴·배너 관리 방안 마련
-4. Cloud Functions(`sendBeanOrderStatusPush`, `confirmTossPayment`) 배포 파이프라인 구성 (`firebase deploy --only functions`)
-5. 토스페이먼츠 운영 키 발급 및 설정 (`TOSS_CLIENT_KEY` dart-define, `TOSS_SECRET_KEY` Functions 시크릿 등록 — 미설정 시 테스트 키/모의 결제로 동작)
-
-### 6.3 선불권 포인트 충전 (구현 완료)
-
-선불권을 결제하면 결제 금액을 포인트로 충전해 주는 기능. 기존 포인트 적립/사용 체계는 그대로 유지하고 충전 경로를 추가한다.
-
-#### 충전 상품 및 보너스 정책
-
-| 선불권 금액 | 충전 포인트 | 보너스 |
-|------|------|------|
-| 10,000원 | 10,000P | — |
-| 30,000원 | 31,000P | +1,000P (약 3.3%) |
-| 50,000원 | 52,500P | +2,500P (5%) |
-| 100,000원 | 107,000P | +7,000P (7%) |
-
-- 보너스 포인트는 고액 충전 유도용. 금액→보너스 매핑은 클라이언트 상수 + 서버(Functions) 양쪽에 동일하게 정의하고 서버 값을 기준으로 지급한다.
-
-#### 사용자 플로우
-
-1. `/points` 화면에 “충전하기” 버튼 추가 → `/points/charge` 충전 화면 이동 (로그인 필수, 게스트는 로그인 유도)
-2. 충전 화면에서 상품(금액) 선택 → 보너스 포함 총 충전 포인트 미리보기
-3. 토스페이먼즈 결제창(기존 `TossPaymentScreen` 재사용)으로 결제
-4. 서버 승인 성공 시 포인트 충전 완료 화면/스낵바 표시 + 잔액 즉시 갱신
-5. 포인트 히스토리에 “충전” 항목으로 표시 (결제 금액·보너스 구분 표기)
-
-#### 서버/데이터 설계
-
-- Cloud Functions 콜러블 `chargePoints` 신설 (또는 `confirmTossPayment`에 충전 모드 추가): 로그인 필수, 토스 결제 금액·상품 검증 후 Admin SDK로 `points` 문서에 충전 기록·잔액 반영. **클라이언트 단독 충전은 금지.**
-- 멱등성: `paymentKey`(또는 주문 ID)를 충전 기록에 저장하고 동일 결제 재요청 시 중복 충전 방지
-- 모델: `PointHistoryType`에 `charge` 추가 (표시명 “충전”, 잔액 증가로 처리), 충전 기록에 결제 금액·보너스 포인트·`paymentKey` 필드 기록
-- 보안 규칙: 충전 타입 히스토리 생성은 Functions(Admin)만 가능하도록 제한, 클라이언트는 읽기/사용 차감만 허용
-
-#### 정책 결정 사항
-
-- 충전 포인트로 결제한 금액에는 기존 규칙대로 적립 발생하지 않음 (포인트 사용분 제외 후 실결제 금액에만 적립 — 현행 동작 유지)
-- 환불: v1은 앱 내 환불 미지원(고객센터 응대), 환불 시 보너스 포인트 차감 후 미사용 잔액 한도 내 환불이 원칙
-- 게스트/로컬 모드: 충전 불가 (결제 서버 승인이 전제이므로 로그인 필수)
-
-#### 구현 체크리스트
-
-- [x] `PointHistoryType.charge` 추가 및 히스토리 표시 대응
-- [x] 충전 상품 정의 (금액→보너스 매핑, 클라이언트/서버 공통)
-- [x] `/points/charge` 충전 화면 (상품 선택 + 결제 연동)
-- [x] `/points` 화면 충전하기 진입점
-- [x] Cloud Functions 충전 승인 로직 (금액 검증 + 멱등 처리 + 포인트 지급)
-- [x] Firestore 보안 규칙 보강 (충전 기록 클라이언트 쓰기 차단)
-- [x] 테스트 (보너스 계산, 멱등성, 히스토리 표시) 및 골든 프리뷰
-
-> 변경 이력: 원두 장바구니 주문/결제 백엔드 연동 및 주문 내역 화면의 주문 데이터 기반 전환 완료 (2026-08-07). 추천도 기반 기능 백로그 추가 (2026-08-07). 쿠폰 매장 사용 처리 플로우 및 원두 주문 상태 변경 푸시 알림(Cloud Functions) 구현 완료 (2026-08-07). 원두 장바구니/결제 쿠폰 할인 적용 구현 완료, 웰컴/생일 쿠폰 자동 발급은 Cloud Functions 필요로 백로그 유지 (2026-08-07). 실결제(PG) 연동 구현 완료 — 토스페이먼츠 결제창 WebView(`TossPaymentScreen`) + `confirmTossPayment` 서버 승인, 주문에 결제 정보 기록 (2026-08-08). 멤버십 등급제(그린/골드/플래티넘 적립률 차등) 및 재주문(주문 내역 → 장바구니 담기) 구현 완료, 고정 10% 적립률을 등급별 적립률로 대체 (2026-08-16). 선불권 포인트 충전 기획 확정 및 백로그 추가 — 정액 충전 + 보너스, 서버 승인 기반 지급 (2026-08-16). 선불권 포인트 충전 구현 완료 — `/points/charge` 충전 화면 + `chargePoints` 서버 승인(멱등 처리·보너스 지급), 충전 기록 보안 규칙 및 테스트/골든 프리뷰 포함 (2026-08-16). 멤버십 등급제 폐지 — 등급별 적립률 차등을 없애고 고정 10% 적립률로 환원 (2026-08-16).
+| 2026-08-07 | 원두 주문/결제 백엔드 연동, 주문 내역 데이터 기반 전환. 추천도 기반 백로그 도입. 쿠폰 매장 사용 처리 + 주문 상태 푸시 알림. 쿠폰 할인 적용. 프로필 사진 변경 요구사항 폐지 |
+| 2026-08-08 | 실결제(PG) 연동 — 토스페이먼츠 결제창 + `confirmTossPayment` 서버 승인 |
+| 2026-08-16 | 재주문 구현. 멤버십 등급제 도입 후 폐지(고정 10% 적립률로 환원). 스탬프 적립 폐지 → 포인트 체계로 대체. 선불권 포인트 충전 기획 및 구현 완료 |
+| 2026-08-17 | 주문·포인트·쿠폰 쓰기를 Cloud Functions 콜러블로 이관. 보안 규칙 강화 — 서버 가격 검증, 쿠폰 복원 서버 전용화, 판매량 서버 집계. 앱 운영 기능 추가(오프라인 배너·원격 강제 업데이트·리뷰 요청·성능 모니터링). **본 문서를 코드 기준으로 전면 재작성** |
