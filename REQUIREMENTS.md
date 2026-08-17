@@ -61,7 +61,7 @@
 
 ### 4.3 메뉴 (menu)
 - ✅ 메뉴 화면 (`/menu`) — 카테고리 **5종**: 드립 커피 / 에스프레소 / 음료 / 티 / 디저트
-- ✅ 메뉴 리스트 (이름·설명·가격·NEW 뱃지·이미지)
+- ✅ 메뉴 리스트 (이름·설명·가격·NEW/HIT/BEST·품절 뱃지·이미지)
 - ✅ 메뉴 상세 (`/menu/item/:menuId`)
 - ✅ Firestore `menus` 연동 (Firebase 미초기화 시 로컬 폴백)
 - ✅ 메뉴 이미지 (로컬 asset, `assets/images/menu/`)
@@ -72,8 +72,9 @@
 - ✅ 주문 생성 — Functions `placeOrder` (`orderType: 'pickup'`)
 - ✅ 픽업 번호 자동 채번 (당일 주문 수 기준)
 - ✅ 주문 상태: 주문 접수 → 제조 중 → 픽업 대기 → 픽업 완료 / 주문 취소
-- ✅ 주문 취소 — Functions `cancelOrder` (`received` 상태에서만 가능, 포인트 환급·적립 회수·쿠폰 복원 포함)
+- ✅ 주문 취소 — Functions `cancelOrder` (고객은 `received`에서만, 포인트 환급·적립 회수·쿠폰 복원·결제 환불 포함)
 - ✅ 주문 상태 추적 (`/profile/orders/track/:orderId`)
+- ✅ 상태 변경 시 푸시 알림 (제조 중 / 픽업 대기 / 취소)
 
 ### 4.5 원두 쇼핑 · 주문 (beans / order)
 - ✅ 원두 목록 (메뉴 원두 탭, `beans`) / 원두 상세 (`/menu/beans/:beanId`)
@@ -81,6 +82,7 @@
 - ✅ 수령 방법 선택: 배송 / 매장 픽업
 - ✅ 주문 생성 — Functions `placeOrder` (`orderType: 'bean'`)
 - ✅ 주문 상태: 주문 접수 → 로스팅 중 → 발송 완료 → 배송 완료 (픽업 시 픽업 대기 → 픽업 완료) / 주문 취소
+- ✅ 상태 변경 시 푸시 알림 (로스팅 / 발송 / 배송 완료 / 픽업 대기 / 취소)
 - ✅ 주문 내역 (`/profile/orders`) — 원두·픽업 통합 표시
 - ✅ 재주문 (주문 내역에서 동일 구성 장바구니 담기, 판매 종료 상품 제외 안내)
 
@@ -90,7 +92,8 @@
 - ✅ 멱등 처리: `payment_usages/{paymentKey}` 문서로 동일 결제 중복 사용 차단
 - ✅ 실패 시 자동 취소: 주문 저장 실패 시 승인된 결제를 자동 환불
 - ✅ 결제 수단 관리 (`/profile/payment-methods`)
-- ✅ 서버 가격 검증: 주문 항목 단가를 `menus`/`beans` 카탈로그와 대조 (클라이언트 가격 신뢰 금지)
+- ✅ 서버 카탈로그 검증: 주문 항목의 단가와 품절 여부를 `menus`/`beans`와 대조 (클라이언트 값 신뢰 금지)
+- ✅ 주문 취소 시 결제 환불: 취소를 먼저 확정해 중복 요청을 막고 결과를 주문의 `refundStatus`에 기록
 
 ### 4.7 포인트 (points)
 - ✅ 포인트 화면 (`/points`) — 잔액, 히스토리, 멤버십 QR
@@ -189,8 +192,9 @@
 
 | 함수 | 종류 | 역할 |
 |------|------|------|
-| `placeOrder` | callable | 주문 생성 — 가격 카탈로그 대조, 쿠폰 검증, 포인트 차감·적립, 결제 검증·멱등, 판매량 집계 |
-| `cancelOrder` | callable | 주문 취소 — 포인트 환급·적립 회수, 쿠폰 복원 |
+| `placeOrder` | callable | 주문 생성 — 카탈로그 단가·품절 대조, 쿠폰 검증, 포인트 차감·적립, 결제 검증·멱등, 판매량 집계 |
+| `cancelOrder` | callable | 주문 취소 — 포인트 환급·적립 회수, 쿠폰 복원, 결제 환불. admin은 다른 회원의 진행 중 주문도 취소 가능 |
+| `updateOrderStatus` | callable | 주문 상태 한 단계 진행 — **admin 클레임 필수**, 되돌리기·건너뛰기 차단 |
 | `usePoints` | callable | 포인트 사용 (잔액 검증) |
 | `chargePoints` | callable | 선불권 충전 (금액·보너스 검증, 멱등) |
 | `earnPointsByMembership` | callable | 매장 적립 — **admin 클레임 필수** |
@@ -198,7 +202,8 @@
 | `registerBusinessProfile` | callable | 사업자 계정 등록 |
 | `signInWithKakao` / `signInWithNaver` | callable | 소셜 토큰 검증 → Firebase 커스텀 토큰 발급 |
 | `backfillCouponUids` | callable | 쿠폰 `uid` 백필 (운영 도구, admin) |
-| `sendBeanOrderStatusPush` | Firestore 트리거 | 주문 상태 변경 시 FCM 푸시 |
+| `sendBeanOrderStatusPush` | Firestore 트리거 | 원두 주문 상태 변경 시 FCM 푸시 |
+| `sendPickupOrderStatusPush` | Firestore 트리거 | 픽업 주문 상태 변경 시 FCM 푸시 |
 | `cleanUpDeletedUserData` | Auth 트리거 (v1 `onDelete`) | 탈퇴 사용자 데이터 정리 |
 
 ### 5.3 권한
@@ -244,6 +249,8 @@
 | `/points` | 포인트 | 페이 |
 | `/points/charge` | 선불권 충전 | 페이 |
 | `/points/earn-scan` | 관리자 회원 QR 스캔 적립 | 페이 |
+| `/points/orders` | 관리자 주문 관리 | 페이 |
+| `/points/catalog` | 관리자 품절 관리 | 페이 |
 | `/profile` | 내 정보 | 마이 |
 | `/profile/orders` | 주문 내역 | 마이 |
 | `/profile/orders/track/:orderId` | 주문 상태 추적 | 마이 |
@@ -272,15 +279,13 @@
 
 ### 7.2 기술 · 운영
 
-1. ⬜ **미사용 의존성 정리** — 코드에서 전혀 참조되지 않음: `image_picker`, `flutter_dotenv`, `shimmer`, `cached_network_image`, `logger`, `permission_handler`, `google_fonts`
-   - 함께 정리: iOS `NSPhotoLibraryUsageDescription` (사진 라이브러리 미사용)
-2. ⬜ 주문 상태 전환(로스팅/발송/배송 완료, 제조/픽업) 관리자 도구
-3. ⬜ 메뉴·배너·매장 마스터 데이터 관리 도구
-4. ⬜ Cloud Functions / 보안 규칙 배포 파이프라인
-5. ⬜ 토스페이먼츠 운영 키 발급 및 등록 (미설정 시 테스트 키·모의 결제로 동작)
-6. ⬜ Remote Config 키 4종 콘솔 등록 (`min_supported_version`, `store_url`, `notice_enabled`, `notice_message`)
-7. ⬜ 생체 인증(`local_auth`) 적용 여부 결정 — 적용 시 결제/포인트 사용 중 어디에 걸지 정해야 함
-8. ⬜ 매장 지도 SDK 도입 검토 (네이버/카카오 지도 — API 키 및 네이티브 설정 필요)
+1. ⬜ 메뉴·원두·배너·매장 **등록/수정** 도구 — 품절 처리(`/points/catalog`)만 앱에서 되고, 신규 등록·가격 변경은 여전히 콘솔에서 문서를 직접 만들어야 한다
+2. ⬜ 환불 실패 건(`refundStatus: 'failed'`) 조회·재시도 도구 — 지금은 함수 로그로만 확인된다
+3. ⬜ Cloud Functions / 보안 규칙 배포 파이프라인
+4. ⬜ 토스페이먼츠 운영 키 발급 및 등록 (미설정 시 테스트 키·모의 결제로 동작)
+5. ⬜ Remote Config 키 4종 콘솔 등록 (`min_supported_version`, `store_url`, `notice_enabled`, `notice_message`)
+6. ⬜ 생체 인증(`local_auth`) 적용 여부 결정 — 적용 시 결제/포인트 사용 중 어디에 걸지 정해야 함
+7. ⬜ 매장 지도 SDK 도입 검토 (네이버/카카오 지도 — API 키 및 네이티브 설정 필요)
 
 ## 8. 이번 정리에서 반영한 문서-코드 차이
 
@@ -323,5 +328,6 @@
 | 2026-08-07 | 원두 주문/결제 백엔드 연동, 주문 내역 데이터 기반 전환. 추천도 기반 백로그 도입. 쿠폰 매장 사용 처리 + 주문 상태 푸시 알림. 쿠폰 할인 적용. 프로필 사진 변경 요구사항 폐지 |
 | 2026-08-08 | 실결제(PG) 연동 — 토스페이먼츠 결제창 + `confirmTossPayment` 서버 승인 |
 | 2026-08-16 | 재주문 구현. 멤버십 등급제 도입 후 폐지(고정 10% 적립률로 환원). 스탬프 적립 폐지 → 포인트 체계로 대체. 선불권 포인트 충전 기획 및 구현 완료 |
-| 2026-08-17 | 비회원 주문 폐지 — 장바구니·선물을 로그인 필요로 전환하고 게스트 안내 카드 제거. 게스트는 열람 전용 |
+| 2026-08-17 | 비회원 주문 폐지 — 장바구니·선물을 로그인 필요로 전환하고 게스트 안내 카드 제거. 게스트는 열람 전용. 미사용 의존성 7종 정리 |
+| 2026-08-18 | 매장 운영 도구 3종 — 주문 상태 관리(`updateOrderStatus`), 주문 취소 시 실제 결제 환불 및 매장 취소, 품절 관리. 픽업 주문 푸시 알림과 취소 알림 추가 |
 | 2026-08-17 | 주문·포인트·쿠폰 쓰기를 Cloud Functions 콜러블로 이관. 보안 규칙 강화 — 서버 가격 검증, 쿠폰 복원 서버 전용화, 판매량 서버 집계. 앱 운영 기능 추가(오프라인 배너·원격 강제 업데이트·리뷰 요청·성능 모니터링). **본 문서를 코드 기준으로 전면 재작성** |
