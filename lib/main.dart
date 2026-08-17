@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,6 +40,14 @@ Future<void> main() async {
       return true;
     };
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    // 디버그 빌드의 측정값이 실사용 지표를 흐리지 않게 릴리스에서만 수집한다.
+    try {
+      await FirebasePerformance.instance.setPerformanceCollectionEnabled(
+        !kDebugMode,
+      );
+    } catch (e) {
+      debugPrint('Performance monitoring setup skipped: $e');
+    }
   }
   if (_kakaoNativeAppKey.isNotEmpty || _kakaoJavaScriptAppKey.isNotEmpty) {
     KakaoSdk.init(
