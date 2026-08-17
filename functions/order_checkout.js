@@ -155,14 +155,6 @@ function validatePlaceOrderRequest(data) {
   return request;
 }
 
-function validateCancelOrderRequest(data) {
-  const orderType = data && data.orderType;
-  if (orderType !== 'bean' && orderType !== 'pickup') {
-    throw new Error('주문 유형이 올바르지 않습니다.');
-  }
-  return {orderType, orderId: requireString(data.orderId, '주문 번호')};
-}
-
 function orderTotalAmount(items) {
   return items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
 }
@@ -470,7 +462,6 @@ module.exports = {
   earnPointsForPayment,
   newOrderEntryId,
   validatePlaceOrderRequest,
-  validateCancelOrderRequest,
   validateUsePointsRequest,
   validateEarnByMembershipRequest,
   orderTotalAmount,

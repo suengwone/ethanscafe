@@ -4,7 +4,6 @@ const assert = require('node:assert/strict');
 const {
   earnPointsForPayment,
   validatePlaceOrderRequest,
-  validateCancelOrderRequest,
   validateUsePointsRequest,
   validateEarnByMembershipRequest,
   orderTotalAmount,
@@ -130,17 +129,6 @@ test('잘못된 주문 요청을 거부한다', () => {
       recipientPhone: '010',
       shippingAddress: '서울',
     }),
-  );
-});
-
-test('주문 취소 요청을 검증한다', () => {
-  assert.deepEqual(
-      validateCancelOrderRequest({orderType: 'pickup', orderId: 'o-1'}),
-      {orderType: 'pickup', orderId: 'o-1'},
-  );
-  assert.throws(() => validateCancelOrderRequest({orderType: 'bean'}));
-  assert.throws(() =>
-    validateCancelOrderRequest({orderType: 'none', orderId: 'o-1'}),
   );
 });
 
