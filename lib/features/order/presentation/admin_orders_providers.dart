@@ -72,6 +72,28 @@ class AdminOrdersController {
     );
     _ref.invalidate(activeBeanOrdersProvider);
   }
+
+  Future<void> cancelPickup(AdminPickupOrder entry) async {
+    await _cancel('pickup', entry.uid, entry.order.id);
+    _ref.invalidate(activePickupOrdersProvider);
+  }
+
+  Future<void> cancelBean(AdminBeanOrder entry) async {
+    await _cancel('bean', entry.uid, entry.order.id);
+    _ref.invalidate(activeBeanOrdersProvider);
+  }
+
+  Future<void> _cancel(String orderType, String uid, String orderId) {
+    final repository = _ref.read(adminOrdersRepositoryProvider);
+    if (repository == null) {
+      throw StateError('관리자 기능을 사용할 수 없습니다.');
+    }
+    return repository.cancelOrder(
+      orderType: orderType,
+      uid: uid,
+      orderId: orderId,
+    );
+  }
 }
 
 final adminOrdersControllerProvider = Provider<AdminOrdersController>((ref) {

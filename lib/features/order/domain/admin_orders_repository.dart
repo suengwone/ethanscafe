@@ -21,4 +21,12 @@ abstract class AdminOrdersRepository {
     required String orderId,
     required BeanOrderStatus status,
   });
+
+  /// 품절·설비 고장처럼 매장 사정으로 주문을 취소한다.
+  /// 서버가 포인트·쿠폰을 되돌리고 카드 결제분을 환불한다.
+  Future<void> cancelOrder({
+    required String orderType,
+    required String uid,
+    required String orderId,
+  });
 }

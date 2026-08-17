@@ -80,6 +80,10 @@ class _PickupOrdersTab extends ConsumerWidget {
                   : () => ref
                       .read(adminOrdersControllerProvider)
                       .advancePickup(entry),
+              onCancel: isPickupOrderCancellable(entry.order)
+                  ? () =>
+                      ref.read(adminOrdersControllerProvider).cancelPickup(entry)
+                  : null,
             );
           },
         );
@@ -127,6 +131,10 @@ class _BeanOrdersTab extends ConsumerWidget {
                   ? null
                   : () =>
                       ref.read(adminOrdersControllerProvider).advanceBean(entry),
+              onCancel: isBeanOrderCancellable(entry.order)
+                  ? () =>
+                      ref.read(adminOrdersControllerProvider).cancelBean(entry)
+                  : null,
             );
           },
         );
@@ -144,6 +152,7 @@ class _OrderCard extends StatefulWidget {
     required this.createdAt,
     required this.nextLabel,
     required this.onAdvance,
+    required this.onCancel,
   });
 
   final String badge;
@@ -153,6 +162,7 @@ class _OrderCard extends StatefulWidget {
   final DateTime createdAt;
   final String? nextLabel;
   final Future<void> Function()? onAdvance;
+  final Future<void> Function()? onCancel;
 
   @override
   State<_OrderCard> createState() => _OrderCardState();
@@ -161,18 +171,50 @@ class _OrderCard extends StatefulWidget {
 class _OrderCardState extends State<_OrderCard> {
   bool _busy = false;
 
-  Future<void> _advance() async {
-    final advance = widget.onAdvance;
-    if (advance == null || _busy) {
+  Future<void> _advance() => _run(widget.onAdvance, '상태를 바꾸지 못했습니다');
+
+  /// 취소는 결제 환불까지 되돌리므로 한 번 더 확인받는다.
+  Future<void> _cancel() async {
+    if (widget.onCancel == null || _busy) {
+      return;
+    }
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('주문을 취소할까요?'),
+        content: Text(
+          '${widget.summary} 주문을 취소합니다.\n'
+          '사용한 포인트와 쿠폰을 돌려주고 결제한 금액을 환불합니다.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('닫기'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('주문 취소'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) {
+      return;
+    }
+    await _run(widget.onCancel, '주문을 취소하지 못했습니다');
+  }
+
+  Future<void> _run(Future<void> Function()? action, String failure) async {
+    if (action == null || _busy) {
       return;
     }
     setState(() => _busy = true);
     try {
-      await advance();
+      await action();
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('상태를 바꾸지 못했습니다: $e')),
+          SnackBar(content: Text('$failure: $e')),
         );
       }
     } finally {
@@ -242,6 +284,13 @@ class _OrderCardState extends State<_OrderCard> {
                 style: textTheme.bodySmall?.copyWith(color: foxtrotCream),
               ),
               const Spacer(),
+              if (widget.onCancel != null)
+                TextButton(
+                  onPressed: _busy ? null : _cancel,
+                  child: const Text('취소'),
+                ),
+              if (widget.onCancel != null && widget.nextLabel != null)
+                const SizedBox(width: 8),
               if (widget.nextLabel != null)
                 FilledButton(
                   onPressed: _busy ? null : _advance,

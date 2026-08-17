@@ -76,6 +76,18 @@ bool isBeanOrderClosed(BeanOrder order) =>
     order.status == BeanOrderStatus.pickedUp ||
     order.status == BeanOrderStatus.cancelled;
 
+/// 매장이 취소할 수 있는 주문인지. 서버(`functions/order_cancel.js`)의
+/// `ADMIN_CANCELLABLE`과 같은 기준이며, 고객에게 넘어간 뒤에는 취소할 수 없다.
+bool isPickupOrderCancellable(PickupOrder order) =>
+    order.status == PickupOrderStatus.received ||
+    order.status == PickupOrderStatus.preparing ||
+    order.status == PickupOrderStatus.ready;
+
+bool isBeanOrderCancellable(BeanOrder order) =>
+    order.status == BeanOrderStatus.received ||
+    order.status == BeanOrderStatus.roasting ||
+    order.status == BeanOrderStatus.ready;
+
 String pickupOrderSummary(PickupOrder order) => _summary(
       order.items.map((item) => item.menuName).toList(),
     );

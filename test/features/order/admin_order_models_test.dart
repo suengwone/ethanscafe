@@ -124,6 +124,49 @@ void main() {
     });
   });
 
+  group('매장 취소 가능 여부', () {
+    test('진행 중인 픽업 주문은 매장이 취소할 수 있다', () {
+      expect(
+        isPickupOrderCancellable(_pickup(status: PickupOrderStatus.received)),
+        isTrue,
+      );
+      expect(
+        isPickupOrderCancellable(_pickup(status: PickupOrderStatus.preparing)),
+        isTrue,
+      );
+      expect(
+        isPickupOrderCancellable(_pickup(status: PickupOrderStatus.ready)),
+        isTrue,
+      );
+    });
+
+    test('픽업이 끝났거나 이미 취소된 주문은 취소할 수 없다', () {
+      expect(
+        isPickupOrderCancellable(_pickup(status: PickupOrderStatus.pickedUp)),
+        isFalse,
+      );
+      expect(
+        isPickupOrderCancellable(_pickup(status: PickupOrderStatus.cancelled)),
+        isFalse,
+      );
+    });
+
+    test('발송한 원두 주문은 취소할 수 없다', () {
+      expect(
+        isBeanOrderCancellable(_bean(status: BeanOrderStatus.roasting)),
+        isTrue,
+      );
+      expect(
+        isBeanOrderCancellable(_bean(status: BeanOrderStatus.shipped)),
+        isFalse,
+      );
+      expect(
+        isBeanOrderCancellable(_bean(status: BeanOrderStatus.delivered)),
+        isFalse,
+      );
+    });
+  });
+
   group('주문 요약', () {
     test('상품이 하나면 이름만, 여럿이면 나머지 건수를 붙인다', () {
       expect(

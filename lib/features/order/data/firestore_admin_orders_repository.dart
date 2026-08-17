@@ -23,6 +23,7 @@ class FirestoreAdminOrdersRepository implements AdminOrdersRepository {
 
   static const _region = 'asia-northeast3';
   static const updateCallableName = 'updateOrderStatus';
+  static const cancelCallableName = 'cancelOrder';
 
   @override
   Future<List<AdminPickupOrder>> loadActivePickupOrders() async {
@@ -86,6 +87,19 @@ class FirestoreAdminOrdersRepository implements AdminOrdersRepository {
       orderId: orderId,
       status: status.name,
     );
+  }
+
+  @override
+  Future<void> cancelOrder({
+    required String orderType,
+    required String uid,
+    required String orderId,
+  }) async {
+    await _functions.httpsCallable(cancelCallableName).call({
+      'orderType': orderType,
+      'uid': uid,
+      'orderId': orderId,
+    });
   }
 
   Future<void> _update({
