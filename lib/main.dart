@@ -9,6 +9,7 @@ import 'package:naver_login_sdk/naver_login_sdk.dart';
 import 'core/services/push_notification_providers.dart';
 import 'core/services/push_notification_service.dart';
 import 'core/theme/app_theme.dart';
+import 'core/widgets/offline_banner.dart';
 import 'features/coupon/presentation/auto_coupon_providers.dart';
 import 'firebase_options.dart';
 import 'router/app_router.dart';
@@ -75,6 +76,8 @@ class CafeApp extends ConsumerWidget {
       theme: buildAppTheme(),
       routerConfig: router,
       debugShowCheckedModeBanner: false,
+      builder: (context, child) =>
+          OfflineBanner(child: child ?? const SizedBox.shrink()),
     );
   }
 }

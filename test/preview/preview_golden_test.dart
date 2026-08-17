@@ -9,9 +9,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:cafe_app/core/services/connectivity_providers.dart';
 import 'package:cafe_app/core/theme/app_theme.dart';
 import 'package:cafe_app/core/utils/text_utils.dart';
 import 'package:cafe_app/core/widgets/app_shell.dart';
+import 'package:cafe_app/core/widgets/offline_banner.dart';
 import 'package:cafe_app/features/auth/domain/account_models.dart';
 import 'package:cafe_app/features/auth/domain/auth_models.dart';
 import 'package:cafe_app/features/auth/presentation/account_providers.dart';
@@ -500,13 +502,21 @@ void main() {
     await precacheAssetImages(tester);
   }
 
-  Future<void> pumpApp(WidgetTester tester, {AppUser? user}) async {
+  Future<void> pumpApp(
+    WidgetTester tester, {
+    AppUser? user,
+    bool isOnline = true,
+    List<Override> overrides = const [],
+  }) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
           authRepositoryProvider.overrideWithValue(
             FakeAuthRepository(user: user),
           ),
+          // 위젯 테스트에서 실제 플랫폼 채널을 타지 않도록 연결 상태를 주입한다.
+          isOnlineProvider.overrideWith((ref) => Stream.value(isOnline)),
+          ...overrides,
         ],
         child: Consumer(
           builder: (context, ref, _) {
@@ -514,6 +524,8 @@ void main() {
             return MaterialApp.router(
               theme: buildAppTheme(),
               routerConfig: router,
+              builder: (context, child) =>
+                  OfflineBanner(child: child ?? const SizedBox.shrink()),
             );
           },
         ),
@@ -528,6 +540,13 @@ void main() {
     await pumpApp(tester);
 
     await expectGolden(find.byType(AppShell), 'home_screen');
+  });
+
+  testWidgets('오프라인 안내 배너 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpApp(tester, isOnline: false);
+
+    await expectGolden(find.byType(OfflineBanner), 'offline_banner');
   });
 
   testWidgets('홈 화면(로그인) 스크린샷', (WidgetTester tester) async {
