@@ -131,7 +131,7 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
       }
       ref.invalidate(pointsControllerProvider);
       state = AsyncValue.data([order, ...state.value ?? const []]);
-      await _recordSales(items);
+      await _afterOrderPlaced(items, recordSales: false);
       return order;
     }
 
@@ -191,12 +191,20 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
               : null,
         );
     state = AsyncValue.data([order, ...state.value ?? const []]);
-    await _afterOrderPlaced(items);
+    await _afterOrderPlaced(items, recordSales: true);
     return order;
   }
 
-  Future<void> _afterOrderPlaced(List<BeanOrderItem> items) async {
-    await _recordSales(items);
+  Future<void> _afterOrderPlaced(
+    List<BeanOrderItem> items, {
+    required bool recordSales,
+  }) async {
+    // 서버 주문은 판매량을 주문 트랜잭션에서 집계하므로 클라이언트는 건너뛴다.
+    if (recordSales) {
+      await _recordSales(items);
+    } else {
+      ref.invalidate(productStatsProvider);
+    }
     await ref.read(appReviewServiceProvider).onOrderPlaced();
   }
 

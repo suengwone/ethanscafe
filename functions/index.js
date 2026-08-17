@@ -42,6 +42,7 @@ const {
   orderTotalAmount,
   catalogItemIds,
   verifyCatalogPrices,
+  salesQuantitiesByItem,
   validateCouponsForOrder,
   couponTitlesLabel,
   normalizePointsData,
@@ -410,6 +411,14 @@ exports.placeOrder = onCall(
           transaction.update(ref, {isUsed: true});
         }
         transaction.set(ordersRef, {orders: [order, ...existingOrders]});
+        for (const [productId, quantity] of salesQuantitiesByItem(
+            orderRequest.orderType, orderRequest.items)) {
+          transaction.set(
+              firestore.collection('product_stats').doc(productId),
+              {salesCount: FieldValue.increment(quantity)},
+              {merge: true},
+          );
+        }
         if (usageRef) {
           transaction.set(usageRef, {
             uid,

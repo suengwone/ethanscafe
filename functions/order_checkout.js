@@ -252,6 +252,16 @@ function validateCouponsForOrder({coupons, uid, orderAmount, nowMillis}) {
   return Math.min(discount, orderAmount);
 }
 
+/** 주문 항목을 카탈로그 문서 ID별 판매 수량으로 합산한다. */
+function salesQuantitiesByItem(orderType, items) {
+  const quantities = new Map();
+  for (const item of items) {
+    const id = catalogItemId(orderType, item);
+    quantities.set(id, (quantities.get(id) || 0) + item.quantity);
+  }
+  return quantities;
+}
+
 function couponIdsLabel(couponIds) {
   return couponIds.length === 0 ? null : couponIds.join(',');
 }
@@ -468,6 +478,7 @@ module.exports = {
   catalogItemIds,
   catalogUnitPrice,
   verifyCatalogPrices,
+  salesQuantitiesByItem,
   couponDiscountFor,
   validateCouponsForOrder,
   couponIdsLabel,

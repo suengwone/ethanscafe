@@ -123,7 +123,7 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
       }
       ref.invalidate(pointsControllerProvider);
       state = AsyncValue.data([order, ...state.value ?? const []]);
-      await _afterOrderPlaced(items);
+      await _afterOrderPlaced(items, recordSales: false);
       return order;
     }
 
@@ -171,12 +171,20 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
           paymentMethod: payment?.method,
         );
     state = AsyncValue.data([order, ...state.value ?? const []]);
-    await _afterOrderPlaced(items);
+    await _afterOrderPlaced(items, recordSales: true);
     return order;
   }
 
-  Future<void> _afterOrderPlaced(List<PickupOrderItem> items) async {
-    await _recordSales(items);
+  Future<void> _afterOrderPlaced(
+    List<PickupOrderItem> items, {
+    required bool recordSales,
+  }) async {
+    // 서버 주문은 판매량을 주문 트랜잭션에서 집계하므로 클라이언트는 건너뛴다.
+    if (recordSales) {
+      await _recordSales(items);
+    } else {
+      ref.invalidate(productStatsProvider);
+    }
     await ref.read(appReviewServiceProvider).onOrderPlaced();
   }
 

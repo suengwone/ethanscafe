@@ -10,6 +10,7 @@ const {
   orderTotalAmount,
   catalogItemIds,
   verifyCatalogPrices,
+  salesQuantitiesByItem,
   couponDiscountFor,
   validateCouponsForOrder,
   couponIdsLabel,
@@ -483,4 +484,22 @@ test('중복 상품 ID는 한 번만 조회한다', () => {
       ['menu-1'],
   );
   assert.deepEqual(catalogItemIds('bean', [beanItem]), ['bean-1']);
+});
+
+test('판매량은 상품 ID별로 합산한다', () => {
+  const quantities = salesQuantitiesByItem('pickup', [
+    pickupItem,
+    {...pickupItem, quantity: 2},
+    {...pickupItem, menuId: 'menu-2', quantity: 5},
+  ]);
+  assert.equal(quantities.get('menu-1'), 3);
+  assert.equal(quantities.get('menu-2'), 5);
+});
+
+test('원두 판매량은 원두 ID 기준으로 합산한다', () => {
+  const quantities = salesQuantitiesByItem('bean', [
+    beanItem,
+    {...beanItem, weight: 'g500', quantity: 1},
+  ]);
+  assert.equal(quantities.get('bean-1'), 3);
 });
