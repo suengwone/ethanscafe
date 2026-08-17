@@ -1,15 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 
-import '../../pickup/data/firestore_pickup_orders_repository.dart';
 import '../../pickup/domain/pickup_order_models.dart';
 import '../domain/admin_order_models.dart';
 import '../domain/admin_orders_repository.dart';
 import '../domain/order_models.dart';
-import 'firestore_bean_orders_repository.dart';
 
-/// 관리자 권한(admin 커스텀 클레임)으로 전체 주문을 읽고,
-/// 상태 변경은 `updateOrderStatus` 콜러블에 맡긴다.
+/// 진행 중인 주문 색인(`active_orders`)을 읽고, 쓰기는 서버 콜러블에 맡긴다.
+/// 색인은 주문 문서 트리거가 유지하며 클라이언트는 쓰지 않는다.
 class FirestoreAdminOrdersRepository implements AdminOrdersRepository {
   FirestoreAdminOrdersRepository({
     FirebaseFirestore? firestore,
@@ -22,43 +20,59 @@ class FirestoreAdminOrdersRepository implements AdminOrdersRepository {
   final FirebaseFunctions _functions;
 
   static const _region = 'asia-northeast3';
+  static const collectionPath = 'active_orders';
   static const updateCallableName = 'updateOrderStatus';
   static const cancelCallableName = 'cancelOrder';
 
   @override
-  Future<List<AdminPickupOrder>> loadActivePickupOrders() async {
-    final snapshot = await _firestore
-        .collection(FirestorePickupOrdersRepository.collectionPath)
-        .get();
-
-    final entries = <AdminPickupOrder>[];
-    for (final doc in snapshot.docs) {
-      for (final order in pickupOrdersFromFirestore(doc.data())) {
-        if (!isPickupOrderClosed(order)) {
-          entries.add(AdminPickupOrder(uid: doc.id, order: order));
-        }
-      }
-    }
-    entries.sort((a, b) => a.order.createdAt.compareTo(b.order.createdAt));
-    return entries;
+  Future<List<ActivePickupOrder>> loadActivePickupOrders() async {
+    final docs = await _loadByType('pickup');
+    return docs.map((data) {
+      return ActivePickupOrder(
+        uid: data['uid'] as String? ?? '',
+        orderId: data['orderId'] as String? ?? '',
+        summary: data['summary'] as String? ?? '주문',
+        status: PickupOrderStatus.values.asNameMap()[data['status']] ??
+            PickupOrderStatus.received,
+        pickupNumber: (data['pickupNumber'] as num?)?.toInt() ?? 0,
+        storeName: data['storeName'] as String? ?? '',
+        createdAt: _createdAt(data),
+      );
+    }).toList();
   }
 
   @override
-  Future<List<AdminBeanOrder>> loadActiveBeanOrders() async {
-    final snapshot = await _firestore
-        .collection(FirestoreBeanOrdersRepository.collectionPath)
-        .get();
+  Future<List<ActiveBeanOrder>> loadActiveBeanOrders() async {
+    final docs = await _loadByType('bean');
+    return docs.map((data) {
+      return ActiveBeanOrder(
+        uid: data['uid'] as String? ?? '',
+        orderId: data['orderId'] as String? ?? '',
+        summary: data['summary'] as String? ?? '주문',
+        status: BeanOrderStatus.values.asNameMap()[data['status']] ??
+            BeanOrderStatus.received,
+        fulfillmentMethod:
+            BeanFulfillmentMethod.values.asNameMap()[data['fulfillmentMethod']] ??
+                BeanFulfillmentMethod.delivery,
+        recipient: data['recipient'] as String?,
+        storeName: data['storeName'] as String?,
+        createdAt: _createdAt(data),
+      );
+    }).toList();
+  }
 
-    final entries = <AdminBeanOrder>[];
-    for (final doc in snapshot.docs) {
-      for (final order in beanOrdersFromFirestore(doc.data())) {
-        if (!isBeanOrderClosed(order)) {
-          entries.add(AdminBeanOrder(uid: doc.id, order: order));
-        }
-      }
-    }
-    entries.sort((a, b) => a.order.createdAt.compareTo(b.order.createdAt));
-    return entries;
+  Future<List<Map<String, dynamic>>> _loadByType(String orderType) async {
+    final snapshot = await _firestore
+        .collection(collectionPath)
+        .where('orderType', isEqualTo: orderType)
+        .orderBy('createdAt')
+        .get();
+    return snapshot.docs.map((doc) => doc.data()).toList();
+  }
+
+  static DateTime _createdAt(Map<String, dynamic> data) {
+    final value = data['createdAt'];
+    return value is Timestamp ? value.toDate() : DateTime.now();
   }
 
   @override

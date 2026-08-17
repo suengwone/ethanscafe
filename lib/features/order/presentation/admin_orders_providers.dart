@@ -15,7 +15,7 @@ final adminOrdersRepositoryProvider = Provider<AdminOrdersRepository?>((ref) {
 });
 
 final activePickupOrdersProvider =
-    FutureProvider.autoDispose<List<AdminPickupOrder>>((ref) async {
+    FutureProvider.autoDispose<List<ActivePickupOrder>>((ref) async {
   final repository = ref.watch(adminOrdersRepositoryProvider);
   if (repository == null) {
     return const [];
@@ -24,7 +24,7 @@ final activePickupOrdersProvider =
 });
 
 final activeBeanOrdersProvider =
-    FutureProvider.autoDispose<List<AdminBeanOrder>>((ref) async {
+    FutureProvider.autoDispose<List<ActiveBeanOrder>>((ref) async {
   final repository = ref.watch(adminOrdersRepositoryProvider);
   if (repository == null) {
     return const [];
@@ -38,8 +38,8 @@ class AdminOrdersController {
 
   final Ref _ref;
 
-  Future<void> advancePickup(AdminPickupOrder entry) async {
-    final next = nextPickupStatus(entry.order.status);
+  Future<void> advancePickup(ActivePickupOrder entry) async {
+    final next = nextPickupStatus(entry.status);
     if (next == null) {
       throw StateError('더 진행할 단계가 없습니다.');
     }
@@ -49,15 +49,15 @@ class AdminOrdersController {
     }
     await repository.advancePickupStatus(
       uid: entry.uid,
-      orderId: entry.order.id,
+      orderId: entry.orderId,
       status: next,
     );
     _ref.invalidate(activePickupOrdersProvider);
   }
 
-  Future<void> advanceBean(AdminBeanOrder entry) async {
+  Future<void> advanceBean(ActiveBeanOrder entry) async {
     final next =
-        nextBeanStatus(entry.order.status, entry.order.fulfillmentMethod);
+        nextBeanStatus(entry.status, entry.fulfillmentMethod);
     if (next == null) {
       throw StateError('더 진행할 단계가 없습니다.');
     }
@@ -67,19 +67,19 @@ class AdminOrdersController {
     }
     await repository.advanceBeanStatus(
       uid: entry.uid,
-      orderId: entry.order.id,
+      orderId: entry.orderId,
       status: next,
     );
     _ref.invalidate(activeBeanOrdersProvider);
   }
 
-  Future<void> cancelPickup(AdminPickupOrder entry) async {
-    await _cancel('pickup', entry.uid, entry.order.id);
+  Future<void> cancelPickup(ActivePickupOrder entry) async {
+    await _cancel('pickup', entry.uid, entry.orderId);
     _ref.invalidate(activePickupOrdersProvider);
   }
 
-  Future<void> cancelBean(AdminBeanOrder entry) async {
-    await _cancel('bean', entry.uid, entry.order.id);
+  Future<void> cancelBean(ActiveBeanOrder entry) async {
+    await _cancel('bean', entry.uid, entry.orderId);
     _ref.invalidate(activeBeanOrdersProvider);
   }
 

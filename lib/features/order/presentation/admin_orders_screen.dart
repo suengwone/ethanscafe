@@ -5,7 +5,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../domain/admin_order_models.dart';
-import '../domain/order_models.dart';
 import 'admin_orders_providers.dart';
 
 final _timeFormat = DateFormat('HH:mm');
@@ -67,20 +66,20 @@ class _PickupOrdersTab extends ConsumerWidget {
           separatorBuilder: (_, _) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
             final entry = orders[index];
-            final next = nextPickupStatus(entry.order.status);
+            final next = nextPickupStatus(entry.status);
             return _OrderCard(
-              badge: '#${entry.order.pickupNumber}',
-              summary: pickupOrderSummary(entry.order),
-              subtitle: entry.order.storeName,
-              statusLabel: entry.order.status.label,
-              createdAt: entry.order.createdAt,
+              badge: '#${entry.pickupNumber}',
+              summary: entry.summary,
+              subtitle: entry.storeName,
+              statusLabel: entry.status.label,
+              createdAt: entry.createdAt,
               nextLabel: next?.label,
               onAdvance: next == null
                   ? null
                   : () => ref
                       .read(adminOrdersControllerProvider)
                       .advancePickup(entry),
-              onCancel: isPickupOrderCancellable(entry.order)
+              onCancel: isPickupStatusCancellable(entry.status)
                   ? () =>
                       ref.read(adminOrdersControllerProvider).cancelPickup(entry)
                   : null,
@@ -114,24 +113,21 @@ class _BeanOrdersTab extends ConsumerWidget {
           itemBuilder: (context, index) {
             final entry = orders[index];
             final next = nextBeanStatus(
-              entry.order.status,
-              entry.order.fulfillmentMethod,
+              entry.status,
+              entry.fulfillmentMethod,
             );
             return _OrderCard(
-              badge: entry.order.fulfillmentMethod.label,
-              summary: beanOrderSummary(entry.order),
-              subtitle: entry.order.fulfillmentMethod ==
-                      BeanFulfillmentMethod.delivery
-                  ? (entry.order.recipient ?? '수령인 미지정')
-                  : (entry.order.storeName ?? '매장 미지정'),
-              statusLabel: entry.order.status.label,
-              createdAt: entry.order.createdAt,
+              badge: entry.fulfillmentMethod.label,
+              summary: entry.summary,
+              subtitle: entry.destinationLabel,
+              statusLabel: entry.status.label,
+              createdAt: entry.createdAt,
               nextLabel: next?.label,
               onAdvance: next == null
                   ? null
                   : () =>
                       ref.read(adminOrdersControllerProvider).advanceBean(entry),
-              onCancel: isBeanOrderCancellable(entry.order)
+              onCancel: isBeanStatusCancellable(entry.status)
                   ? () =>
                       ref.read(adminOrdersControllerProvider).cancelBean(entry)
                   : null,

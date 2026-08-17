@@ -564,51 +564,23 @@ void main() {
       user: _previewUser,
       overrides: [
         activePickupOrdersProvider.overrideWith((ref) async => [
-              AdminPickupOrder(
+              ActivePickupOrder(
                 uid: 'u1',
-                order: PickupOrder(
-                  id: 'p1',
-                  storeId: 's1',
-                  storeName: '폭스트롯 마천점',
-                  pickupNumber: 12,
-                  items: const [
-                    PickupOrderItem(
-                      menuId: 'm1',
-                      menuName: '바닐라 라떼',
-                      option: 'ICE',
-                      quantity: 2,
-                      unitPrice: 5800,
-                    ),
-                  ],
-                  totalAmount: 11600,
-                  createdAt: DateTime(2026, 8, 18, 9, 41),
-                ),
+                orderId: 'p1',
+                summary: '바닐라 라떼',
+                status: PickupOrderStatus.received,
+                pickupNumber: 12,
+                storeName: '폭스트롯 마천점',
+                createdAt: DateTime(2026, 8, 18, 9, 41),
               ),
-              AdminPickupOrder(
+              ActivePickupOrder(
                 uid: 'u2',
-                order: PickupOrder(
-                  id: 'p2',
-                  storeId: 's1',
-                  storeName: '폭스트롯 마천점',
-                  pickupNumber: 13,
-                  items: const [
-                    PickupOrderItem(
-                      menuId: 'm2',
-                      menuName: '플레인 베이글',
-                      quantity: 1,
-                      unitPrice: 3800,
-                    ),
-                    PickupOrderItem(
-                      menuId: 'm3',
-                      menuName: '아메리카노',
-                      quantity: 1,
-                      unitPrice: 4500,
-                    ),
-                  ],
-                  totalAmount: 8300,
-                  status: PickupOrderStatus.preparing,
-                  createdAt: DateTime(2026, 8, 18, 9, 52),
-                ),
+                orderId: 'p2',
+                summary: '플레인 베이글 외 1건',
+                status: PickupOrderStatus.preparing,
+                pickupNumber: 13,
+                storeName: '폭스트롯 마천점',
+                createdAt: DateTime(2026, 8, 18, 9, 52),
               ),
             ]),
       ],

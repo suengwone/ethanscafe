@@ -1,20 +1,57 @@
 import '../../pickup/domain/pickup_order_models.dart';
 import 'order_models.dart';
 
-/// 매장이 처리해야 할 주문 한 건. 주문 문서가 회원별로 묶여 있어
-/// 관리자 화면에서는 회원 uid를 함께 들고 다닌다.
-class AdminPickupOrder {
-  const AdminPickupOrder({required this.uid, required this.order});
+/// 매장이 처리해야 할 주문 한 건.
+///
+/// 주문 원본은 회원별 문서에 배열로 쌓여 있어 그대로 읽으면 회원 수만큼 문서를
+/// 읽어야 한다. 그래서 서버가 진행 중인 주문만 `active_orders`에 떼어 두고,
+/// 매장 화면은 목록에 필요한 값만 담긴 이 투영을 읽는다.
+class ActivePickupOrder {
+  const ActivePickupOrder({
+    required this.uid,
+    required this.orderId,
+    required this.summary,
+    required this.status,
+    required this.pickupNumber,
+    required this.storeName,
+    required this.createdAt,
+  });
 
   final String uid;
-  final PickupOrder order;
+  final String orderId;
+  final String summary;
+  final PickupOrderStatus status;
+  final int pickupNumber;
+  final String storeName;
+  final DateTime createdAt;
 }
 
-class AdminBeanOrder {
-  const AdminBeanOrder({required this.uid, required this.order});
+class ActiveBeanOrder {
+  const ActiveBeanOrder({
+    required this.uid,
+    required this.orderId,
+    required this.summary,
+    required this.status,
+    required this.fulfillmentMethod,
+    required this.createdAt,
+    this.recipient,
+    this.storeName,
+  });
 
   final String uid;
-  final BeanOrder order;
+  final String orderId;
+  final String summary;
+  final BeanOrderStatus status;
+  final BeanFulfillmentMethod fulfillmentMethod;
+  final DateTime createdAt;
+  final String? recipient;
+  final String? storeName;
+
+  /// 배송이면 수령인을, 픽업이면 매장을 보여준다.
+  String get destinationLabel =>
+      fulfillmentMethod == BeanFulfillmentMethod.delivery
+          ? (recipient ?? '수령인 미지정')
+          : (storeName ?? '매장 미지정');
 }
 
 /// 상태 전환 흐름. 서버(`functions/order_transitions.js`)와 같은 순서를 쓴다.
@@ -66,40 +103,14 @@ BeanOrderStatus? nextBeanStatus(
   return flow[index + 1];
 }
 
-/// 매장이 더 손댈 필요가 없는 주문인지. 완료·취소는 목록에서 감춘다.
-bool isPickupOrderClosed(PickupOrder order) =>
-    order.status == PickupOrderStatus.pickedUp ||
-    order.status == PickupOrderStatus.cancelled;
-
-bool isBeanOrderClosed(BeanOrder order) =>
-    order.status == BeanOrderStatus.delivered ||
-    order.status == BeanOrderStatus.pickedUp ||
-    order.status == BeanOrderStatus.cancelled;
-
 /// 매장이 취소할 수 있는 주문인지. 서버(`functions/order_cancel.js`)의
 /// `ADMIN_CANCELLABLE`과 같은 기준이며, 고객에게 넘어간 뒤에는 취소할 수 없다.
-bool isPickupOrderCancellable(PickupOrder order) =>
-    order.status == PickupOrderStatus.received ||
-    order.status == PickupOrderStatus.preparing ||
-    order.status == PickupOrderStatus.ready;
+bool isPickupStatusCancellable(PickupOrderStatus status) =>
+    status == PickupOrderStatus.received ||
+    status == PickupOrderStatus.preparing ||
+    status == PickupOrderStatus.ready;
 
-bool isBeanOrderCancellable(BeanOrder order) =>
-    order.status == BeanOrderStatus.received ||
-    order.status == BeanOrderStatus.roasting ||
-    order.status == BeanOrderStatus.ready;
-
-String pickupOrderSummary(PickupOrder order) => _summary(
-      order.items.map((item) => item.menuName).toList(),
-    );
-
-String beanOrderSummary(BeanOrder order) => _summary(
-      order.items.map((item) => item.beanName).toList(),
-    );
-
-String _summary(List<String> names) {
-  if (names.isEmpty) {
-    return '주문';
-  }
-  final first = names.first.isEmpty ? '주문' : names.first;
-  return names.length == 1 ? first : '$first 외 ${names.length - 1}건';
-}
+bool isBeanStatusCancellable(BeanOrderStatus status) =>
+    status == BeanOrderStatus.received ||
+    status == BeanOrderStatus.roasting ||
+    status == BeanOrderStatus.ready;
