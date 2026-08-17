@@ -182,6 +182,7 @@
 | `subscriptions` · `gifts` · `wholesale_quotes` | 구독·선물·견적 | 본인 읽기/쓰기 |
 | `reviews` | 리뷰 | 로그인 사용자 읽기 / 본인만 쓰기 |
 | `product_stats` | 판매량 집계 | 공개 읽기 / 쓰기는 admin·서버만 |
+| `active_orders` | 진행 중인 주문 색인 (주문 1건 = 문서 1개, 트리거가 유지) | admin 읽기 / 쓰기 전면 차단 |
 | `coupons` | 쿠폰 | 소유자 읽기 / 자동 쿠폰 생성·`isUsed: true` 처리만 |
 | `menus` · `beans` · `banners` · `notices` · `stores` | 마스터 데이터 | 공개 읽기 / 쓰기는 admin |
 | `payment_usages` | 결제 멱등 키 | **규칙 미정의 → 전면 차단**. 서버(Admin SDK) 전용 |
@@ -202,8 +203,9 @@
 | `registerBusinessProfile` | callable | 사업자 계정 등록 |
 | `signInWithKakao` / `signInWithNaver` | callable | 소셜 토큰 검증 → Firebase 커스텀 토큰 발급 |
 | `backfillCouponUids` | callable | 쿠폰 `uid` 백필 (운영 도구, admin) |
-| `sendBeanOrderStatusPush` | Firestore 트리거 | 원두 주문 상태 변경 시 FCM 푸시 |
-| `sendPickupOrderStatusPush` | Firestore 트리거 | 픽업 주문 상태 변경 시 FCM 푸시 |
+| `backfillActiveOrders` | callable | 진행 중 주문 색인 재생성 (운영 도구, admin — 색인 도입 후 1회) |
+| `sendBeanOrderStatusPush` | Firestore 트리거 | 원두 주문 — `active_orders` 색인 갱신 + FCM 푸시 |
+| `sendPickupOrderStatusPush` | Firestore 트리거 | 픽업 주문 — `active_orders` 색인 갱신 + FCM 푸시 |
 | `cleanUpDeletedUserData` | Auth 트리거 (v1 `onDelete`) | 탈퇴 사용자 데이터 정리 |
 
 ### 5.3 권한
@@ -329,5 +331,5 @@
 | 2026-08-08 | 실결제(PG) 연동 — 토스페이먼츠 결제창 + `confirmTossPayment` 서버 승인 |
 | 2026-08-16 | 재주문 구현. 멤버십 등급제 도입 후 폐지(고정 10% 적립률로 환원). 스탬프 적립 폐지 → 포인트 체계로 대체. 선불권 포인트 충전 기획 및 구현 완료 |
 | 2026-08-17 | 비회원 주문 폐지 — 장바구니·선물을 로그인 필요로 전환하고 게스트 안내 카드 제거. 게스트는 열람 전용. 미사용 의존성 7종 정리 |
-| 2026-08-18 | 매장 운영 도구 3종 — 주문 상태 관리(`updateOrderStatus`), 주문 취소 시 실제 결제 환불 및 매장 취소, 품절 관리. 픽업 주문 푸시 알림과 취소 알림 추가 |
+| 2026-08-18 | 매장 운영 도구 3종 — 주문 상태 관리(`updateOrderStatus`), 주문 취소 시 실제 결제 환불 및 매장 취소, 품절 관리. 픽업 주문 푸시 알림과 취소 알림 추가. 주문 관리 화면이 `active_orders` 색인을 읽도록 변경 |
 | 2026-08-17 | 주문·포인트·쿠폰 쓰기를 Cloud Functions 콜러블로 이관. 보안 규칙 강화 — 서버 가격 검증, 쿠폰 복원 서버 전용화, 판매량 서버 집계. 앱 운영 기능 추가(오프라인 배너·원격 강제 업데이트·리뷰 요청·성능 모니터링). **본 문서를 코드 기준으로 전면 재작성** |
