@@ -41,6 +41,7 @@ import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
 import 'package:cafe_app/features/order/domain/order_models.dart';
 import 'package:cafe_app/features/order/domain/admin_order_models.dart';
 import 'package:cafe_app/features/order/domain/refund_failure_models.dart';
+import 'package:cafe_app/features/order/domain/refund_status.dart';
 import 'package:cafe_app/features/order/presentation/admin_orders_providers.dart';
 import 'package:cafe_app/features/order/presentation/admin_orders_screen.dart';
 import 'package:cafe_app/features/pickup/domain/pickup_order_models.dart';
@@ -49,6 +50,7 @@ import 'package:cafe_app/features/payment/data/local_payments_repository.dart';
 import 'package:cafe_app/features/payment/domain/payment_models.dart';
 import 'package:cafe_app/features/payment/presentation/toss_payment_screen.dart';
 import 'package:cafe_app/features/pickup/presentation/pickup_cart_providers.dart';
+import 'package:cafe_app/features/pickup/presentation/pickup_order_providers.dart';
 import 'package:cafe_app/features/pickup/presentation/pickup_cart_screen.dart';
 import 'package:cafe_app/features/pickup/presentation/pickup_order_tracking_screen.dart';
 import 'package:cafe_app/features/store/data/local_stores_repository.dart';
@@ -1049,6 +1051,43 @@ void main() {
     await expectGolden(
       find.byType(PickupOrderTrackingScreen),
       'pickup_order_tracking_screen',
+    );
+  });
+
+  testWidgets('환불이 밀린 취소 주문 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const PickupOrderTrackingScreen(orderId: 'pickup-refund'),
+      user: _previewUser,
+      overrides: [
+        pickupOrderTrackingProvider('pickup-refund')
+            .overrideWith((ref) => Stream.value(
+              PickupOrder(
+                id: 'pickup-refund',
+                storeId: 's1',
+                storeName: '폭스트롯 마천점',
+                pickupNumber: 12,
+                items: const [
+                  PickupOrderItem(
+                    menuId: 'm1',
+                    menuName: '바닐라 라떼',
+                    quantity: 2,
+                    unitPrice: 5800,
+                  ),
+                ],
+                totalAmount: 11600,
+                status: PickupOrderStatus.cancelled,
+                refundStatus: RefundStatus.failed,
+                createdAt: DateTime(2026, 8, 18, 9, 41),
+              ),
+            )),
+      ],
+    );
+
+    await expectGolden(
+      find.byType(PickupOrderTrackingScreen),
+      'pickup_order_refund_pending',
     );
   });
 
