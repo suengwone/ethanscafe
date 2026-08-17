@@ -1,3 +1,17 @@
+// 취소는 고객이 직접 하기도 하고 매장이 품절 등으로 하기도 한다.
+// 매장이 취소한 경우 알리지 않으면 고객이 헛걸음하므로 두 경우 모두 보낸다.
+const CANCELLED_MESSAGE = {
+  title: '주문이 취소됐어요',
+  body: (summary, order) => {
+    // 포인트·쿠폰으로만 치른 주문은 환불할 결제 건이 없다.
+    const refunded = order && typeof order.paymentKey === 'string' &&
+      order.paymentKey.length > 0;
+    return refunded ?
+      `${summary} 주문이 취소되었어요. 결제하신 금액은 환불됩니다.` :
+      `${summary} 주문이 취소되었어요. 사용하신 포인트와 쿠폰은 돌려드렸어요.`;
+  },
+};
+
 const STATUS_MESSAGES = {
   roasting: {
     title: '원두 로스팅이 시작됐어요',
@@ -11,6 +25,12 @@ const STATUS_MESSAGES = {
     title: '원두가 배송 완료됐어요',
     body: (summary) => `${summary} 주문이 배송 완료되었어요. 맛있게 즐겨주세요.`,
   },
+  // 매장 수령을 고른 원두 주문. 배송 흐름에는 없는 단계다.
+  ready: {
+    title: '원두가 준비됐어요',
+    body: (summary) => `${summary} 주문을 매장에서 찾아가세요.`,
+  },
+  cancelled: CANCELLED_MESSAGE,
 };
 
 // 픽업 주문용. 매장에서 상태를 넘길 때 고객에게 바로 알린다.
@@ -23,6 +43,7 @@ const PICKUP_STATUS_MESSAGES = {
     title: '주문하신 음료가 나왔어요',
     body: (summary) => `${summary} 주문을 픽업대에서 찾아가세요.`,
   },
+  cancelled: CANCELLED_MESSAGE,
 };
 
 function orderSummary(order) {
@@ -63,7 +84,7 @@ function collectStatusChangeNotifications(
       orderId: order.id,
       status: order.status,
       title: message.title,
-      body: message.body(orderSummary(order)),
+      body: message.body(orderSummary(order), order),
     });
   }
   return notifications;

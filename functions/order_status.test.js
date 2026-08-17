@@ -44,7 +44,7 @@ test('문서가 처음 생성된 경우에도 알림을 보내지 않는다', ()
 
 test('알 수 없는 상태로 바뀌면 알림을 보내지 않는다', () => {
   const before = {orders: [order('o1', 'received')]};
-  const after = {orders: [order('o1', 'cancelled')]};
+  const after = {orders: [order('o1', 'pickedUp')]};
 
   assert.deepEqual(collectStatusChangeNotifications(before, after), []);
 });
@@ -116,4 +116,41 @@ test('픽업 메시지 표에 없는 상태는 알리지 않는다', () => {
     collectStatusChangeNotifications(before, after, PICKUP_STATUS_MESSAGES),
     [],
   );
+});
+
+test('매장이 취소한 픽업 주문도 고객에게 알린다', () => {
+  const items = [{menuName: '바닐라 라떼'}];
+  const before = {orders: [{id: 'p1', status: 'preparing', items}]};
+  const after = {
+    orders: [{id: 'p1', status: 'cancelled', items, paymentKey: 'pk_1'}],
+  };
+
+  const notifications = collectStatusChangeNotifications(
+    before, after, PICKUP_STATUS_MESSAGES,
+  );
+
+  assert.equal(notifications.length, 1);
+  assert.equal(notifications[0].title, '주문이 취소됐어요');
+  assert.match(notifications[0].body, /환불됩니다/);
+});
+
+test('결제 없이 치른 주문의 취소 알림은 환불을 말하지 않는다', () => {
+  const before = {orders: [{id: 'b1', status: 'received', items: []}]};
+  const after = {orders: [{id: 'b1', status: 'cancelled', items: []}]};
+
+  const notifications = collectStatusChangeNotifications(before, after);
+
+  assert.equal(notifications.length, 1);
+  assert.match(notifications[0].body, /포인트와 쿠폰은 돌려드렸어요/);
+});
+
+test('매장 수령 원두가 준비되면 알린다', () => {
+  const items = [{beanName: '에티오피아 예가체프'}];
+  const before = {orders: [{id: 'b1', status: 'roasting', items}]};
+  const after = {orders: [{id: 'b1', status: 'ready', items}]};
+
+  const notifications = collectStatusChangeNotifications(before, after);
+
+  assert.equal(notifications.length, 1);
+  assert.equal(notifications[0].title, '원두가 준비됐어요');
 });
