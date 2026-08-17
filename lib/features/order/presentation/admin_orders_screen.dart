@@ -5,7 +5,11 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../domain/admin_order_models.dart';
+import '../domain/refund_failure_models.dart';
 import 'admin_orders_providers.dart';
+
+final _dateFormat = DateFormat('M/d HH:mm');
+final _amountFormat = NumberFormat('#,###');
 
 final _timeFormat = DateFormat('HH:mm');
 
@@ -16,7 +20,7 @@ class AdminOrdersScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('주문 관리'),
@@ -24,6 +28,7 @@ class AdminOrdersScreen extends ConsumerWidget {
             tabs: [
               Tab(text: '픽업'),
               Tab(text: '원두'),
+              Tab(text: '환불 실패'),
             ],
           ),
           actions: [
@@ -33,12 +38,17 @@ class AdminOrdersScreen extends ConsumerWidget {
               onPressed: () {
                 ref.invalidate(activePickupOrdersProvider);
                 ref.invalidate(activeBeanOrdersProvider);
+                ref.invalidate(refundFailuresProvider);
               },
             ),
           ],
         ),
         body: const TabBarView(
-          children: [_PickupOrdersTab(), _BeanOrdersTab()],
+          children: [
+            _PickupOrdersTab(),
+            _BeanOrdersTab(),
+            _RefundFailuresTab(),
+          ],
         ),
       ),
     );
@@ -135,6 +145,143 @@ class _BeanOrdersTab extends ConsumerWidget {
           },
         );
       },
+    );
+  }
+}
+
+/// 취소는 됐는데 환불만 실패한 주문. 고객 돈이 묶여 있어 눈에 띄게 두고 재시도를 건다.
+class _RefundFailuresTab extends ConsumerWidget {
+  const _RefundFailuresTab();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(refundFailuresProvider);
+    return state.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => _ErrorView(
+        onRetry: () => ref.invalidate(refundFailuresProvider),
+      ),
+      data: (failures) {
+        if (failures.isEmpty) {
+          return const _EmptyView(message: '환불이 밀린 주문이 없습니다.');
+        }
+        return ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: failures.length,
+          separatorBuilder: (_, _) => const SizedBox(height: 12),
+          itemBuilder: (context, index) {
+            final failure = failures[index];
+            return _RefundFailureCard(
+              failure: failure,
+              onRetry: () =>
+                  ref.read(adminOrdersControllerProvider).retryRefund(failure),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _RefundFailureCard extends StatefulWidget {
+  const _RefundFailureCard({required this.failure, required this.onRetry});
+
+  final RefundFailure failure;
+  final Future<void> Function() onRetry;
+
+  @override
+  State<_RefundFailureCard> createState() => _RefundFailureCardState();
+}
+
+class _RefundFailureCardState extends State<_RefundFailureCard> {
+  bool _busy = false;
+
+  Future<void> _retry() async {
+    if (_busy) {
+      return;
+    }
+    setState(() => _busy = true);
+    try {
+      await widget.onRetry();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('환불했습니다.')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('환불에 실패했습니다: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _busy = false);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final failure = widget.failure;
+    final textTheme = Theme.of(context).textTheme;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: foxtrotCard,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.redAccent.withValues(alpha: 0.5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(LucideIcons.triangleAlert, size: 16, color: Colors.redAccent),
+              const SizedBox(width: 6),
+              Text(
+                '${failure.orderTypeLabel} · 환불 실패',
+                style: textTheme.labelMedium
+                    ?.copyWith(color: Colors.redAccent),
+              ),
+              const Spacer(),
+              Text(
+                _dateFormat.format(failure.failedAt),
+                style: textTheme.bodySmall?.copyWith(color: foxtrotMuted),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            failure.summary,
+            style: textTheme.titleMedium?.copyWith(
+              color: foxtrotCream,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            '${_amountFormat.format(failure.amount)}원',
+            style: textTheme.bodySmall?.copyWith(color: foxtrotMuted),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              const Spacer(),
+              FilledButton(
+                onPressed: _busy ? null : _retry,
+                child: _busy
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Text('환불 재시도'),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/firestore_admin_orders_repository.dart';
 import '../domain/admin_order_models.dart';
 import '../domain/admin_orders_repository.dart';
+import '../domain/refund_failure_models.dart';
 
 final adminOrdersRepositoryProvider = Provider<AdminOrdersRepository?>((ref) {
   try {
@@ -30,6 +31,15 @@ final activeBeanOrdersProvider =
     return const [];
   }
   return repository.loadActiveBeanOrders();
+});
+
+final refundFailuresProvider =
+    FutureProvider.autoDispose<List<RefundFailure>>((ref) async {
+  final repository = ref.watch(adminOrdersRepositoryProvider);
+  if (repository == null) {
+    return const [];
+  }
+  return repository.loadRefundFailures();
 });
 
 /// 상태를 한 단계 넘기고 목록을 새로 읽는다.
@@ -81,6 +91,15 @@ class AdminOrdersController {
   Future<void> cancelBean(ActiveBeanOrder entry) async {
     await _cancel('bean', entry.uid, entry.orderId);
     _ref.invalidate(activeBeanOrdersProvider);
+  }
+
+  Future<void> retryRefund(RefundFailure failure) async {
+    final repository = _ref.read(adminOrdersRepositoryProvider);
+    if (repository == null) {
+      throw StateError('관리자 기능을 사용할 수 없습니다.');
+    }
+    await repository.retryRefund(failure);
+    _ref.invalidate(refundFailuresProvider);
   }
 
   Future<void> _cancel(String orderType, String uid, String orderId) {
