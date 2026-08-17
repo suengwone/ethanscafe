@@ -17,6 +17,7 @@ import '../features/notice/presentation/notice_list_screen.dart';
 import '../features/order/presentation/order_history_screen.dart';
 import '../features/pickup/presentation/pickup_cart_screen.dart';
 import '../features/pickup/presentation/pickup_order_tracking_screen.dart';
+import '../features/order/presentation/admin_orders_screen.dart';
 import '../features/points/presentation/admin_points_scan_screen.dart';
 import '../features/points/presentation/points_charge_screen.dart';
 import '../features/points/presentation/points_screen.dart';
@@ -144,6 +145,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                     path: 'earn-scan',
                     builder: (context, state) =>
                         const AdminPointsScanScreen(),
+                  ),
+                  GoRoute(
+                    path: 'orders',
+                    builder: (context, state) => const AdminOrdersScreen(),
                   ),
                 ],
               ),

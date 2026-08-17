@@ -276,6 +276,12 @@ class _StaffSection extends ConsumerWidget {
                 icon: const Icon(LucideIcons.scanLine, size: 18),
                 label: const Text('회원 QR 스캔 포인트 적립'),
               ),
+              const SizedBox(height: 8),
+              FilledButton.tonalIcon(
+                onPressed: () => context.push('/points/orders'),
+                icon: const Icon(LucideIcons.clipboardList, size: 18),
+                label: const Text('주문 관리'),
+              ),
             ],
           ),
         ),
