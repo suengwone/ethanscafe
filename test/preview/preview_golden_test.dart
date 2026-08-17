@@ -14,6 +14,7 @@ import 'package:cafe_app/core/theme/app_theme.dart';
 import 'package:cafe_app/core/utils/text_utils.dart';
 import 'package:cafe_app/core/widgets/app_shell.dart';
 import 'package:cafe_app/core/widgets/offline_banner.dart';
+import 'package:cafe_app/core/widgets/update_gate.dart';
 import 'package:cafe_app/features/auth/domain/account_models.dart';
 import 'package:cafe_app/features/auth/domain/auth_models.dart';
 import 'package:cafe_app/features/auth/presentation/account_providers.dart';
@@ -547,6 +548,19 @@ void main() {
     await pumpApp(tester, isOnline: false);
 
     await expectGolden(find.byType(OfflineBanner), 'offline_banner');
+  });
+
+  testWidgets('업데이트 안내 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const UpdateRequiredView(storeUrl: 'https://example.com/app'),
+    );
+
+    await expectGolden(
+      find.byType(UpdateRequiredView),
+      'update_required_screen',
+    );
   });
 
   testWidgets('홈 화면(로그인) 스크린샷', (WidgetTester tester) async {
