@@ -139,10 +139,13 @@ class _MenuTile extends ConsumerWidget {
                 fontSize: 16,
               ),
             ),
-            if (showNew || showHit || showBest)
+            if (item.soldOut || showNew || showHit || showBest)
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // 품절이면 판매 배지는 의미가 없어 대신 품절만 보여준다.
+                  if (item.soldOut) const SoldOutBadge(),
+                  if (!item.soldOut) ...[
                   if (showBest) const BestBadge(),
                   if (showHit) ...[
                     if (showBest) const SizedBox(width: 4),
@@ -151,6 +154,7 @@ class _MenuTile extends ConsumerWidget {
                   if (showNew) ...[
                     if (showBest || showHit) const SizedBox(width: 4),
                     const NewBadge(),
+                  ],
                   ],
                 ],
               ),

@@ -97,7 +97,7 @@ class _PickupOrderBar extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '매장 픽업 주문',
+                      item.soldOut ? '오늘은 준비된 재료가 떨어졌어요' : '매장 픽업 주문',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     Text(
@@ -112,9 +112,9 @@ class _PickupOrderBar extends ConsumerWidget {
                 ),
               ),
               FilledButton.icon(
-                onPressed: () => _order(context, ref),
+                onPressed: item.soldOut ? null : () => _order(context, ref),
                 icon: const Icon(LucideIcons.coffee, size: 18),
-                label: const Text('주문하기'),
+                label: Text(item.soldOut ? '품절' : '주문하기'),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 28,

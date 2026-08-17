@@ -490,9 +490,10 @@ class _OrderBar extends ConsumerWidget {
               ),
               const SizedBox(width: 8),
               FilledButton.icon(
-                onPressed: () => _showOrderSheet(context, ref),
+                onPressed:
+                    bean.soldOut ? null : () => _showOrderSheet(context, ref),
                 icon: const Icon(LucideIcons.shoppingBag, size: 18),
-                label: const Text('주문하기'),
+                label: Text(bean.soldOut ? '품절' : '주문하기'),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,

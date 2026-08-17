@@ -252,17 +252,23 @@ class _BeanCard extends ConsumerWidget {
                                 style: textTheme.labelLarge,
                               ),
                             ),
-                            if (badges.contains(ProductBadge.best)) ...[
+                            // 품절이면 판매 배지는 의미가 없어 대신 품절만 보여준다.
+                            if (bean.soldOut) ...[
                               const SizedBox(width: 6),
-                              const BestBadge(),
-                            ],
-                            if (badges.contains(ProductBadge.hit)) ...[
-                              const SizedBox(width: 6),
-                              const HitBadge(),
-                            ],
-                            if (bean.isNew) ...[
-                              const SizedBox(width: 6),
-                              const NewBadge(),
+                              const SoldOutBadge(),
+                            ] else ...[
+                              if (badges.contains(ProductBadge.best)) ...[
+                                const SizedBox(width: 6),
+                                const BestBadge(),
+                              ],
+                              if (badges.contains(ProductBadge.hit)) ...[
+                                const SizedBox(width: 6),
+                                const HitBadge(),
+                              ],
+                              if (bean.isNew) ...[
+                                const SizedBox(width: 6),
+                                const NewBadge(),
+                              ],
                             ],
                           ],
                         ),
