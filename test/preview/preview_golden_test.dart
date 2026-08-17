@@ -681,14 +681,15 @@ void main() {
     await expectGolden(find.byType(BeanGiftScreen), 'bean_gift_screen');
   });
 
-  testWidgets('원두 선물하기 화면(비회원) 스크린샷', (WidgetTester tester) async {
+  testWidgets('원두 선물하기 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(
       tester,
       const BeanGiftScreen(beanId: 'ethiopia-yirgacheffe-aricha'),
+      user: _previewUser,
     );
 
-    await expectGolden(find.byType(BeanGiftScreen), 'bean_gift_screen_guest');
+    await expectGolden(find.byType(BeanGiftScreen), 'bean_gift_screen');
   });
 
   testWidgets('선물 내역 화면 스크린샷', (WidgetTester tester) async {
@@ -743,13 +744,13 @@ void main() {
     await expectGolden(find.byType(BeanCartScreen), 'bean_cart_screen');
   });
 
-  testWidgets('원두 장바구니 화면(비회원) 스크린샷', (WidgetTester tester) async {
+  testWidgets('원두 장바구니 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
-    await pumpScreen(tester, const BeanCartScreen());
+    await pumpScreen(tester, const BeanCartScreen(), user: _previewUser);
 
     await fillBeanCart(tester, find.byType(BeanCartScreen));
 
-    await expectGolden(find.byType(BeanCartScreen), 'bean_cart_screen_guest');
+    await expectGolden(find.byType(BeanCartScreen), 'bean_cart_screen');
   });
 
   testWidgets('원두 장바구니 픽업 선택 화면 스크린샷', (WidgetTester tester) async {
@@ -860,16 +861,13 @@ void main() {
     await expectGolden(find.byType(PickupCartScreen), 'pickup_cart_screen');
   });
 
-  testWidgets('픽업 장바구니 화면(비회원) 스크린샷', (WidgetTester tester) async {
+  testWidgets('픽업 장바구니 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
-    await pumpScreen(tester, const PickupCartScreen());
+    await pumpScreen(tester, const PickupCartScreen(), user: _previewUser);
 
     await fillPickupCart(tester, find.byType(PickupCartScreen));
 
-    await expectGolden(
-      find.byType(PickupCartScreen),
-      'pickup_cart_screen_guest',
-    );
+    await expectGolden(find.byType(PickupCartScreen), 'pickup_cart_screen');
   });
 
   testWidgets('픽업 장바구니 빈 화면 스크린샷', (WidgetTester tester) async {

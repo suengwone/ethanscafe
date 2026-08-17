@@ -6,8 +6,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
-import '../../../core/widgets/guest_signup_notice_card.dart';
-import '../../auth/presentation/auth_providers.dart';
 import '../../beans/domain/bean_models.dart';
 import '../../beans/presentation/beans_providers.dart';
 import 'gift_providers.dart';
@@ -116,7 +114,6 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final isMember = ref.watch(authStateProvider).value != null;
 
     return Column(
       children: [
@@ -133,13 +130,6 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  if (!isMember) ...[
-                    const GuestSignupNoticeCard(
-                      message:
-                          '비회원으로도 선물할 수 있어요.\n포인트 적립은 회원가입 후 이용할 수 있어요.',
-                    ),
-                    const SizedBox(height: 10),
-                  ],
                   _BeanSummaryCard(bean: widget.bean),
                   const SizedBox(height: 16),
                   _SectionCard(

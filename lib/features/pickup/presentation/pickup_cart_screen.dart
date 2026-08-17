@@ -6,8 +6,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
-import '../../../core/widgets/guest_signup_notice_card.dart';
-import '../../auth/presentation/auth_providers.dart';
 import '../../coupon/domain/coupon_models.dart';
 import '../../coupon/presentation/coupon_select_sheet.dart';
 import '../../coupon/presentation/coupons_providers.dart';
@@ -29,7 +27,6 @@ class PickupCartScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final items = ref.watch(pickupCartProvider);
-    final isMember = ref.watch(authStateProvider).value != null;
 
     return Scaffold(
       appBar: AppBar(title: const Text('픽업 주문')),
@@ -38,10 +35,6 @@ class PickupCartScreen extends ConsumerWidget {
           : ListView(
               padding: foxtrotListPadding,
               children: [
-                if (!isMember)
-                  const GuestSignupNoticeCard(
-                    message: '비회원으로도 주문할 수 있어요.\n회원가입하면 결제 금액의 10%가 포인트로 적립돼요.',
-                  ),
                 const _StoreCard(),
                 const SizedBox(height: 4),
                 ...List.generate(
@@ -572,7 +565,6 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
     final usedPoints = _usePoints ? usablePoints : 0;
     final payAmount = total - couponDiscount - usedPoints;
 
-    final isMember = ref.watch(authStateProvider).value != null;
 
     return Container(
       decoration: const BoxDecoration(
@@ -585,7 +577,6 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (isMember) ...[
               Row(
                 children: [
                   const Icon(LucideIcons.ticket, size: 16, color: foxtrotGold),
@@ -645,26 +636,6 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                   ),
                 ],
               ),
-              ] else
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        LucideIcons.userPlus,
-                        size: 16,
-                        color: foxtrotGold,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          '포인트 적립·쿠폰은 회원가입 후 이용할 수 있어요.',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               const SizedBox(height: 4),
               Row(
                 children: [
