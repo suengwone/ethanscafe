@@ -13,16 +13,30 @@ const STATUS_MESSAGES = {
   },
 };
 
+// 픽업 주문용. 매장에서 상태를 넘길 때 고객에게 바로 알린다.
+const PICKUP_STATUS_MESSAGES = {
+  preparing: {
+    title: '음료를 만들고 있어요',
+    body: (summary) => `${summary} 주문을 준비 중이에요.`,
+  },
+  ready: {
+    title: '주문하신 음료가 나왔어요',
+    body: (summary) => `${summary} 주문을 픽업대에서 찾아가세요.`,
+  },
+};
+
 function orderSummary(order) {
   const items = Array.isArray(order.items) ? order.items : [];
   if (items.length === 0) {
-    return '원두';
+    return '주문';
   }
-  const first = items[0] && items[0].beanName ? items[0].beanName : '원두';
-  return items.length === 1 ? first : `${first} 외 ${items.length - 1}건`;
+  const first = items[0] || {};
+  const name = first.beanName || first.menuName || '주문';
+  return items.length === 1 ? name : `${name} 외 ${items.length - 1}건`;
 }
 
-function collectStatusChangeNotifications(beforeData, afterData) {
+function collectStatusChangeNotifications(
+    beforeData, afterData, messages = STATUS_MESSAGES) {
   const beforeOrders =
     beforeData && Array.isArray(beforeData.orders) ? beforeData.orders : [];
   const afterOrders =
@@ -41,7 +55,7 @@ function collectStatusChangeNotifications(beforeData, afterData) {
     if (beforeStatusById.get(order.id) === order.status) {
       continue;
     }
-    const message = STATUS_MESSAGES[order.status];
+    const message = messages[order.status];
     if (!message) {
       continue;
     }
@@ -57,6 +71,7 @@ function collectStatusChangeNotifications(beforeData, afterData) {
 
 module.exports = {
   STATUS_MESSAGES,
+  PICKUP_STATUS_MESSAGES,
   orderSummary,
   collectStatusChangeNotifications,
 };

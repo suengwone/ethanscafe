@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const {
   collectStatusChangeNotifications,
   orderSummary,
+  PICKUP_STATUS_MESSAGES,
 } = require('./order_status');
 
 const order = (id, status, items) => ({
@@ -75,5 +76,44 @@ test('주문 요약은 첫 상품명과 나머지 건수를 표시한다', () =>
     ),
     '에티오피아 예가체프 외 2건',
   );
-  assert.equal(orderSummary({id: 'o1', status: 'shipped'}), '원두');
+  // 원두·픽업 양쪽에서 쓰이므로 상품이 없을 때는 중립적인 기본값을 쓴다.
+  assert.equal(orderSummary({id: 'o1', status: 'shipped'}), '주문');
+});
+
+test('픽업 주문은 메뉴명으로 요약한다', () => {
+  assert.equal(
+    orderSummary({id: 'p1', items: [{menuName: '바닐라 라떼'}]}),
+    '바닐라 라떼',
+  );
+  assert.equal(
+    orderSummary({
+      id: 'p1',
+      items: [{menuName: '바닐라 라떼'}, {menuName: '플레인 베이글'}],
+    }),
+    '바닐라 라떼 외 1건',
+  );
+});
+
+test('픽업 상태 변경은 픽업 전용 메시지로 수집한다', () => {
+  const before = {orders: [{id: 'p1', status: 'received', items: [{menuName: '바닐라 라떼'}]}]};
+  const after = {orders: [{id: 'p1', status: 'ready', items: [{menuName: '바닐라 라떼'}]}]};
+
+  const notifications = collectStatusChangeNotifications(
+    before, after, PICKUP_STATUS_MESSAGES,
+  );
+
+  assert.equal(notifications.length, 1);
+  assert.equal(notifications[0].status, 'ready');
+  assert.equal(notifications[0].title, '주문하신 음료가 나왔어요');
+  assert.match(notifications[0].body, /바닐라 라떼/);
+});
+
+test('픽업 메시지 표에 없는 상태는 알리지 않는다', () => {
+  const before = {orders: [{id: 'p1', status: 'ready', items: []}]};
+  const after = {orders: [{id: 'p1', status: 'pickedUp', items: []}]};
+
+  assert.deepEqual(
+    collectStatusChangeNotifications(before, after, PICKUP_STATUS_MESSAGES),
+    [],
+  );
 });
