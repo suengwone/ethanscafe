@@ -180,12 +180,16 @@ function catalogUnitPrice(orderType, item, data) {
  * 가격을 클라이언트가 정하면 0원 주문을 만들 수 있으므로 서버가 반드시 확인한다.
  * catalogData는 문서 ID -> 문서 데이터(없으면 null) 맵이다.
  */
-function verifyCatalogPrices({orderType, items, catalogData}) {
+function verifyCatalogItems({orderType, items, catalogData}) {
   for (const item of items) {
     const id = catalogItemId(orderType, item);
     const data = catalogData.get(id);
     if (!data) {
       throw new Error('판매하지 않는 상품이 포함되어 있습니다.');
+    }
+    // 장바구니에 담아둔 사이 매장이 품절 처리했을 수 있다.
+    if (data.soldOut === true) {
+      throw new Error('품절된 상품이 포함되어 있습니다. 장바구니를 다시 확인해 주세요.');
     }
     const expected = catalogUnitPrice(orderType, item, data);
     if (!Number.isInteger(expected) || expected < 0) {
@@ -468,7 +472,7 @@ module.exports = {
   catalogItemId,
   catalogItemIds,
   catalogUnitPrice,
-  verifyCatalogPrices,
+  verifyCatalogItems,
   salesQuantitiesByItem,
   couponDiscountFor,
   validateCouponsForOrder,

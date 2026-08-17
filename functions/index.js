@@ -47,7 +47,7 @@ const {
   validateEarnByMembershipRequest,
   orderTotalAmount,
   catalogItemIds,
-  verifyCatalogPrices,
+  verifyCatalogItems,
   salesQuantitiesByItem,
   validateCouponsForOrder,
   couponTitlesLabel,
@@ -302,7 +302,7 @@ exports.placeOrder = onCall(
       catalogData.set(itemIds[index], snapshot.exists ? snapshot.data() : null);
     });
     try {
-      verifyCatalogPrices({
+      verifyCatalogItems({
         orderType: orderRequest.orderType,
         items: orderRequest.items,
         catalogData,

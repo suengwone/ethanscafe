@@ -8,7 +8,7 @@ const {
   validateEarnByMembershipRequest,
   orderTotalAmount,
   catalogItemIds,
-  verifyCatalogPrices,
+  verifyCatalogItems,
   salesQuantitiesByItem,
   couponDiscountFor,
   validateCouponsForOrder,
@@ -419,12 +419,12 @@ test('포인트 문서가 없으면 기본값을 만든다', () => {
 
 test('픽업 단가가 메뉴 가격과 다르면 거부한다', () => {
   const catalogData = new Map([['menu-1', {price: 4500}]]);
-  assert.doesNotThrow(() => verifyCatalogPrices({
+  assert.doesNotThrow(() => verifyCatalogItems({
     orderType: 'pickup',
     items: [pickupItem],
     catalogData,
   }));
-  assert.throws(() => verifyCatalogPrices({
+  assert.throws(() => verifyCatalogItems({
     orderType: 'pickup',
     items: [{...pickupItem, unitPrice: 0}],
     catalogData,
@@ -433,17 +433,17 @@ test('픽업 단가가 메뉴 가격과 다르면 거부한다', () => {
 
 test('원두 단가는 용량별 가격과 대조한다', () => {
   const catalogData = new Map([['bean-1', {price200: 15000, price500: 30000}]]);
-  assert.doesNotThrow(() => verifyCatalogPrices({
+  assert.doesNotThrow(() => verifyCatalogItems({
     orderType: 'bean',
     items: [beanItem],
     catalogData,
   }));
-  assert.throws(() => verifyCatalogPrices({
+  assert.throws(() => verifyCatalogItems({
     orderType: 'bean',
     items: [{...beanItem, weight: 'g500'}],
     catalogData,
   }), /가격이 변경/);
-  assert.doesNotThrow(() => verifyCatalogPrices({
+  assert.doesNotThrow(() => verifyCatalogItems({
     orderType: 'bean',
     items: [{...beanItem, weight: 'g500', unitPrice: 30000}],
     catalogData,
@@ -451,15 +451,28 @@ test('원두 단가는 용량별 가격과 대조한다', () => {
 });
 
 test('카탈로그에 없는 상품은 거부한다', () => {
-  assert.throws(() => verifyCatalogPrices({
+  assert.throws(() => verifyCatalogItems({
     orderType: 'pickup',
     items: [pickupItem],
     catalogData: new Map([['menu-1', null]]),
   }), /판매하지 않는 상품/);
 });
 
+test('품절 처리된 상품은 거부한다', () => {
+  assert.throws(() => verifyCatalogItems({
+    orderType: 'pickup',
+    items: [pickupItem],
+    catalogData: new Map([['menu-1', {price: 4500, soldOut: true}]]),
+  }), /품절된 상품/);
+  assert.doesNotThrow(() => verifyCatalogItems({
+    orderType: 'pickup',
+    items: [pickupItem],
+    catalogData: new Map([['menu-1', {price: 4500, soldOut: false}]]),
+  }));
+});
+
 test('카탈로그 가격이 숫자가 아니면 거부한다', () => {
-  assert.throws(() => verifyCatalogPrices({
+  assert.throws(() => verifyCatalogItems({
     orderType: 'pickup',
     items: [pickupItem],
     catalogData: new Map([['menu-1', {price: '4500'}]]),
