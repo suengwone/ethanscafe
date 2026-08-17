@@ -6,6 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/order_cancel_dialog.dart';
+import '../../order/domain/refund_status.dart';
 import '../domain/pickup_order_models.dart';
 import 'pickup_order_providers.dart';
 
@@ -49,7 +50,7 @@ class PickupOrderTrackingScreen extends ConsumerWidget {
               _OrderSummaryCard(order: order),
               const SizedBox(height: 12),
               if (order.isCancelled)
-                const _CancelledCard()
+                _CancelledCard(refund: order.refundStatus)
               else
                 _StatusTimelineCard(status: order.status),
               const SizedBox(height: 12),
@@ -306,7 +307,22 @@ class _StatusStep extends StatelessWidget {
 }
 
 class _CancelledCard extends StatelessWidget {
-  const _CancelledCard();
+  const _CancelledCard({this.refund});
+
+  final RefundStatus? refund;
+
+  /// 환불이 밀린 건은 다 끝난 것처럼 말하지 않는다.
+  String get _message {
+    switch (refund) {
+      case RefundStatus.pending:
+      case RefundStatus.failed:
+        return '사용한 쿠폰과 포인트는 복구되었어요. 결제 환불은 확인 중이며, '
+            '오래 걸리면 고객센터로 문의해 주세요.';
+      case RefundStatus.done:
+      case null:
+        return '사용한 쿠폰과 포인트는 복구되었어요. 결제 환불은 수단에 따라 3~5일 소요될 수 있어요.';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -322,8 +338,7 @@ class _CancelledCard extends StatelessWidget {
             Text('주문이 취소되었어요', style: textTheme.titleSmall),
             const SizedBox(height: 6),
             Text(
-              '사용한 쿠폰과 포인트는 복구되었어요. 결제 환불은 수단에 따라 3~5일 소요될 수 있어요.'
-                  .keepWord,
+              _message.keepWord,
               style: textTheme.bodySmall,
               textAlign: TextAlign.center,
             ),

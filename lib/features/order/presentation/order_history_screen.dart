@@ -19,6 +19,7 @@ import '../../review/domain/review_models.dart';
 import '../../review/presentation/review_providers.dart';
 import '../../review/presentation/review_sheet.dart';
 import '../domain/order_models.dart';
+import '../domain/refund_status.dart';
 import '../domain/reorder.dart';
 import 'order_providers.dart';
 
@@ -205,7 +206,7 @@ class _BeanOrderCard extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(width: 10),
-                _StatusChip(status: order.status),
+                _StatusChip(status: order.status, refund: order.refundStatus),
               ],
             ),
             const SizedBox(height: 12),
@@ -426,7 +427,7 @@ class _PickupOrderCard extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  _PickupStatusChip(status: order.status),
+                  _PickupStatusChip(status: order.status, refund: order.refundStatus),
                 ],
               ),
               const SizedBox(height: 12),
@@ -628,9 +629,10 @@ class _ReviewItemRow extends ConsumerWidget {
 }
 
 class _PickupStatusChip extends StatelessWidget {
-  const _PickupStatusChip({required this.status});
+  const _PickupStatusChip({required this.status, this.refund});
 
   final PickupOrderStatus status;
+  final RefundStatus? refund;
 
   @override
   Widget build(BuildContext context) {
@@ -642,7 +644,9 @@ class _PickupStatusChip extends StatelessWidget {
         border: Border.all(color: foxtrotBorder),
       ),
       child: Text(
-        status.label,
+        status == PickupOrderStatus.cancelled
+            ? refundLabelFor(status.label, refund)
+            : status.label,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
           color: status == PickupOrderStatus.cancelled
               ? foxtrotMuted
@@ -655,9 +659,10 @@ class _PickupStatusChip extends StatelessWidget {
 }
 
 class _StatusChip extends StatelessWidget {
-  const _StatusChip({required this.status});
+  const _StatusChip({required this.status, this.refund});
 
   final BeanOrderStatus status;
+  final RefundStatus? refund;
 
   @override
   Widget build(BuildContext context) {
@@ -669,7 +674,9 @@ class _StatusChip extends StatelessWidget {
         border: Border.all(color: foxtrotBorder),
       ),
       child: Text(
-        status.label,
+        status == BeanOrderStatus.cancelled
+            ? refundLabelFor(status.label, refund)
+            : status.label,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
           color: status == BeanOrderStatus.cancelled
               ? foxtrotMuted
