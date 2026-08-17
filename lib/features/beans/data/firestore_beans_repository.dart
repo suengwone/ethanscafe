@@ -41,6 +41,7 @@ Bean beanFromFirestore(String id, Map<String, dynamic> data) {
     price200: (data['price200'] as num? ?? 0).toInt(),
     price500: (data['price500'] as num? ?? 0).toInt(),
     isNew: data['isNew'] as bool? ?? false,
+    soldOut: data['soldOut'] as bool? ?? false,
   );
 }
 

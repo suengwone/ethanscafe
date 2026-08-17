@@ -56,6 +56,7 @@ abstract class Bean with _$Bean {
     required int price200,
     required int price500,
     @Default(false) bool isNew,
+    @Default(false) bool soldOut,
   }) = _Bean;
 
   int priceOf(BeanWeight weight) =>

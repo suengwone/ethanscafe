@@ -37,5 +37,6 @@ MenuItem menuItemFromFirestore(String id, Map<String, dynamic> data) {
         (data['servingOptions'] as List<dynamic>? ?? const []).cast<String>(),
     detail: data['detail'] as String?,
     isRecommended: data['isRecommended'] as bool? ?? false,
+    soldOut: data['soldOut'] as bool? ?? false,
   );
 }

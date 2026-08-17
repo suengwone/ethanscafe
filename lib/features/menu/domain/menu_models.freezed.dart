@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MenuItem {
 
- String get id; String get name; String get description; MenuCategory get category; int get price; bool get priceFrom; MenuBadge get badge; List<String> get servingOptions; String? get detail; bool get isRecommended;
+ String get id; String get name; String get description; MenuCategory get category; int get price; bool get priceFrom; MenuBadge get badge; List<String> get servingOptions; String? get detail; bool get isRecommended; bool get soldOut;
 /// Create a copy of MenuItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $MenuItemCopyWith<MenuItem> get copyWith => _$MenuItemCopyWithImpl<MenuItem>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MenuItem&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.category, category) || other.category == category)&&(identical(other.price, price) || other.price == price)&&(identical(other.priceFrom, priceFrom) || other.priceFrom == priceFrom)&&(identical(other.badge, badge) || other.badge == badge)&&const DeepCollectionEquality().equals(other.servingOptions, servingOptions)&&(identical(other.detail, detail) || other.detail == detail)&&(identical(other.isRecommended, isRecommended) || other.isRecommended == isRecommended));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MenuItem&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.category, category) || other.category == category)&&(identical(other.price, price) || other.price == price)&&(identical(other.priceFrom, priceFrom) || other.priceFrom == priceFrom)&&(identical(other.badge, badge) || other.badge == badge)&&const DeepCollectionEquality().equals(other.servingOptions, servingOptions)&&(identical(other.detail, detail) || other.detail == detail)&&(identical(other.isRecommended, isRecommended) || other.isRecommended == isRecommended)&&(identical(other.soldOut, soldOut) || other.soldOut == soldOut));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description,category,price,priceFrom,badge,const DeepCollectionEquality().hash(servingOptions),detail,isRecommended);
+int get hashCode => Object.hash(runtimeType,id,name,description,category,price,priceFrom,badge,const DeepCollectionEquality().hash(servingOptions),detail,isRecommended,soldOut);
 
 @override
 String toString() {
-  return 'MenuItem(id: $id, name: $name, description: $description, category: $category, price: $price, priceFrom: $priceFrom, badge: $badge, servingOptions: $servingOptions, detail: $detail, isRecommended: $isRecommended)';
+  return 'MenuItem(id: $id, name: $name, description: $description, category: $category, price: $price, priceFrom: $priceFrom, badge: $badge, servingOptions: $servingOptions, detail: $detail, isRecommended: $isRecommended, soldOut: $soldOut)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $MenuItemCopyWith<$Res>  {
   factory $MenuItemCopyWith(MenuItem value, $Res Function(MenuItem) _then) = _$MenuItemCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String description, MenuCategory category, int price, bool priceFrom, MenuBadge badge, List<String> servingOptions, String? detail, bool isRecommended
+ String id, String name, String description, MenuCategory category, int price, bool priceFrom, MenuBadge badge, List<String> servingOptions, String? detail, bool isRecommended, bool soldOut
 });
 
 
@@ -62,7 +62,7 @@ class _$MenuItemCopyWithImpl<$Res>
 
 /// Create a copy of MenuItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = null,Object? category = null,Object? price = null,Object? priceFrom = null,Object? badge = null,Object? servingOptions = null,Object? detail = freezed,Object? isRecommended = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = null,Object? category = null,Object? price = null,Object? priceFrom = null,Object? badge = null,Object? servingOptions = null,Object? detail = freezed,Object? isRecommended = null,Object? soldOut = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -74,6 +74,7 @@ as bool,badge: null == badge ? _self.badge : badge // ignore: cast_nullable_to_n
 as MenuBadge,servingOptions: null == servingOptions ? _self.servingOptions : servingOptions // ignore: cast_nullable_to_non_nullable
 as List<String>,detail: freezed == detail ? _self.detail : detail // ignore: cast_nullable_to_non_nullable
 as String?,isRecommended: null == isRecommended ? _self.isRecommended : isRecommended // ignore: cast_nullable_to_non_nullable
+as bool,soldOut: null == soldOut ? _self.soldOut : soldOut // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -159,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String description,  MenuCategory category,  int price,  bool priceFrom,  MenuBadge badge,  List<String> servingOptions,  String? detail,  bool isRecommended)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String description,  MenuCategory category,  int price,  bool priceFrom,  MenuBadge badge,  List<String> servingOptions,  String? detail,  bool isRecommended,  bool soldOut)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MenuItem() when $default != null:
-return $default(_that.id,_that.name,_that.description,_that.category,_that.price,_that.priceFrom,_that.badge,_that.servingOptions,_that.detail,_that.isRecommended);case _:
+return $default(_that.id,_that.name,_that.description,_that.category,_that.price,_that.priceFrom,_that.badge,_that.servingOptions,_that.detail,_that.isRecommended,_that.soldOut);case _:
   return orElse();
 
 }
@@ -180,10 +181,10 @@ return $default(_that.id,_that.name,_that.description,_that.category,_that.price
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String description,  MenuCategory category,  int price,  bool priceFrom,  MenuBadge badge,  List<String> servingOptions,  String? detail,  bool isRecommended)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String description,  MenuCategory category,  int price,  bool priceFrom,  MenuBadge badge,  List<String> servingOptions,  String? detail,  bool isRecommended,  bool soldOut)  $default,) {final _that = this;
 switch (_that) {
 case _MenuItem():
-return $default(_that.id,_that.name,_that.description,_that.category,_that.price,_that.priceFrom,_that.badge,_that.servingOptions,_that.detail,_that.isRecommended);case _:
+return $default(_that.id,_that.name,_that.description,_that.category,_that.price,_that.priceFrom,_that.badge,_that.servingOptions,_that.detail,_that.isRecommended,_that.soldOut);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +201,10 @@ return $default(_that.id,_that.name,_that.description,_that.category,_that.price
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String description,  MenuCategory category,  int price,  bool priceFrom,  MenuBadge badge,  List<String> servingOptions,  String? detail,  bool isRecommended)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String description,  MenuCategory category,  int price,  bool priceFrom,  MenuBadge badge,  List<String> servingOptions,  String? detail,  bool isRecommended,  bool soldOut)?  $default,) {final _that = this;
 switch (_that) {
 case _MenuItem() when $default != null:
-return $default(_that.id,_that.name,_that.description,_that.category,_that.price,_that.priceFrom,_that.badge,_that.servingOptions,_that.detail,_that.isRecommended);case _:
+return $default(_that.id,_that.name,_that.description,_that.category,_that.price,_that.priceFrom,_that.badge,_that.servingOptions,_that.detail,_that.isRecommended,_that.soldOut);case _:
   return null;
 
 }
@@ -215,7 +216,7 @@ return $default(_that.id,_that.name,_that.description,_that.category,_that.price
 
 
 class _MenuItem extends MenuItem {
-  const _MenuItem({required this.id, required this.name, required this.description, required this.category, required this.price, this.priceFrom = false, this.badge = MenuBadge.none, final  List<String> servingOptions = const <String>[], this.detail, this.isRecommended = false}): _servingOptions = servingOptions,super._();
+  const _MenuItem({required this.id, required this.name, required this.description, required this.category, required this.price, this.priceFrom = false, this.badge = MenuBadge.none, final  List<String> servingOptions = const <String>[], this.detail, this.isRecommended = false, this.soldOut = false}): _servingOptions = servingOptions,super._();
   
 
 @override final  String id;
@@ -234,6 +235,7 @@ class _MenuItem extends MenuItem {
 
 @override final  String? detail;
 @override@JsonKey() final  bool isRecommended;
+@override@JsonKey() final  bool soldOut;
 
 /// Create a copy of MenuItem
 /// with the given fields replaced by the non-null parameter values.
@@ -245,16 +247,16 @@ _$MenuItemCopyWith<_MenuItem> get copyWith => __$MenuItemCopyWithImpl<_MenuItem>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MenuItem&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.category, category) || other.category == category)&&(identical(other.price, price) || other.price == price)&&(identical(other.priceFrom, priceFrom) || other.priceFrom == priceFrom)&&(identical(other.badge, badge) || other.badge == badge)&&const DeepCollectionEquality().equals(other._servingOptions, _servingOptions)&&(identical(other.detail, detail) || other.detail == detail)&&(identical(other.isRecommended, isRecommended) || other.isRecommended == isRecommended));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MenuItem&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.category, category) || other.category == category)&&(identical(other.price, price) || other.price == price)&&(identical(other.priceFrom, priceFrom) || other.priceFrom == priceFrom)&&(identical(other.badge, badge) || other.badge == badge)&&const DeepCollectionEquality().equals(other._servingOptions, _servingOptions)&&(identical(other.detail, detail) || other.detail == detail)&&(identical(other.isRecommended, isRecommended) || other.isRecommended == isRecommended)&&(identical(other.soldOut, soldOut) || other.soldOut == soldOut));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description,category,price,priceFrom,badge,const DeepCollectionEquality().hash(_servingOptions),detail,isRecommended);
+int get hashCode => Object.hash(runtimeType,id,name,description,category,price,priceFrom,badge,const DeepCollectionEquality().hash(_servingOptions),detail,isRecommended,soldOut);
 
 @override
 String toString() {
-  return 'MenuItem(id: $id, name: $name, description: $description, category: $category, price: $price, priceFrom: $priceFrom, badge: $badge, servingOptions: $servingOptions, detail: $detail, isRecommended: $isRecommended)';
+  return 'MenuItem(id: $id, name: $name, description: $description, category: $category, price: $price, priceFrom: $priceFrom, badge: $badge, servingOptions: $servingOptions, detail: $detail, isRecommended: $isRecommended, soldOut: $soldOut)';
 }
 
 
@@ -265,7 +267,7 @@ abstract mixin class _$MenuItemCopyWith<$Res> implements $MenuItemCopyWith<$Res>
   factory _$MenuItemCopyWith(_MenuItem value, $Res Function(_MenuItem) _then) = __$MenuItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String description, MenuCategory category, int price, bool priceFrom, MenuBadge badge, List<String> servingOptions, String? detail, bool isRecommended
+ String id, String name, String description, MenuCategory category, int price, bool priceFrom, MenuBadge badge, List<String> servingOptions, String? detail, bool isRecommended, bool soldOut
 });
 
 
@@ -282,7 +284,7 @@ class __$MenuItemCopyWithImpl<$Res>
 
 /// Create a copy of MenuItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = null,Object? category = null,Object? price = null,Object? priceFrom = null,Object? badge = null,Object? servingOptions = null,Object? detail = freezed,Object? isRecommended = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = null,Object? category = null,Object? price = null,Object? priceFrom = null,Object? badge = null,Object? servingOptions = null,Object? detail = freezed,Object? isRecommended = null,Object? soldOut = null,}) {
   return _then(_MenuItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -294,6 +296,7 @@ as bool,badge: null == badge ? _self.badge : badge // ignore: cast_nullable_to_n
 as MenuBadge,servingOptions: null == servingOptions ? _self._servingOptions : servingOptions // ignore: cast_nullable_to_non_nullable
 as List<String>,detail: freezed == detail ? _self.detail : detail // ignore: cast_nullable_to_non_nullable
 as String?,isRecommended: null == isRecommended ? _self.isRecommended : isRecommended // ignore: cast_nullable_to_non_nullable
+as bool,soldOut: null == soldOut ? _self.soldOut : soldOut // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

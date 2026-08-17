@@ -41,6 +41,7 @@ abstract class MenuItem with _$MenuItem {
     @Default(<String>[]) List<String> servingOptions,
     String? detail,
     @Default(false) bool isRecommended,
+    @Default(false) bool soldOut,
   }) = _MenuItem;
 
   String get priceLabel =>
