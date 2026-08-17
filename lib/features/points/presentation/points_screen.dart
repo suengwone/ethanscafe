@@ -282,6 +282,12 @@ class _StaffSection extends ConsumerWidget {
                 icon: const Icon(LucideIcons.clipboardList, size: 18),
                 label: const Text('주문 관리'),
               ),
+              const SizedBox(height: 8),
+              FilledButton.tonalIcon(
+                onPressed: () => context.push('/points/catalog'),
+                icon: const Icon(LucideIcons.packageX, size: 18),
+                label: const Text('품절 관리'),
+              ),
             ],
           ),
         ),

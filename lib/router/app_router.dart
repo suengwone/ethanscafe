@@ -7,6 +7,7 @@ import '../features/auth/presentation/business_register_screen.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/beans/presentation/bean_cart_screen.dart';
 import '../features/beans/presentation/bean_detail_screen.dart';
+import '../features/catalog/presentation/catalog_admin_screen.dart';
 import '../features/coupon/presentation/coupon_list_screen.dart';
 import '../features/gift/presentation/bean_gift_screen.dart';
 import '../features/gift/presentation/gift_history_screen.dart';
@@ -149,6 +150,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'orders',
                     builder: (context, state) => const AdminOrdersScreen(),
+                  ),
+                  GoRoute(
+                    path: 'catalog',
+                    builder: (context, state) => const CatalogAdminScreen(),
                   ),
                 ],
               ),
