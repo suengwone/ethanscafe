@@ -85,6 +85,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // 진행 중인 주문 색인. 매장 관리자만 읽고, 쓰기는 트리거(서버)만 한다.
+    match /active_orders/{entryId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
     match /menus/{document=**} {
       allow read: if true;
       allow write: if isAdmin();

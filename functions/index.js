@@ -68,6 +68,10 @@ const {
   cancelledOrderOf,
   cancelReasonOf,
 } = require('./order_cancel');
+const {
+  COLLECTION: ACTIVE_ORDERS_COLLECTION,
+  collectActiveOrderWrites,
+} = require('./active_orders');
 const {collectCouponBackfills} = require('./coupon_backfill');
 const {
   validateChargeRequest,
@@ -764,6 +768,46 @@ exports.backfillCouponUids = onCall(async (request) => {
   return {updated: updates.length, skipped};
 });
 
+/**
+ * 진행 중인 주문 색인을 처음부터 다시 만든다.
+ *
+ * 색인은 주문 문서가 바뀔 때만 갱신되므로, 색인을 도입하기 전에 들어온 주문은
+ * 아무도 건드리지 않으면 매장 화면에 영영 나타나지 않는다. 배포 직후 한 번 돌린다.
+ */
+exports.backfillActiveOrders = onCall(async (request) => {
+  if (!request.auth || request.auth.token.admin !== true) {
+    throw new HttpsError('permission-denied', '관리자만 사용할 수 있습니다.');
+  }
+
+  const firestore = getFirestore();
+  let indexed = 0;
+  for (const [orderType, collection] of Object.entries(ORDER_COLLECTIONS)) {
+    const snapshot = await firestore.collection(collection).get();
+    for (const doc of snapshot.docs) {
+      // 색인이 비어 있다고 보고 전체를 다시 쓴다.
+      const writes = collectActiveOrderWrites({
+        orderType,
+        uid: doc.id,
+        beforeData: null,
+        afterData: doc.data(),
+      });
+      if (writes.length === 0) {
+        continue;
+      }
+      const batch = firestore.batch();
+      for (const write of writes) {
+        batch.set(
+            firestore.collection(ACTIVE_ORDERS_COLLECTION).doc(write.id),
+            write.doc,
+        );
+      }
+      await batch.commit();
+      indexed += writes.length;
+    }
+  }
+  return {indexed};
+});
+
 exports.signInWithKakao = onCall(
   {secrets: [kakaoJsAppKey, kakaoClientSecret]},
   async (request) => {
@@ -966,11 +1010,41 @@ async function pushOrderStatusNotifications(uid, notifications) {
   }
 }
 
+/** 진행 중인 주문 색인을 주문 문서 변경에 맞춰 갱신한다. */
+async function syncActiveOrders({orderType, uid, beforeData, afterData}) {
+  const writes = collectActiveOrderWrites({
+    orderType,
+    uid,
+    beforeData,
+    afterData,
+  });
+  if (writes.length === 0) {
+    return;
+  }
+  const firestore = getFirestore();
+  const batch = firestore.batch();
+  for (const write of writes) {
+    const ref = firestore.collection(ACTIVE_ORDERS_COLLECTION).doc(write.id);
+    if (write.type === 'delete') {
+      batch.delete(ref);
+    } else {
+      batch.set(ref, write.doc);
+    }
+  }
+  await batch.commit();
+}
+
 exports.sendBeanOrderStatusPush = onDocumentWritten(
   'orders/{uid}',
   async (event) => {
     const before = event.data.before.exists ? event.data.before.data() : null;
     const after = event.data.after.exists ? event.data.after.data() : null;
+    await syncActiveOrders({
+      orderType: 'bean',
+      uid: event.params.uid,
+      beforeData: before,
+      afterData: after,
+    });
     await pushOrderStatusNotifications(
         event.params.uid,
         collectStatusChangeNotifications(before, after),
@@ -983,6 +1057,12 @@ exports.sendPickupOrderStatusPush = onDocumentWritten(
   async (event) => {
     const before = event.data.before.exists ? event.data.before.data() : null;
     const after = event.data.after.exists ? event.data.after.data() : null;
+    await syncActiveOrders({
+      orderType: 'pickup',
+      uid: event.params.uid,
+      beforeData: before,
+      afterData: after,
+    });
     await pushOrderStatusNotifications(
         event.params.uid,
         collectStatusChangeNotifications(
