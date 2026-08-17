@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../core/firebase/firestore_converters.dart';
+import '../../order/domain/refund_status.dart';
 import '../domain/pickup_order_models.dart';
 import '../domain/pickup_orders_repository.dart';
 
@@ -145,6 +146,7 @@ PickupOrder pickupOrderFromFirestore(Map<String, dynamic> data) {
     paymentMethod: data['paymentMethod'] as String?,
     status: PickupOrderStatus.values.asNameMap()[data['status']] ??
         PickupOrderStatus.received,
+    refundStatus: RefundStatus.parse(data['refundStatus']),
     createdAt: firestoreDateTime(data['createdAt']),
   );
 }

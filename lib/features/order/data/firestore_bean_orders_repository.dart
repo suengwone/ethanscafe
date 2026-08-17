@@ -6,6 +6,7 @@ import '../../../core/firebase/firestore_converters.dart';
 import '../../beans/domain/bean_models.dart';
 import '../domain/bean_orders_repository.dart';
 import '../domain/order_models.dart';
+import '../domain/refund_status.dart';
 
 class FirestoreBeanOrdersRepository implements BeanOrdersRepository {
   FirestoreBeanOrdersRepository({
@@ -142,6 +143,7 @@ BeanOrder beanOrderFromFirestore(Map<String, dynamic> data) {
     shippingAddress: data['shippingAddress'] as String?,
     status: BeanOrderStatus.values.asNameMap()[data['status']] ??
         BeanOrderStatus.received,
+    refundStatus: RefundStatus.parse(data['refundStatus']),
     createdAt: firestoreDateTime(data['createdAt']),
   );
 }

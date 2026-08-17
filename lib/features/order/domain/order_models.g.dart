@@ -63,6 +63,10 @@ _BeanOrder _$BeanOrderFromJson(Map<String, dynamic> json) => _BeanOrder(
   status:
       $enumDecodeNullable(_$BeanOrderStatusEnumMap, json['status']) ??
       BeanOrderStatus.received,
+  refundStatus: $enumDecodeNullable(
+    _$RefundStatusEnumMap,
+    json['refundStatus'],
+  ),
   createdAt: DateTime.parse(json['createdAt'] as String),
 );
 
@@ -86,6 +90,7 @@ Map<String, dynamic> _$BeanOrderToJson(_BeanOrder instance) =>
       'recipientPhone': instance.recipientPhone,
       'shippingAddress': instance.shippingAddress,
       'status': _$BeanOrderStatusEnumMap[instance.status]!,
+      'refundStatus': _$RefundStatusEnumMap[instance.refundStatus],
       'createdAt': instance.createdAt.toIso8601String(),
     };
 
@@ -102,4 +107,10 @@ const _$BeanOrderStatusEnumMap = {
   BeanOrderStatus.ready: 'ready',
   BeanOrderStatus.pickedUp: 'pickedUp',
   BeanOrderStatus.cancelled: 'cancelled',
+};
+
+const _$RefundStatusEnumMap = {
+  RefundStatus.pending: 'pending',
+  RefundStatus.done: 'done',
+  RefundStatus.failed: 'failed',
 };

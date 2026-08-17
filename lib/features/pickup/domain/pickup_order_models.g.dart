@@ -43,6 +43,10 @@ _PickupOrder _$PickupOrderFromJson(Map<String, dynamic> json) => _PickupOrder(
   status:
       $enumDecodeNullable(_$PickupOrderStatusEnumMap, json['status']) ??
       PickupOrderStatus.received,
+  refundStatus: $enumDecodeNullable(
+    _$RefundStatusEnumMap,
+    json['refundStatus'],
+  ),
   createdAt: DateTime.parse(json['createdAt'] as String),
 );
 
@@ -62,6 +66,7 @@ Map<String, dynamic> _$PickupOrderToJson(_PickupOrder instance) =>
       'paymentKey': instance.paymentKey,
       'paymentMethod': instance.paymentMethod,
       'status': _$PickupOrderStatusEnumMap[instance.status]!,
+      'refundStatus': _$RefundStatusEnumMap[instance.refundStatus],
       'createdAt': instance.createdAt.toIso8601String(),
     };
 
@@ -71,4 +76,10 @@ const _$PickupOrderStatusEnumMap = {
   PickupOrderStatus.ready: 'ready',
   PickupOrderStatus.pickedUp: 'pickedUp',
   PickupOrderStatus.cancelled: 'cancelled',
+};
+
+const _$RefundStatusEnumMap = {
+  RefundStatus.pending: 'pending',
+  RefundStatus.done: 'done',
+  RefundStatus.failed: 'failed',
 };

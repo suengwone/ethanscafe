@@ -290,7 +290,7 @@ as int,
 /// @nodoc
 mixin _$PickupOrder {
 
- String get id; String get storeId; String get storeName; int get pickupNumber; List<PickupOrderItem> get items; int get totalAmount; int get usedPoints; int get earnedPoints; String? get couponId; String? get couponTitle; int get couponDiscount; String? get paymentKey; String? get paymentMethod; PickupOrderStatus get status; DateTime get createdAt;
+ String get id; String get storeId; String get storeName; int get pickupNumber; List<PickupOrderItem> get items; int get totalAmount; int get usedPoints; int get earnedPoints; String? get couponId; String? get couponTitle; int get couponDiscount; String? get paymentKey; String? get paymentMethod; PickupOrderStatus get status; RefundStatus? get refundStatus; DateTime get createdAt;
 /// Create a copy of PickupOrder
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -303,16 +303,16 @@ $PickupOrderCopyWith<PickupOrder> get copyWith => _$PickupOrderCopyWithImpl<Pick
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PickupOrder&&(identical(other.id, id) || other.id == id)&&(identical(other.storeId, storeId) || other.storeId == storeId)&&(identical(other.storeName, storeName) || other.storeName == storeName)&&(identical(other.pickupNumber, pickupNumber) || other.pickupNumber == pickupNumber)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.usedPoints, usedPoints) || other.usedPoints == usedPoints)&&(identical(other.earnedPoints, earnedPoints) || other.earnedPoints == earnedPoints)&&(identical(other.couponId, couponId) || other.couponId == couponId)&&(identical(other.couponTitle, couponTitle) || other.couponTitle == couponTitle)&&(identical(other.couponDiscount, couponDiscount) || other.couponDiscount == couponDiscount)&&(identical(other.paymentKey, paymentKey) || other.paymentKey == paymentKey)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PickupOrder&&(identical(other.id, id) || other.id == id)&&(identical(other.storeId, storeId) || other.storeId == storeId)&&(identical(other.storeName, storeName) || other.storeName == storeName)&&(identical(other.pickupNumber, pickupNumber) || other.pickupNumber == pickupNumber)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.usedPoints, usedPoints) || other.usedPoints == usedPoints)&&(identical(other.earnedPoints, earnedPoints) || other.earnedPoints == earnedPoints)&&(identical(other.couponId, couponId) || other.couponId == couponId)&&(identical(other.couponTitle, couponTitle) || other.couponTitle == couponTitle)&&(identical(other.couponDiscount, couponDiscount) || other.couponDiscount == couponDiscount)&&(identical(other.paymentKey, paymentKey) || other.paymentKey == paymentKey)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.status, status) || other.status == status)&&(identical(other.refundStatus, refundStatus) || other.refundStatus == refundStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,storeId,storeName,pickupNumber,const DeepCollectionEquality().hash(items),totalAmount,usedPoints,earnedPoints,couponId,couponTitle,couponDiscount,paymentKey,paymentMethod,status,createdAt);
+int get hashCode => Object.hash(runtimeType,id,storeId,storeName,pickupNumber,const DeepCollectionEquality().hash(items),totalAmount,usedPoints,earnedPoints,couponId,couponTitle,couponDiscount,paymentKey,paymentMethod,status,refundStatus,createdAt);
 
 @override
 String toString() {
-  return 'PickupOrder(id: $id, storeId: $storeId, storeName: $storeName, pickupNumber: $pickupNumber, items: $items, totalAmount: $totalAmount, usedPoints: $usedPoints, earnedPoints: $earnedPoints, couponId: $couponId, couponTitle: $couponTitle, couponDiscount: $couponDiscount, paymentKey: $paymentKey, paymentMethod: $paymentMethod, status: $status, createdAt: $createdAt)';
+  return 'PickupOrder(id: $id, storeId: $storeId, storeName: $storeName, pickupNumber: $pickupNumber, items: $items, totalAmount: $totalAmount, usedPoints: $usedPoints, earnedPoints: $earnedPoints, couponId: $couponId, couponTitle: $couponTitle, couponDiscount: $couponDiscount, paymentKey: $paymentKey, paymentMethod: $paymentMethod, status: $status, refundStatus: $refundStatus, createdAt: $createdAt)';
 }
 
 
@@ -323,7 +323,7 @@ abstract mixin class $PickupOrderCopyWith<$Res>  {
   factory $PickupOrderCopyWith(PickupOrder value, $Res Function(PickupOrder) _then) = _$PickupOrderCopyWithImpl;
 @useResult
 $Res call({
- String id, String storeId, String storeName, int pickupNumber, List<PickupOrderItem> items, int totalAmount, int usedPoints, int earnedPoints, String? couponId, String? couponTitle, int couponDiscount, String? paymentKey, String? paymentMethod, PickupOrderStatus status, DateTime createdAt
+ String id, String storeId, String storeName, int pickupNumber, List<PickupOrderItem> items, int totalAmount, int usedPoints, int earnedPoints, String? couponId, String? couponTitle, int couponDiscount, String? paymentKey, String? paymentMethod, PickupOrderStatus status, RefundStatus? refundStatus, DateTime createdAt
 });
 
 
@@ -340,7 +340,7 @@ class _$PickupOrderCopyWithImpl<$Res>
 
 /// Create a copy of PickupOrder
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? storeId = null,Object? storeName = null,Object? pickupNumber = null,Object? items = null,Object? totalAmount = null,Object? usedPoints = null,Object? earnedPoints = null,Object? couponId = freezed,Object? couponTitle = freezed,Object? couponDiscount = null,Object? paymentKey = freezed,Object? paymentMethod = freezed,Object? status = null,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? storeId = null,Object? storeName = null,Object? pickupNumber = null,Object? items = null,Object? totalAmount = null,Object? usedPoints = null,Object? earnedPoints = null,Object? couponId = freezed,Object? couponTitle = freezed,Object? couponDiscount = null,Object? paymentKey = freezed,Object? paymentMethod = freezed,Object? status = null,Object? refundStatus = freezed,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,storeId: null == storeId ? _self.storeId : storeId // ignore: cast_nullable_to_non_nullable
@@ -356,7 +356,8 @@ as String?,couponDiscount: null == couponDiscount ? _self.couponDiscount : coupo
 as int,paymentKey: freezed == paymentKey ? _self.paymentKey : paymentKey // ignore: cast_nullable_to_non_nullable
 as String?,paymentMethod: freezed == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
 as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as PickupOrderStatus,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as PickupOrderStatus,refundStatus: freezed == refundStatus ? _self.refundStatus : refundStatus // ignore: cast_nullable_to_non_nullable
+as RefundStatus?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }
@@ -442,10 +443,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String storeId,  String storeName,  int pickupNumber,  List<PickupOrderItem> items,  int totalAmount,  int usedPoints,  int earnedPoints,  String? couponId,  String? couponTitle,  int couponDiscount,  String? paymentKey,  String? paymentMethod,  PickupOrderStatus status,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String storeId,  String storeName,  int pickupNumber,  List<PickupOrderItem> items,  int totalAmount,  int usedPoints,  int earnedPoints,  String? couponId,  String? couponTitle,  int couponDiscount,  String? paymentKey,  String? paymentMethod,  PickupOrderStatus status,  RefundStatus? refundStatus,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PickupOrder() when $default != null:
-return $default(_that.id,_that.storeId,_that.storeName,_that.pickupNumber,_that.items,_that.totalAmount,_that.usedPoints,_that.earnedPoints,_that.couponId,_that.couponTitle,_that.couponDiscount,_that.paymentKey,_that.paymentMethod,_that.status,_that.createdAt);case _:
+return $default(_that.id,_that.storeId,_that.storeName,_that.pickupNumber,_that.items,_that.totalAmount,_that.usedPoints,_that.earnedPoints,_that.couponId,_that.couponTitle,_that.couponDiscount,_that.paymentKey,_that.paymentMethod,_that.status,_that.refundStatus,_that.createdAt);case _:
   return orElse();
 
 }
@@ -463,10 +464,10 @@ return $default(_that.id,_that.storeId,_that.storeName,_that.pickupNumber,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String storeId,  String storeName,  int pickupNumber,  List<PickupOrderItem> items,  int totalAmount,  int usedPoints,  int earnedPoints,  String? couponId,  String? couponTitle,  int couponDiscount,  String? paymentKey,  String? paymentMethod,  PickupOrderStatus status,  DateTime createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String storeId,  String storeName,  int pickupNumber,  List<PickupOrderItem> items,  int totalAmount,  int usedPoints,  int earnedPoints,  String? couponId,  String? couponTitle,  int couponDiscount,  String? paymentKey,  String? paymentMethod,  PickupOrderStatus status,  RefundStatus? refundStatus,  DateTime createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _PickupOrder():
-return $default(_that.id,_that.storeId,_that.storeName,_that.pickupNumber,_that.items,_that.totalAmount,_that.usedPoints,_that.earnedPoints,_that.couponId,_that.couponTitle,_that.couponDiscount,_that.paymentKey,_that.paymentMethod,_that.status,_that.createdAt);case _:
+return $default(_that.id,_that.storeId,_that.storeName,_that.pickupNumber,_that.items,_that.totalAmount,_that.usedPoints,_that.earnedPoints,_that.couponId,_that.couponTitle,_that.couponDiscount,_that.paymentKey,_that.paymentMethod,_that.status,_that.refundStatus,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -483,10 +484,10 @@ return $default(_that.id,_that.storeId,_that.storeName,_that.pickupNumber,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String storeId,  String storeName,  int pickupNumber,  List<PickupOrderItem> items,  int totalAmount,  int usedPoints,  int earnedPoints,  String? couponId,  String? couponTitle,  int couponDiscount,  String? paymentKey,  String? paymentMethod,  PickupOrderStatus status,  DateTime createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String storeId,  String storeName,  int pickupNumber,  List<PickupOrderItem> items,  int totalAmount,  int usedPoints,  int earnedPoints,  String? couponId,  String? couponTitle,  int couponDiscount,  String? paymentKey,  String? paymentMethod,  PickupOrderStatus status,  RefundStatus? refundStatus,  DateTime createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _PickupOrder() when $default != null:
-return $default(_that.id,_that.storeId,_that.storeName,_that.pickupNumber,_that.items,_that.totalAmount,_that.usedPoints,_that.earnedPoints,_that.couponId,_that.couponTitle,_that.couponDiscount,_that.paymentKey,_that.paymentMethod,_that.status,_that.createdAt);case _:
+return $default(_that.id,_that.storeId,_that.storeName,_that.pickupNumber,_that.items,_that.totalAmount,_that.usedPoints,_that.earnedPoints,_that.couponId,_that.couponTitle,_that.couponDiscount,_that.paymentKey,_that.paymentMethod,_that.status,_that.refundStatus,_that.createdAt);case _:
   return null;
 
 }
@@ -498,7 +499,7 @@ return $default(_that.id,_that.storeId,_that.storeName,_that.pickupNumber,_that.
 @JsonSerializable()
 
 class _PickupOrder extends PickupOrder {
-  const _PickupOrder({required this.id, required this.storeId, required this.storeName, required this.pickupNumber, required final  List<PickupOrderItem> items, required this.totalAmount, this.usedPoints = 0, this.earnedPoints = 0, this.couponId, this.couponTitle, this.couponDiscount = 0, this.paymentKey, this.paymentMethod, this.status = PickupOrderStatus.received, required this.createdAt}): _items = items,super._();
+  const _PickupOrder({required this.id, required this.storeId, required this.storeName, required this.pickupNumber, required final  List<PickupOrderItem> items, required this.totalAmount, this.usedPoints = 0, this.earnedPoints = 0, this.couponId, this.couponTitle, this.couponDiscount = 0, this.paymentKey, this.paymentMethod, this.status = PickupOrderStatus.received, this.refundStatus, required this.createdAt}): _items = items,super._();
   factory _PickupOrder.fromJson(Map<String, dynamic> json) => _$PickupOrderFromJson(json);
 
 @override final  String id;
@@ -521,6 +522,7 @@ class _PickupOrder extends PickupOrder {
 @override final  String? paymentKey;
 @override final  String? paymentMethod;
 @override@JsonKey() final  PickupOrderStatus status;
+@override final  RefundStatus? refundStatus;
 @override final  DateTime createdAt;
 
 /// Create a copy of PickupOrder
@@ -536,16 +538,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PickupOrder&&(identical(other.id, id) || other.id == id)&&(identical(other.storeId, storeId) || other.storeId == storeId)&&(identical(other.storeName, storeName) || other.storeName == storeName)&&(identical(other.pickupNumber, pickupNumber) || other.pickupNumber == pickupNumber)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.usedPoints, usedPoints) || other.usedPoints == usedPoints)&&(identical(other.earnedPoints, earnedPoints) || other.earnedPoints == earnedPoints)&&(identical(other.couponId, couponId) || other.couponId == couponId)&&(identical(other.couponTitle, couponTitle) || other.couponTitle == couponTitle)&&(identical(other.couponDiscount, couponDiscount) || other.couponDiscount == couponDiscount)&&(identical(other.paymentKey, paymentKey) || other.paymentKey == paymentKey)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PickupOrder&&(identical(other.id, id) || other.id == id)&&(identical(other.storeId, storeId) || other.storeId == storeId)&&(identical(other.storeName, storeName) || other.storeName == storeName)&&(identical(other.pickupNumber, pickupNumber) || other.pickupNumber == pickupNumber)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.usedPoints, usedPoints) || other.usedPoints == usedPoints)&&(identical(other.earnedPoints, earnedPoints) || other.earnedPoints == earnedPoints)&&(identical(other.couponId, couponId) || other.couponId == couponId)&&(identical(other.couponTitle, couponTitle) || other.couponTitle == couponTitle)&&(identical(other.couponDiscount, couponDiscount) || other.couponDiscount == couponDiscount)&&(identical(other.paymentKey, paymentKey) || other.paymentKey == paymentKey)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.status, status) || other.status == status)&&(identical(other.refundStatus, refundStatus) || other.refundStatus == refundStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,storeId,storeName,pickupNumber,const DeepCollectionEquality().hash(_items),totalAmount,usedPoints,earnedPoints,couponId,couponTitle,couponDiscount,paymentKey,paymentMethod,status,createdAt);
+int get hashCode => Object.hash(runtimeType,id,storeId,storeName,pickupNumber,const DeepCollectionEquality().hash(_items),totalAmount,usedPoints,earnedPoints,couponId,couponTitle,couponDiscount,paymentKey,paymentMethod,status,refundStatus,createdAt);
 
 @override
 String toString() {
-  return 'PickupOrder(id: $id, storeId: $storeId, storeName: $storeName, pickupNumber: $pickupNumber, items: $items, totalAmount: $totalAmount, usedPoints: $usedPoints, earnedPoints: $earnedPoints, couponId: $couponId, couponTitle: $couponTitle, couponDiscount: $couponDiscount, paymentKey: $paymentKey, paymentMethod: $paymentMethod, status: $status, createdAt: $createdAt)';
+  return 'PickupOrder(id: $id, storeId: $storeId, storeName: $storeName, pickupNumber: $pickupNumber, items: $items, totalAmount: $totalAmount, usedPoints: $usedPoints, earnedPoints: $earnedPoints, couponId: $couponId, couponTitle: $couponTitle, couponDiscount: $couponDiscount, paymentKey: $paymentKey, paymentMethod: $paymentMethod, status: $status, refundStatus: $refundStatus, createdAt: $createdAt)';
 }
 
 
@@ -556,7 +558,7 @@ abstract mixin class _$PickupOrderCopyWith<$Res> implements $PickupOrderCopyWith
   factory _$PickupOrderCopyWith(_PickupOrder value, $Res Function(_PickupOrder) _then) = __$PickupOrderCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String storeId, String storeName, int pickupNumber, List<PickupOrderItem> items, int totalAmount, int usedPoints, int earnedPoints, String? couponId, String? couponTitle, int couponDiscount, String? paymentKey, String? paymentMethod, PickupOrderStatus status, DateTime createdAt
+ String id, String storeId, String storeName, int pickupNumber, List<PickupOrderItem> items, int totalAmount, int usedPoints, int earnedPoints, String? couponId, String? couponTitle, int couponDiscount, String? paymentKey, String? paymentMethod, PickupOrderStatus status, RefundStatus? refundStatus, DateTime createdAt
 });
 
 
@@ -573,7 +575,7 @@ class __$PickupOrderCopyWithImpl<$Res>
 
 /// Create a copy of PickupOrder
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? storeId = null,Object? storeName = null,Object? pickupNumber = null,Object? items = null,Object? totalAmount = null,Object? usedPoints = null,Object? earnedPoints = null,Object? couponId = freezed,Object? couponTitle = freezed,Object? couponDiscount = null,Object? paymentKey = freezed,Object? paymentMethod = freezed,Object? status = null,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? storeId = null,Object? storeName = null,Object? pickupNumber = null,Object? items = null,Object? totalAmount = null,Object? usedPoints = null,Object? earnedPoints = null,Object? couponId = freezed,Object? couponTitle = freezed,Object? couponDiscount = null,Object? paymentKey = freezed,Object? paymentMethod = freezed,Object? status = null,Object? refundStatus = freezed,Object? createdAt = null,}) {
   return _then(_PickupOrder(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,storeId: null == storeId ? _self.storeId : storeId // ignore: cast_nullable_to_non_nullable
@@ -589,7 +591,8 @@ as String?,couponDiscount: null == couponDiscount ? _self.couponDiscount : coupo
 as int,paymentKey: freezed == paymentKey ? _self.paymentKey : paymentKey // ignore: cast_nullable_to_non_nullable
 as String?,paymentMethod: freezed == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
 as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as PickupOrderStatus,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as PickupOrderStatus,refundStatus: freezed == refundStatus ? _self.refundStatus : refundStatus // ignore: cast_nullable_to_non_nullable
+as RefundStatus?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }

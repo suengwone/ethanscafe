@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../order/domain/refund_status.dart';
+
 part 'pickup_order_models.freezed.dart';
 part 'pickup_order_models.g.dart';
 
@@ -66,6 +68,7 @@ abstract class PickupOrder with _$PickupOrder {
     String? paymentKey,
     String? paymentMethod,
     @Default(PickupOrderStatus.received) PickupOrderStatus status,
+    RefundStatus? refundStatus,
     required DateTime createdAt,
   }) = _PickupOrder;
 

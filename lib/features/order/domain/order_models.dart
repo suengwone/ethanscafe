@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../beans/domain/bean_models.dart';
+import 'refund_status.dart';
 
 part 'order_models.freezed.dart';
 part 'order_models.g.dart';
@@ -76,6 +77,7 @@ abstract class BeanOrder with _$BeanOrder {
     String? recipientPhone,
     String? shippingAddress,
     @Default(BeanOrderStatus.received) BeanOrderStatus status,
+    RefundStatus? refundStatus,
     required DateTime createdAt,
   }) = _BeanOrder;
 
