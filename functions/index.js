@@ -10,6 +10,7 @@ const {getMessaging} = require('firebase-admin/messaging');
 
 const {
   collectStatusChangeNotifications,
+  orderSummary,
   PICKUP_STATUS_MESSAGES,
 } = require('./order_status');
 const {
@@ -72,6 +73,13 @@ const {
   COLLECTION: ACTIVE_ORDERS_COLLECTION,
   collectActiveOrderWrites,
 } = require('./active_orders');
+const {
+  COLLECTION: REFUND_FAILURES_COLLECTION,
+  refundFailureId,
+  refundFailureDoc,
+  validateRetryRefundRequest,
+  refundRetryDecision,
+} = require('./refund_failures');
 const {collectCouponBackfills} = require('./coupon_backfill');
 const {
   validateChargeRequest,
@@ -578,26 +586,19 @@ exports.cancelOrder = onCall({secrets: [tossSecretKey]}, async (request) => {
           orderType: cancelRequest.orderType,
         }),
     );
-    const settled = await firestore.runTransaction(async (transaction) => {
-      // 그 사이에 다른 주문이 들어올 수 있어 배열을 통째로 덮어쓰지 않고 다시 읽는다.
-      const snapshot = await transaction.get(ordersRef);
-      const data = snapshot.data();
-      const orders = data && Array.isArray(data.orders) ? data.orders : [];
-      const index = orders.findIndex(
-          (order) => order && order.id === cancelRequest.orderId);
-      if (index === -1) {
-        return cancelled;
-      }
-      const patched = {
-        ...orders[index],
-        refundStatus: refunded ? REFUND_DONE : REFUND_FAILED,
-      };
-      const updated = [...orders];
-      updated[index] = patched;
-      transaction.set(ordersRef, {orders: updated});
-      return patched;
-    });
+    const settled = await patchRefundStatus({
+      firestore,
+      ordersRef,
+      orderId: cancelRequest.orderId,
+      status: refunded ? REFUND_DONE : REFUND_FAILED,
+    }) ?? cancelled;
     if (!refunded) {
+      // 고객 돈이 묶인 상태다. 매장이 목록으로 보고 재시도할 수 있게 남긴다.
+      await recordRefundFailure({
+        orderType: cancelRequest.orderType,
+        uid,
+        order: {...settled, summary: orderSummary(settled)},
+      });
       throw new HttpsError(
           'internal',
           '주문은 취소했으나 결제 환불에 실패했습니다. 고객센터로 문의해 주세요.',
@@ -611,6 +612,100 @@ exports.cancelOrder = onCall({secrets: [tossSecretKey]}, async (request) => {
     throw new HttpsError(
         'failed-precondition', error.message || '주문 취소에 실패했습니다.');
   }
+});
+
+async function recordRefundFailure({orderType, uid, order}) {
+  await getFirestore()
+      .collection(REFUND_FAILURES_COLLECTION)
+      .doc(refundFailureId({orderType, uid, orderId: order.id}))
+      .set(refundFailureDoc({
+        orderType,
+        uid,
+        order,
+        failedAt: Timestamp.now(),
+      }));
+}
+
+/**
+ * 주문 배열에서 한 건의 `refundStatus`만 고쳐 쓰고 그 주문을 돌려준다.
+ * 그 사이 다른 주문이 들어올 수 있어 배열을 통째로 덮어쓰지 않고 다시 읽는다.
+ */
+function patchRefundStatus({firestore, ordersRef, orderId, status}) {
+  return firestore.runTransaction(async (transaction) => {
+    const snapshot = await transaction.get(ordersRef);
+    const data = snapshot.data();
+    const orders = data && Array.isArray(data.orders) ? data.orders : [];
+    const index = orders.findIndex((order) => order && order.id === orderId);
+    if (index === -1) {
+      return null;
+    }
+    const patched = {...orders[index], refundStatus: status};
+    const updated = [...orders];
+    updated[index] = patched;
+    transaction.set(ordersRef, {orders: updated});
+    return patched;
+  });
+}
+
+/**
+ * 실패한 환불을 다시 시도한다.
+ *
+ * 취소 요청이 PG에 닿고 응답만 유실된 경우가 있어, 다시 걸기 전에 결제를 조회한다.
+ * 이미 취소돼 있으면 재요청 없이 성공으로 정리한다.
+ */
+exports.retryRefund = onCall({secrets: [tossSecretKey]}, async (request) => {
+  if (!request.auth || request.auth.token.admin !== true) {
+    throw new HttpsError('permission-denied', '관리자만 사용할 수 있습니다.');
+  }
+
+  let retryRequest;
+  try {
+    retryRequest = validateRetryRefundRequest(request.data);
+  } catch (error) {
+    throw new HttpsError('invalid-argument', error.message);
+  }
+
+  const firestore = getFirestore();
+  const failureRef = firestore
+      .collection(REFUND_FAILURES_COLLECTION)
+      .doc(refundFailureId(retryRequest));
+  const failure = await failureRef.get();
+  if (!failure.exists) {
+    throw new HttpsError('not-found', '환불 실패 기록을 찾을 수 없습니다.');
+  }
+  const paymentKey = failure.data().paymentKey;
+  if (typeof paymentKey !== 'string' || paymentKey.length === 0) {
+    throw new HttpsError('failed-precondition', '환불할 결제 정보가 없습니다.');
+  }
+
+  const response = await fetch(paymentLookupUrl(paymentKey), {
+    headers: {'Authorization': basicAuthHeader(tossSecretKey.value())},
+  });
+  const payment = await response.json().catch(() => null);
+  if (!response.ok) {
+    throw new HttpsError('failed-precondition', '결제 정보를 확인하지 못했습니다.');
+  }
+
+  const decision = refundRetryDecision(payment);
+  const refunded = decision.action === 'settled' ||
+      await cancelTossPayment(
+          tossSecretKey.value(), paymentKey, '환불 재시도');
+
+  const ordersRef = firestore
+      .collection(ORDER_COLLECTIONS[retryRequest.orderType])
+      .doc(retryRequest.uid);
+  await patchRefundStatus({
+    firestore,
+    ordersRef,
+    orderId: retryRequest.orderId,
+    status: refunded ? REFUND_DONE : REFUND_FAILED,
+  });
+
+  if (!refunded) {
+    throw new HttpsError('internal', '환불이 다시 실패했습니다.');
+  }
+  await failureRef.delete();
+  return {refunded: true, alreadyCancelled: decision.action === 'settled'};
 });
 
 exports.updateOrderStatus = onCall(async (request) => {
