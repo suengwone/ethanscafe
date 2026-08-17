@@ -167,6 +167,44 @@ function orderTotalAmount(items) {
   return items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
 }
 
+/** 주문 항목이 참조하는 카탈로그 문서 ID. 픽업은 메뉴, 원두는 원두 문서다. */
+function catalogItemId(orderType, item) {
+  return orderType === 'pickup' ? item.menuId : item.beanId;
+}
+
+function catalogItemIds(orderType, items) {
+  return [...new Set(items.map((item) => catalogItemId(orderType, item)))];
+}
+
+function catalogUnitPrice(orderType, item, data) {
+  if (orderType === 'pickup') {
+    return data.price;
+  }
+  return item.weight === 'g200' ? data.price200 : data.price500;
+}
+
+/**
+ * 클라이언트가 보낸 단가를 카탈로그 가격과 대조한다.
+ * 가격을 클라이언트가 정하면 0원 주문을 만들 수 있으므로 서버가 반드시 확인한다.
+ * catalogData는 문서 ID -> 문서 데이터(없으면 null) 맵이다.
+ */
+function verifyCatalogPrices({orderType, items, catalogData}) {
+  for (const item of items) {
+    const id = catalogItemId(orderType, item);
+    const data = catalogData.get(id);
+    if (!data) {
+      throw new Error('판매하지 않는 상품이 포함되어 있습니다.');
+    }
+    const expected = catalogUnitPrice(orderType, item, data);
+    if (!Number.isInteger(expected) || expected < 0) {
+      throw new Error('상품 가격을 확인하지 못했습니다.');
+    }
+    if (expected !== item.unitPrice) {
+      throw new Error('상품 가격이 변경되었습니다. 장바구니를 다시 확인해 주세요.');
+    }
+  }
+}
+
 function couponDiscountFor(coupon, orderAmount) {
   const discountAmount = coupon.discountAmount || 0;
   const discountRate = coupon.discountRate || 0;
@@ -426,6 +464,10 @@ module.exports = {
   validateUsePointsRequest,
   validateEarnByMembershipRequest,
   orderTotalAmount,
+  catalogItemId,
+  catalogItemIds,
+  catalogUnitPrice,
+  verifyCatalogPrices,
   couponDiscountFor,
   validateCouponsForOrder,
   couponIdsLabel,

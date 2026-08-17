@@ -40,6 +40,8 @@ const {
   validateUsePointsRequest,
   validateEarnByMembershipRequest,
   orderTotalAmount,
+  catalogItemIds,
+  verifyCatalogPrices,
   validateCouponsForOrder,
   couponTitlesLabel,
   normalizePointsData,
@@ -263,6 +265,27 @@ exports.placeOrder = onCall(
 
     const uid = request.auth.uid;
     const firestore = getFirestore();
+
+    // 금액을 계산하기 전에 단가가 카탈로그와 일치하는지 서버에서 확인한다.
+    const catalogCollection =
+        orderRequest.orderType === 'pickup' ? 'menus' : 'beans';
+    const itemIds = catalogItemIds(orderRequest.orderType, orderRequest.items);
+    const catalogSnapshots = await firestore.getAll(
+        ...itemIds.map((id) => firestore.collection(catalogCollection).doc(id)));
+    const catalogData = new Map();
+    catalogSnapshots.forEach((snapshot, index) => {
+      catalogData.set(itemIds[index], snapshot.exists ? snapshot.data() : null);
+    });
+    try {
+      verifyCatalogPrices({
+        orderType: orderRequest.orderType,
+        items: orderRequest.items,
+        catalogData,
+      });
+    } catch (error) {
+      throw new HttpsError('failed-precondition', error.message);
+    }
+
     const couponRefs = orderRequest.couponIds.map(
         (id) => firestore.collection('coupons').doc(id));
 

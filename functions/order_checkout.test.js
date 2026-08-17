@@ -8,6 +8,8 @@ const {
   validateUsePointsRequest,
   validateEarnByMembershipRequest,
   orderTotalAmount,
+  catalogItemIds,
+  verifyCatalogPrices,
   couponDiscountFor,
   validateCouponsForOrder,
   couponIdsLabel,
@@ -424,4 +426,61 @@ test('포인트 문서가 없으면 기본값을 만든다', () => {
     balance: 0,
     history: [],
   });
+});
+
+test('픽업 단가가 메뉴 가격과 다르면 거부한다', () => {
+  const catalogData = new Map([['menu-1', {price: 4500}]]);
+  assert.doesNotThrow(() => verifyCatalogPrices({
+    orderType: 'pickup',
+    items: [pickupItem],
+    catalogData,
+  }));
+  assert.throws(() => verifyCatalogPrices({
+    orderType: 'pickup',
+    items: [{...pickupItem, unitPrice: 0}],
+    catalogData,
+  }), /가격이 변경/);
+});
+
+test('원두 단가는 용량별 가격과 대조한다', () => {
+  const catalogData = new Map([['bean-1', {price200: 15000, price500: 30000}]]);
+  assert.doesNotThrow(() => verifyCatalogPrices({
+    orderType: 'bean',
+    items: [beanItem],
+    catalogData,
+  }));
+  assert.throws(() => verifyCatalogPrices({
+    orderType: 'bean',
+    items: [{...beanItem, weight: 'g500'}],
+    catalogData,
+  }), /가격이 변경/);
+  assert.doesNotThrow(() => verifyCatalogPrices({
+    orderType: 'bean',
+    items: [{...beanItem, weight: 'g500', unitPrice: 30000}],
+    catalogData,
+  }));
+});
+
+test('카탈로그에 없는 상품은 거부한다', () => {
+  assert.throws(() => verifyCatalogPrices({
+    orderType: 'pickup',
+    items: [pickupItem],
+    catalogData: new Map([['menu-1', null]]),
+  }), /판매하지 않는 상품/);
+});
+
+test('카탈로그 가격이 숫자가 아니면 거부한다', () => {
+  assert.throws(() => verifyCatalogPrices({
+    orderType: 'pickup',
+    items: [pickupItem],
+    catalogData: new Map([['menu-1', {price: '4500'}]]),
+  }), /가격을 확인하지 못/);
+});
+
+test('중복 상품 ID는 한 번만 조회한다', () => {
+  assert.deepEqual(
+      catalogItemIds('pickup', [pickupItem, {...pickupItem, quantity: 3}]),
+      ['menu-1'],
+  );
+  assert.deepEqual(catalogItemIds('bean', [beanItem]), ['bean-1']);
 });
