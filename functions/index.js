@@ -43,7 +43,6 @@ const {
 } = require('./toss_payment');
 const {
   validatePlaceOrderRequest,
-  validateCancelOrderRequest,
   validateUsePointsRequest,
   validateEarnByMembershipRequest,
   orderTotalAmount,
@@ -60,6 +59,15 @@ const {
   serializeOrder,
   newOrderEntryId,
 } = require('./order_checkout');
+const {
+  REFUND_DONE,
+  REFUND_FAILED,
+  resolveCancelTarget,
+  assertCancellable,
+  refundKeyOf,
+  cancelledOrderOf,
+  cancelReasonOf,
+} = require('./order_cancel');
 const {collectCouponBackfills} = require('./coupon_backfill');
 const {
   validateChargeRequest,
@@ -242,9 +250,10 @@ const ORDER_DESCRIPTIONS = {
   pickup: {use: '픽업 주문 포인트 사용', earn: '픽업 주문', cancel: '픽업 주문 취소'},
 };
 
+/** 결제를 전액 취소한다. 성공 여부를 돌려주고 예외는 던지지 않는다. */
 async function cancelTossPayment(secretKey, paymentKey, cancelReason) {
   try {
-    await fetch(paymentCancelUrl(paymentKey), {
+    const response = await fetch(paymentCancelUrl(paymentKey), {
       method: 'POST',
       headers: {
         'Authorization': basicAuthHeader(secretKey),
@@ -252,8 +261,16 @@ async function cancelTossPayment(secretKey, paymentKey, cancelReason) {
       },
       body: JSON.stringify({cancelReason}),
     });
+    if (!response.ok) {
+      const body = await response.text().catch(() => '');
+      console.error('결제 취소가 거절되었습니다.', paymentKey, response.status,
+          body);
+      return false;
+    }
+    return true;
   } catch (error) {
-    console.error('결제 자동 취소에 실패했습니다.', paymentKey, error);
+    console.error('결제 취소에 실패했습니다.', paymentKey, error);
+    return false;
   }
 }
 
@@ -438,14 +455,17 @@ exports.placeOrder = onCall(
       return {...result, order: serializeOrder(result.order)};
     } catch (error) {
       if (approvedPayment) {
-        await cancelTossPayment(
+        const cancelled = await cancelTossPayment(
             tossSecretKey.value(),
             approvedPayment.paymentKey,
             '주문 저장 실패 자동 취소',
         );
         throw new HttpsError(
             'aborted',
-            `주문 저장에 실패해 결제를 자동 취소(환불)했습니다. (${error.message})`,
+            cancelled ?
+              `주문 저장에 실패해 결제를 자동 취소(환불)했습니다. (${error.message})` :
+              '주문 저장에 실패했으나 결제 취소까지 실패했습니다. ' +
+                `고객센터로 문의해 주세요. (${error.message})`,
         );
       }
       throw new HttpsError(
@@ -454,19 +474,23 @@ exports.placeOrder = onCall(
   },
 );
 
-exports.cancelOrder = onCall(async (request) => {
+exports.cancelOrder = onCall({secrets: [tossSecretKey]}, async (request) => {
   if (!request.auth) {
     throw new HttpsError('unauthenticated', '로그인이 필요합니다.');
   }
 
   let cancelRequest;
   try {
-    cancelRequest = validateCancelOrderRequest(request.data);
+    cancelRequest = resolveCancelTarget({
+      data: request.data,
+      uid: request.auth.uid,
+      isAdmin: request.auth.token.admin === true,
+    });
   } catch (error) {
     throw new HttpsError('invalid-argument', error.message);
   }
 
-  const uid = request.auth.uid;
+  const uid = cancelRequest.uid;
   const firestore = getFirestore();
   const descriptions = ORDER_DESCRIPTIONS[cancelRequest.orderType];
   const ordersRef = firestore
@@ -487,14 +511,11 @@ exports.cancelOrder = onCall(async (request) => {
         throw new Error('주문을 찾을 수 없습니다.');
       }
       const order = orders[index];
-      if (order.status === 'cancelled') {
-        throw new Error('이미 취소된 주문입니다.');
-      }
-      if (order.status !== 'received') {
-        throw new Error(cancelRequest.orderType === 'bean' ?
-          '로스팅이 시작된 주문은 취소할 수 없습니다.' :
-          '제조가 시작된 주문은 취소할 수 없습니다.');
-      }
+      assertCancellable({
+        orderType: cancelRequest.orderType,
+        order,
+        byAdmin: cancelRequest.byAdmin,
+      });
 
       const couponIds =
           typeof order.couponId === 'string' && order.couponId.length > 0 ?
@@ -524,7 +545,7 @@ exports.cancelOrder = onCall(async (request) => {
         });
       }
 
-      const cancelledOrder = {...order, status: 'cancelled'};
+      const cancelledOrder = cancelledOrderOf(order);
       const updatedOrders = [...orders];
       updatedOrders[index] = cancelledOrder;
       transaction.set(ordersRef, {orders: updatedOrders});
@@ -538,8 +559,51 @@ exports.cancelOrder = onCall(async (request) => {
       }
       return cancelledOrder;
     });
-    return {order: serializeOrder(cancelled)};
+
+    // 취소를 먼저 확정해 중복 요청을 막고, 그 뒤에 결제를 환불한다.
+    // 환불 결과는 주문 문서에 남겨 실패한 건을 골라낼 수 있게 한다.
+    const paymentKey = refundKeyOf(cancelled);
+    if (!paymentKey) {
+      return {order: serializeOrder(cancelled)};
+    }
+    const refunded = await cancelTossPayment(
+        tossSecretKey.value(),
+        paymentKey,
+        cancelReasonOf({
+          byAdmin: cancelRequest.byAdmin,
+          orderType: cancelRequest.orderType,
+        }),
+    );
+    const settled = await firestore.runTransaction(async (transaction) => {
+      // 그 사이에 다른 주문이 들어올 수 있어 배열을 통째로 덮어쓰지 않고 다시 읽는다.
+      const snapshot = await transaction.get(ordersRef);
+      const data = snapshot.data();
+      const orders = data && Array.isArray(data.orders) ? data.orders : [];
+      const index = orders.findIndex(
+          (order) => order && order.id === cancelRequest.orderId);
+      if (index === -1) {
+        return cancelled;
+      }
+      const patched = {
+        ...orders[index],
+        refundStatus: refunded ? REFUND_DONE : REFUND_FAILED,
+      };
+      const updated = [...orders];
+      updated[index] = patched;
+      transaction.set(ordersRef, {orders: updated});
+      return patched;
+    });
+    if (!refunded) {
+      throw new HttpsError(
+          'internal',
+          '주문은 취소했으나 결제 환불에 실패했습니다. 고객센터로 문의해 주세요.',
+      );
+    }
+    return {order: serializeOrder(settled)};
   } catch (error) {
+    if (error instanceof HttpsError) {
+      throw error;
+    }
     throw new HttpsError(
         'failed-precondition', error.message || '주문 취소에 실패했습니다.');
   }
