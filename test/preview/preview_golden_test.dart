@@ -40,6 +40,7 @@ import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
 import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
 import 'package:cafe_app/features/order/domain/order_models.dart';
 import 'package:cafe_app/features/order/domain/admin_order_models.dart';
+import 'package:cafe_app/features/order/domain/refund_failure_models.dart';
 import 'package:cafe_app/features/order/presentation/admin_orders_providers.dart';
 import 'package:cafe_app/features/order/presentation/admin_orders_screen.dart';
 import 'package:cafe_app/features/pickup/domain/pickup_order_models.dart';
@@ -587,6 +588,39 @@ void main() {
     );
 
     await expectGolden(find.byType(AdminOrdersScreen), 'admin_orders_screen');
+  });
+
+  testWidgets('환불 실패 목록 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const AdminOrdersScreen(),
+      user: _previewUser,
+      overrides: [
+        refundFailuresProvider.overrideWith((ref) async => [
+              RefundFailure(
+                orderType: 'pickup',
+                uid: 'u1',
+                orderId: 'p1',
+                summary: '바닐라 라떼 외 1건',
+                amount: 11600,
+                failedAt: DateTime(2026, 8, 18, 9, 41),
+              ),
+              RefundFailure(
+                orderType: 'bean',
+                uid: 'u2',
+                orderId: 'b1',
+                summary: '에티오피아 예가체프',
+                amount: 30000,
+                failedAt: DateTime(2026, 8, 18, 10, 12),
+              ),
+            ]),
+      ],
+    );
+    await tester.tap(find.text('환불 실패'));
+    await tester.pumpAndSettle();
+
+    await expectGolden(find.byType(AdminOrdersScreen), 'refund_failures');
   });
 
   testWidgets('품절 관리 화면 스크린샷', (WidgetTester tester) async {
