@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/services/app_review_providers.dart';
 import '../../auth/presentation/auth_providers.dart';
 import '../../coupon/domain/coupon_models.dart';
 import '../../coupon/presentation/coupons_providers.dart';
@@ -122,7 +123,7 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
       }
       ref.invalidate(pointsControllerProvider);
       state = AsyncValue.data([order, ...state.value ?? const []]);
-      await _recordSales(items);
+      await _afterOrderPlaced(items);
       return order;
     }
 
@@ -170,8 +171,13 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
           paymentMethod: payment?.method,
         );
     state = AsyncValue.data([order, ...state.value ?? const []]);
-    await _recordSales(items);
+    await _afterOrderPlaced(items);
     return order;
+  }
+
+  Future<void> _afterOrderPlaced(List<PickupOrderItem> items) async {
+    await _recordSales(items);
+    await ref.read(appReviewServiceProvider).onOrderPlaced();
   }
 
   Future<void> _recordSales(List<PickupOrderItem> items) async {

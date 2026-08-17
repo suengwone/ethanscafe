@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/services/app_review_providers.dart';
 import '../../auth/presentation/auth_providers.dart';
 import '../../beans/domain/bean_cart_models.dart';
 import '../../coupon/domain/coupon_models.dart';
@@ -190,8 +191,13 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
               : null,
         );
     state = AsyncValue.data([order, ...state.value ?? const []]);
-    await _recordSales(items);
+    await _afterOrderPlaced(items);
     return order;
+  }
+
+  Future<void> _afterOrderPlaced(List<BeanOrderItem> items) async {
+    await _recordSales(items);
+    await ref.read(appReviewServiceProvider).onOrderPlaced();
   }
 
   Future<void> _recordSales(List<BeanOrderItem> items) async {
