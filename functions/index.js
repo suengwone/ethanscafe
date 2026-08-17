@@ -8,7 +8,14 @@ const {getAuth} = require('firebase-admin/auth');
 const {getFirestore, FieldValue, Timestamp} = require('firebase-admin/firestore');
 const {getMessaging} = require('firebase-admin/messaging');
 
-const {collectStatusChangeNotifications} = require('./order_status');
+const {
+  collectStatusChangeNotifications,
+  PICKUP_STATUS_MESSAGES,
+} = require('./order_status');
+const {
+  validateStatusTransition,
+  validateUpdateOrderStatusRequest,
+} = require('./order_transitions');
 const {userDataDocPaths} = require('./account_cleanup');
 const {
   NAVER_PROFILE_URL,
@@ -538,6 +545,51 @@ exports.cancelOrder = onCall(async (request) => {
   }
 });
 
+exports.updateOrderStatus = onCall(async (request) => {
+  if (!request.auth || request.auth.token.admin !== true) {
+    throw new HttpsError('permission-denied', '관리자만 사용할 수 있습니다.');
+  }
+
+  let statusRequest;
+  try {
+    statusRequest = validateUpdateOrderStatusRequest(request.data);
+  } catch (error) {
+    throw new HttpsError('invalid-argument', error.message);
+  }
+
+  const firestore = getFirestore();
+  const ordersRef = firestore
+      .collection(ORDER_COLLECTIONS[statusRequest.orderType])
+      .doc(statusRequest.uid);
+
+  try {
+    return await firestore.runTransaction(async (transaction) => {
+      const snapshot = await transaction.get(ordersRef);
+      const data = snapshot.data();
+      const orders = data && Array.isArray(data.orders) ? data.orders : [];
+      const index = orders.findIndex(
+          (order) => order && order.id === statusRequest.orderId);
+      if (index === -1) {
+        throw new Error('주문을 찾을 수 없습니다.');
+      }
+
+      validateStatusTransition({
+        orderType: statusRequest.orderType,
+        order: orders[index],
+        nextStatus: statusRequest.status,
+      });
+
+      const updated = [...orders];
+      updated[index] = {...orders[index], status: statusRequest.status};
+      transaction.set(ordersRef, {orders: updated});
+      return {order: serializeOrder(updated[index])};
+    });
+  } catch (error) {
+    throw new HttpsError(
+        'failed-precondition', error.message || '주문 상태 변경에 실패했습니다.');
+  }
+});
+
 exports.usePoints = onCall(async (request) => {
   if (!request.auth) {
     throw new HttpsError('unauthenticated', '로그인이 필요합니다.');
@@ -779,17 +831,15 @@ const INVALID_TOKEN_CODES = [
   'messaging/invalid-argument',
 ];
 
-exports.sendBeanOrderStatusPush = onDocumentWritten(
-  'orders/{uid}',
-  async (event) => {
-    const before = event.data.before.exists ? event.data.before.data() : null;
-    const after = event.data.after.exists ? event.data.after.data() : null;
-    const notifications = collectStatusChangeNotifications(before, after);
-    if (notifications.length === 0) {
-      return;
-    }
-
-    const uid = event.params.uid;
+/**
+ * 주문 상태 변경 알림 발송. 원두·픽업 트리거가 공유한다.
+ * 알림 설정이 꺼져 있거나 토큰이 없으면 조용히 끝낸다.
+ */
+async function pushOrderStatusNotifications(uid, notifications) {
+  if (notifications.length === 0) {
+    return;
+  }
+  {
     const firestore = getFirestore();
 
     const settingsSnapshot = await firestore
@@ -849,5 +899,30 @@ exports.sendBeanOrderStatusPush = onDocumentWritten(
           {merge: true},
         );
     }
+  }
+}
+
+exports.sendBeanOrderStatusPush = onDocumentWritten(
+  'orders/{uid}',
+  async (event) => {
+    const before = event.data.before.exists ? event.data.before.data() : null;
+    const after = event.data.after.exists ? event.data.after.data() : null;
+    await pushOrderStatusNotifications(
+        event.params.uid,
+        collectStatusChangeNotifications(before, after),
+    );
+  },
+);
+
+exports.sendPickupOrderStatusPush = onDocumentWritten(
+  'pickup_orders/{uid}',
+  async (event) => {
+    const before = event.data.before.exists ? event.data.before.data() : null;
+    const after = event.data.after.exists ? event.data.after.data() : null;
+    await pushOrderStatusNotifications(
+        event.params.uid,
+        collectStatusChangeNotifications(
+            before, after, PICKUP_STATUS_MESSAGES),
+    );
   },
 );
