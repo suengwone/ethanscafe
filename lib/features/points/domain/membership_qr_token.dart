@@ -7,12 +7,17 @@ const Duration membershipQrRefreshInterval = Duration(minutes: 1);
 const String _tokenPrefix = 'MQR1';
 const String _tokenSalt = 'foxtrot-membership-qr';
 
+// FNV-1a 64비트. 웹(JS)은 정수가 double이라 64비트 리터럴을 표현하지 못하므로
+// BigInt로 계산해 네이티브와 같은 결과를 낸다.
+final BigInt _fnvOffsetBasis = BigInt.parse('cbf29ce484222325', radix: 16);
+final BigInt _fnvPrime = BigInt.parse('100000001b3', radix: 16);
+final BigInt _fnv64Mask = BigInt.parse('ffffffffffffffff', radix: 16);
+
 String _signature(String payload) {
-  const int fnvPrime = 0x100000001b3;
-  int hash = 0xcbf29ce484222325;
+  var hash = _fnvOffsetBasis;
   for (final unit in utf8.encode('$_tokenSalt.$payload')) {
-    hash ^= unit;
-    hash = (hash * fnvPrime) & 0xFFFFFFFFFFFFFFFF;
+    hash ^= BigInt.from(unit);
+    hash = (hash * _fnvPrime) & _fnv64Mask;
   }
   return hash.toRadixString(16).padLeft(16, '0');
 }
