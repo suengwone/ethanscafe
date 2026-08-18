@@ -7,8 +7,9 @@ import '../../beans/presentation/beans_providers.dart';
 import '../../menu/domain/menu_models.dart';
 import '../../menu/presentation/menu_providers.dart';
 import 'catalog_admin_providers.dart';
+import 'menu_edit_screen.dart';
 
-/// 매장이 재료가 떨어진 상품을 바로 내리는 화면.
+/// 매장이 상품을 등록·수정하고 품절 처리하는 화면.
 /// 품절 처리한 상품은 주문 시 서버가 한 번 더 막는다.
 class CatalogAdminScreen extends ConsumerWidget {
   const CatalogAdminScreen({super.key});
@@ -19,7 +20,7 @@ class CatalogAdminScreen extends ConsumerWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('품절 관리'),
+          title: const Text('상품 관리'),
           bottom: const TabBar(
             tabs: [
               Tab(text: '메뉴'),
@@ -29,6 +30,29 @@ class CatalogAdminScreen extends ConsumerWidget {
         ),
         body: const TabBarView(
           children: [_MenuSoldOutTab(), _BeanSoldOutTab()],
+        ),
+        floatingActionButton: Builder(
+          builder: (context) {
+            final tabs = DefaultTabController.of(context);
+            // 원두 등록은 아직 없으므로 메뉴 탭에서만 띄운다.
+            return AnimatedBuilder(
+              animation: tabs,
+              builder: (context, _) {
+                if (tabs.index != 0) {
+                  return const SizedBox.shrink();
+                }
+                return FloatingActionButton.extended(
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (context) => const MenuEditScreen(),
+                    ),
+                  ),
+                  icon: const Icon(Icons.add),
+                  label: const Text('메뉴 등록'),
+                );
+              },
+            );
+          },
         ),
       ),
     );
@@ -51,6 +75,11 @@ class _MenuSoldOutTab extends ConsumerWidget {
       onChanged: (item, soldOut) => ref
           .read(catalogAdminControllerProvider)
           .setMenuSoldOut(item.id, soldOut),
+      onTap: (context, item) => Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (context) => MenuEditScreen(item: item),
+        ),
+      ),
     );
   }
 }
@@ -84,6 +113,7 @@ class _CatalogList<T> extends StatelessWidget {
     required this.subtitleOf,
     required this.soldOutOf,
     required this.onChanged,
+    this.onTap,
   });
 
   final AsyncValue<List<T>> state;
@@ -93,6 +123,7 @@ class _CatalogList<T> extends StatelessWidget {
   final String Function(T) subtitleOf;
   final bool Function(T) soldOutOf;
   final Future<void> Function(T, bool) onChanged;
+  final void Function(BuildContext, T)? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -113,10 +144,9 @@ class _CatalogList<T> extends StatelessWidget {
           return Center(
             child: Text(
               emptyMessage,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: foxtrotMuted),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: foxtrotMuted),
             ),
           );
         }
@@ -131,6 +161,7 @@ class _CatalogList<T> extends StatelessWidget {
               subtitle: subtitleOf(item),
               soldOut: soldOutOf(item),
               onChanged: (soldOut) => onChanged(item, soldOut),
+              onTap: onTap == null ? null : () => onTap!(context, item),
             );
           },
         );
@@ -145,12 +176,14 @@ class _SoldOutTile extends StatefulWidget {
     required this.subtitle,
     required this.soldOut,
     required this.onChanged,
+    this.onTap,
   });
 
   final String name;
   final String subtitle;
   final bool soldOut;
   final Future<void> Function(bool) onChanged;
+  final VoidCallback? onTap;
 
   @override
   State<_SoldOutTile> createState() => _SoldOutTileState();
@@ -168,9 +201,9 @@ class _SoldOutTileState extends State<_SoldOutTile> {
       await widget.onChanged(soldOut);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('판매 상태를 바꾸지 못했습니다: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('판매 상태를 바꾸지 못했습니다: $e')));
       }
     } finally {
       if (mounted) {
@@ -182,39 +215,42 @@ class _SoldOutTileState extends State<_SoldOutTile> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: foxtrotCard,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: foxtrotBorder),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.name,
-                  style: textTheme.bodyLarge?.copyWith(
-                    color: widget.soldOut ? foxtrotMuted : foxtrotCream,
-                    fontWeight: FontWeight.w600,
+    return InkWell(
+      onTap: widget.onTap,
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: foxtrotCard,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: foxtrotBorder),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.name,
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: widget.soldOut ? foxtrotMuted : foxtrotCream,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  widget.soldOut ? '품절 · ${widget.subtitle}' : widget.subtitle,
-                  style: textTheme.bodySmall?.copyWith(color: foxtrotMuted),
-                ),
-              ],
+                  const SizedBox(height: 2),
+                  Text(
+                    widget.soldOut
+                        ? '품절 · ${widget.subtitle}'
+                        : widget.subtitle,
+                    style: textTheme.bodySmall?.copyWith(color: foxtrotMuted),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Switch(
-            value: widget.soldOut,
-            onChanged: _busy ? null : _toggle,
-          ),
-        ],
+            Switch(value: widget.soldOut, onChanged: _busy ? null : _toggle),
+          ],
+        ),
       ),
     );
   }

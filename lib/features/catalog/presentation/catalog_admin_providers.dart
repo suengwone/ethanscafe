@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../beans/presentation/beans_providers.dart';
+import '../../menu/domain/menu_models.dart';
 import '../../menu/presentation/menu_providers.dart';
 import '../data/firestore_catalog_admin_repository.dart';
 import '../domain/catalog_admin_repository.dart';
@@ -21,6 +22,16 @@ class CatalogAdminController {
   const CatalogAdminController(this._ref);
 
   final Ref _ref;
+
+  Future<void> saveMenuItem(MenuItem item) async {
+    await _repository.saveMenuItem(item);
+    _ref.invalidate(menuItemsProvider);
+  }
+
+  Future<void> deleteMenuItem(String menuId) async {
+    await _repository.deleteMenuItem(menuId);
+    _ref.invalidate(menuItemsProvider);
+  }
 
   Future<void> setMenuSoldOut(String menuId, bool soldOut) async {
     await _repository.setMenuSoldOut(menuId: menuId, soldOut: soldOut);

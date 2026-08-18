@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../beans/data/firestore_beans_repository.dart';
 import '../../menu/data/firestore_menu_repository.dart';
+import '../../menu/domain/menu_models.dart';
 import '../domain/catalog_admin_repository.dart';
 
 class FirestoreCatalogAdminRepository implements CatalogAdminRepository {
@@ -9,6 +10,21 @@ class FirestoreCatalogAdminRepository implements CatalogAdminRepository {
       : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
+
+  @override
+  Future<void> saveMenuItem(MenuItem item) async {
+    final menus = _firestore.collection(FirestoreMenuRepository.collectionPath);
+    final doc = item.id.isEmpty ? menus.doc() : menus.doc(item.id);
+    await doc.set(menuItemToFirestore(item), SetOptions(merge: true));
+  }
+
+  @override
+  Future<void> deleteMenuItem(String menuId) {
+    return _firestore
+        .collection(FirestoreMenuRepository.collectionPath)
+        .doc(menuId)
+        .delete();
+  }
 
   @override
   Future<void> setMenuSoldOut({
