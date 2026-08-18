@@ -27,6 +27,7 @@ import 'package:cafe_app/features/beans/presentation/bean_cart_providers.dart';
 import 'package:cafe_app/features/beans/presentation/bean_cart_screen.dart';
 import 'package:cafe_app/features/beans/presentation/bean_detail_screen.dart';
 import 'package:cafe_app/features/catalog/presentation/catalog_admin_screen.dart';
+import 'package:cafe_app/features/catalog/presentation/menu_edit_screen.dart';
 import 'package:cafe_app/features/coupon/presentation/coupon_list_screen.dart';
 import 'package:cafe_app/features/coupon/presentation/coupons_providers.dart';
 import 'package:cafe_app/features/gift/presentation/bean_gift_screen.dart';
@@ -625,7 +626,7 @@ void main() {
     await expectGolden(find.byType(AdminOrdersScreen), 'refund_failures');
   });
 
-  testWidgets('품절 관리 화면 스크린샷', (WidgetTester tester) async {
+  testWidgets('상품 관리 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(
       tester,
@@ -660,6 +661,27 @@ void main() {
     );
 
     await expectGolden(find.byType(CatalogAdminScreen), 'catalog_admin_screen');
+  });
+
+  testWidgets('메뉴 수정 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const MenuEditScreen(
+        item: MenuItem(
+          id: 'm1',
+          name: '바닐라 라떼',
+          description: '마다가스카르 바닐라빈을 넣은 라떼',
+          category: MenuCategory.espresso,
+          price: 5800,
+          badge: MenuBadge.hit,
+          sortOrder: 3,
+        ),
+      ),
+      user: _previewUser,
+    );
+
+    await expectGolden(find.byType(MenuEditScreen), 'menu_edit_screen');
   });
 
   testWidgets('업데이트 안내 화면 스크린샷', (WidgetTester tester) async {
