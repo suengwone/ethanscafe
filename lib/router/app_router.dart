@@ -37,10 +37,16 @@ const publicPaths = {'/', '/login', '/menu', '/notices', '/stores'};
 
 /// `/menu` 하위지만 로그인이 필요한 거래 흐름.
 /// 비회원 주문은 서버를 거치지 않아 결제·주문이 기기에만 남으므로 진입을 막는다.
-const protectedMenuPaths = {'/menu/cart', '/menu/beans-cart', '/menu/gift'};
+const protectedMenuPaths = {'/menu/cart', '/menu/beans-cart'};
+
+/// 원두 선물하기(`/menu/beans/:beanId/gift`)처럼 경로 파라미터가 섞인 거래 흐름.
+const protectedMenuSuffixes = {'/gift'};
 
 bool isPublicPath(String location) {
   if (protectedMenuPaths.contains(location)) {
+    return false;
+  }
+  if (protectedMenuSuffixes.any(location.endsWith)) {
     return false;
   }
   return publicPaths.contains(location) || location.startsWith('/menu/');

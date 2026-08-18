@@ -110,11 +110,29 @@ void main() {
   testWidgets('비로그인 시 원두 선물하기는 로그인으로 리다이렉트된다', (tester) async {
     final router = await pumpApp(tester);
 
-    router.go('/menu/gift');
+    router.go('/menu/beans/ethiopia-yirgacheffe-aricha/gift');
     await tester.pumpAndSettle();
 
     expect(find.byType(LoginScreen), findsOneWidget);
     expect(find.byType(BeanGiftScreen), findsNothing);
+  });
+
+  testWidgets('로그인 시 원두 선물하기 화면에 접근할 수 있다', (tester) async {
+    final router = await pumpApp(
+      tester,
+      user: const AppUser(
+        uid: 'test-uid',
+        displayName: '테스트 사용자',
+        email: 'test@example.com',
+        providerId: 'google',
+      ),
+    );
+
+    router.go('/menu/beans/ethiopia-yirgacheffe-aricha/gift');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(BeanGiftScreen), findsOneWidget);
+    expect(find.byType(LoginScreen), findsNothing);
   });
 
   testWidgets('비로그인 시 메뉴(원두 포함) 화면은 볼 수 있다', (tester) async {
