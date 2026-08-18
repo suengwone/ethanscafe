@@ -26,6 +26,7 @@ import 'package:cafe_app/features/beans/domain/bean_models.dart';
 import 'package:cafe_app/features/beans/presentation/bean_cart_providers.dart';
 import 'package:cafe_app/features/beans/presentation/bean_cart_screen.dart';
 import 'package:cafe_app/features/beans/presentation/bean_detail_screen.dart';
+import 'package:cafe_app/features/catalog/presentation/bean_edit_screen.dart';
 import 'package:cafe_app/features/catalog/presentation/catalog_admin_screen.dart';
 import 'package:cafe_app/features/catalog/presentation/menu_edit_screen.dart';
 import 'package:cafe_app/features/coupon/presentation/coupon_list_screen.dart';
@@ -682,6 +683,36 @@ void main() {
     );
 
     await expectGolden(find.byType(MenuEditScreen), 'menu_edit_screen');
+  });
+
+  testWidgets('원두 수정 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const BeanEditScreen(
+        bean: Bean(
+          id: 'b1',
+          name: '에티오피아 예가체프',
+          origin: '에티오피아 예가체프',
+          description: '자스민과 자몽이 스치는 밝은 산미',
+          story: '해발 2,000m 소농가에서 수확한 헤어룸 품종',
+          roastLevel: RoastLevel.mediumLight,
+          process: '워시드',
+          tastingNotes: ['자몽', '자스민', '흑설탕'],
+          acidity: 5,
+          body: 2,
+          sweetness: 4,
+          recommendedBrews: ['핸드드립', '에어로프레스'],
+          price200: 15000,
+          price500: 30000,
+          isNew: true,
+          sortOrder: 1,
+        ),
+      ),
+      user: _previewUser,
+    );
+
+    await expectGolden(find.byType(BeanEditScreen), 'bean_edit_screen');
   });
 
   testWidgets('업데이트 안내 화면 스크린샷', (WidgetTester tester) async {
