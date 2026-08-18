@@ -148,14 +148,20 @@ class _PickupOptionSheetState extends State<PickupOptionSheet> {
               ],
             ),
             const SizedBox(height: 16),
-            FilledButton.icon(
-              onPressed: () => Navigator.of(context).pop(
-                PickupOptionSelection(option: _option, quantity: _quantity),
-              ),
-              icon: const Icon(LucideIcons.shoppingBag, size: 18),
-              label: const Text('장바구니 담기'),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: () => Navigator.of(context).pop(
+                  PickupOptionSelection(option: _option, quantity: _quantity),
+                ),
+                icon: const Icon(LucideIcons.shoppingBag, size: 18),
+                label: const Text('장바구니 담기'),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
+                ),
               ),
             ),
           ],
