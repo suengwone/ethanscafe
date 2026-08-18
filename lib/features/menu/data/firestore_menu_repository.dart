@@ -38,5 +38,24 @@ MenuItem menuItemFromFirestore(String id, Map<String, dynamic> data) {
     detail: data['detail'] as String?,
     isRecommended: data['isRecommended'] as bool? ?? false,
     soldOut: data['soldOut'] as bool? ?? false,
+    sortOrder: (data['sortOrder'] as num? ?? 0).toInt(),
   );
+}
+
+/// 저장용 문서. `menus`는 `sortOrder`로 정렬해 읽으므로 이 값이 없으면
+/// 질의 결과에서 아예 빠진다. 새 메뉴에도 반드시 넣는다.
+Map<String, dynamic> menuItemToFirestore(MenuItem item) {
+  return {
+    'name': item.name,
+    'description': item.description,
+    'category': item.category.name,
+    'price': item.price,
+    'priceFrom': item.priceFrom,
+    'badge': item.badge.name,
+    'servingOptions': item.servingOptions,
+    'detail': item.detail,
+    'isRecommended': item.isRecommended,
+    'soldOut': item.soldOut,
+    'sortOrder': item.sortOrder,
+  };
 }
