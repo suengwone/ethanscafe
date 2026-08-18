@@ -140,4 +140,36 @@ void main() {
     expect(container.read(pickupCartCountProvider), 3);
     expect(container.read(pickupCartTotalProvider), 6000 * 2 + 8000);
   });
+
+  test('지운 항목을 원래 자리에 되돌린다', () {
+    final container = createContainer();
+    final notifier = container.read(pickupCartProvider.notifier);
+    notifier.add(menuItem: _menuItem('a'), option: 'HOT');
+    notifier.add(menuItem: _menuItem('b'), option: 'ICED');
+    notifier.add(menuItem: _menuItem('c'), option: 'HOT');
+
+    final removed = container.read(pickupCartProvider)[1];
+    notifier.removeAt(1);
+    expect(container.read(pickupCartProvider), hasLength(2));
+
+    notifier.insertAt(1, removed);
+
+    final items = container.read(pickupCartProvider);
+    expect(items, hasLength(3));
+    expect(items[1].menuItem.id, 'b');
+    expect(items[1].option, 'ICED');
+  });
+
+  test('되돌릴 위치가 범위를 벗어나도 목록 끝에 되살린다', () {
+    final container = createContainer();
+    final notifier = container.read(pickupCartProvider.notifier);
+    notifier.add(menuItem: _menuItem('a'), option: 'HOT');
+
+    final removed = container.read(pickupCartProvider).first;
+    notifier.removeAt(0);
+    notifier.insertAt(5, removed);
+
+    expect(container.read(pickupCartProvider), hasLength(1));
+    expect(container.read(pickupCartProvider).first.menuItem.id, 'a');
+  });
 }

@@ -186,4 +186,30 @@ void main() {
     expect(container.read(beanCartCountProvider), 3);
     expect(container.read(beanCartTotalProvider), 15000 * 2 + 32000);
   });
+
+  test('지운 항목을 원래 자리에 되돌린다', () {
+    final container = createContainer();
+    final notifier = container.read(beanCartProvider.notifier);
+    notifier.add(
+      bean: _bean('a'),
+      weight: BeanWeight.g200,
+      grind: GrindOption.wholeBean,
+    );
+    notifier.add(
+      bean: _bean('b'),
+      weight: BeanWeight.g500,
+      grind: GrindOption.handDrip,
+    );
+
+    final removed = container.read(beanCartProvider).first;
+    notifier.removeAt(0);
+    expect(container.read(beanCartProvider), hasLength(1));
+
+    notifier.insertAt(0, removed);
+
+    final items = container.read(beanCartProvider);
+    expect(items, hasLength(2));
+    expect(items.first.bean.id, 'a');
+    expect(items.first.weight, BeanWeight.g200);
+  });
 }

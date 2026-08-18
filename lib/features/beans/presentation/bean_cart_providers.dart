@@ -54,6 +54,12 @@ class BeanCartNotifier extends Notifier<List<BeanCartItem>> {
     state = [...state]..removeAt(index);
   }
 
+  /// 실수로 지운 항목을 원래 자리에 되돌린다.
+  void insertAt(int index, BeanCartItem item) {
+    final position = index.clamp(0, state.length);
+    state = [...state]..insert(position, item);
+  }
+
   void clear() => state = const [];
 }
 
