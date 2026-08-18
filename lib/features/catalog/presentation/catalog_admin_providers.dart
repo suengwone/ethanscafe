@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../beans/domain/bean_models.dart';
 import '../../beans/presentation/beans_providers.dart';
 import '../../menu/domain/menu_models.dart';
 import '../../menu/presentation/menu_providers.dart';
@@ -31,6 +32,16 @@ class CatalogAdminController {
   Future<void> deleteMenuItem(String menuId) async {
     await _repository.deleteMenuItem(menuId);
     _ref.invalidate(menuItemsProvider);
+  }
+
+  Future<void> saveBean(Bean bean) async {
+    await _repository.saveBean(bean);
+    _ref.invalidate(beansProvider);
+  }
+
+  Future<void> deleteBean(String beanId) async {
+    await _repository.deleteBean(beanId);
+    _ref.invalidate(beansProvider);
   }
 
   Future<void> setMenuSoldOut(String menuId, bool soldOut) async {

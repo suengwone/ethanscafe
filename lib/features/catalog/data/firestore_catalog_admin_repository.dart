@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../beans/data/firestore_beans_repository.dart';
+import '../../beans/domain/bean_models.dart';
 import '../../menu/data/firestore_menu_repository.dart';
 import '../../menu/domain/menu_models.dart';
 import '../domain/catalog_admin_repository.dart';
@@ -23,6 +24,21 @@ class FirestoreCatalogAdminRepository implements CatalogAdminRepository {
     return _firestore
         .collection(FirestoreMenuRepository.collectionPath)
         .doc(menuId)
+        .delete();
+  }
+
+  @override
+  Future<void> saveBean(Bean bean) async {
+    final beans = _firestore.collection(FirestoreBeansRepository.collectionPath);
+    final doc = bean.id.isEmpty ? beans.doc() : beans.doc(bean.id);
+    await doc.set(beanToFirestore(bean), SetOptions(merge: true));
+  }
+
+  @override
+  Future<void> deleteBean(String beanId) {
+    return _firestore
+        .collection(FirestoreBeansRepository.collectionPath)
+        .doc(beanId)
         .delete();
   }
 

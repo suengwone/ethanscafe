@@ -6,6 +6,7 @@ import '../../beans/domain/bean_models.dart';
 import '../../beans/presentation/beans_providers.dart';
 import '../../menu/domain/menu_models.dart';
 import '../../menu/presentation/menu_providers.dart';
+import 'bean_edit_screen.dart';
 import 'catalog_admin_providers.dart';
 import 'menu_edit_screen.dart';
 
@@ -34,21 +35,21 @@ class CatalogAdminScreen extends ConsumerWidget {
         floatingActionButton: Builder(
           builder: (context) {
             final tabs = DefaultTabController.of(context);
-            // 원두 등록은 아직 없으므로 메뉴 탭에서만 띄운다.
+            // 보고 있는 탭에 맞는 등록 화면을 연다.
             return AnimatedBuilder(
               animation: tabs,
               builder: (context, _) {
-                if (tabs.index != 0) {
-                  return const SizedBox.shrink();
-                }
+                final isMenuTab = tabs.index == 0;
                 return FloatingActionButton.extended(
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (context) => const MenuEditScreen(),
+                      builder: (context) => isMenuTab
+                          ? const MenuEditScreen()
+                          : const BeanEditScreen(),
                     ),
                   ),
                   icon: const Icon(Icons.add),
-                  label: const Text('메뉴 등록'),
+                  label: Text(isMenuTab ? '메뉴 등록' : '원두 등록'),
                 );
               },
             );
@@ -100,6 +101,11 @@ class _BeanSoldOutTab extends ConsumerWidget {
       onChanged: (bean, soldOut) => ref
           .read(catalogAdminControllerProvider)
           .setBeanSoldOut(bean.id, soldOut),
+      onTap: (context, bean) => Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (context) => BeanEditScreen(bean: bean),
+        ),
+      ),
     );
   }
 }
