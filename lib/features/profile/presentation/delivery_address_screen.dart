@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/confirm_delete_dialog.dart';
 import '../../auth/presentation/auth_providers.dart';
 import '../data/firestore_delivery_addresses_repository.dart';
 import '../data/local_delivery_addresses_repository.dart';
@@ -162,6 +163,25 @@ class _AddressCard extends ConsumerWidget {
 
   final DeliveryAddress address;
 
+  Future<void> _delete(BuildContext context, WidgetRef ref) async {
+    final confirmed = await confirmDelete(
+      context,
+      title: '배송지 삭제',
+      message: '${address.label} 배송지를 삭제할까요? 삭제하면 되돌릴 수 없어요.',
+    );
+    if (!confirmed || !context.mounted) {
+      return;
+    }
+    await ref.read(deliveryAddressesProvider.notifier)
+        .removeAddress(address.id);
+    if (!context.mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(const SnackBar(content: Text('배송지를 삭제했어요.')));
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
@@ -246,7 +266,7 @@ class _AddressCard extends ConsumerWidget {
                   case 'default':
                     controller.setDefaultAddress(address.id);
                   case 'delete':
-                    controller.removeAddress(address.id);
+                    _delete(context, ref);
                 }
               },
               itemBuilder: (context) => [

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/confirm_delete_dialog.dart';
 import '../../auth/presentation/auth_providers.dart';
 import '../data/firestore_payment_methods_repository.dart';
 import '../data/local_payment_methods_repository.dart';
@@ -148,6 +149,24 @@ class _PaymentMethodCard extends ConsumerWidget {
 
   final PaymentMethod card;
 
+  Future<void> _delete(BuildContext context, WidgetRef ref) async {
+    final confirmed = await confirmDelete(
+      context,
+      title: '결제 수단 삭제',
+      message: '${card.brand}(**** ${card.last4}) 카드를 삭제할까요? 삭제하면 되돌릴 수 없어요.',
+    );
+    if (!confirmed || !context.mounted) {
+      return;
+    }
+    await ref.read(paymentMethodsProvider.notifier).removeCard(card.id);
+    if (!context.mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(const SnackBar(content: Text('결제 수단을 삭제했어요.')));
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
@@ -226,7 +245,7 @@ class _PaymentMethodCard extends ConsumerWidget {
                   case 'default':
                     controller.setDefaultCard(card.id);
                   case 'delete':
-                    controller.removeCard(card.id);
+                    _delete(context, ref);
                 }
               },
               itemBuilder: (context) => [
