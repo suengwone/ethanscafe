@@ -42,7 +42,31 @@ Bean beanFromFirestore(String id, Map<String, dynamic> data) {
     price500: (data['price500'] as num? ?? 0).toInt(),
     isNew: data['isNew'] as bool? ?? false,
     soldOut: data['soldOut'] as bool? ?? false,
+    sortOrder: (data['sortOrder'] as num? ?? 0).toInt(),
   );
+}
+
+/// 저장용 문서. `beans`는 `sortOrder`로 정렬해 읽으므로 이 값이 없으면
+/// 질의 결과에서 아예 빠진다. 새 원두에도 반드시 넣는다.
+Map<String, dynamic> beanToFirestore(Bean bean) {
+  return {
+    'name': bean.name,
+    'origin': bean.origin,
+    'description': bean.description,
+    'story': bean.story,
+    'roastLevel': bean.roastLevel.name,
+    'process': bean.process,
+    'tastingNotes': bean.tastingNotes,
+    'acidity': bean.acidity,
+    'body': bean.body,
+    'sweetness': bean.sweetness,
+    'recommendedBrews': bean.recommendedBrews,
+    'price200': bean.price200,
+    'price500': bean.price500,
+    'isNew': bean.isNew,
+    'soldOut': bean.soldOut,
+    'sortOrder': bean.sortOrder,
+  };
 }
 
 List<String> _stringList(Object? value) =>
