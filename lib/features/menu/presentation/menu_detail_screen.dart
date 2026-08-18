@@ -6,6 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
+import '../../auth/presentation/login_required.dart';
 import '../../pickup/presentation/pickup_cart_providers.dart';
 import '../../review/presentation/product_review_section.dart';
 import '../../pickup/presentation/pickup_cart_screen.dart';
@@ -60,6 +61,10 @@ class _PickupOrderBar extends ConsumerWidget {
   final MenuItem item;
 
   Future<void> _order(BuildContext context, WidgetRef ref) async {
+    if (!requireLogin(context, ref, message: '메뉴 주문은 로그인 후 이용할 수 있어요.')) {
+      return;
+    }
+
     final selection = await showPickupOptionSheet(context, item);
     if (selection == null || !context.mounted) return;
 

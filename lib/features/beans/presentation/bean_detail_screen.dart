@@ -7,6 +7,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
+import '../../auth/presentation/login_required.dart';
 import '../../review/presentation/product_review_section.dart';
 import '../../subscription/presentation/bean_subscribe_sheet.dart';
 import '../domain/bean_models.dart';
@@ -464,8 +465,7 @@ class _OrderBar extends ConsumerWidget {
                 ),
               ),
               IconButton(
-                onPressed: () =>
-                    context.push('/menu/beans/${bean.id}/gift'),
+                onPressed: () => _openGift(context, ref),
                 tooltip: '선물하기',
                 icon: const Icon(LucideIcons.gift, size: 20),
                 style: IconButton.styleFrom(
@@ -508,7 +508,18 @@ class _OrderBar extends ConsumerWidget {
     );
   }
 
+  void _openGift(BuildContext context, WidgetRef ref) {
+    if (!requireLogin(context, ref, message: '원두 선물하기는 로그인 후 이용할 수 있어요.')) {
+      return;
+    }
+    context.push('/menu/beans/${bean.id}/gift');
+  }
+
   Future<void> _showOrderSheet(BuildContext context, WidgetRef ref) async {
+    if (!requireLogin(context, ref, message: '원두 주문은 로그인 후 이용할 수 있어요.')) {
+      return;
+    }
+
     final result = await showModalBottomSheet<BeanOrderSelection>(
       context: context,
       isScrollControlled: true,

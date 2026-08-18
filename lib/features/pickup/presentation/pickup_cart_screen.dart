@@ -6,6 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../auth/presentation/login_required.dart';
 import '../../coupon/domain/coupon_models.dart';
 import '../../coupon/presentation/coupon_select_sheet.dart';
 import '../../coupon/presentation/coupons_providers.dart';
@@ -56,7 +57,12 @@ class PickupCartButton extends ConsumerWidget {
     final count = ref.watch(pickupCartCountProvider);
 
     return IconButton(
-      onPressed: () => context.push('/menu/cart'),
+      onPressed: () {
+        if (!requireLogin(context, ref, message: '장바구니는 로그인 후 이용할 수 있어요.')) {
+          return;
+        }
+        context.push('/menu/cart');
+      },
       tooltip: '픽업 장바구니',
       icon: Stack(
         clipBehavior: Clip.none,
@@ -319,6 +325,24 @@ class _CartItemCard extends ConsumerWidget {
   final PickupCartItem item;
   final int index;
 
+  /// 장바구니에서 실수로 지우는 일이 잦아 되돌릴 기회를 준다.
+  void _remove(BuildContext context, WidgetRef ref) {
+    final notifier = ref.read(pickupCartProvider.notifier);
+    final removed = item;
+    notifier.removeAt(index);
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text('${removed.menuItem.name}을(를) 장바구니에서 뺐어요.'),
+          action: SnackBarAction(
+            label: '실행취소',
+            onPressed: () => notifier.insertAt(index, removed),
+          ),
+        ),
+      );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
@@ -353,7 +377,7 @@ class _CartItemCard extends ConsumerWidget {
                   ),
                 ),
                 IconButton(
-                  onPressed: () => notifier.removeAt(index),
+                  onPressed: () => _remove(context, ref),
                   icon: const Icon(LucideIcons.trash2, size: 18),
                   color: foxtrotMuted,
                   tooltip: '삭제',
@@ -616,7 +640,9 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      '보유 포인트 ${_priceFormat.format(balance)}P',
+                      usablePoints > 0
+                          ? '포인트 사용 (보유 ${_priceFormat.format(balance)}P)'
+                          : '사용 가능한 포인트가 없어요',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
