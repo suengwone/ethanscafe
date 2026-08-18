@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -846,17 +847,6 @@ void main() {
     await expectGolden(find.byType(BeanGiftScreen), 'bean_gift_screen');
   });
 
-  testWidgets('원두 선물하기 화면 스크린샷', (WidgetTester tester) async {
-    await configureView(tester);
-    await pumpScreen(
-      tester,
-      const BeanGiftScreen(beanId: 'ethiopia-yirgacheffe-aricha'),
-      user: _previewUser,
-    );
-
-    await expectGolden(find.byType(BeanGiftScreen), 'bean_gift_screen');
-  });
-
   testWidgets('선물 내역 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(tester, const GiftHistoryScreen());
@@ -869,6 +859,7 @@ void main() {
     await pumpScreen(
       tester,
       const BeanDetailScreen(beanId: 'ethiopia-yirgacheffe-aricha'),
+      user: _previewUser,
     );
 
     await tester.tap(find.text('주문하기'));
@@ -903,15 +894,6 @@ void main() {
       overrides: [couponNowProvider.overrideWithValue(DateTime(2026, 8, 3))],
       user: _previewUser,
     );
-
-    await fillBeanCart(tester, find.byType(BeanCartScreen));
-
-    await expectGolden(find.byType(BeanCartScreen), 'bean_cart_screen');
-  });
-
-  testWidgets('원두 장바구니 화면 스크린샷', (WidgetTester tester) async {
-    await configureView(tester);
-    await pumpScreen(tester, const BeanCartScreen(), user: _previewUser);
 
     await fillBeanCart(tester, find.byType(BeanCartScreen));
 
@@ -987,6 +969,7 @@ void main() {
     await pumpScreen(
       tester,
       const MenuDetailScreen(menuId: 'espresso-vanilla-latte'),
+      user: _previewUser,
     );
 
     await tester.tap(find.text('주문하기'));
@@ -1010,6 +993,8 @@ void main() {
     final stores = await LocalStoresRepository().loadStores();
     container.read(pickupStoreProvider.notifier).select(stores.first);
     await tester.pumpAndSettle();
+    // 담은 뒤에 나타나는 메뉴 썸네일도 골든에 찍히도록 다시 캐시한다.
+    await precacheAssetImages(tester);
   }
 
   testWidgets('픽업 장바구니 화면 스크린샷', (WidgetTester tester) async {
@@ -1020,15 +1005,6 @@ void main() {
       overrides: [couponNowProvider.overrideWithValue(DateTime(2026, 8, 3))],
       user: _previewUser,
     );
-
-    await fillPickupCart(tester, find.byType(PickupCartScreen));
-
-    await expectGolden(find.byType(PickupCartScreen), 'pickup_cart_screen');
-  });
-
-  testWidgets('픽업 장바구니 화면 스크린샷', (WidgetTester tester) async {
-    await configureView(tester);
-    await pumpScreen(tester, const PickupCartScreen(), user: _previewUser);
 
     await fillPickupCart(tester, find.byType(PickupCartScreen));
 
@@ -1208,6 +1184,18 @@ void main() {
     await pumpScreen(tester, const PaymentMethodsScreen());
 
     await expectGolden(find.byType(PaymentMethodsScreen), 'payment_methods_screen');
+  });
+
+  testWidgets('결제 수단 삭제 확인 다이얼로그 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const PaymentMethodsScreen());
+
+    await tester.tap(find.byIcon(LucideIcons.ellipsisVertical).first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('삭제').last);
+    await tester.pumpAndSettle();
+
+    await expectGolden(find.byType(MaterialApp), 'payment_method_delete_dialog');
   });
 
   testWidgets('배송지 관리 화면 스크린샷', (WidgetTester tester) async {
