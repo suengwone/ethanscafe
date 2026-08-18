@@ -117,12 +117,12 @@ class _BusinessHeader extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  '$companyName님,\n좋은 거래 되세요!',
+                  '$companyName님,\n좋은 거래 되세요!'.keepWord,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  '주문 후 로스팅한 신선한 원두를 도매가로 공급해 드려요',
+                  '주문 후 로스팅한 신선한 원두를 도매가로 공급해 드려요'.keepWord,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],

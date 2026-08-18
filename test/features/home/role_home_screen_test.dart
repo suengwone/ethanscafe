@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:cafe_app/core/theme/app_theme.dart';
+import 'package:cafe_app/core/utils/text_utils.dart';
 import 'package:cafe_app/features/auth/domain/account_models.dart';
 import 'package:cafe_app/features/auth/presentation/account_providers.dart';
 import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
@@ -61,7 +62,7 @@ void main() {
 
     expect(find.byType(BusinessHomeScreen), findsOneWidget);
     expect(find.byType(HomeScreen), findsNothing);
-    expect(find.textContaining('카페 어라운드'), findsOneWidget);
+    expect(find.textContaining('카페 어라운드'.keepWord), findsOneWidget);
     expect(find.text('도매 원두 리스트'), findsOneWidget);
   });
 }
