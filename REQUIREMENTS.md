@@ -154,7 +154,7 @@
 
 ### 4.14 내 정보 (profile)
 - ✅ 프로필 화면 (`/profile`) — 아바타·닉네임·로그인 유도
-- ✅ 나의 활동: 주문 내역, 쿠폰함, 즐겨찾기, 구독, 선물 내역
+- ✅ 나의 활동: 주문 내역, 쿠폰함, 즐겨찾기, 구독, 선물 내역, 친구 초대
 - ✅ 설정: 알림 설정, 결제 수단, 배송지 관리 (`/profile/addresses`)
 - ✅ 기타: 고객센터, 이용약관, 개인정보처리방침, 사업자 정보
 - ✅ 계정: 로그아웃, 회원 탈퇴
@@ -193,6 +193,21 @@
   - 혼잡도는 고른 시각(`congestionUpdatedAt`)을 함께 저장한다. 같은 값을 다시 골라도 시각만 새로 찍어
     직원이 "아직 혼잡"을 갱신할 수 있게 하고, 3시간이 지난 값은 고객 화면에서 숨긴다
 
+### 4.18 친구 초대 (referral)
+
+- ✅ 초대 코드 발급 (`/profile/referral`) — 계정마다 6자리 코드 1개. 첫 진입 시 `issueReferralCode`가 발급한다
+- ✅ 초대 코드 입력 — 친구 코드를 입력하면 **양쪽 모두 3,000P** 즉시 적립 (`redeemReferralCode`)
+- ✅ 초대 현황 — 초대한 친구 수, 받은 보상, 남은 초대 횟수
+- ✅ 코드·초대 문구 클립보드 복사
+- 규칙
+  - 코드는 계정당 **한 번만** 입력할 수 있다 (`referrals/{uid}.redeemedCode`)
+  - 본인 코드는 사용할 수 없다
+  - 초대 보상은 **한 사람당 최대 10명**까지 받는다
+  - 코드 글자는 `ABCDEFGHJKLMNPQRSTUVWXYZ23456789` — 0/O, 1/I처럼 받아적기 헷갈리는 글자를 뺐다.
+    입력값은 대문자로 맞추고 공백·구분 기호를 지운 뒤 검사한다
+  - 보상은 결제가 없는 적립이므로 포인트 히스토리에 `earn` 항목(`친구 초대 보상` / `초대 코드 입력 보상`)으로 남는다
+  - 지급 판단·한도 검사·중복 차단은 **전부 서버(콜러블 트랜잭션)** 에서 한다. 클라이언트는 `referrals` 쓰기 권한이 없다
+
 ## 5. 비기능 요구사항
 
 ### 5.1 Firestore 컬렉션
@@ -211,6 +226,8 @@
 | `refund_failures` | 취소는 됐으나 환불이 실패한 주문 | admin 읽기 / 쓰기 전면 차단 |
 | `coupons` | 쿠폰 | 소유자 읽기 / 자동 쿠폰 생성·`isUsed: true` 처리만 |
 | `menus` · `beans` · `banners` · `notices` · `stores` | 마스터 데이터 | 공개 읽기 / 쓰기는 admin |
+| `referrals` | 초대 코드·초대 실적 | 본인 읽기 / 쓰기 전면 차단 (서버만) |
+| `referral_codes` | 코드 → 회원 매핑 | **읽기·쓰기 전면 차단**. 남의 코드 열거를 막기 위해 서버 전용 |
 | `payment_usages` | 결제 멱등 키 | **규칙 미정의 → 전면 차단**. 서버(Admin SDK) 전용 |
 
 > 규칙 최하단에 `match /{document=**} { allow read, write: if false; }` 캐치올이 있어, 명시되지 않은 경로는 기본 차단된다.
@@ -228,6 +245,8 @@
 | `earnPointsByMembership` | callable | 매장 적립 — **admin 클레임 필수** |
 | `confirmTossPayment` | callable | 토스 결제 승인 (금액 검증) |
 | `registerBusinessProfile` | callable | 사업자 계정 등록 |
+| `issueReferralCode` | callable | 초대 코드 발급·조회 (없으면 겹치지 않는 코드를 선점해 생성) |
+| `redeemReferralCode` | callable | 초대 코드 사용 — 본인·중복·한도 검사 후 양쪽에 보상 적립 |
 | `signInWithKakao` / `signInWithNaver` | callable | 소셜 토큰 검증 → Firebase 커스텀 토큰 발급 |
 | `backfillCouponUids` | callable | 쿠폰 `uid` 백필 (운영 도구, admin) |
 | `backfillActiveOrders` | callable | 진행 중 주문 색인 재생성 (운영 도구, admin — 색인 도입 후 1회) |
@@ -288,6 +307,7 @@
 | `/profile/favorites` | 즐겨찾기 메뉴 | 마이 |
 | `/profile/subscriptions` | 정기구독 관리 | 마이 |
 | `/profile/gifts` | 선물 내역 | 마이 |
+| `/profile/referral` | 친구 초대 | 마이 |
 | `/profile/notifications` | 알림 설정 | 마이 |
 | `/profile/payment-methods` | 결제 수단 관리 | 마이 |
 | `/profile/addresses` | 배송지 관리 | 마이 |
@@ -304,7 +324,6 @@
 |--------|------|------|
 | ★ | 다크 모드 | 시스템 설정 연동 (현재는 다크 테마 고정) |
 | ★ | 다국어 지원 | 영어 로케일 (`flutter_localizations`) |
-| ★ | 친구 초대 리퍼럴 | 초대 코드 입력 시 양측 포인트/쿠폰 지급 |
 
 ### 7.2 기술 · 운영
 
@@ -358,6 +377,7 @@
 | 2026-08-16 | 재주문 구현. 멤버십 등급제 도입 후 폐지(고정 10% 적립률로 환원). 스탬프 적립 폐지 → 포인트 체계로 대체. 선불권 포인트 충전 기획 및 구현 완료 |
 | 2026-08-17 | 비회원 주문 폐지 — 장바구니·선물을 로그인 필요로 전환하고 게스트 안내 카드 제거. 게스트는 열람 전용. 미사용 의존성 7종 정리 |
 | 2026-08-18 | 매장 운영 도구 3종 — 주문 상태 관리(`updateOrderStatus`), 주문 취소 시 실제 결제 환불 및 매장 취소, 품절 관리. 픽업 주문 푸시 알림과 취소 알림 추가. 주문 관리 화면이 `active_orders` 색인을 읽도록 변경. 환불 실패 건 조회·재시도(`retryRefund`)와 고객 화면 환불 상태 노출. 메뉴·원두 등록·수정 도구 |
+| 2026-08-19 | 친구 초대 리퍼럴 — `/profile/referral` 신설. 계정별 6자리 초대 코드(`issueReferralCode`)와 코드 입력 시 양쪽 3,000P 지급(`redeemReferralCode`). 한 번만 입력·본인 코드 불가·최대 10명 한도를 서버 트랜잭션에서 검사하고 `referrals`·`referral_codes`는 클라이언트 쓰기를 막았다 |
 | 2026-08-19 | 매장 상세 강화 — `/stores/:storeId` 신설. 영업시간 문자열을 해석해 영업 중/종료를 표시하고, 매장 공지와 매장이 직접 올리는 혼잡도(3시간 뒤 자동 숨김)를 `CafeStore`에 추가. 매장 관리 화면에서 둘 다 편집 |
 | 2026-08-19 | 공지 등록·수정 도구 — 카탈로그 관리에 공지 탭 추가. `noticeToFirestore` 직렬화와 게시일(`createdAt`) 편집으로 마스터 데이터 5종을 모두 앱에서 관리한다 |
 | 2026-08-19 | 배너·매장 등록·수정 도구 — 상품 관리 화면을 **카탈로그 관리**로 넓혀 탭 4종(메뉴·원두·배너·매장)으로 재구성. `EventBanner`·`CafeStore`에 `sortOrder` 추가 및 쓰기 직렬화. 배너 아이콘 표를 홈 캐러셀과 관리자 화면이 함께 쓰도록 통합 |
