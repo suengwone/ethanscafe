@@ -286,7 +286,7 @@ class _StaffSection extends ConsumerWidget {
               FilledButton.tonalIcon(
                 onPressed: () => context.push('/points/catalog'),
                 icon: const Icon(LucideIcons.package, size: 18),
-                label: const Text('상품 관리'),
+                label: const Text('카탈로그 관리'),
               ),
             ],
           ),
