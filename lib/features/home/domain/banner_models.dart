@@ -9,5 +9,6 @@ abstract class EventBanner with _$EventBanner {
     required String title,
     required String subtitle,
     @Default('sparkles') String icon,
+    @Default(0) int sortOrder,
   }) = _EventBanner;
 }

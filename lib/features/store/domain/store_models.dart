@@ -14,5 +14,6 @@ abstract class CafeStore with _$CafeStore {
     required String weekdayHours,
     required String weekendHours,
     @Default(<String>[]) List<String> services,
+    @Default(0) int sortOrder,
   }) = _CafeStore;
 }

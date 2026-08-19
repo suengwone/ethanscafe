@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EventBanner {
 
- String get id; String get title; String get subtitle; String get icon;
+ String get id; String get title; String get subtitle; String get icon; int get sortOrder;
 /// Create a copy of EventBanner
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $EventBannerCopyWith<EventBanner> get copyWith => _$EventBannerCopyWithImpl<Even
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventBanner&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.subtitle, subtitle) || other.subtitle == subtitle)&&(identical(other.icon, icon) || other.icon == icon));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventBanner&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.subtitle, subtitle) || other.subtitle == subtitle)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,subtitle,icon);
+int get hashCode => Object.hash(runtimeType,id,title,subtitle,icon,sortOrder);
 
 @override
 String toString() {
-  return 'EventBanner(id: $id, title: $title, subtitle: $subtitle, icon: $icon)';
+  return 'EventBanner(id: $id, title: $title, subtitle: $subtitle, icon: $icon, sortOrder: $sortOrder)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $EventBannerCopyWith<$Res>  {
   factory $EventBannerCopyWith(EventBanner value, $Res Function(EventBanner) _then) = _$EventBannerCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String subtitle, String icon
+ String id, String title, String subtitle, String icon, int sortOrder
 });
 
 
@@ -62,13 +62,14 @@ class _$EventBannerCopyWithImpl<$Res>
 
 /// Create a copy of EventBanner
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? subtitle = null,Object? icon = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? subtitle = null,Object? icon = null,Object? sortOrder = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,subtitle: null == subtitle ? _self.subtitle : subtitle // ignore: cast_nullable_to_non_nullable
 as String,icon: null == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
-as String,
+as String,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
@@ -153,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String subtitle,  String icon)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String subtitle,  String icon,  int sortOrder)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EventBanner() when $default != null:
-return $default(_that.id,_that.title,_that.subtitle,_that.icon);case _:
+return $default(_that.id,_that.title,_that.subtitle,_that.icon,_that.sortOrder);case _:
   return orElse();
 
 }
@@ -174,10 +175,10 @@ return $default(_that.id,_that.title,_that.subtitle,_that.icon);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String subtitle,  String icon)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String subtitle,  String icon,  int sortOrder)  $default,) {final _that = this;
 switch (_that) {
 case _EventBanner():
-return $default(_that.id,_that.title,_that.subtitle,_that.icon);case _:
+return $default(_that.id,_that.title,_that.subtitle,_that.icon,_that.sortOrder);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +195,10 @@ return $default(_that.id,_that.title,_that.subtitle,_that.icon);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String subtitle,  String icon)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String subtitle,  String icon,  int sortOrder)?  $default,) {final _that = this;
 switch (_that) {
 case _EventBanner() when $default != null:
-return $default(_that.id,_that.title,_that.subtitle,_that.icon);case _:
+return $default(_that.id,_that.title,_that.subtitle,_that.icon,_that.sortOrder);case _:
   return null;
 
 }
@@ -209,13 +210,14 @@ return $default(_that.id,_that.title,_that.subtitle,_that.icon);case _:
 
 
 class _EventBanner implements EventBanner {
-  const _EventBanner({required this.id, required this.title, required this.subtitle, this.icon = 'sparkles'});
+  const _EventBanner({required this.id, required this.title, required this.subtitle, this.icon = 'sparkles', this.sortOrder = 0});
   
 
 @override final  String id;
 @override final  String title;
 @override final  String subtitle;
 @override@JsonKey() final  String icon;
+@override@JsonKey() final  int sortOrder;
 
 /// Create a copy of EventBanner
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +229,16 @@ _$EventBannerCopyWith<_EventBanner> get copyWith => __$EventBannerCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventBanner&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.subtitle, subtitle) || other.subtitle == subtitle)&&(identical(other.icon, icon) || other.icon == icon));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventBanner&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.subtitle, subtitle) || other.subtitle == subtitle)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,subtitle,icon);
+int get hashCode => Object.hash(runtimeType,id,title,subtitle,icon,sortOrder);
 
 @override
 String toString() {
-  return 'EventBanner(id: $id, title: $title, subtitle: $subtitle, icon: $icon)';
+  return 'EventBanner(id: $id, title: $title, subtitle: $subtitle, icon: $icon, sortOrder: $sortOrder)';
 }
 
 
@@ -247,7 +249,7 @@ abstract mixin class _$EventBannerCopyWith<$Res> implements $EventBannerCopyWith
   factory _$EventBannerCopyWith(_EventBanner value, $Res Function(_EventBanner) _then) = __$EventBannerCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String subtitle, String icon
+ String id, String title, String subtitle, String icon, int sortOrder
 });
 
 
@@ -264,13 +266,14 @@ class __$EventBannerCopyWithImpl<$Res>
 
 /// Create a copy of EventBanner
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? subtitle = null,Object? icon = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? subtitle = null,Object? icon = null,Object? sortOrder = null,}) {
   return _then(_EventBanner(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,subtitle: null == subtitle ? _self.subtitle : subtitle // ignore: cast_nullable_to_non_nullable
 as String,icon: null == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
-as String,
+as String,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

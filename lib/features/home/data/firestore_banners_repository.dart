@@ -29,5 +29,15 @@ EventBanner bannerFromFirestore(String id, Map<String, dynamic> data) {
     title: data['title'] as String? ?? '',
     subtitle: data['subtitle'] as String? ?? '',
     icon: data['icon'] as String? ?? 'sparkles',
+    sortOrder: (data['sortOrder'] as num? ?? 0).toInt(),
   );
+}
+
+Map<String, dynamic> bannerToFirestore(EventBanner banner) {
+  return {
+    'title': banner.title,
+    'subtitle': banner.subtitle,
+    'icon': banner.icon,
+    'sortOrder': banner.sortOrder,
+  };
 }

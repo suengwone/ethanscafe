@@ -34,5 +34,20 @@ CafeStore storeFromFirestore(String id, Map<String, dynamic> data) {
     weekdayHours: data['weekdayHours'] as String? ?? '',
     weekendHours: data['weekendHours'] as String? ?? '',
     services: (data['services'] as List<dynamic>? ?? const []).cast<String>(),
+    sortOrder: (data['sortOrder'] as num? ?? 0).toInt(),
   );
+}
+
+Map<String, dynamic> storeToFirestore(CafeStore store) {
+  return {
+    'name': store.name,
+    'address': store.address,
+    'phone': store.phone,
+    'latitude': store.latitude,
+    'longitude': store.longitude,
+    'weekdayHours': store.weekdayHours,
+    'weekendHours': store.weekendHours,
+    'services': store.services,
+    'sortOrder': store.sortOrder,
+  };
 }
