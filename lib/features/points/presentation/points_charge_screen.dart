@@ -165,10 +165,10 @@ class _ChargePlanCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: selected ? foxtrotGold.withValues(alpha: 0.12) : foxtrotCard,
+          color: selected ? context.palette.accent.withValues(alpha: 0.12) : context.palette.card,
           borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
           border: Border.all(
-            color: selected ? foxtrotGold : foxtrotBorder,
+            color: selected ? context.palette.accent : context.palette.border,
             width: selected ? 1.4 : 1,
           ),
         ),
@@ -177,7 +177,7 @@ class _ChargePlanCard extends StatelessWidget {
             Icon(
               selected ? LucideIcons.circleCheck : LucideIcons.circle,
               size: 20,
-              color: selected ? foxtrotGold : foxtrotBorder,
+              color: selected ? context.palette.accent : context.palette.border,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -194,7 +194,7 @@ class _ChargePlanCard extends StatelessWidget {
                         ? '보너스 +${_amountFormat.format(plan.bonus)}P 지급'
                         : '보너스 없음',
                     style: textTheme.bodySmall?.copyWith(
-                      color: plan.bonus > 0 ? foxtrotGoldLight : null,
+                      color: plan.bonus > 0 ? context.palette.accentSoft : null,
                     ),
                   ),
                 ],
@@ -203,11 +203,11 @@ class _ChargePlanCard extends StatelessWidget {
             const SizedBox(width: 10),
             Text(
               '${_amountFormat.format(plan.totalPoints)}P',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 letterSpacing: -0.3,
-                color: foxtrotGoldLight,
+                color: context.palette.accentSoft,
               ),
             ),
           ],
@@ -260,11 +260,11 @@ class _ChargeSummaryCard extends StatelessWidget {
                 ),
                 Text(
                   '${_amountFormat.format(balance + plan.totalPoints)}P',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
                     letterSpacing: -0.3,
-                    color: foxtrotGoldLight,
+                    color: context.palette.accentSoft,
                   ),
                 ),
               ],
@@ -296,7 +296,7 @@ class _SummaryRow extends StatelessWidget {
         Text(
           value,
           style: textTheme.bodySmall?.copyWith(
-            color: highlight ? foxtrotGold : null,
+            color: highlight ? context.palette.accent : null,
             fontWeight: FontWeight.w600,
           ),
         ),

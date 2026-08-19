@@ -102,7 +102,7 @@ class _CartSummaryBar extends ConsumerWidget {
     final total = ref.watch(beanCartTotalProvider);
 
     return Material(
-      color: foxtrotGold,
+      color: context.palette.accent,
       borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
       child: InkWell(
         borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
@@ -111,32 +111,32 @@ class _CartSummaryBar extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
           child: Row(
             children: [
-              const Icon(
+              Icon(
                 LucideIcons.shoppingBag,
                 size: 18,
-                color: foxtrotBlack,
+                color: context.palette.background,
               ),
               const SizedBox(width: 8),
               Text(
                 '장바구니 · $count개',
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.w700,
-                  color: foxtrotBlack,
+                  color: context.palette.background,
                 ),
               ),
               const Spacer(),
               Text(
                 '${_priceFormat.format(total)}원',
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.w700,
-                  color: foxtrotBlack,
+                  color: context.palette.background,
                 ),
               ),
               const SizedBox(width: 4),
-              const Icon(
+              Icon(
                 LucideIcons.chevronRight,
                 size: 16,
-                color: foxtrotBlack,
+                color: context.palette.background,
               ),
             ],
           ),
@@ -183,7 +183,7 @@ class _BeanSectionHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, size: 18, color: foxtrotGold),
+              Icon(icon, size: 18, color: context.palette.accent),
               const SizedBox(width: 7),
               Expanded(
                 child: Text(title.keepWord, style: textTheme.titleMedium),
@@ -229,13 +229,13 @@ class _BeanCard extends ConsumerWidget {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: foxtrotSurface,
+                      color: context.palette.surface,
                       borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-                      border: Border.all(color: foxtrotBorder),
+                      border: Border.all(color: context.palette.border),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       LucideIcons.bean,
-                      color: foxtrotGold,
+                      color: context.palette.accent,
                       size: 24,
                     ),
                   ),
@@ -295,7 +295,7 @@ class _BeanCard extends ConsumerWidget {
               const SizedBox(height: 12),
               Container(
                 height: 1,
-                color: foxtrotBorder.withValues(alpha: 0.5),
+                color: context.palette.border.withValues(alpha: 0.5),
               ),
               const SizedBox(height: 10),
               Row(
@@ -304,18 +304,18 @@ class _BeanCard extends ConsumerWidget {
                   const Spacer(),
                   Text(
                     '${_priceFormat.format(bean.price200)}원',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
                       letterSpacing: -0.3,
-                      color: foxtrotCream,
+                      color: context.palette.ink,
                     ),
                   ),
                   const SizedBox(width: 2),
-                  const Icon(
+                  Icon(
                     LucideIcons.chevronRight,
                     size: 16,
-                    color: foxtrotMuted,
+                    color: context.palette.muted,
                   ),
                 ],
               ),
@@ -337,12 +337,12 @@ class _TastingNoteChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: foxtrotGold.withValues(alpha: 0.12),
+        color: context.palette.accent.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
       ),
       child: Text(
         note,
-        style: const TextStyle(fontSize: 11, color: foxtrotGoldLight),
+        style: TextStyle(fontSize: 11, color: context.palette.accentSoft),
       ),
     );
   }

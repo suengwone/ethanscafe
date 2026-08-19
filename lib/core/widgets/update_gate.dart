@@ -41,7 +41,7 @@ class UpdateRequiredView extends StatelessWidget {
     final hasStoreUrl = storeUrl.trim().isNotEmpty;
 
     return Scaffold(
-      backgroundColor: foxtrotBlack,
+      backgroundColor: context.palette.background,
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -54,7 +54,7 @@ class UpdateRequiredView extends StatelessWidget {
                 Text(
                   '업데이트가 필요합니다',
                   style: theme.textTheme.headlineSmall?.copyWith(
-                    color: foxtrotCream,
+                    color: context.palette.ink,
                     fontWeight: FontWeight.w700,
                   ),
                   textAlign: TextAlign.center,
@@ -63,7 +63,7 @@ class UpdateRequiredView extends StatelessWidget {
                 Text(
                   '더 안전하고 편리한 이용을 위해\n최신 버전으로 업데이트해 주세요.',
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: foxtrotMuted,
+                    color: context.palette.muted,
                     height: 1.5,
                   ),
                   textAlign: TextAlign.center,

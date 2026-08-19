@@ -80,7 +80,7 @@ class CouponListScreen extends ConsumerWidget {
     final confirmed = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: foxtrotCard,
+      backgroundColor: context.palette.card,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -112,7 +112,7 @@ class _EmptyCoupons extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(LucideIcons.ticket, size: 48, color: foxtrotMuted),
+          Icon(LucideIcons.ticket, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text(
             '보유한 쿠폰이 없어요',
@@ -165,15 +165,15 @@ class _CouponCard extends StatelessWidget {
                   width: 52,
                   height: 52,
                   decoration: BoxDecoration(
-                    color: foxtrotSurface,
+                    color: context.palette.surface,
                     borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
                     border: Border.all(
-                      color: usable ? foxtrotGold : foxtrotBorder,
+                      color: usable ? context.palette.accent : context.palette.border,
                     ),
                   ),
                   child: Icon(
                     LucideIcons.ticket,
-                    color: usable ? foxtrotGold : foxtrotMuted,
+                    color: usable ? context.palette.accent : context.palette.muted,
                     size: 24,
                   ),
                 ),
@@ -245,16 +245,16 @@ class _StatusChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
         color: highlighted
-            ? foxtrotGold.withValues(alpha: 0.15)
-            : foxtrotSurface,
+            ? context.palette.accent.withValues(alpha: 0.15)
+            : context.palette.surface,
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
-        border: highlighted ? null : Border.all(color: foxtrotBorder),
+        border: highlighted ? null : Border.all(color: context.palette.border),
       ),
       child: Text(
         label,
         style: TextStyle(
           fontSize: 11,
-          color: highlighted ? foxtrotGoldLight : foxtrotMuted,
+          color: highlighted ? context.palette.accentSoft : context.palette.muted,
         ),
       ),
     );
@@ -349,13 +349,13 @@ class _CouponUseSheet extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: foxtrotSurface,
+                color: context.palette.surface,
                 borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-                border: Border.all(color: foxtrotBorder),
+                border: Border.all(color: context.palette.border),
               ),
               child: Row(
                 children: [
-                  const Icon(LucideIcons.info, color: foxtrotGold, size: 18),
+                  Icon(LucideIcons.info, color: context.palette.accent, size: 18),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(

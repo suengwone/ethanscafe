@@ -105,13 +105,13 @@ class _HeaderSection extends StatelessWidget {
               width: 88,
               height: 88,
               decoration: BoxDecoration(
-                color: foxtrotSurface,
+                color: context.palette.surface,
                 shape: BoxShape.circle,
-                border: Border.all(color: foxtrotGold, width: 1.5),
+                border: Border.all(color: context.palette.accent, width: 1.5),
               ),
-              child: const Icon(
+              child: Icon(
                 LucideIcons.bean,
-                color: foxtrotGold,
+                color: context.palette.accent,
                 size: 40,
               ),
             ),
@@ -170,18 +170,18 @@ class _InfoChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: foxtrotSurface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-        border: Border.all(color: foxtrotBorder),
+        border: Border.all(color: context.palette.border),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: foxtrotGold),
+          Icon(icon, size: 14, color: context.palette.accent),
           const SizedBox(width: 6),
           Text(
             label,
-            style: const TextStyle(fontSize: 12, color: foxtrotCream),
+            style: TextStyle(fontSize: 12, color: context.palette.ink),
           ),
         ],
       ),
@@ -209,14 +209,14 @@ class _TastingNotesSection extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: foxtrotGold.withValues(alpha: 0.12),
+                  color: context.palette.accent.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
                 ),
                 child: Text(
                   note,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
-                    color: foxtrotGoldLight,
+                    color: context.palette.accentSoft,
                   ),
                 ),
               ),
@@ -273,9 +273,9 @@ class _ProfileRow extends StatelessWidget {
                   height: 6,
                   margin: EdgeInsets.only(right: index < 4 ? 6 : 0),
                   decoration: BoxDecoration(
-                    color: filled ? foxtrotGold : foxtrotSurface,
+                    color: filled ? context.palette.accent : context.palette.surface,
                     borderRadius: BorderRadius.circular(3),
-                    border: filled ? null : Border.all(color: foxtrotBorder),
+                    border: filled ? null : Border.all(color: context.palette.border),
                   ),
                 ),
               );
@@ -406,17 +406,17 @@ class BeanCartButton extends ConsumerWidget {
                   vertical: 1,
                 ),
                 decoration: BoxDecoration(
-                  color: foxtrotGold,
+                  color: context.palette.accent,
                   borderRadius: BorderRadius.circular(9),
                 ),
                 constraints: const BoxConstraints(minWidth: 16),
                 child: Text(
                   '$count',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
-                    color: foxtrotBlack,
+                    color: context.palette.background,
                   ),
                 ),
               ),
@@ -435,9 +435,9 @@ class _OrderBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      decoration: const BoxDecoration(
-        color: foxtrotSurface,
-        border: Border(top: BorderSide(color: foxtrotBorder)),
+      decoration: BoxDecoration(
+        color: context.palette.surface,
+        border: Border(top: BorderSide(color: context.palette.border)),
       ),
       child: SafeArea(
         child: Padding(
@@ -455,10 +455,10 @@ class _OrderBar extends ConsumerWidget {
                     ),
                     Text(
                       '${_priceFormat.format(bean.price200)}원',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: foxtrotGoldLight,
+                        color: context.palette.accentSoft,
                       ),
                     ),
                   ],
@@ -469,8 +469,8 @@ class _OrderBar extends ConsumerWidget {
                 tooltip: '선물하기',
                 icon: const Icon(LucideIcons.gift, size: 20),
                 style: IconButton.styleFrom(
-                  side: const BorderSide(color: foxtrotBorder),
-                  foregroundColor: foxtrotGoldLight,
+                  side: BorderSide(color: context.palette.border),
+                  foregroundColor: context.palette.accentSoft,
                 ),
               ),
               const SizedBox(width: 8),
@@ -484,8 +484,8 @@ class _OrderBar extends ConsumerWidget {
                     horizontal: 14,
                     vertical: 14,
                   ),
-                  side: const BorderSide(color: foxtrotGold),
-                  foregroundColor: foxtrotGoldLight,
+                  side: BorderSide(color: context.palette.accent),
+                  foregroundColor: context.palette.accentSoft,
                 ),
               ),
               const SizedBox(width: 8),
@@ -523,7 +523,7 @@ class _OrderBar extends ConsumerWidget {
     final result = await showModalBottomSheet<BeanOrderSelection>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: foxtrotCard,
+      backgroundColor: context.palette.card,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -657,17 +657,17 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
                       label: Text(grind.label),
                       selected: _grind == grind,
                       onSelected: (_) => setState(() => _grind = grind),
-                      selectedColor: foxtrotGold.withValues(alpha: 0.25),
+                      selectedColor: context.palette.accent.withValues(alpha: 0.25),
                       labelStyle: TextStyle(
                         fontSize: 13,
                         color: _grind == grind
-                            ? foxtrotGoldLight
-                            : foxtrotCream,
+                            ? context.palette.accentSoft
+                            : context.palette.ink,
                       ),
                       side: BorderSide(
-                        color: _grind == grind ? foxtrotGold : foxtrotBorder,
+                        color: _grind == grind ? context.palette.accent : context.palette.border,
                       ),
-                      backgroundColor: foxtrotSurface,
+                      backgroundColor: context.palette.surface,
                       showCheckmark: false,
                     ),
                   )
@@ -709,10 +709,10 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
                 const Spacer(),
                 Text(
                   '${_priceFormat.format(_totalPrice)}원',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: foxtrotGoldLight,
+                    color: context.palette.accentSoft,
                   ),
                 ),
               ],
@@ -727,8 +727,8 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
                     label: const Text('장바구니 담기'),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      side: const BorderSide(color: foxtrotGold),
-                      foregroundColor: foxtrotGoldLight,
+                      side: BorderSide(color: context.palette.accent),
+                      foregroundColor: context.palette.accentSoft,
                     ),
                   ),
                 ),
@@ -773,11 +773,11 @@ class _WeightOption extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: selected
-              ? foxtrotGold.withValues(alpha: 0.15)
-              : foxtrotSurface,
+              ? context.palette.accent.withValues(alpha: 0.15)
+              : context.palette.surface,
           borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
           border: Border.all(
-            color: selected ? foxtrotGold : foxtrotBorder,
+            color: selected ? context.palette.accent : context.palette.border,
             width: selected ? 1.5 : 1,
           ),
         ),
@@ -787,7 +787,7 @@ class _WeightOption extends StatelessWidget {
               weight.label,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: selected ? foxtrotGoldLight : foxtrotCream,
+                color: selected ? context.palette.accentSoft : context.palette.ink,
               ),
             ),
             const SizedBox(height: 4),
@@ -822,14 +822,14 @@ class _QuantityButton extends StatelessWidget {
         width: 36,
         height: 36,
         decoration: BoxDecoration(
-          color: foxtrotSurface,
+          color: context.palette.surface,
           borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-          border: Border.all(color: foxtrotBorder),
+          border: Border.all(color: context.palette.border),
         ),
         child: Icon(
           icon,
           size: 18,
-          color: enabled ? foxtrotGold : foxtrotMuted,
+          color: enabled ? context.palette.accent : context.palette.muted,
         ),
       ),
     );

@@ -228,7 +228,7 @@ class _RefundFailureCardState extends State<_RefundFailureCard> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: foxtrotCard,
+        color: context.palette.card,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.redAccent.withValues(alpha: 0.5)),
       ),
@@ -247,7 +247,7 @@ class _RefundFailureCardState extends State<_RefundFailureCard> {
               const Spacer(),
               Text(
                 _dateFormat.format(failure.failedAt),
-                style: textTheme.bodySmall?.copyWith(color: foxtrotMuted),
+                style: textTheme.bodySmall?.copyWith(color: context.palette.muted),
               ),
             ],
           ),
@@ -255,14 +255,14 @@ class _RefundFailureCardState extends State<_RefundFailureCard> {
           Text(
             failure.summary,
             style: textTheme.titleMedium?.copyWith(
-              color: foxtrotCream,
+              color: context.palette.ink,
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 2),
           Text(
             '${_amountFormat.format(failure.amount)}원',
-            style: textTheme.bodySmall?.copyWith(color: foxtrotMuted),
+            style: textTheme.bodySmall?.copyWith(color: context.palette.muted),
           ),
           const SizedBox(height: 14),
           Row(
@@ -373,9 +373,9 @@ class _OrderCardState extends State<_OrderCard> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: foxtrotCard,
+        color: context.palette.card,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: foxtrotBorder),
+        border: Border.all(color: context.palette.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -386,13 +386,13 @@ class _OrderCardState extends State<_OrderCard> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: foxtrotGold.withValues(alpha: 0.18),
+                  color: context.palette.accent.withValues(alpha: 0.18),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   widget.badge,
                   style: textTheme.labelMedium?.copyWith(
-                    color: foxtrotGoldLight,
+                    color: context.palette.accentSoft,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -400,7 +400,7 @@ class _OrderCardState extends State<_OrderCard> {
               const Spacer(),
               Text(
                 _timeFormat.format(widget.createdAt),
-                style: textTheme.bodySmall?.copyWith(color: foxtrotMuted),
+                style: textTheme.bodySmall?.copyWith(color: context.palette.muted),
               ),
             ],
           ),
@@ -408,23 +408,23 @@ class _OrderCardState extends State<_OrderCard> {
           Text(
             widget.summary,
             style: textTheme.titleMedium?.copyWith(
-              color: foxtrotCream,
+              color: context.palette.ink,
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 2),
           Text(
             widget.subtitle,
-            style: textTheme.bodySmall?.copyWith(color: foxtrotMuted),
+            style: textTheme.bodySmall?.copyWith(color: context.palette.muted),
           ),
           const SizedBox(height: 14),
           Row(
             children: [
-              Icon(LucideIcons.clock, size: 14, color: foxtrotMuted),
+              Icon(LucideIcons.clock, size: 14, color: context.palette.muted),
               const SizedBox(width: 6),
               Text(
                 widget.statusLabel,
-                style: textTheme.bodySmall?.copyWith(color: foxtrotCream),
+                style: textTheme.bodySmall?.copyWith(color: context.palette.ink),
               ),
               const Spacer(),
               if (widget.onCancel != null)
@@ -464,14 +464,14 @@ class _EmptyView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(LucideIcons.clipboardCheck, size: 40, color: foxtrotMuted),
+          Icon(LucideIcons.clipboardCheck, size: 40, color: context.palette.muted),
           const SizedBox(height: 12),
           Text(
             message,
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium
-                ?.copyWith(color: foxtrotMuted),
+                ?.copyWith(color: context.palette.muted),
           ),
         ],
       ),

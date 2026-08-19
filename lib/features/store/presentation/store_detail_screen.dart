@@ -84,7 +84,7 @@ class _StoreDetail extends StatelessWidget {
             if (distanceMeters != null)
               StoreBadge(
                 label: '내 위치에서 ${storeDistanceLabel(distanceMeters!)}',
-                color: foxtrotGoldLight,
+                color: context.palette.accentSoft,
               ),
           ],
         ),
@@ -148,22 +148,22 @@ class _NoticeCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: foxtrotGold.withValues(alpha: 0.1),
+        color: context.palette.accent.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
-        border: Border.all(color: foxtrotGold.withValues(alpha: 0.4)),
+        border: Border.all(color: context.palette.accent.withValues(alpha: 0.4)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(LucideIcons.megaphone, size: 16, color: foxtrotGold),
+          Icon(LucideIcons.megaphone, size: 16, color: context.palette.accent),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   '매장 공지',
-                  style: TextStyle(fontSize: 12, color: foxtrotGoldLight),
+                  style: TextStyle(fontSize: 12, color: context.palette.accentSoft),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -197,7 +197,7 @@ class _HoursRow extends StatelessWidget {
         Expanded(
           child: Text(
             hours.isEmpty ? '정보 없음' : hours,
-            style: textTheme.bodySmall?.copyWith(color: foxtrotCream),
+            style: textTheme.bodySmall?.copyWith(color: context.palette.ink),
           ),
         ),
       ],

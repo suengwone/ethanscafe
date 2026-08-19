@@ -59,7 +59,7 @@ class _EmptyGifts extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(LucideIcons.gift, size: 48, color: foxtrotMuted),
+          Icon(LucideIcons.gift, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text(
             '보낸 선물이 없어요',
@@ -99,13 +99,13 @@ class _GiftCard extends StatelessWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: foxtrotSurface,
+                    color: context.palette.surface,
                     borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-                    border: Border.all(color: foxtrotBorder),
+                    border: Border.all(color: context.palette.border),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     LucideIcons.gift,
-                    color: foxtrotGold,
+                    color: context.palette.accent,
                     size: 22,
                   ),
                 ),
@@ -151,13 +151,13 @@ class _GiftCard extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: foxtrotSurface,
+                  color: context.palette.surface,
                   borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-                  border: Border.all(color: foxtrotBorder),
+                  border: Border.all(color: context.palette.border),
                 ),
                 child: Text(
                   '“${gift.message}”'.keepWord,
-                  style: textTheme.bodySmall?.copyWith(color: foxtrotCream),
+                  style: textTheme.bodySmall?.copyWith(color: context.palette.ink),
                 ),
               ),
             ],
@@ -178,16 +178,16 @@ class _GiftStatusChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: foxtrotSurface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-        border: Border.all(color: foxtrotBorder),
+        border: Border.all(color: context.palette.border),
       ),
       child: Text(
         status.label,
         style: Theme.of(context)
             .textTheme
             .bodySmall
-            ?.copyWith(color: foxtrotGoldLight, fontWeight: FontWeight.w600),
+            ?.copyWith(color: context.palette.accentSoft, fontWeight: FontWeight.w600),
       ),
     );
   }

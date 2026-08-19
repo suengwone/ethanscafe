@@ -171,19 +171,19 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
                                   onSelected: (_) =>
                                       setState(() => _grind = grind),
                                   selectedColor:
-                                      foxtrotGold.withValues(alpha: 0.25),
+                                      context.palette.accent.withValues(alpha: 0.25),
                                   labelStyle: TextStyle(
                                     fontSize: 13,
                                     color: _grind == grind
-                                        ? foxtrotGoldLight
-                                        : foxtrotCream,
+                                        ? context.palette.accentSoft
+                                        : context.palette.ink,
                                   ),
                                   side: BorderSide(
                                     color: _grind == grind
-                                        ? foxtrotGold
-                                        : foxtrotBorder,
+                                        ? context.palette.accent
+                                        : context.palette.border,
                                   ),
-                                  backgroundColor: foxtrotSurface,
+                                  backgroundColor: context.palette.surface,
                                   showCheckmark: false,
                                 ),
                               )
@@ -295,13 +295,13 @@ class _BeanSummaryCard extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: foxtrotSurface,
+                color: context.palette.surface,
                 shape: BoxShape.circle,
-                border: Border.all(color: foxtrotGold, width: 1.5),
+                border: Border.all(color: context.palette.accent, width: 1.5),
               ),
-              child: const Icon(
+              child: Icon(
                 LucideIcons.gift,
-                color: foxtrotGold,
+                color: context.palette.accent,
                 size: 22,
               ),
             ),
@@ -340,9 +340,9 @@ class _GiftBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: foxtrotSurface,
-        border: Border(top: BorderSide(color: foxtrotBorder)),
+      decoration: BoxDecoration(
+        color: context.palette.surface,
+        border: Border(top: BorderSide(color: context.palette.border)),
       ),
       child: SafeArea(
         child: Padding(
@@ -360,10 +360,10 @@ class _GiftBar extends StatelessWidget {
                     ),
                     Text(
                       '${_priceFormat.format(totalPrice)}원',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: foxtrotGoldLight,
+                        color: context.palette.accentSoft,
                       ),
                     ),
                   ],
@@ -434,11 +434,11 @@ class _WeightOption extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: selected
-              ? foxtrotGold.withValues(alpha: 0.15)
-              : foxtrotSurface,
+              ? context.palette.accent.withValues(alpha: 0.15)
+              : context.palette.surface,
           borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
           border: Border.all(
-            color: selected ? foxtrotGold : foxtrotBorder,
+            color: selected ? context.palette.accent : context.palette.border,
             width: selected ? 1.5 : 1,
           ),
         ),
@@ -448,7 +448,7 @@ class _WeightOption extends StatelessWidget {
               weight.label,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: selected ? foxtrotGoldLight : foxtrotCream,
+                color: selected ? context.palette.accentSoft : context.palette.ink,
               ),
             ),
             const SizedBox(height: 4),
@@ -483,14 +483,14 @@ class _QuantityButton extends StatelessWidget {
         width: 36,
         height: 36,
         decoration: BoxDecoration(
-          color: foxtrotSurface,
+          color: context.palette.surface,
           borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-          border: Border.all(color: foxtrotBorder),
+          border: Border.all(color: context.palette.border),
         ),
         child: Icon(
           icon,
           size: 18,
-          color: enabled ? foxtrotGold : foxtrotMuted,
+          color: enabled ? context.palette.accent : context.palette.muted,
         ),
       ),
     );

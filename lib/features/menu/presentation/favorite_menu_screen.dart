@@ -58,7 +58,7 @@ class _EmptyFavorites extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(LucideIcons.heart, size: 48, color: foxtrotMuted),
+          Icon(LucideIcons.heart, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text(
             '아직 즐겨찾기한 메뉴가 없어요',
@@ -101,7 +101,7 @@ class _FavoriteTile extends ConsumerWidget {
           style: Theme.of(context).textTheme.bodySmall,
         ),
         trailing: IconButton(
-          icon: const Icon(LucideIcons.heart600, color: foxtrotGold),
+          icon: Icon(LucideIcons.heart600, color: context.palette.accent),
           tooltip: '즐겨찾기 해제',
           onPressed: () =>
               ref.read(favoritesProvider.notifier).toggle(item.id),

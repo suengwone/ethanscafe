@@ -8,12 +8,6 @@ import '../../domain/banner_models.dart';
 import '../banner_icons.dart';
 import '../home_providers.dart';
 
-const _bannerGradients = <List<Color>>[
-  [Color(0xFF8A6D2F), Color(0xFF4A3A17)],
-  [Color(0xFF5C4433), Color(0xFF2B1E14)],
-  [foxtrotCard, foxtrotSurface],
-];
-
 class EventBannerCarousel extends ConsumerStatefulWidget {
   const EventBannerCarousel({super.key});
 
@@ -48,7 +42,7 @@ class _EventBannerCarouselState extends ConsumerState<EventBannerCarousel> {
             for (var i = 0; i < banners.length; i++)
               _BannerCard(
                 banner: banners[i],
-                colors: _bannerGradients[i % _bannerGradients.length],
+                colors: context.palette.bannerGradients[i % context.palette.bannerGradients.length],
               ),
           ],
         ),
@@ -65,7 +59,7 @@ class _EventBannerCarouselState extends ConsumerState<EventBannerCarousel> {
               decoration: BoxDecoration(
                 color: isActive
                     ? Theme.of(context).colorScheme.primary
-                    : foxtrotBorder,
+                    : context.palette.border,
                 borderRadius: BorderRadius.circular(3),
               ),
             );
@@ -93,7 +87,7 @@ class _BannerCard extends StatelessWidget {
           colors: colors,
         ),
         borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-        border: Border.all(color: foxtrotGold.withValues(alpha: 0.35)),
+        border: Border.all(color: context.palette.accent.withValues(alpha: 0.35)),
       ),
       padding: const EdgeInsets.all(20),
       child: Row(
@@ -108,13 +102,13 @@ class _BannerCard extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .titleMedium
-                      ?.copyWith(color: foxtrotGoldLight),
+                      ?.copyWith(color: context.palette.accentSoft),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   banner.subtitle.keepWord,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: foxtrotCream.withValues(alpha: 0.85),
+                        color: context.palette.ink.withValues(alpha: 0.85),
                       ),
                 ),
               ],
@@ -123,7 +117,7 @@ class _BannerCard extends StatelessWidget {
           Icon(
             bannerIcon(banner.icon),
             size: 48,
-            color: foxtrotGoldLight.withValues(alpha: 0.5),
+            color: context.palette.accentSoft.withValues(alpha: 0.5),
           ),
         ],
       ),

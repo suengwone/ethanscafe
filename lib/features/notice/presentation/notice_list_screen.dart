@@ -59,7 +59,7 @@ class _EmptyNotices extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(LucideIcons.bellOff, size: 48, color: foxtrotMuted),
+          Icon(LucideIcons.bellOff, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text(
             '새로운 알림이 없어요',
@@ -87,8 +87,8 @@ class _NoticeCard extends StatelessWidget {
         child: ExpansionTile(
           tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          iconColor: foxtrotGold,
-          collapsedIconColor: foxtrotMuted,
+          iconColor: context.palette.accent,
+          collapsedIconColor: context.palette.muted,
           title: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -138,12 +138,12 @@ class _CategoryBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: foxtrotGold.withValues(alpha: 0.15),
+        color: context.palette.accent.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
       ),
       child: Text(
         category.label,
-        style: const TextStyle(fontSize: 11, color: foxtrotGoldLight),
+        style: TextStyle(fontSize: 11, color: context.palette.accentSoft),
       ),
     );
   }
@@ -157,14 +157,14 @@ class _ImportantBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: foxtrotGold,
+        color: context.palette.accent,
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
       ),
-      child: const Text(
+      child: Text(
         '중요',
         style: TextStyle(
           fontSize: 11,
-          color: foxtrotBlack,
+          color: context.palette.background,
           fontWeight: FontWeight.bold,
         ),
       ),

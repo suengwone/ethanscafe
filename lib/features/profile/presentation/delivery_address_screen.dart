@@ -123,7 +123,7 @@ class DeliveryAddressScreen extends ConsumerWidget {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: foxtrotCard,
+      backgroundColor: context.palette.card,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -141,7 +141,7 @@ class _EmptyAddresses extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(LucideIcons.mapPin, size: 48, color: foxtrotMuted),
+          Icon(LucideIcons.mapPin, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text(
             '등록된 배송지가 없어요',
@@ -201,15 +201,15 @@ class _AddressCard extends ConsumerWidget {
               width: 52,
               height: 52,
               decoration: BoxDecoration(
-                color: foxtrotSurface,
+                color: context.palette.surface,
                 borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
                 border: Border.all(
-                  color: address.isDefault ? foxtrotGold : foxtrotBorder,
+                  color: address.isDefault ? context.palette.accent : context.palette.border,
                 ),
               ),
               child: Icon(
                 address.label == '회사' ? LucideIcons.building2 : LucideIcons.house,
-                color: address.isDefault ? foxtrotGold : foxtrotMuted,
+                color: address.isDefault ? context.palette.accent : context.palette.muted,
                 size: 24,
               ),
             ),
@@ -229,15 +229,15 @@ class _AddressCard extends ConsumerWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: foxtrotGold.withValues(alpha: 0.15),
+                            color: context.palette.accent.withValues(alpha: 0.15),
                             borderRadius:
                                 BorderRadius.circular(foxtrotRadiusSmall),
                           ),
-                          child: const Text(
+                          child: Text(
                             '기본 배송지',
                             style: TextStyle(
                               fontSize: 11,
-                              color: foxtrotGoldLight,
+                              color: context.palette.accentSoft,
                             ),
                           ),
                         ),
@@ -255,12 +255,12 @@ class _AddressCard extends ConsumerWidget {
               ),
             ),
             PopupMenuButton<String>(
-              icon: const Icon(
+              icon: Icon(
                 LucideIcons.ellipsisVertical,
                 size: 20,
-                color: foxtrotMuted,
+                color: context.palette.muted,
               ),
-              color: foxtrotCard,
+              color: context.palette.card,
               onSelected: (value) {
                 switch (value) {
                   case 'default':

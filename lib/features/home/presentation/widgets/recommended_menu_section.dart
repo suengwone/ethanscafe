@@ -41,7 +41,7 @@ class RecommendedMenuSection extends ConsumerWidget {
               const Spacer(),
               TextButton(
                 onPressed: () => context.go('/menu'),
-                style: TextButton.styleFrom(foregroundColor: foxtrotMuted),
+                style: TextButton.styleFrom(foregroundColor: context.palette.muted),
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -83,9 +83,9 @@ class _RecommendedCard extends StatelessWidget {
       width: 148,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: foxtrotCard,
+        color: context.palette.card,
         borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-        border: Border.all(color: foxtrotBorder.withValues(alpha: 0.7)),
+        border: Border.all(color: context.palette.border.withValues(alpha: 0.7)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,8 +95,8 @@ class _RecommendedCard extends StatelessWidget {
               Container(
                 width: 64,
                 height: 64,
-                decoration: const BoxDecoration(
-                  color: foxtrotSurface,
+                decoration: BoxDecoration(
+                  color: context.palette.surface,
                   shape: BoxShape.circle,
                 ),
                 clipBehavior: Clip.antiAlias,

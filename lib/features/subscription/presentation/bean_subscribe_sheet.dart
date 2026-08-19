@@ -25,7 +25,7 @@ Future<void> showBeanSubscribeSheet(
   final selection = await showModalBottomSheet<BeanSubscribeSelection>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: foxtrotCard,
+    backgroundColor: context.palette.card,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
@@ -107,7 +107,7 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
           children: [
             Row(
               children: [
-                const Icon(LucideIcons.repeat, size: 18, color: foxtrotGold),
+                Icon(LucideIcons.repeat, size: 18, color: context.palette.accent),
                 const SizedBox(width: 8),
                 Text('원두 정기구독', style: textTheme.titleLarge),
               ],
@@ -174,17 +174,17 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
                       label: Text(grind.label),
                       selected: _grind == grind,
                       onSelected: (_) => setState(() => _grind = grind),
-                      selectedColor: foxtrotGold.withValues(alpha: 0.25),
+                      selectedColor: context.palette.accent.withValues(alpha: 0.25),
                       labelStyle: TextStyle(
                         fontSize: 13,
                         color: _grind == grind
-                            ? foxtrotGoldLight
-                            : foxtrotCream,
+                            ? context.palette.accentSoft
+                            : context.palette.ink,
                       ),
                       side: BorderSide(
-                        color: _grind == grind ? foxtrotGold : foxtrotBorder,
+                        color: _grind == grind ? context.palette.accent : context.palette.border,
                       ),
-                      backgroundColor: foxtrotSurface,
+                      backgroundColor: context.palette.surface,
                       showCheckmark: false,
                     ),
                   )
@@ -224,10 +224,10 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
                 const Spacer(),
                 Text(
                   '${_priceFormat.format(_pricePerDelivery)}원',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: foxtrotGoldLight,
+                    color: context.palette.accentSoft,
                   ),
                 ),
               ],
@@ -283,11 +283,11 @@ class _CycleOption extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: selected
-              ? foxtrotGold.withValues(alpha: 0.15)
-              : foxtrotSurface,
+              ? context.palette.accent.withValues(alpha: 0.15)
+              : context.palette.surface,
           borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
           border: Border.all(
-            color: selected ? foxtrotGold : foxtrotBorder,
+            color: selected ? context.palette.accent : context.palette.border,
             width: selected ? 1.5 : 1,
           ),
         ),
@@ -297,7 +297,7 @@ class _CycleOption extends StatelessWidget {
               cycle.label,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: selected ? foxtrotGoldLight : foxtrotCream,
+                color: selected ? context.palette.accentSoft : context.palette.ink,
               ),
             ),
             const SizedBox(height: 4),
@@ -334,11 +334,11 @@ class _WeightOption extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: selected
-              ? foxtrotGold.withValues(alpha: 0.15)
-              : foxtrotSurface,
+              ? context.palette.accent.withValues(alpha: 0.15)
+              : context.palette.surface,
           borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
           border: Border.all(
-            color: selected ? foxtrotGold : foxtrotBorder,
+            color: selected ? context.palette.accent : context.palette.border,
             width: selected ? 1.5 : 1,
           ),
         ),
@@ -348,7 +348,7 @@ class _WeightOption extends StatelessWidget {
               weight.label,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: selected ? foxtrotGoldLight : foxtrotCream,
+                color: selected ? context.palette.accentSoft : context.palette.ink,
               ),
             ),
             const SizedBox(height: 4),
@@ -383,14 +383,14 @@ class _QuantityButton extends StatelessWidget {
         width: 36,
         height: 36,
         decoration: BoxDecoration(
-          color: foxtrotSurface,
+          color: context.palette.surface,
           borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-          border: Border.all(color: foxtrotBorder),
+          border: Border.all(color: context.palette.border),
         ),
         child: Icon(
           icon,
           size: 18,
-          color: enabled ? foxtrotGold : foxtrotMuted,
+          color: enabled ? context.palette.accent : context.palette.muted,
         ),
       ),
     );

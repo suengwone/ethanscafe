@@ -17,7 +17,7 @@ Future<List<Coupon>?> showCouponSelectSheet({
   return showModalBottomSheet<List<Coupon>>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: foxtrotCard,
+    backgroundColor: context.palette.card,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
@@ -134,12 +134,12 @@ class CouponStackableBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: foxtrotGold.withValues(alpha: 0.15),
+        color: context.palette.accent.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
       ),
-      child: const Text(
+      child: Text(
         '중복 사용',
-        style: TextStyle(fontSize: 10, color: foxtrotGoldLight),
+        style: TextStyle(fontSize: 10, color: context.palette.accentSoft),
       ),
     );
   }
@@ -171,7 +171,7 @@ class _CouponOptionCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-        side: BorderSide(color: highlighted ? foxtrotGold : foxtrotBorder),
+        side: BorderSide(color: highlighted ? context.palette.accent : context.palette.border),
       ),
       child: InkWell(
         onTap: onTap,
@@ -182,7 +182,7 @@ class _CouponOptionCard extends StatelessWidget {
               Icon(
                 highlighted ? LucideIcons.circleCheck : LucideIcons.ticket,
                 size: 20,
-                color: highlighted ? foxtrotGold : foxtrotMuted,
+                color: highlighted ? context.palette.accent : context.palette.muted,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -214,7 +214,7 @@ class _CouponOptionCard extends StatelessWidget {
                 const SizedBox(width: 10),
                 Text(
                   trailing!,
-                  style: textTheme.labelLarge?.copyWith(color: foxtrotGold),
+                  style: textTheme.labelLarge?.copyWith(color: context.palette.accent),
                 ),
               ],
             ],

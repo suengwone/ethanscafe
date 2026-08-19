@@ -10,13 +10,13 @@ class NewBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: foxtrotGold,
+        color: context.palette.accent,
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
       ),
-      child: const Text(
+      child: Text(
         'NEW',
         style: TextStyle(
-          color: foxtrotBlack,
+          color: context.palette.background,
           fontSize: 10,
           fontWeight: FontWeight.bold,
         ),
@@ -33,13 +33,13 @@ class BestBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: foxtrotGoldLight,
+        color: context.palette.accentSoft,
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
       ),
-      child: const Text(
+      child: Text(
         'BEST',
         style: TextStyle(
-          color: foxtrotBlack,
+          color: context.palette.background,
           fontSize: 10,
           fontWeight: FontWeight.bold,
         ),
@@ -56,13 +56,13 @@ class HitBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        border: Border.all(color: foxtrotGold),
+        border: Border.all(color: context.palette.accent),
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
       ),
-      child: const Text(
+      child: Text(
         'HIT',
         style: TextStyle(
-          color: foxtrotGold,
+          color: context.palette.accent,
           fontSize: 10,
           fontWeight: FontWeight.bold,
         ),
@@ -80,13 +80,13 @@ class SoldOutBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: foxtrotMuted,
+        color: context.palette.muted,
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
       ),
-      child: const Text(
+      child: Text(
         '품절',
         style: TextStyle(
-          color: foxtrotBlack,
+          color: context.palette.background,
           fontSize: 10,
           fontWeight: FontWeight.bold,
         ),

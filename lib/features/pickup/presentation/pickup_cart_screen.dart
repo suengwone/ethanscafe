@@ -78,17 +78,17 @@ class PickupCartButton extends ConsumerWidget {
                   vertical: 1,
                 ),
                 decoration: BoxDecoration(
-                  color: foxtrotGold,
+                  color: context.palette.accent,
                   borderRadius: BorderRadius.circular(9),
                 ),
                 constraints: const BoxConstraints(minWidth: 16),
                 child: Text(
                   '$count',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
-                    color: foxtrotBlack,
+                    color: context.palette.background,
                   ),
                 ),
               ),
@@ -108,7 +108,7 @@ class _EmptyCart extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(LucideIcons.coffee, size: 48, color: foxtrotMuted),
+          Icon(LucideIcons.coffee, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text(
             '장바구니가 비어 있어요',
@@ -138,7 +138,7 @@ class _StoreCard extends ConsumerWidget {
     final store = await showModalBottomSheet<CafeStore>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: foxtrotCard,
+      backgroundColor: context.palette.card,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -163,13 +163,13 @@ class _StoreCard extends ConsumerWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: foxtrotSurface,
+                color: context.palette.surface,
                 borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-                border: Border.all(color: foxtrotBorder),
+                border: Border.all(color: context.palette.border),
               ),
-              child: const Icon(
+              child: Icon(
                 LucideIcons.store,
-                color: foxtrotGold,
+                color: context.palette.accent,
                 size: 22,
               ),
             ),
@@ -287,7 +287,7 @@ class _StoreOptionCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-        side: BorderSide(color: highlighted ? foxtrotGold : foxtrotBorder),
+        side: BorderSide(color: highlighted ? context.palette.accent : context.palette.border),
       ),
       child: InkWell(
         onTap: onTap,
@@ -298,7 +298,7 @@ class _StoreOptionCard extends StatelessWidget {
               Icon(
                 LucideIcons.store,
                 size: 20,
-                color: highlighted ? foxtrotGold : foxtrotMuted,
+                color: highlighted ? context.palette.accent : context.palette.muted,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -379,7 +379,7 @@ class _CartItemCard extends ConsumerWidget {
                 IconButton(
                   onPressed: () => _remove(context, ref),
                   icon: const Icon(LucideIcons.trash2, size: 18),
-                  color: foxtrotMuted,
+                  color: context.palette.muted,
                   tooltip: '삭제',
                 ),
               ],
@@ -410,11 +410,11 @@ class _CartItemCard extends ConsumerWidget {
                 const Spacer(),
                 Text(
                   '${_priceFormat.format(item.totalPrice)}원',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 16,
                     letterSpacing: -0.3,
-                    color: foxtrotCream,
+                    color: context.palette.ink,
                   ),
                 ),
               ],
@@ -446,14 +446,14 @@ class _QuantityButton extends StatelessWidget {
         width: 32,
         height: 32,
         decoration: BoxDecoration(
-          color: foxtrotSurface,
+          color: context.palette.surface,
           borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-          border: Border.all(color: foxtrotBorder),
+          border: Border.all(color: context.palette.border),
         ),
         child: Icon(
           icon,
           size: 16,
-          color: enabled ? foxtrotGold : foxtrotMuted,
+          color: enabled ? context.palette.accent : context.palette.muted,
         ),
       ),
     );
@@ -591,9 +591,9 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
 
 
     return Container(
-      decoration: const BoxDecoration(
-        color: foxtrotSurface,
-        border: Border(top: BorderSide(color: foxtrotBorder)),
+      decoration: BoxDecoration(
+        color: context.palette.surface,
+        border: Border(top: BorderSide(color: context.palette.border)),
       ),
       child: SafeArea(
         child: Padding(
@@ -603,7 +603,7 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
             children: [
               Row(
                 children: [
-                  const Icon(LucideIcons.ticket, size: 16, color: foxtrotGold),
+                  Icon(LucideIcons.ticket, size: 16, color: context.palette.accent),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -624,7 +624,7 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall
-                          ?.copyWith(color: foxtrotGold),
+                          ?.copyWith(color: context.palette.accent),
                     ),
                   TextButton(
                     onPressed: applicable.isEmpty || _submitting
@@ -636,7 +636,7 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
               ),
               Row(
                 children: [
-                  const Icon(LucideIcons.coins, size: 16, color: foxtrotGold),
+                  Icon(LucideIcons.coins, size: 16, color: context.palette.accent),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -652,7 +652,7 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall
-                          ?.copyWith(color: foxtrotGold),
+                          ?.copyWith(color: context.palette.accent),
                     ),
                   Switch(
                     value: _usePoints,
@@ -676,10 +676,10 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                         ),
                         Text(
                           '${_priceFormat.format(payAmount)}원',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: foxtrotGoldLight,
+                            color: context.palette.accentSoft,
                           ),
                         ),
                       ],

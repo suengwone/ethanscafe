@@ -17,7 +17,7 @@ class OfflineBanner extends ConsumerWidget {
     final isOnline = ref.watch(isOnlineProvider).value ?? true;
 
     return Material(
-      color: foxtrotBlack,
+      color: context.palette.background,
       child: Column(
         children: [
           if (!isOnline) const _OfflineBar(),
@@ -37,17 +37,17 @@ class _OfflineBar extends StatelessWidget {
       bottom: false,
       child: Container(
         width: double.infinity,
-        color: foxtrotDanger,
+        color: context.palette.danger,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(LucideIcons.wifiOff, size: 16, color: foxtrotBlack),
+            Icon(LucideIcons.wifiOff, size: 16, color: context.palette.background),
             const SizedBox(width: 8),
             Text(
               '인터넷에 연결되어 있지 않습니다',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: foxtrotBlack,
+                color: context.palette.background,
                 fontWeight: FontWeight.w600,
               ),
             ),

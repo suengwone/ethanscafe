@@ -111,7 +111,7 @@ class _ReviewSheetState extends ConsumerState<ReviewSheet> {
                     icon: Icon(
                       Icons.star_rounded,
                       size: 36,
-                      color: star <= _rating ? foxtrotGold : foxtrotBorder,
+                      color: star <= _rating ? context.palette.accent : context.palette.border,
                     ),
                   ),
               ],
@@ -156,7 +156,7 @@ class ReviewRatingStars extends StatelessWidget {
           Icon(
             Icons.star_rounded,
             size: size,
-            color: star <= rating ? foxtrotGold : foxtrotBorder,
+            color: star <= rating ? context.palette.accent : context.palette.border,
           ),
       ],
     );

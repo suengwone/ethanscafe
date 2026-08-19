@@ -75,10 +75,10 @@ class SupportScreen extends StatelessWidget {
               children: [
                 for (final faq in _faqs)
                   ExpansionTile(
-                    leading: const Icon(
+                    leading: Icon(
                       LucideIcons.circleQuestionMark,
                       size: 20,
-                      color: foxtrotMuted,
+                      color: context.palette.muted,
                     ),
                     title: Text(faq.question, style: textTheme.labelLarge),
                     childrenPadding:

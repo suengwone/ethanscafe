@@ -145,7 +145,7 @@ class _StoreCard extends StatelessWidget {
                   if (distanceMeters != null)
                     StoreBadge(
                       label: storeDistanceLabel(distanceMeters!),
-                      color: foxtrotGoldLight,
+                      color: context.palette.accentSoft,
                     ),
                 ],
               ),

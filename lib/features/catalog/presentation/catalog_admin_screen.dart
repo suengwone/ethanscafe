@@ -248,7 +248,7 @@ class _CatalogList<T> extends StatelessWidget {
               emptyMessage,
               style: Theme.of(
                 context,
-              ).textTheme.bodyMedium?.copyWith(color: foxtrotMuted),
+              ).textTheme.bodyMedium?.copyWith(color: context.palette.muted),
             ),
           );
         }
@@ -329,9 +329,9 @@ class _CatalogTileState extends State<_CatalogTile> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: foxtrotCard,
+          color: context.palette.card,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: foxtrotBorder),
+          border: Border.all(color: context.palette.border),
         ),
         child: Row(
           children: [
@@ -342,14 +342,14 @@ class _CatalogTileState extends State<_CatalogTile> {
                   Text(
                     widget.name,
                     style: textTheme.bodyLarge?.copyWith(
-                      color: soldOut ? foxtrotMuted : foxtrotCream,
+                      color: soldOut ? context.palette.muted : context.palette.ink,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     soldOut ? '품절 · ${widget.subtitle}' : widget.subtitle,
-                    style: textTheme.bodySmall?.copyWith(color: foxtrotMuted),
+                    style: textTheme.bodySmall?.copyWith(color: context.palette.muted),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -359,7 +359,7 @@ class _CatalogTileState extends State<_CatalogTile> {
             if (widget.soldOut != null)
               Switch(value: soldOut, onChanged: _busy ? null : _toggle)
             else
-              const Icon(Icons.chevron_right, color: foxtrotMuted),
+              Icon(Icons.chevron_right, color: context.palette.muted),
           ],
         ),
       ),

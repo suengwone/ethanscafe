@@ -87,9 +87,9 @@ class _PickupOrderBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      decoration: const BoxDecoration(
-        color: foxtrotSurface,
-        border: Border(top: BorderSide(color: foxtrotBorder)),
+      decoration: BoxDecoration(
+        color: context.palette.surface,
+        border: Border(top: BorderSide(color: context.palette.border)),
       ),
       child: SafeArea(
         child: Padding(
@@ -107,10 +107,10 @@ class _PickupOrderBar extends ConsumerWidget {
                     ),
                     Text(
                       item.priceLabel,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: foxtrotGoldLight,
+                        color: context.palette.accentSoft,
                       ),
                     ),
                   ],
@@ -148,7 +148,7 @@ class _FavoriteButton extends ConsumerWidget {
     return IconButton(
       icon: Icon(
         isFavorite ? LucideIcons.heart600 : LucideIcons.heart,
-        color: isFavorite ? foxtrotGold : null,
+        color: isFavorite ? context.palette.accent : null,
       ),
       tooltip: isFavorite ? '즐겨찾기 해제' : '즐겨찾기 등록',
       onPressed: () async {
@@ -241,9 +241,9 @@ class _HeaderSection extends StatelessWidget {
               width: 88,
               height: 88,
               decoration: BoxDecoration(
-                color: foxtrotSurface,
+                color: context.palette.surface,
                 shape: BoxShape.circle,
-                border: Border.all(color: foxtrotGold, width: 1.5),
+                border: Border.all(color: context.palette.accent, width: 1.5),
               ),
               clipBehavior: Clip.antiAlias,
               child: Image.asset(
@@ -251,7 +251,7 @@ class _HeaderSection extends StatelessWidget {
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Icon(
                   menuCategoryIcon(item.category),
-                  color: foxtrotGold,
+                  color: context.palette.accent,
                   size: 40,
                 ),
               ),
@@ -286,10 +286,10 @@ class _HeaderSection extends StatelessWidget {
             const SizedBox(height: 14),
             Text(
               item.priceLabel,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: foxtrotGoldLight,
+                color: context.palette.accentSoft,
               ),
             ),
             if (item.servingOptions.isNotEmpty) ...[
@@ -319,12 +319,12 @@ class _ServingChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: foxtrotGold.withValues(alpha: 0.12),
+        color: context.palette.accent.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
       ),
       child: Text(
         label,
-        style: const TextStyle(fontSize: 13, color: foxtrotGoldLight),
+        style: TextStyle(fontSize: 13, color: context.palette.accentSoft),
       ),
     );
   }
@@ -412,9 +412,9 @@ class MenuImageThumbnail extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: foxtrotSurface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-        border: Border.all(color: foxtrotBorder),
+        border: Border.all(color: context.palette.border),
       ),
       clipBehavior: Clip.antiAlias,
       child: Image.asset(
@@ -422,7 +422,7 @@ class MenuImageThumbnail extends StatelessWidget {
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) => Icon(
           menuCategoryIcon(item.category),
-          color: foxtrotGold,
+          color: context.palette.accent,
           size: size * 0.45,
         ),
       ),

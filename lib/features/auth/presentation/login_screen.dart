@@ -98,7 +98,7 @@ class LoginScreen extends ConsumerWidget {
                 ),
                 label: '구글로 시작하기',
                 textColor: Colors.black87,
-                borderColor: foxtrotBorder,
+                borderColor: context.palette.border,
               ),
               const SizedBox(height: 24),
               if (isLoading)

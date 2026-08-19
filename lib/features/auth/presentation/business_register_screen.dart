@@ -220,8 +220,8 @@ class _RegisterForm extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(LucideIcons.building2,
-                    color: foxtrotGold, size: 22),
+                Icon(LucideIcons.building2,
+                    color: context.palette.accent, size: 22),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -307,8 +307,8 @@ class _SavedBusinessView extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(LucideIcons.building2,
-                        color: foxtrotGold, size: 22),
+                    Icon(LucideIcons.building2,
+                        color: context.palette.accent, size: 22),
                     const SizedBox(width: 10),
                     Text('등록된 사업자 정보', style: textTheme.titleMedium),
                   ],
@@ -405,8 +405,8 @@ class _RegisteredView extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(LucideIcons.badgeCheck,
-                        color: foxtrotGold, size: 22),
+                    Icon(LucideIcons.badgeCheck,
+                        color: context.palette.accent, size: 22),
                     const SizedBox(width: 10),
                     Text('사업자 계정 사용 중', style: textTheme.titleMedium),
                   ],

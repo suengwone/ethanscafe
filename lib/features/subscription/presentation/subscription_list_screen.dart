@@ -62,7 +62,7 @@ class _EmptySubscriptions extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(LucideIcons.repeat, size: 48, color: foxtrotMuted),
+          Icon(LucideIcons.repeat, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text(
             '구독 중인 원두가 없어요',
@@ -146,13 +146,13 @@ class _SubscriptionCard extends ConsumerWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: foxtrotSurface,
+                    color: context.palette.surface,
                     borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-                    border: Border.all(color: foxtrotBorder),
+                    border: Border.all(color: context.palette.border),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     LucideIcons.repeat,
-                    color: foxtrotGold,
+                    color: context.palette.accent,
                     size: 22,
                   ),
                 ),
@@ -213,8 +213,8 @@ class _SubscriptionCard extends ConsumerWidget {
                       ),
                       label: Text(subscription.isPaused ? '구독 재개' : '일시정지'),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: foxtrotGold),
-                        foregroundColor: foxtrotGoldLight,
+                        side: BorderSide(color: context.palette.accent),
+                        foregroundColor: context.palette.accentSoft,
                       ),
                     ),
                   ),
@@ -250,16 +250,16 @@ class _SubscriptionStatusChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: foxtrotSurface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-        border: Border.all(color: foxtrotBorder),
+        border: Border.all(color: context.palette.border),
       ),
       child: Text(
         status.label,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: status == SubscriptionStatus.cancelled
-                  ? foxtrotMuted
-                  : foxtrotGoldLight,
+                  ? context.palette.muted
+                  : context.palette.accentSoft,
               fontWeight: FontWeight.w600,
             ),
       ),

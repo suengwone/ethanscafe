@@ -72,7 +72,7 @@ class _AdminPointsScanScreenState extends ConsumerState<AdminPointsScanScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        icon: const Icon(LucideIcons.circleCheck, color: foxtrotGold, size: 40),
+        icon: Icon(LucideIcons.circleCheck, color: context.palette.accent, size: 40),
         title: const Text('포인트 적립 완료'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -89,7 +89,7 @@ class _AdminPointsScanScreenState extends ConsumerState<AdminPointsScanScreen> {
               style: Theme.of(context)
                   .textTheme
                   .headlineMedium
-                  ?.copyWith(color: foxtrotGold),
+                  ?.copyWith(color: context.palette.accent),
             ),
             const SizedBox(height: 4),
             Text(

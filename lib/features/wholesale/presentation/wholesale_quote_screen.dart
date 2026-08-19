@@ -215,7 +215,7 @@ class _CompanyCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            const Icon(LucideIcons.building2, color: foxtrotGold, size: 22),
+            Icon(LucideIcons.building2, color: context.palette.accent, size: 22),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -288,7 +288,7 @@ class _QuoteBeanTile extends StatelessWidget {
                     '${kg}kg',
                     textAlign: TextAlign.center,
                     style: textTheme.labelLarge?.copyWith(
-                      color: selected ? foxtrotGold : foxtrotMuted,
+                      color: selected ? context.palette.accent : context.palette.muted,
                     ),
                   ),
                 ),
@@ -305,14 +305,14 @@ class _QuoteBeanTile extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: foxtrotSurface,
+                  color: context.palette.surface,
                   borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-                  border: Border.all(color: foxtrotBorder),
+                  border: Border.all(color: context.palette.border),
                 ),
                 child: Text(
                   '적용 단가 kg당 ${_priceFormat.format(bean.unitPriceFor(kg))}원 · '
                   '합계 ${_priceFormat.format(bean.totalPriceFor(kg))}원',
-                  style: textTheme.bodySmall?.copyWith(color: foxtrotCream),
+                  style: textTheme.bodySmall?.copyWith(color: context.palette.ink),
                 ),
               ),
             ],
@@ -334,11 +334,11 @@ class _StepperButton extends StatelessWidget {
     return IconButton(
       onPressed: onPressed,
       style: IconButton.styleFrom(
-        backgroundColor: foxtrotSurface,
-        shape: CircleBorder(side: BorderSide(color: foxtrotBorder)),
+        backgroundColor: context.palette.surface,
+        shape: CircleBorder(side: BorderSide(color: context.palette.border)),
         minimumSize: const Size(36, 36),
       ),
-      icon: Icon(icon, size: 16, color: foxtrotCream),
+      icon: Icon(icon, size: 16, color: context.palette.ink),
     );
   }
 }
@@ -361,9 +361,9 @@ class _QuoteBottomBar extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Container(
-      decoration: const BoxDecoration(
-        color: foxtrotSurface,
-        border: Border(top: BorderSide(color: foxtrotBorder)),
+      decoration: BoxDecoration(
+        color: context.palette.surface,
+        border: Border(top: BorderSide(color: context.palette.border)),
       ),
       child: SafeArea(
         child: Padding(
@@ -379,7 +379,7 @@ class _QuoteBottomBar extends StatelessWidget {
                     Text(
                       '예상 ${_priceFormat.format(totalAmount)}원',
                       style:
-                          textTheme.titleMedium?.copyWith(color: foxtrotGold),
+                          textTheme.titleMedium?.copyWith(color: context.palette.accent),
                     ),
                   ],
                 ),

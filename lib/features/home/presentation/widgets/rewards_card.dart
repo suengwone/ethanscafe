@@ -23,14 +23,14 @@ class GuestRewardsCard extends StatelessWidget {
         color: Colors.transparent,
         child: Ink(
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [foxtrotCard, foxtrotSurface],
+              colors: [context.palette.card, context.palette.surface],
             ),
             borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-            border: Border.all(color: foxtrotGold.withValues(alpha: 0.45)),
-            boxShadow: foxtrotCardShadow,
+            border: Border.all(color: context.palette.accent.withValues(alpha: 0.45)),
+            boxShadow: context.palette.cardShadow,
           ),
           child: InkWell(
             onTap: () => context.go('/login'),
@@ -42,9 +42,9 @@ class GuestRewardsCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         LucideIcons.sparkles,
-                        color: foxtrotGold,
+                        color: context.palette.accent,
                         size: 20,
                       ),
                       const SizedBox(width: 6),
@@ -53,9 +53,9 @@ class GuestRewardsCard extends StatelessWidget {
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
                       const Spacer(),
-                      const Icon(
+                      Icon(
                         LucideIcons.chevronRight,
-                        color: foxtrotMuted,
+                        color: context.palette.muted,
                         size: 20,
                       ),
                     ],
@@ -63,8 +63,8 @@ class GuestRewardsCard extends StatelessWidget {
                   const SizedBox(height: 12),
                   Text(
                     '로그인하고\n포인트를 모아보세요'.keepWord,
-                    style: const TextStyle(
-                      color: foxtrotGoldLight,
+                    style: TextStyle(
+                      color: context.palette.accentSoft,
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       height: 1.3,
@@ -111,14 +111,14 @@ class RewardsCard extends ConsumerWidget {
         color: Colors.transparent,
         child: Ink(
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [foxtrotCard, foxtrotSurface],
+              colors: [context.palette.card, context.palette.surface],
             ),
             borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-            border: Border.all(color: foxtrotGold.withValues(alpha: 0.45)),
-            boxShadow: foxtrotCardShadow,
+            border: Border.all(color: context.palette.accent.withValues(alpha: 0.45)),
+            boxShadow: context.palette.cardShadow,
           ),
           child: InkWell(
             onTap: () => context.go('/points'),
@@ -130,9 +130,9 @@ class RewardsCard extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         LucideIcons.sparkles,
-                        color: foxtrotGold,
+                        color: context.palette.accent,
                         size: 20,
                       ),
                       const SizedBox(width: 6),
@@ -141,9 +141,9 @@ class RewardsCard extends ConsumerWidget {
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
                       const Spacer(),
-                      const Icon(
+                      Icon(
                         LucideIcons.chevronRight,
-                        color: foxtrotMuted,
+                        color: context.palette.muted,
                         size: 20,
                       ),
                     ],
@@ -151,8 +151,8 @@ class RewardsCard extends ConsumerWidget {
                   const SizedBox(height: 12),
                   Text(
                     '${_pointFormat.format(balance)}P',
-                    style: const TextStyle(
-                      color: foxtrotGoldLight,
+                    style: TextStyle(
+                      color: context.palette.accentSoft,
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                     ),
@@ -163,9 +163,9 @@ class RewardsCard extends ConsumerWidget {
                     child: LinearProgressIndicator(
                       value: progress,
                       minHeight: 8,
-                      backgroundColor: foxtrotBorder,
+                      backgroundColor: context.palette.border,
                       valueColor:
-                          const AlwaysStoppedAnimation<Color>(foxtrotGold),
+                          AlwaysStoppedAnimation<Color>(context.palette.accent),
                     ),
                   ),
                   const SizedBox(height: 8),

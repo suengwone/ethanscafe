@@ -117,14 +117,14 @@ class ProfileScreen extends ConsumerWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: foxtrotGold,
+                          color: context.palette.accent,
                           borderRadius:
                               BorderRadius.circular(foxtrotRadiusMedium),
                         ),
                         child: Text(
                           '$usableCouponCount',
-                          style: const TextStyle(
-                            color: foxtrotBlack,
+                          style: TextStyle(
+                            color: context.palette.background,
                             fontSize: 12,
                           ),
                         ),
@@ -142,14 +142,14 @@ class ProfileScreen extends ConsumerWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: foxtrotGold,
+                          color: context.palette.accent,
                           borderRadius:
                               BorderRadius.circular(foxtrotRadiusMedium),
                         ),
                         child: Text(
                           '$subscriptionCount',
-                          style: const TextStyle(
-                            color: foxtrotBlack,
+                          style: TextStyle(
+                            color: context.palette.background,
                             fontSize: 12,
                           ),
                         ),
@@ -270,7 +270,7 @@ class ProfileScreen extends ConsumerWidget {
   void _showBusinessInfo(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: foxtrotCard,
+      backgroundColor: context.palette.card,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -458,13 +458,13 @@ class _ProfileHeader extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 50,
-            backgroundColor: foxtrotCard,
+            backgroundColor: context.palette.card,
             backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
             child: photoUrl == null
-                ? const Icon(
+                ? Icon(
                     LucideIcons.user300,
                     size: 50,
-                    color: foxtrotMuted,
+                    color: context.palette.muted,
                   )
                 : null,
           ),

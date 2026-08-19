@@ -101,16 +101,16 @@ class _BusinessHeader extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: foxtrotGold.withValues(alpha: 0.16),
+                    color: context.palette.accent.withValues(alpha: 0.16),
                     borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
                     border: Border.all(
-                      color: foxtrotGold.withValues(alpha: 0.5),
+                      color: context.palette.accent.withValues(alpha: 0.5),
                     ),
                   ),
                   child: Text(
                     '사업자 회원',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: foxtrotGoldLight,
+                          color: context.palette.accentSoft,
                           fontWeight: FontWeight.w700,
                         ),
                   ),
@@ -162,13 +162,13 @@ class _CircleIconButton extends StatelessWidget {
       onPressed: onPressed,
       tooltip: tooltip,
       style: IconButton.styleFrom(
-        backgroundColor: foxtrotCard,
+        backgroundColor: context.palette.card,
         shape: CircleBorder(
-          side: BorderSide(color: foxtrotBorder.withValues(alpha: 0.7)),
+          side: BorderSide(color: context.palette.border.withValues(alpha: 0.7)),
         ),
         minimumSize: const Size(40, 40),
       ),
-      icon: Icon(icon, size: 18, color: foxtrotCream),
+      icon: Icon(icon, size: 18, color: context.palette.ink),
     );
   }
 }
@@ -200,7 +200,7 @@ class _WholesaleInfoCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: Row(
                   children: [
-                    Icon(icon, size: 16, color: foxtrotGold),
+                    Icon(icon, size: 16, color: context.palette.accent),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(label.keepWord, style: textTheme.bodySmall),
@@ -268,10 +268,10 @@ class _QuickActionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Material(
-        color: foxtrotCard,
+        color: context.palette.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-          side: BorderSide(color: foxtrotBorder.withValues(alpha: 0.7)),
+          side: BorderSide(color: context.palette.border.withValues(alpha: 0.7)),
         ),
         child: InkWell(
           onTap: () => context.push(location),
@@ -280,12 +280,12 @@ class _QuickActionItem extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 14),
             child: Column(
               children: [
-                Icon(icon, size: 22, color: foxtrotGold),
+                Icon(icon, size: 22, color: context.palette.accent),
                 const SizedBox(height: 6),
                 Text(
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: foxtrotCream,
+                        color: context.palette.ink,
                         fontWeight: FontWeight.w600,
                       ),
                 ),
@@ -328,13 +328,13 @@ class _WholesaleBeanCard extends StatelessWidget {
                       vertical: 3,
                     ),
                     decoration: BoxDecoration(
-                      color: foxtrotGold,
+                      color: context.palette.accent,
                       borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
                     ),
-                    child: const Text(
+                    child: Text(
                       'BEST',
                       style: TextStyle(
-                        color: foxtrotBlack,
+                        color: context.palette.background,
                         fontSize: 11,
                         fontWeight: FontWeight.w800,
                       ),
@@ -352,23 +352,23 @@ class _WholesaleBeanCard extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               bean.tastingNotes.join(' · '),
-              style: textTheme.bodySmall?.copyWith(color: foxtrotGoldLight),
+              style: textTheme.bodySmall?.copyWith(color: context.palette.accentSoft),
             ),
             const SizedBox(height: 12),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                color: foxtrotSurface,
+                color: context.palette.surface,
                 borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-                border: Border.all(color: foxtrotBorder),
+                border: Border.all(color: context.palette.border),
               ),
               child: Text(
                 bean.tiers
                     .map((tier) =>
                         '${tier.minKg}kg~ ${_priceFormat.format(tier.pricePerKg)}원')
                     .join('  ·  '),
-                style: textTheme.bodySmall?.copyWith(color: foxtrotCream),
+                style: textTheme.bodySmall?.copyWith(color: context.palette.ink),
               ),
             ),
             const SizedBox(height: 12),
@@ -382,7 +382,7 @@ class _WholesaleBeanCard extends StatelessWidget {
                       Text(
                         'kg당 ${_priceFormat.format(bean.basePricePerKg)}원~',
                         style: textTheme.titleMedium
-                            ?.copyWith(color: foxtrotGold),
+                            ?.copyWith(color: context.palette.accent),
                       ),
                       const SizedBox(height: 2),
                       Text(

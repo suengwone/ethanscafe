@@ -53,7 +53,7 @@ class _TossPaymentScreenState extends State<TossPaymentScreen> {
     if (widget.webViewBuilder == null) {
       _controller = WebViewController()
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..setBackgroundColor(foxtrotBlack)
+        ..setBackgroundColor(context.palette.background)
         ..setNavigationDelegate(
           NavigationDelegate(onNavigationRequest: _handleNavigation),
         )
@@ -172,7 +172,7 @@ class _TossPaymentScreenState extends State<TossPaymentScreen> {
                   WebViewWidget(controller: controller),
                 if (_confirming)
                   ColoredBox(
-                    color: foxtrotBlack.withValues(alpha: 0.8),
+                    color: context.palette.background.withValues(alpha: 0.8),
                     child: Center(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -213,9 +213,9 @@ class _PaymentSummary extends StatelessWidget {
         foxtrotScreenHPadding,
         14,
       ),
-      decoration: const BoxDecoration(
-        color: foxtrotSurface,
-        border: Border(bottom: BorderSide(color: foxtrotBorder)),
+      decoration: BoxDecoration(
+        color: context.palette.surface,
+        border: Border(bottom: BorderSide(color: context.palette.border)),
       ),
       child: Row(
         children: [
@@ -223,13 +223,13 @@ class _PaymentSummary extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: foxtrotCard,
+              color: context.palette.card,
               borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-              border: Border.all(color: foxtrotBorder),
+              border: Border.all(color: context.palette.border),
             ),
-            child: const Icon(
+            child: Icon(
               LucideIcons.creditCard,
-              color: foxtrotGold,
+              color: context.palette.accent,
               size: 20,
             ),
           ),
@@ -251,11 +251,11 @@ class _PaymentSummary extends StatelessWidget {
           const SizedBox(width: 10),
           Text(
             '${_amountFormat.format(request.amount)}원',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
               letterSpacing: -0.3,
-              color: foxtrotGoldLight,
+              color: context.palette.accentSoft,
             ),
           ),
         ],

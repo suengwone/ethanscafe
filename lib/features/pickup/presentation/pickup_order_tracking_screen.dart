@@ -64,10 +64,10 @@ class PickupOrderTrackingScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
+                    Icon(
                       LucideIcons.refreshCw,
                       size: 12,
-                      color: foxtrotMuted,
+                      color: context.palette.muted,
                     ),
                     const SizedBox(width: 6),
                     Text(
@@ -93,7 +93,7 @@ class _OrderNotFound extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(LucideIcons.receiptText, size: 48, color: foxtrotMuted),
+          Icon(LucideIcons.receiptText, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text('주문을 찾을 수 없어요', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
@@ -213,10 +213,10 @@ class _StatusStep extends StatelessWidget {
     final isCurrent = state == _StepState.current;
     final isDone = state == _StepState.done;
     final accent = isCurrent
-        ? foxtrotGold
+        ? context.palette.accent
         : isDone
-        ? foxtrotGoldLight
-        : foxtrotMuted;
+        ? context.palette.accentSoft
+        : context.palette.muted;
 
     return IntrinsicHeight(
       child: Row(
@@ -229,11 +229,11 @@ class _StatusStep extends StatelessWidget {
                 height: 40,
                 decoration: BoxDecoration(
                   color: isCurrent
-                      ? foxtrotGold.withValues(alpha: 0.18)
-                      : foxtrotSurface,
+                      ? context.palette.accent.withValues(alpha: 0.18)
+                      : context.palette.surface,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: isCurrent || isDone ? foxtrotGold : foxtrotBorder,
+                    color: isCurrent || isDone ? context.palette.accent : context.palette.border,
                   ),
                 ),
                 child: Icon(
@@ -247,7 +247,7 @@ class _StatusStep extends StatelessWidget {
                   child: Container(
                     width: 2,
                     margin: const EdgeInsets.symmetric(vertical: 4),
-                    color: isDone ? foxtrotGold : foxtrotBorder,
+                    color: isDone ? context.palette.accent : context.palette.border,
                   ),
                 ),
             ],
@@ -264,7 +264,7 @@ class _StatusStep extends StatelessWidget {
                       Text(
                         label,
                         style: textTheme.labelLarge?.copyWith(
-                          color: isCurrent ? foxtrotGold : null,
+                          color: isCurrent ? context.palette.accent : null,
                           fontWeight: isCurrent
                               ? FontWeight.w700
                               : FontWeight.w600,
@@ -278,7 +278,7 @@ class _StatusStep extends StatelessWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: foxtrotGold.withValues(alpha: 0.18),
+                            color: context.palette.accent.withValues(alpha: 0.18),
                             borderRadius: BorderRadius.circular(
                               foxtrotRadiusSmall,
                             ),
@@ -286,7 +286,7 @@ class _StatusStep extends StatelessWidget {
                           child: Text(
                             '진행 중',
                             style: textTheme.bodySmall?.copyWith(
-                              color: foxtrotGold,
+                              color: context.palette.accent,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -333,7 +333,7 @@ class _CancelledCard extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            const Icon(LucideIcons.circleX, size: 40, color: foxtrotMuted),
+            Icon(LucideIcons.circleX, size: 40, color: context.palette.muted),
             const SizedBox(height: 12),
             Text('주문이 취소되었어요', style: textTheme.titleSmall),
             const SizedBox(height: 6),
@@ -363,7 +363,7 @@ class _CancelOrderButton extends ConsumerWidget {
       height: 44,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
-          foregroundColor: foxtrotMuted,
+          foregroundColor: context.palette.muted,
           textStyle: textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
         ),
         onPressed: () => _cancelOrder(context, ref),
@@ -444,14 +444,14 @@ class _OrderItemsCard extends StatelessWidget {
                 ),
               ),
             const SizedBox(height: 4),
-            Container(height: 1, color: foxtrotBorder.withValues(alpha: 0.5)),
+            Container(height: 1, color: context.palette.border.withValues(alpha: 0.5)),
             const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(child: Text('결제 금액', style: textTheme.labelLarge)),
                 Text(
                   '${_amountFormat.format(order.paidAmount)}원',
-                  style: textTheme.titleMedium?.copyWith(color: foxtrotGold),
+                  style: textTheme.titleMedium?.copyWith(color: context.palette.accent),
                 ),
               ],
             ),

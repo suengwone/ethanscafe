@@ -24,8 +24,8 @@ Future<bool> confirmDelete(
         FilledButton(
           onPressed: () => Navigator.of(context).pop(true),
           style: FilledButton.styleFrom(
-            backgroundColor: foxtrotDanger,
-            foregroundColor: foxtrotBlack,
+            backgroundColor: context.palette.danger,
+            foregroundColor: context.palette.background,
           ),
           child: Text(confirmLabel),
         ),

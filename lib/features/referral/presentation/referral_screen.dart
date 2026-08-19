@@ -160,24 +160,24 @@ class _RewardHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [foxtrotCard, foxtrotSurface],
+          colors: [context.palette.card, context.palette.surface],
         ),
         borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-        border: Border.all(color: foxtrotBorder),
+        border: Border.all(color: context.palette.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(LucideIcons.userPlus, color: foxtrotGold, size: 20),
+              Icon(LucideIcons.userPlus, color: context.palette.accent, size: 20),
               const SizedBox(width: 8),
               Text(
                 '초대 리워드',
-                style: theme.textTheme.titleSmall?.copyWith(color: foxtrotGold),
+                style: theme.textTheme.titleSmall?.copyWith(color: context.palette.accent),
               ),
             ],
           ),
@@ -189,7 +189,7 @@ class _RewardHeader extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             '친구가 가입 후 내 초대 코드를 입력하면 두 사람 모두 포인트를 받습니다.'.keepWord,
-            style: theme.textTheme.bodyMedium?.copyWith(color: foxtrotMuted),
+            style: theme.textTheme.bodyMedium?.copyWith(color: context.palette.muted),
           ),
         ],
       ),
@@ -214,9 +214,9 @@ class _MyCodeCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: foxtrotCard,
+        color: context.palette.card,
         borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-        border: Border.all(color: foxtrotBorder),
+        border: Border.all(color: context.palette.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -230,7 +230,7 @@ class _MyCodeCard extends StatelessWidget {
                   summary.code,
                   style: theme.textTheme.headlineMedium?.copyWith(
                     letterSpacing: 6,
-                    color: foxtrotGold,
+                    color: context.palette.accent,
                   ),
                 ),
               ),
@@ -299,15 +299,15 @@ class _StatTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
-        color: foxtrotSurface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-        border: Border.all(color: foxtrotBorder),
+        border: Border.all(color: context.palette.border),
       ),
       child: Column(
         children: [
           Text(
             value,
-            style: theme.textTheme.titleMedium?.copyWith(color: foxtrotGold),
+            style: theme.textTheme.titleMedium?.copyWith(color: context.palette.accent),
           ),
           const SizedBox(height: 6),
           Text(label, style: theme.textTheme.bodySmall),
@@ -334,9 +334,9 @@ class _RedeemForm extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: foxtrotCard,
+        color: context.palette.card,
         borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-        border: Border.all(color: foxtrotBorder),
+        border: Border.all(color: context.palette.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -376,13 +376,13 @@ class _RedeemedCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: foxtrotCard,
+        color: context.palette.card,
         borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-        border: Border.all(color: foxtrotBorder),
+        border: Border.all(color: context.palette.border),
       ),
       child: Row(
         children: [
-          const Icon(LucideIcons.circleCheck, color: foxtrotGold, size: 20),
+          Icon(LucideIcons.circleCheck, color: context.palette.accent, size: 20),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -394,7 +394,7 @@ class _RedeemedCard extends StatelessWidget {
                   '${summary.redeemedCode} 코드로 '
                   '${_amountFormat.format(summary.reward)}P를 받았습니다.',
                   style:
-                      theme.textTheme.bodyMedium?.copyWith(color: foxtrotMuted),
+                      theme.textTheme.bodyMedium?.copyWith(color: context.palette.muted),
                 ),
               ],
             ),

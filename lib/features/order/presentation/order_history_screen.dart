@@ -132,7 +132,7 @@ class _EmptyOrders extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(LucideIcons.receiptText, size: 48, color: foxtrotMuted),
+          Icon(LucideIcons.receiptText, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text('주문 내역이 없어요', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
@@ -181,13 +181,13 @@ class _BeanOrderCard extends ConsumerWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: foxtrotSurface,
+                    color: context.palette.surface,
                     borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-                    border: Border.all(color: foxtrotBorder),
+                    border: Border.all(color: context.palette.border),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     LucideIcons.bean,
-                    color: foxtrotGold,
+                    color: context.palette.accent,
                     size: 22,
                   ),
                 ),
@@ -240,7 +240,7 @@ class _BeanOrderCard extends ConsumerWidget {
                       Text(
                         pointsSummary,
                         style: textTheme.bodySmall?.copyWith(
-                          color: foxtrotGold,
+                          color: context.palette.accent,
                         ),
                       ),
                     ],
@@ -254,7 +254,7 @@ class _BeanOrderCard extends ConsumerWidget {
               height: 36,
               child: OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: foxtrotGoldLight,
+                  foregroundColor: context.palette.accentSoft,
                   textStyle: textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -271,7 +271,7 @@ class _BeanOrderCard extends ConsumerWidget {
                 height: 36,
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: foxtrotMuted,
+                    foregroundColor: context.palette.muted,
                     textStyle: textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -283,7 +283,7 @@ class _BeanOrderCard extends ConsumerWidget {
             ],
             if (_reviewable) ...[
               const SizedBox(height: 12),
-              Container(height: 1, color: foxtrotBorder.withValues(alpha: 0.5)),
+              Container(height: 1, color: context.palette.border.withValues(alpha: 0.5)),
               for (final item in order.items)
                 _ReviewItemRow(
                   orderId: order.id,
@@ -399,13 +399,13 @@ class _PickupOrderCard extends ConsumerWidget {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: foxtrotSurface,
+                      color: context.palette.surface,
                       borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-                      border: Border.all(color: foxtrotBorder),
+                      border: Border.all(color: context.palette.border),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       LucideIcons.coffee,
-                      color: foxtrotGold,
+                      color: context.palette.accent,
                       size: 22,
                     ),
                   ),
@@ -454,7 +454,7 @@ class _PickupOrderCard extends ConsumerWidget {
                         Text(
                           pointsSummary,
                           style: textTheme.bodySmall?.copyWith(
-                            color: foxtrotGold,
+                            color: context.palette.accent,
                           ),
                         ),
                       ],
@@ -471,14 +471,14 @@ class _PickupOrderCard extends ConsumerWidget {
                     Text(
                       '주문 현황 보기',
                       style: textTheme.bodySmall?.copyWith(
-                        color: foxtrotGold,
+                        color: context.palette.accent,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const Icon(
+                    Icon(
                       LucideIcons.chevronRight,
                       size: 14,
-                      color: foxtrotGold,
+                      color: context.palette.accent,
                     ),
                   ],
                 ),
@@ -489,7 +489,7 @@ class _PickupOrderCard extends ConsumerWidget {
                 height: 36,
                 child: OutlinedButton.icon(
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: foxtrotGoldLight,
+                    foregroundColor: context.palette.accentSoft,
                     textStyle: textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -503,7 +503,7 @@ class _PickupOrderCard extends ConsumerWidget {
                 const SizedBox(height: 12),
                 Container(
                   height: 1,
-                  color: foxtrotBorder.withValues(alpha: 0.5),
+                  color: context.palette.border.withValues(alpha: 0.5),
                 ),
                 for (final item in order.items)
                   _ReviewItemRow(
@@ -590,7 +590,7 @@ class _ReviewItemRow extends ConsumerWidget {
                   const SizedBox(height: 2),
                   Text(
                     '“${review.comment}”'.keepWord,
-                    style: textTheme.bodySmall?.copyWith(color: foxtrotMuted),
+                    style: textTheme.bodySmall?.copyWith(color: context.palette.muted),
                   ),
                 ],
               ],
@@ -639,9 +639,9 @@ class _PickupStatusChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: foxtrotSurface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-        border: Border.all(color: foxtrotBorder),
+        border: Border.all(color: context.palette.border),
       ),
       child: Text(
         status == PickupOrderStatus.cancelled
@@ -649,8 +649,8 @@ class _PickupStatusChip extends StatelessWidget {
             : status.label,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
           color: status == PickupOrderStatus.cancelled
-              ? foxtrotMuted
-              : foxtrotGoldLight,
+              ? context.palette.muted
+              : context.palette.accentSoft,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -669,9 +669,9 @@ class _StatusChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: foxtrotSurface,
+        color: context.palette.surface,
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-        border: Border.all(color: foxtrotBorder),
+        border: Border.all(color: context.palette.border),
       ),
       child: Text(
         status == BeanOrderStatus.cancelled
@@ -679,8 +679,8 @@ class _StatusChip extends StatelessWidget {
             : status.label,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
           color: status == BeanOrderStatus.cancelled
-              ? foxtrotMuted
-              : foxtrotGoldLight,
+              ? context.palette.muted
+              : context.palette.accentSoft,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -708,13 +708,13 @@ class _OrderCard extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: foxtrotSurface,
+                color: context.palette.surface,
                 borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-                border: Border.all(color: foxtrotBorder),
+                border: Border.all(color: context.palette.border),
               ),
-              child: const Icon(
+              child: Icon(
                 LucideIcons.receiptText,
-                color: foxtrotGold,
+                color: context.palette.accent,
                 size: 22,
               ),
             ),
@@ -743,7 +743,7 @@ class _OrderCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   '+${_amountFormat.format(entry.amount)}P 적립',
-                  style: textTheme.bodySmall?.copyWith(color: foxtrotGold),
+                  style: textTheme.bodySmall?.copyWith(color: context.palette.accent),
                 ),
               ],
             ),

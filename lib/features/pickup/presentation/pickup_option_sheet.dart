@@ -23,7 +23,7 @@ Future<PickupOptionSelection?> showPickupOptionSheet(
   return showModalBottomSheet<PickupOptionSelection>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: foxtrotCard,
+    backgroundColor: context.palette.card,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
@@ -87,18 +87,18 @@ class _PickupOptionSheetState extends State<PickupOptionSheet> {
                         label: Text(option),
                         selected: _option == option,
                         onSelected: (_) => setState(() => _option = option),
-                        selectedColor: foxtrotGold.withValues(alpha: 0.25),
+                        selectedColor: context.palette.accent.withValues(alpha: 0.25),
                         labelStyle: TextStyle(
                           fontSize: 13,
                           color: _option == option
-                              ? foxtrotGoldLight
-                              : foxtrotCream,
+                              ? context.palette.accentSoft
+                              : context.palette.ink,
                         ),
                         side: BorderSide(
                           color:
-                              _option == option ? foxtrotGold : foxtrotBorder,
+                              _option == option ? context.palette.accent : context.palette.border,
                         ),
-                        backgroundColor: foxtrotSurface,
+                        backgroundColor: context.palette.surface,
                         showCheckmark: false,
                       ),
                     )
@@ -139,10 +139,10 @@ class _PickupOptionSheetState extends State<PickupOptionSheet> {
                 const Spacer(),
                 Text(
                   '${_priceFormat.format(_totalPrice)}원',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: foxtrotGoldLight,
+                    color: context.palette.accentSoft,
                   ),
                 ),
               ],
@@ -191,14 +191,14 @@ class _QuantityButton extends StatelessWidget {
         width: 36,
         height: 36,
         decoration: BoxDecoration(
-          color: foxtrotSurface,
+          color: context.palette.surface,
           borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-          border: Border.all(color: foxtrotBorder),
+          border: Border.all(color: context.palette.border),
         ),
         child: Icon(
           icon,
           size: 18,
-          color: enabled ? foxtrotGold : foxtrotMuted,
+          color: enabled ? context.palette.accent : context.palette.muted,
         ),
       ),
     );

@@ -14,13 +14,17 @@ class FoxtrotLogo extends StatelessWidget {
     return RepaintBoundary(
       child: CustomPaint(
         size: Size.square(size),
-        painter: _FoxtrotLogoPainter(),
+        painter: _FoxtrotLogoPainter(context.palette),
       ),
     );
   }
 }
 
 class _FoxtrotLogoPainter extends CustomPainter {
+  const _FoxtrotLogoPainter(this.palette);
+
+  final FoxtrotPalette palette;
+
   @override
   void paint(Canvas canvas, Size size) {
     final s = size.shortestSide;
@@ -30,18 +34,18 @@ class _FoxtrotLogoPainter extends CustomPainter {
     Offset p(double x, double y) => Offset(x * s, y * s);
 
     final backgroundPaint = Paint()
-      ..shader = const LinearGradient(
+      ..shader = LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [foxtrotCard, foxtrotSurface],
+        colors: [palette.card, palette.surface],
       ).createShader(Offset.zero & size);
     canvas.drawCircle(center, radius, backgroundPaint);
 
     final glowPaint = Paint()
       ..shader = RadialGradient(
         colors: [
-          foxtrotGold.withValues(alpha: 0.16),
-          foxtrotGold.withValues(alpha: 0.0),
+          palette.accent.withValues(alpha: 0.16),
+          palette.accent.withValues(alpha: 0.0),
         ],
       ).createShader(
         Rect.fromCircle(center: center, radius: radius * 0.85),
@@ -56,10 +60,10 @@ class _FoxtrotLogoPainter extends CustomPainter {
         endAngle: math.pi * 2,
         transform: const GradientRotation(-math.pi / 3),
         colors: [
-          foxtrotGold.withValues(alpha: 0.9),
-          foxtrotGoldLight,
-          foxtrotGold.withValues(alpha: 0.35),
-          foxtrotGold.withValues(alpha: 0.9),
+          palette.accent.withValues(alpha: 0.9),
+          palette.accentSoft,
+          palette.accent.withValues(alpha: 0.35),
+          palette.accent.withValues(alpha: 0.9),
         ],
         stops: const [0.0, 0.25, 0.65, 1.0],
       ).createShader(Offset.zero & size);
@@ -68,13 +72,13 @@ class _FoxtrotLogoPainter extends CustomPainter {
     final innerRingPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = s * 0.008
-      ..color = foxtrotGold.withValues(alpha: 0.35);
+      ..color = palette.accent.withValues(alpha: 0.35);
     canvas.drawCircle(center, radius * 0.86, innerRingPaint);
 
     final tickPaint = Paint()
       ..strokeWidth = s * 0.008
       ..strokeCap = StrokeCap.round
-      ..color = foxtrotGold.withValues(alpha: 0.5);
+      ..color = palette.accent.withValues(alpha: 0.5);
     for (var i = 0; i < 4; i++) {
       final angle = math.pi / 4 + i * math.pi / 2;
       final direction = Offset(math.cos(angle), math.sin(angle));
@@ -85,10 +89,10 @@ class _FoxtrotLogoPainter extends CustomPainter {
       );
     }
 
-    final strokeShader = const LinearGradient(
+    final strokeShader = LinearGradient(
       begin: Alignment.topRight,
       end: Alignment.bottomLeft,
-      colors: [foxtrotGoldLight, foxtrotGold],
+      colors: [palette.accentSoft, palette.accent],
     ).createShader(Offset.zero & size);
 
     final fPaint = Paint()
@@ -144,5 +148,6 @@ class _FoxtrotLogoPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _FoxtrotLogoPainter oldDelegate) =>
+      oldDelegate.palette != palette;
 }

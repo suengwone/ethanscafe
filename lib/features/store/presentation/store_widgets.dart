@@ -74,7 +74,7 @@ class StoreOpenBadge extends StatelessWidget {
     }
     return StoreBadge(
       label: isOpen ? '영업 중' : '영업 종료',
-      color: isOpen ? foxtrotGoldLight : foxtrotMuted,
+      color: isOpen ? context.palette.accentSoft : context.palette.muted,
     );
   }
 }
@@ -90,16 +90,19 @@ class StoreCongestionBadge extends StatelessWidget {
   final CafeStore store;
   final DateTime now;
 
-  static const _colors = {
-    StoreCongestion.relaxed: foxtrotGoldLight,
-    StoreCongestion.normal: foxtrotGold,
-    StoreCongestion.busy: foxtrotDanger,
-  };
+  Color? _color(StoreCongestion? congestion, FoxtrotPalette palette) {
+    return switch (congestion) {
+      StoreCongestion.relaxed => palette.accentSoft,
+      StoreCongestion.normal => palette.accent,
+      StoreCongestion.busy => palette.danger,
+      _ => null,
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
     final congestion = store.congestionAt(now);
-    final color = _colors[congestion];
+    final color = _color(congestion, context.palette);
     if (color == null) {
       return const SizedBox.shrink();
     }
@@ -118,7 +121,7 @@ class StoreInfoRow extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 14, color: foxtrotGold),
+        Icon(icon, size: 14, color: context.palette.accent),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
@@ -141,12 +144,12 @@ class StoreServiceChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: foxtrotGold.withValues(alpha: 0.12),
+        color: context.palette.accent.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
       ),
       child: Text(
         label,
-        style: const TextStyle(fontSize: 11, color: foxtrotGoldLight),
+        style: TextStyle(fontSize: 11, color: context.palette.accentSoft),
       ),
     );
   }

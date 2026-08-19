@@ -119,13 +119,13 @@ class _CircleIconButton extends StatelessWidget {
       onPressed: onPressed,
       tooltip: tooltip,
       style: IconButton.styleFrom(
-        backgroundColor: foxtrotCard,
+        backgroundColor: context.palette.card,
         shape: CircleBorder(
-          side: BorderSide(color: foxtrotBorder.withValues(alpha: 0.7)),
+          side: BorderSide(color: context.palette.border.withValues(alpha: 0.7)),
         ),
         minimumSize: const Size(40, 40),
       ),
-      icon: Icon(icon, size: 18, color: foxtrotCream),
+      icon: Icon(icon, size: 18, color: context.palette.ink),
     );
   }
 }
@@ -183,10 +183,10 @@ class _QuickActionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Material(
-        color: foxtrotCard,
+        color: context.palette.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-          side: BorderSide(color: foxtrotBorder.withValues(alpha: 0.7)),
+          side: BorderSide(color: context.palette.border.withValues(alpha: 0.7)),
         ),
         child: InkWell(
           onTap: () => context.go(location),
@@ -195,12 +195,12 @@ class _QuickActionItem extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 14),
             child: Column(
               children: [
-                Icon(icon, size: 22, color: foxtrotGold),
+                Icon(icon, size: 22, color: context.palette.accent),
                 const SizedBox(height: 6),
                 Text(
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: foxtrotCream,
+                        color: context.palette.ink,
                         fontWeight: FontWeight.w600,
                       ),
                 ),

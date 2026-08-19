@@ -458,7 +458,7 @@ class _HistoryItem extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: entry.isIncrease
-                  ? foxtrotGold
+                  ? context.palette.accent
                   : Theme.of(context).colorScheme.error,
             ),
           ),

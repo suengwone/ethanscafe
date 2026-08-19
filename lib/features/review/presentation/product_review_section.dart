@@ -39,16 +39,16 @@ class ProductReviewSection extends ConsumerWidget {
                 Text('리뷰', style: textTheme.titleMedium),
                 if (stats != null && stats.hasRating) ...[
                   const SizedBox(width: 8),
-                  const Icon(
+                  Icon(
                     Icons.star_rounded,
                     size: 18,
-                    color: foxtrotGold,
+                    color: context.palette.accent,
                   ),
                   const SizedBox(width: 2),
                   Text(
                     stats.averageRating.toStringAsFixed(1),
                     style: textTheme.labelLarge?.copyWith(
-                      color: foxtrotGoldLight,
+                      color: context.palette.accentSoft,
                     ),
                   ),
                   const SizedBox(width: 4),
@@ -80,7 +80,7 @@ class ProductReviewSection extends ConsumerWidget {
                       if (index > 0)
                         Divider(
                           height: 20,
-                          color: foxtrotBorder.withValues(alpha: 0.5),
+                          color: context.palette.border.withValues(alpha: 0.5),
                         ),
                       _ReviewRow(review: review),
                     ],
@@ -110,10 +110,10 @@ class _EmptyReviews extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return Row(
       children: [
-        const Icon(
+        Icon(
           LucideIcons.messageSquareHeart,
           size: 18,
-          color: foxtrotMuted,
+          color: context.palette.muted,
         ),
         const SizedBox(width: 8),
         Expanded(
