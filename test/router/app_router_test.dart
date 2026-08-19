@@ -20,6 +20,7 @@ import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
 import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
 import 'package:cafe_app/features/pickup/presentation/pickup_cart_screen.dart';
 import 'package:cafe_app/features/order/presentation/order_history_screen.dart';
+import 'package:cafe_app/features/store/presentation/store_detail_screen.dart';
 import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/profile/presentation/delivery_address_screen.dart';
@@ -187,6 +188,16 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(StoreListScreen), findsOneWidget);
+    expect(find.byType(LoginScreen), findsNothing);
+  });
+
+  testWidgets('비로그인 시 매장 상세 화면은 볼 수 있다', (tester) async {
+    final router = await pumpApp(tester);
+
+    router.go('/stores/macheon');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(StoreDetailScreen), findsOneWidget);
     expect(find.byType(LoginScreen), findsNothing);
   });
 

@@ -20,6 +20,11 @@ final storesProvider = FutureProvider<List<CafeStore>>((ref) {
   return ref.watch(storesRepositoryProvider).loadStores();
 });
 
+/// 영업 중 여부와 혼잡도 신선도를 재는 기준 시각.
+/// 화면이 `DateTime.now()`를 직접 부르면 테스트·골든이 실행 시각에 따라 흔들려서
+/// provider로 빼 두고 고정할 수 있게 한다.
+final storeClockProvider = Provider<DateTime Function()>((ref) => DateTime.now);
+
 final storeDistancesProvider =
     AsyncNotifierProvider<StoreDistancesController, Map<String, double>?>(
         StoreDistancesController.new);

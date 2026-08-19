@@ -28,6 +28,7 @@ import '../features/profile/presentation/payment_methods_screen.dart';
 import '../features/profile/presentation/policy_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
 import '../features/profile/presentation/support_screen.dart';
+import '../features/store/presentation/store_detail_screen.dart';
 import '../features/store/presentation/store_list_screen.dart';
 import '../features/subscription/presentation/subscription_list_screen.dart';
 import '../features/wholesale/presentation/wholesale_quote_history_screen.dart';
@@ -49,7 +50,9 @@ bool isPublicPath(String location) {
   if (protectedMenuSuffixes.any(location.endsWith)) {
     return false;
   }
-  return publicPaths.contains(location) || location.startsWith('/menu/');
+  return publicPaths.contains(location) ||
+      location.startsWith('/menu/') ||
+      location.startsWith('/stores/');
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -84,6 +87,14 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'stores',
                     builder: (context, state) => const StoreListScreen(),
+                    routes: [
+                      GoRoute(
+                        path: ':storeId',
+                        builder: (context, state) => StoreDetailScreen(
+                          storeId: state.pathParameters['storeId']!,
+                        ),
+                      ),
+                    ],
                   ),
                   GoRoute(
                     path: 'wholesale/quote',
