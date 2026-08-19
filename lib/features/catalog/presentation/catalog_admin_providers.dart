@@ -3,8 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../beans/domain/bean_models.dart';
 import '../../beans/presentation/beans_providers.dart';
+import '../../home/domain/banner_models.dart';
+import '../../home/presentation/home_providers.dart';
 import '../../menu/domain/menu_models.dart';
 import '../../menu/presentation/menu_providers.dart';
+import '../../store/domain/store_models.dart';
+import '../../store/presentation/stores_providers.dart';
 import '../data/firestore_catalog_admin_repository.dart';
 import '../domain/catalog_admin_repository.dart';
 
@@ -42,6 +46,26 @@ class CatalogAdminController {
   Future<void> deleteBean(String beanId) async {
     await _repository.deleteBean(beanId);
     _ref.invalidate(beansProvider);
+  }
+
+  Future<void> saveBanner(EventBanner banner) async {
+    await _repository.saveBanner(banner);
+    _ref.invalidate(bannersProvider);
+  }
+
+  Future<void> deleteBanner(String bannerId) async {
+    await _repository.deleteBanner(bannerId);
+    _ref.invalidate(bannersProvider);
+  }
+
+  Future<void> saveStore(CafeStore store) async {
+    await _repository.saveStore(store);
+    _ref.invalidate(storesProvider);
+  }
+
+  Future<void> deleteStore(String storeId) async {
+    await _repository.deleteStore(storeId);
+    _ref.invalidate(storesProvider);
   }
 
   Future<void> setMenuSoldOut(String menuId, bool soldOut) async {
