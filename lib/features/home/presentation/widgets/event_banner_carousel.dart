@@ -1,11 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/text_utils.dart';
 import '../../domain/banner_models.dart';
+import '../banner_icons.dart';
 import '../home_providers.dart';
 
 const _bannerGradients = <List<Color>>[
@@ -13,19 +13,6 @@ const _bannerGradients = <List<Color>>[
   [Color(0xFF5C4433), Color(0xFF2B1E14)],
   [foxtrotCard, foxtrotSurface],
 ];
-
-IconData _bannerIcon(String icon) {
-  switch (icon) {
-    case 'snowflake':
-      return LucideIcons.snowflake300;
-    case 'bean':
-      return LucideIcons.bean300;
-    case 'gift':
-      return LucideIcons.gift300;
-    default:
-      return LucideIcons.sparkles;
-  }
-}
 
 class EventBannerCarousel extends ConsumerStatefulWidget {
   const EventBannerCarousel({super.key});
@@ -134,7 +121,7 @@ class _BannerCard extends StatelessWidget {
             ),
           ),
           Icon(
-            _bannerIcon(banner.icon),
+            bannerIcon(banner.icon),
             size: 48,
             color: foxtrotGoldLight.withValues(alpha: 0.5),
           ),
