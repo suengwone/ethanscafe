@@ -167,6 +167,11 @@ class ProfileScreen extends ConsumerWidget {
                 title: '즐겨찾기 메뉴',
                 onTap: () => context.push('/profile/favorites'),
               ),
+              _buildListTile(
+                icon: LucideIcons.userPlus,
+                title: '친구 초대',
+                onTap: () => context.push('/profile/referral'),
+              ),
             ],
           ),
           const SizedBox(height: 8),

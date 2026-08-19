@@ -28,6 +28,7 @@ import '../features/profile/presentation/payment_methods_screen.dart';
 import '../features/profile/presentation/policy_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
 import '../features/profile/presentation/support_screen.dart';
+import '../features/referral/presentation/referral_screen.dart';
 import '../features/store/presentation/store_detail_screen.dart';
 import '../features/store/presentation/store_list_screen.dart';
 import '../features/subscription/presentation/subscription_list_screen.dart';
@@ -215,6 +216,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'gifts',
                     builder: (context, state) => const GiftHistoryScreen(),
+                  ),
+                  GoRoute(
+                    path: 'referral',
+                    builder: (context, state) => const ReferralScreen(),
                   ),
                   GoRoute(
                     path: 'payment-methods',
