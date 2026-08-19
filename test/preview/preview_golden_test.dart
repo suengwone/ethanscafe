@@ -79,6 +79,7 @@ import 'package:cafe_app/features/profile/presentation/payment_methods_screen.da
 import 'package:cafe_app/features/profile/presentation/policy_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
 import 'package:cafe_app/features/profile/presentation/support_screen.dart';
+import 'package:cafe_app/features/referral/presentation/referral_screen.dart';
 import 'package:cafe_app/router/app_router.dart';
 
 import '../features/auth/fake_account_repository.dart';
@@ -193,6 +194,11 @@ void main() {
     );
     SharedPreferences.setMockInitialValues({
       'favorite_menu_ids': ['espresso-vanilla-latte', 'beverage-matcha-latte'],
+      'referral_summary': jsonEncode({
+        'code': 'FXP2K9',
+        'invitedCount': 3,
+        'earnedPoints': 9000,
+      }),
       'points_data': jsonEncode({
         'membershipId': 'MEMBER-12345678',
         'balance': 32250,
@@ -1011,6 +1017,13 @@ void main() {
     await pumpScreen(tester, const GiftHistoryScreen());
 
     await expectGolden(find.byType(GiftHistoryScreen), 'gift_history_screen');
+  });
+
+  testWidgets('친구 초대 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const ReferralScreen(), user: _previewUser);
+
+    await expectGolden(find.byType(ReferralScreen), 'referral_screen');
   });
 
   testWidgets('원두 주문 바텀시트 스크린샷', (WidgetTester tester) async {
