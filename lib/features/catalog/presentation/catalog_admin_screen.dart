@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../beans/domain/bean_models.dart';
@@ -8,15 +9,20 @@ import '../../home/domain/banner_models.dart';
 import '../../home/presentation/home_providers.dart';
 import '../../menu/domain/menu_models.dart';
 import '../../menu/presentation/menu_providers.dart';
+import '../../notice/domain/notice_models.dart';
+import '../../notice/presentation/notices_providers.dart';
 import '../../store/domain/store_models.dart';
 import '../../store/presentation/stores_providers.dart';
 import 'banner_edit_screen.dart';
 import 'bean_edit_screen.dart';
 import 'catalog_admin_providers.dart';
 import 'menu_edit_screen.dart';
+import 'notice_edit_screen.dart';
 import 'store_edit_screen.dart';
 
-/// 매장이 메뉴·원두·배너·매장 정보를 등록·수정하고 품절 처리하는 화면.
+final _noticeDateFormat = DateFormat('yyyy.MM.dd');
+
+/// 매장이 메뉴·원두·배너·매장·공지를 등록·수정하고 품절 처리하는 화면.
 /// 품절 처리한 상품은 주문 시 서버가 한 번 더 막는다.
 class CatalogAdminScreen extends ConsumerWidget {
   const CatalogAdminScreen({super.key});
@@ -26,6 +32,7 @@ class CatalogAdminScreen extends ConsumerWidget {
     (label: '원두', addLabel: '원두 등록'),
     (label: '배너', addLabel: '배너 등록'),
     (label: '매장', addLabel: '매장 등록'),
+    (label: '공지', addLabel: '공지 등록'),
   ];
 
   static Widget _editScreenFor(int tabIndex) {
@@ -33,7 +40,8 @@ class CatalogAdminScreen extends ConsumerWidget {
       0 => const MenuEditScreen(),
       1 => const BeanEditScreen(),
       2 => const BannerEditScreen(),
-      _ => const StoreEditScreen(),
+      3 => const StoreEditScreen(),
+      _ => const NoticeEditScreen(),
     };
   }
 
@@ -44,9 +52,7 @@ class CatalogAdminScreen extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('카탈로그 관리'),
-          bottom: TabBar(
-            tabs: [for (final tab in _tabs) Tab(text: tab.label)],
-          ),
+          bottom: TabBar(tabs: [for (final tab in _tabs) Tab(text: tab.label)]),
         ),
         body: const TabBarView(
           children: [
@@ -54,6 +60,7 @@ class CatalogAdminScreen extends ConsumerWidget {
             _BeanTab(),
             _BannerTab(),
             _StoreTab(),
+            _NoticeTab(),
           ],
         ),
         floatingActionButton: Builder(
@@ -173,6 +180,28 @@ class _StoreTab extends ConsumerWidget {
   }
 }
 
+class _NoticeTab extends ConsumerWidget {
+  const _NoticeTab();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return _CatalogList<Notice>(
+      state: ref.watch(noticesProvider),
+      errorMessage: '공지를 불러오지 못했습니다.',
+      emptyMessage: '등록된 공지가 없습니다.',
+      onRetry: () => ref.invalidate(noticesProvider),
+      nameOf: (notice) => notice.title,
+      subtitleOf: (notice) =>
+          '${notice.category.label} · ${_noticeDateFormat.format(notice.createdAt)}',
+      onTap: (context, notice) => Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (context) => NoticeEditScreen(notice: notice),
+        ),
+      ),
+    );
+  }
+}
+
 class _CatalogList<T> extends StatelessWidget {
   const _CatalogList({
     required this.state,
@@ -193,7 +222,7 @@ class _CatalogList<T> extends StatelessWidget {
   final String Function(T) nameOf;
   final String Function(T) subtitleOf;
 
-  /// 품절 개념이 있는 목록(메뉴·원두)만 넘긴다. 배너·매장은 스위치 없이 그린다.
+  /// 품절 개념이 있는 목록(메뉴·원두)만 넘긴다. 배너·매장·공지는 스위치 없이 그린다.
   final bool Function(T)? soldOutOf;
   final Future<void> Function(T, bool)? onSoldOutChanged;
   final void Function(BuildContext, T)? onTap;
