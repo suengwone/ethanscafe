@@ -23,6 +23,7 @@ import 'package:cafe_app/features/order/presentation/order_history_screen.dart';
 import 'package:cafe_app/features/store/presentation/store_detail_screen.dart';
 import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
+import 'package:cafe_app/features/profile/presentation/appearance_settings_screen.dart';
 import 'package:cafe_app/features/profile/presentation/delivery_address_screen.dart';
 import 'package:cafe_app/features/profile/presentation/payment_methods_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
@@ -311,6 +312,24 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(ReferralScreen), findsOneWidget);
+    expect(find.byType(LoginScreen), findsNothing);
+  });
+
+  testWidgets('로그인 시 화면 테마 설정에 접근할 수 있다', (tester) async {
+    final router = await pumpApp(
+      tester,
+      user: const AppUser(
+        uid: 'test-uid',
+        displayName: '테스트 사용자',
+        email: 'test@example.com',
+        providerId: 'google',
+      ),
+    );
+
+    router.go('/profile/appearance');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AppearanceSettingsScreen), findsOneWidget);
     expect(find.byType(LoginScreen), findsNothing);
   });
 
