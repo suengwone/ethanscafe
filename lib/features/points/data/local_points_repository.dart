@@ -88,6 +88,35 @@ class LocalPointsRepository implements PointsRepository {
     return data;
   }
 
+  /// 결제 없이 지급하는 적립(친구 초대 보상 등).
+  Future<PointsData> award({
+    required int amount,
+    required String description,
+  }) async {
+    if (amount <= 0) {
+      throw ArgumentError.value(amount, 'amount', '적립 포인트는 0보다 커야 합니다.');
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    var data = await load();
+    data = data.copyWith(
+      balance: data.balance + amount,
+      history: [
+        PointHistoryEntry(
+          id: _generateId(),
+          type: PointHistoryType.earn,
+          description: description,
+          amount: amount,
+          createdAt: DateTime.now(),
+        ),
+        ...data.history,
+      ],
+    );
+
+    await _save(prefs, data);
+    return data;
+  }
+
   @override
   Future<PointsData> usePoints({
     required int amount,
