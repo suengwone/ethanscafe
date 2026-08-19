@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../core/firebase/firestore_converters.dart';
 import '../domain/store_models.dart';
 import '../domain/stores_repository.dart';
 
@@ -35,6 +36,13 @@ CafeStore storeFromFirestore(String id, Map<String, dynamic> data) {
     weekendHours: data['weekendHours'] as String? ?? '',
     services: (data['services'] as List<dynamic>? ?? const []).cast<String>(),
     sortOrder: (data['sortOrder'] as num? ?? 0).toInt(),
+    notice: data['notice'] as String? ?? '',
+    congestion:
+        StoreCongestion.values.asNameMap()[data['congestion']] ??
+        StoreCongestion.unknown,
+    congestionUpdatedAt: data['congestionUpdatedAt'] == null
+        ? null
+        : firestoreDateTime(data['congestionUpdatedAt']),
   );
 }
 
@@ -49,5 +57,10 @@ Map<String, dynamic> storeToFirestore(CafeStore store) {
     'weekendHours': store.weekendHours,
     'services': store.services,
     'sortOrder': store.sortOrder,
+    'notice': store.notice,
+    'congestion': store.congestion.name,
+    'congestionUpdatedAt': store.congestionUpdatedAt == null
+        ? null
+        : Timestamp.fromDate(store.congestionUpdatedAt!),
   };
 }

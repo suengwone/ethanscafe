@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CafeStore {
 
- String get id; String get name; String get address; String get phone; double get latitude; double get longitude; String get weekdayHours; String get weekendHours; List<String> get services; int get sortOrder;
+ String get id; String get name; String get address; String get phone; double get latitude; double get longitude; String get weekdayHours; String get weekendHours; List<String> get services; int get sortOrder; String get notice; StoreCongestion get congestion; DateTime? get congestionUpdatedAt;
 /// Create a copy of CafeStore
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $CafeStoreCopyWith<CafeStore> get copyWith => _$CafeStoreCopyWithImpl<CafeStore>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CafeStore&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.address, address) || other.address == address)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.weekdayHours, weekdayHours) || other.weekdayHours == weekdayHours)&&(identical(other.weekendHours, weekendHours) || other.weekendHours == weekendHours)&&const DeepCollectionEquality().equals(other.services, services)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CafeStore&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.address, address) || other.address == address)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.weekdayHours, weekdayHours) || other.weekdayHours == weekdayHours)&&(identical(other.weekendHours, weekendHours) || other.weekendHours == weekendHours)&&const DeepCollectionEquality().equals(other.services, services)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.notice, notice) || other.notice == notice)&&(identical(other.congestion, congestion) || other.congestion == congestion)&&(identical(other.congestionUpdatedAt, congestionUpdatedAt) || other.congestionUpdatedAt == congestionUpdatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,address,phone,latitude,longitude,weekdayHours,weekendHours,const DeepCollectionEquality().hash(services),sortOrder);
+int get hashCode => Object.hash(runtimeType,id,name,address,phone,latitude,longitude,weekdayHours,weekendHours,const DeepCollectionEquality().hash(services),sortOrder,notice,congestion,congestionUpdatedAt);
 
 @override
 String toString() {
-  return 'CafeStore(id: $id, name: $name, address: $address, phone: $phone, latitude: $latitude, longitude: $longitude, weekdayHours: $weekdayHours, weekendHours: $weekendHours, services: $services, sortOrder: $sortOrder)';
+  return 'CafeStore(id: $id, name: $name, address: $address, phone: $phone, latitude: $latitude, longitude: $longitude, weekdayHours: $weekdayHours, weekendHours: $weekendHours, services: $services, sortOrder: $sortOrder, notice: $notice, congestion: $congestion, congestionUpdatedAt: $congestionUpdatedAt)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $CafeStoreCopyWith<$Res>  {
   factory $CafeStoreCopyWith(CafeStore value, $Res Function(CafeStore) _then) = _$CafeStoreCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String address, String phone, double latitude, double longitude, String weekdayHours, String weekendHours, List<String> services, int sortOrder
+ String id, String name, String address, String phone, double latitude, double longitude, String weekdayHours, String weekendHours, List<String> services, int sortOrder, String notice, StoreCongestion congestion, DateTime? congestionUpdatedAt
 });
 
 
@@ -62,7 +62,7 @@ class _$CafeStoreCopyWithImpl<$Res>
 
 /// Create a copy of CafeStore
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? address = null,Object? phone = null,Object? latitude = null,Object? longitude = null,Object? weekdayHours = null,Object? weekendHours = null,Object? services = null,Object? sortOrder = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? address = null,Object? phone = null,Object? latitude = null,Object? longitude = null,Object? weekdayHours = null,Object? weekendHours = null,Object? services = null,Object? sortOrder = null,Object? notice = null,Object? congestion = null,Object? congestionUpdatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,10 @@ as double,weekdayHours: null == weekdayHours ? _self.weekdayHours : weekdayHours
 as String,weekendHours: null == weekendHours ? _self.weekendHours : weekendHours // ignore: cast_nullable_to_non_nullable
 as String,services: null == services ? _self.services : services // ignore: cast_nullable_to_non_nullable
 as List<String>,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
-as int,
+as int,notice: null == notice ? _self.notice : notice // ignore: cast_nullable_to_non_nullable
+as String,congestion: null == congestion ? _self.congestion : congestion // ignore: cast_nullable_to_non_nullable
+as StoreCongestion,congestionUpdatedAt: freezed == congestionUpdatedAt ? _self.congestionUpdatedAt : congestionUpdatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -159,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String address,  String phone,  double latitude,  double longitude,  String weekdayHours,  String weekendHours,  List<String> services,  int sortOrder)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String address,  String phone,  double latitude,  double longitude,  String weekdayHours,  String weekendHours,  List<String> services,  int sortOrder,  String notice,  StoreCongestion congestion,  DateTime? congestionUpdatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CafeStore() when $default != null:
-return $default(_that.id,_that.name,_that.address,_that.phone,_that.latitude,_that.longitude,_that.weekdayHours,_that.weekendHours,_that.services,_that.sortOrder);case _:
+return $default(_that.id,_that.name,_that.address,_that.phone,_that.latitude,_that.longitude,_that.weekdayHours,_that.weekendHours,_that.services,_that.sortOrder,_that.notice,_that.congestion,_that.congestionUpdatedAt);case _:
   return orElse();
 
 }
@@ -180,10 +183,10 @@ return $default(_that.id,_that.name,_that.address,_that.phone,_that.latitude,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String address,  String phone,  double latitude,  double longitude,  String weekdayHours,  String weekendHours,  List<String> services,  int sortOrder)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String address,  String phone,  double latitude,  double longitude,  String weekdayHours,  String weekendHours,  List<String> services,  int sortOrder,  String notice,  StoreCongestion congestion,  DateTime? congestionUpdatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _CafeStore():
-return $default(_that.id,_that.name,_that.address,_that.phone,_that.latitude,_that.longitude,_that.weekdayHours,_that.weekendHours,_that.services,_that.sortOrder);case _:
+return $default(_that.id,_that.name,_that.address,_that.phone,_that.latitude,_that.longitude,_that.weekdayHours,_that.weekendHours,_that.services,_that.sortOrder,_that.notice,_that.congestion,_that.congestionUpdatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +203,10 @@ return $default(_that.id,_that.name,_that.address,_that.phone,_that.latitude,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String address,  String phone,  double latitude,  double longitude,  String weekdayHours,  String weekendHours,  List<String> services,  int sortOrder)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String address,  String phone,  double latitude,  double longitude,  String weekdayHours,  String weekendHours,  List<String> services,  int sortOrder,  String notice,  StoreCongestion congestion,  DateTime? congestionUpdatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _CafeStore() when $default != null:
-return $default(_that.id,_that.name,_that.address,_that.phone,_that.latitude,_that.longitude,_that.weekdayHours,_that.weekendHours,_that.services,_that.sortOrder);case _:
+return $default(_that.id,_that.name,_that.address,_that.phone,_that.latitude,_that.longitude,_that.weekdayHours,_that.weekendHours,_that.services,_that.sortOrder,_that.notice,_that.congestion,_that.congestionUpdatedAt);case _:
   return null;
 
 }
@@ -214,8 +217,8 @@ return $default(_that.id,_that.name,_that.address,_that.phone,_that.latitude,_th
 /// @nodoc
 
 
-class _CafeStore implements CafeStore {
-  const _CafeStore({required this.id, required this.name, required this.address, required this.phone, required this.latitude, required this.longitude, required this.weekdayHours, required this.weekendHours, final  List<String> services = const <String>[], this.sortOrder = 0}): _services = services;
+class _CafeStore extends CafeStore {
+  const _CafeStore({required this.id, required this.name, required this.address, required this.phone, required this.latitude, required this.longitude, required this.weekdayHours, required this.weekendHours, final  List<String> services = const <String>[], this.sortOrder = 0, this.notice = '', this.congestion = StoreCongestion.unknown, this.congestionUpdatedAt}): _services = services,super._();
   
 
 @override final  String id;
@@ -234,6 +237,9 @@ class _CafeStore implements CafeStore {
 }
 
 @override@JsonKey() final  int sortOrder;
+@override@JsonKey() final  String notice;
+@override@JsonKey() final  StoreCongestion congestion;
+@override final  DateTime? congestionUpdatedAt;
 
 /// Create a copy of CafeStore
 /// with the given fields replaced by the non-null parameter values.
@@ -245,16 +251,16 @@ _$CafeStoreCopyWith<_CafeStore> get copyWith => __$CafeStoreCopyWithImpl<_CafeSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CafeStore&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.address, address) || other.address == address)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.weekdayHours, weekdayHours) || other.weekdayHours == weekdayHours)&&(identical(other.weekendHours, weekendHours) || other.weekendHours == weekendHours)&&const DeepCollectionEquality().equals(other._services, _services)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CafeStore&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.address, address) || other.address == address)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.weekdayHours, weekdayHours) || other.weekdayHours == weekdayHours)&&(identical(other.weekendHours, weekendHours) || other.weekendHours == weekendHours)&&const DeepCollectionEquality().equals(other._services, _services)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.notice, notice) || other.notice == notice)&&(identical(other.congestion, congestion) || other.congestion == congestion)&&(identical(other.congestionUpdatedAt, congestionUpdatedAt) || other.congestionUpdatedAt == congestionUpdatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,address,phone,latitude,longitude,weekdayHours,weekendHours,const DeepCollectionEquality().hash(_services),sortOrder);
+int get hashCode => Object.hash(runtimeType,id,name,address,phone,latitude,longitude,weekdayHours,weekendHours,const DeepCollectionEquality().hash(_services),sortOrder,notice,congestion,congestionUpdatedAt);
 
 @override
 String toString() {
-  return 'CafeStore(id: $id, name: $name, address: $address, phone: $phone, latitude: $latitude, longitude: $longitude, weekdayHours: $weekdayHours, weekendHours: $weekendHours, services: $services, sortOrder: $sortOrder)';
+  return 'CafeStore(id: $id, name: $name, address: $address, phone: $phone, latitude: $latitude, longitude: $longitude, weekdayHours: $weekdayHours, weekendHours: $weekendHours, services: $services, sortOrder: $sortOrder, notice: $notice, congestion: $congestion, congestionUpdatedAt: $congestionUpdatedAt)';
 }
 
 
@@ -265,7 +271,7 @@ abstract mixin class _$CafeStoreCopyWith<$Res> implements $CafeStoreCopyWith<$Re
   factory _$CafeStoreCopyWith(_CafeStore value, $Res Function(_CafeStore) _then) = __$CafeStoreCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String address, String phone, double latitude, double longitude, String weekdayHours, String weekendHours, List<String> services, int sortOrder
+ String id, String name, String address, String phone, double latitude, double longitude, String weekdayHours, String weekendHours, List<String> services, int sortOrder, String notice, StoreCongestion congestion, DateTime? congestionUpdatedAt
 });
 
 
@@ -282,7 +288,7 @@ class __$CafeStoreCopyWithImpl<$Res>
 
 /// Create a copy of CafeStore
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? address = null,Object? phone = null,Object? latitude = null,Object? longitude = null,Object? weekdayHours = null,Object? weekendHours = null,Object? services = null,Object? sortOrder = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? address = null,Object? phone = null,Object? latitude = null,Object? longitude = null,Object? weekdayHours = null,Object? weekendHours = null,Object? services = null,Object? sortOrder = null,Object? notice = null,Object? congestion = null,Object? congestionUpdatedAt = freezed,}) {
   return _then(_CafeStore(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -294,7 +300,10 @@ as double,weekdayHours: null == weekdayHours ? _self.weekdayHours : weekdayHours
 as String,weekendHours: null == weekendHours ? _self.weekendHours : weekendHours // ignore: cast_nullable_to_non_nullable
 as String,services: null == services ? _self._services : services // ignore: cast_nullable_to_non_nullable
 as List<String>,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
-as int,
+as int,notice: null == notice ? _self.notice : notice // ignore: cast_nullable_to_non_nullable
+as String,congestion: null == congestion ? _self.congestion : congestion // ignore: cast_nullable_to_non_nullable
+as StoreCongestion,congestionUpdatedAt: freezed == congestionUpdatedAt ? _self.congestionUpdatedAt : congestionUpdatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

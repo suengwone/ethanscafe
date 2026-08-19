@@ -27,6 +27,7 @@ class LocalStoresRepository implements StoresRepository {
       weekdayHours: '08:00 - 18:30',
       weekendHours: '10:00 - 19:00',
       services: ['무료주차 2시간', '반려견 동반', '테라스', '장애인 시설'],
+      notice: '매월 셋째 주 월요일은 정기 휴무입니다.',
     ),
   ];
 }
