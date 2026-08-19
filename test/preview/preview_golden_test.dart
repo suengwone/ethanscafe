@@ -63,7 +63,9 @@ import 'package:cafe_app/features/pickup/presentation/pickup_order_tracking_scre
 import 'package:cafe_app/features/home/domain/banner_models.dart';
 import 'package:cafe_app/features/store/data/local_stores_repository.dart';
 import 'package:cafe_app/features/store/domain/store_models.dart';
+import 'package:cafe_app/features/store/presentation/store_detail_screen.dart';
 import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
+import 'package:cafe_app/features/store/presentation/stores_providers.dart';
 import 'package:cafe_app/features/subscription/presentation/subscription_list_screen.dart';
 import 'package:cafe_app/features/wholesale/presentation/business_home_screen.dart';
 import 'package:cafe_app/features/wholesale/presentation/wholesale_quote_history_screen.dart';
@@ -160,6 +162,13 @@ const _previewBusinessProfile = AccountProfile(
     phone: '010-1234-5678',
   ),
 );
+
+/// 매장 화면은 지금 시각에 따라 영업 중/종료가 바뀌므로 골든에서 시각을 고정한다.
+final _previewNow = DateTime(2026, 8, 19, 15); // 수요일 15시
+
+final _previewStoreOverrides = [
+  storeClockProvider.overrideWithValue(() => _previewNow),
+];
 
 const _previewUser = AppUser(
   uid: 'preview-user',
@@ -754,7 +763,7 @@ void main() {
     await configureView(tester);
     await pumpScreen(
       tester,
-      const StoreEditScreen(
+      StoreEditScreen(
         store: CafeStore(
           id: 'pangyo',
           name: '폭스트롯 판교테크노밸리점',
@@ -764,12 +773,21 @@ void main() {
           longitude: 127.110935,
           weekdayHours: '08:00 - 18:30',
           weekendHours: '10:00 - 19:00',
-          services: ['무료주차 2시간', '반려견 동반', '테라스'],
+          services: const ['무료주차 2시간', '반려견 동반', '테라스'],
           sortOrder: 2,
+          notice: '8월 24일(월)은 매장 정기 소독으로 14시에 문을 닫습니다.',
+          congestion: StoreCongestion.normal,
+          congestionUpdatedAt: _previewNow.subtract(
+            const Duration(minutes: 20),
+          ),
         ),
       ),
+      overrides: _previewStoreOverrides,
       user: _previewUser,
     );
+    // 이번에 추가한 매장 공지·혼잡도는 첫 화면 아래에 있어 스크롤해서 담는다.
+    await tester.drag(find.byType(ListView), const Offset(0, -320));
+    await tester.pumpAndSettle();
 
     await expectGolden(find.byType(StoreEditScreen), 'store_edit_screen');
   });
@@ -854,9 +872,44 @@ void main() {
 
   testWidgets('매장 찾기 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
-    await pumpScreen(tester, const StoreListScreen());
+    await pumpScreen(
+      tester,
+      const StoreListScreen(),
+      overrides: _previewStoreOverrides,
+    );
 
     await expectGolden(find.byType(StoreListScreen), 'store_list_screen');
+  });
+
+  testWidgets('매장 상세 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const StoreDetailScreen(storeId: 'macheon'),
+      overrides: [
+        ..._previewStoreOverrides,
+        storesProvider.overrideWith((ref) async => [
+          CafeStore(
+            id: 'macheon',
+            name: '폭스트롯 마천점',
+            address: '서울 송파구 성내천로 189 1층 (마천동)',
+            phone: '010-7730-2388',
+            latitude: 37.501458,
+            longitude: 127.149322,
+            weekdayHours: '09:00 - 21:00',
+            weekendHours: '10:00 - 19:00',
+            services: const ['핸드드립 바', '카카오페이', '제로페이', '테라스'],
+            notice: '8월 24일(월)은 매장 정기 소독으로 14시에 문을 닫습니다.',
+            congestion: StoreCongestion.busy,
+            congestionUpdatedAt: _previewNow.subtract(
+              const Duration(minutes: 20),
+            ),
+          ),
+        ]),
+      ],
+    );
+
+    await expectGolden(find.byType(StoreDetailScreen), 'store_detail_screen');
   });
 
   testWidgets('포인트 화면 스크린샷', (WidgetTester tester) async {
