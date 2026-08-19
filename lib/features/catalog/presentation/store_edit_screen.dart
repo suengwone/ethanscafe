@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../store/domain/store_models.dart';
+import '../../store/presentation/stores_providers.dart';
 import '../domain/comma_list.dart';
 import 'catalog_admin_providers.dart';
 
@@ -29,6 +30,10 @@ class _StoreEditScreenState extends ConsumerState<StoreEditScreen> {
   late final TextEditingController _weekendHours;
   late final TextEditingController _services;
   late final TextEditingController _sortOrder;
+  late final TextEditingController _notice;
+  late StoreCongestion _congestion;
+  /// 같은 혼잡도를 다시 골라도 시각을 새로 찍어 준다.
+  bool _congestionTouched = false;
   bool _busy = false;
 
   bool get _isNew => widget.store == null;
@@ -50,6 +55,8 @@ class _StoreEditScreenState extends ConsumerState<StoreEditScreen> {
     _sortOrder = TextEditingController(
       text: (store?.sortOrder ?? 0).toString(),
     );
+    _notice = TextEditingController(text: store?.notice ?? '');
+    _congestion = store?.congestion ?? StoreCongestion.unknown;
   }
 
   @override
@@ -63,6 +70,7 @@ class _StoreEditScreenState extends ConsumerState<StoreEditScreen> {
     _weekendHours.dispose();
     _services.dispose();
     _sortOrder.dispose();
+    _notice.dispose();
     super.dispose();
   }
 
@@ -82,6 +90,9 @@ class _StoreEditScreenState extends ConsumerState<StoreEditScreen> {
       weekendHours: _weekendHours.text.trim(),
       services: parseCommaList(_services.text),
       sortOrder: int.tryParse(_sortOrder.text.trim()) ?? 0,
+      notice: _notice.text.trim(),
+      congestion: _congestion,
+      congestionUpdatedAt: _congestionUpdatedAt,
     );
     try {
       await ref.read(catalogAdminControllerProvider).saveStore(store);
@@ -96,6 +107,17 @@ class _StoreEditScreenState extends ConsumerState<StoreEditScreen> {
         );
       }
     }
+  }
+
+  /// 혼잡도는 올린 시각이 함께 있어야 오래된 값을 걸러 낼 수 있다.
+  DateTime? get _congestionUpdatedAt {
+    if (_congestion == StoreCongestion.unknown) {
+      return null;
+    }
+    if (_congestionTouched) {
+      return ref.read(storeClockProvider)();
+    }
+    return widget.store?.congestionUpdatedAt;
   }
 
   Future<void> _delete() async {
@@ -213,6 +235,40 @@ class _StoreEditScreenState extends ConsumerState<StoreEditScreen> {
                 labelText: '편의시설',
                 helperText: '쉼표로 구분 (예: 무료주차 2시간, 테라스)',
               ),
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _notice,
+              decoration: const InputDecoration(
+                labelText: '매장 공지',
+                helperText: '매장 상세 맨 위에 걸립니다. 비우면 안 보입니다.',
+              ),
+              maxLines: 2,
+            ),
+            const SizedBox(height: 16),
+            const Text('현재 혼잡도'),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: StoreCongestion.values
+                  .map(
+                    (congestion) => ChoiceChip(
+                      label: Text(congestion.label),
+                      selected: _congestion == congestion,
+                      // 같은 값을 다시 눌러도 시각만 새로 찍는다.
+                      onSelected: (_) => setState(() {
+                        _congestion = congestion;
+                        _congestionTouched = true;
+                      }),
+                    ),
+                  )
+                  .toList(),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '고른 지 ${CafeStore.congestionFreshness.inHours}시간이 지나면 고객 화면에서 자동으로 숨깁니다.',
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 12),
             TextFormField(

@@ -6,6 +6,7 @@ import 'package:cafe_app/core/theme/app_theme.dart';
 import 'package:cafe_app/features/catalog/presentation/catalog_admin_providers.dart';
 import 'package:cafe_app/features/catalog/presentation/store_edit_screen.dart';
 import 'package:cafe_app/features/store/domain/store_models.dart';
+import 'package:cafe_app/features/store/presentation/stores_providers.dart';
 
 import 'fake_catalog_admin_repository.dart';
 
@@ -14,7 +15,9 @@ void main() {
 
   setUp(() => repository = FakeCatalogAdminRepository());
 
-  const store = CafeStore(
+  final now = DateTime(2026, 8, 19, 15);
+
+  final store = CafeStore(
     id: 'macheon',
     name: '폭스트롯 마천점',
     address: '서울 송파구 성내천로 189 1층',
@@ -25,6 +28,9 @@ void main() {
     weekendHours: '09:00 - 21:00',
     services: ['핸드드립 바', '카카오페이'],
     sortOrder: 1,
+    notice: '매월 셋째 주 월요일은 정기 휴무입니다.',
+    congestion: StoreCongestion.relaxed,
+    congestionUpdatedAt: DateTime(2026, 8, 19, 9),
   );
 
   Future<void> pumpScreen(WidgetTester tester, {CafeStore? store}) async {
@@ -36,6 +42,7 @@ void main() {
       ProviderScope(
         overrides: [
           catalogAdminRepositoryProvider.overrideWithValue(repository),
+          storeClockProvider.overrideWithValue(() => now),
         ],
         child: MaterialApp(
           theme: buildAppTheme(),
@@ -64,6 +71,7 @@ void main() {
       '평일 영업시간': '08:00 - 18:30',
       '주말 영업시간': '10:00 - 19:00',
       '편의시설': '무료주차 2시간, 테라스',
+      '매장 공지': '오픈 기념 아메리카노 500원 할인 중',
       '노출 순서': '2',
     };
     for (final entry in values.entries) {
@@ -115,8 +123,46 @@ void main() {
         weekendHours: '10:00 - 19:00',
         services: ['무료주차 2시간', '테라스'],
         sortOrder: 2,
+        notice: '오픈 기념 아메리카노 500원 할인 중',
       ),
     );
+  });
+
+  testWidgets('혼잡도를 고르면 고른 시각을 함께 저장한다', (tester) async {
+    await pumpScreen(tester);
+    await fillNewStore(tester);
+
+    await tester.tap(find.text('혼잡'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('등록'));
+    await tester.pumpAndSettle();
+
+    expect(repository.savedStore?.congestion, StoreCongestion.busy);
+    expect(repository.savedStore?.congestionUpdatedAt, now);
+  });
+
+  testWidgets('혼잡도를 정보 없음으로 되돌리면 시각을 지운다', (tester) async {
+    await pumpScreen(tester, store: store);
+
+    await tester.tap(find.text('정보 없음'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('저장'));
+    await tester.pumpAndSettle();
+
+    expect(repository.savedStore?.congestion, StoreCongestion.unknown);
+    expect(repository.savedStore?.congestionUpdatedAt, isNull);
+  });
+
+  testWidgets('같은 혼잡도를 다시 골라도 시각을 새로 찍는다', (tester) async {
+    await pumpScreen(tester, store: store);
+
+    await tester.tap(find.text('여유'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('저장'));
+    await tester.pumpAndSettle();
+
+    expect(repository.savedStore?.congestion, StoreCongestion.relaxed);
+    expect(repository.savedStore?.congestionUpdatedAt, now);
   });
 
   testWidgets('기존 매장은 저장한 값을 그대로 채워 보여준다', (tester) async {
@@ -125,6 +171,7 @@ void main() {
     expect(find.text('매장 수정'), findsOneWidget);
     expect(find.text('37.501458'), findsOneWidget);
     expect(find.text('핸드드립 바, 카카오페이'), findsOneWidget);
+    expect(find.text('매월 셋째 주 월요일은 정기 휴무입니다.'), findsOneWidget);
 
     await tester.tap(find.text('저장'));
     await tester.pumpAndSettle();
