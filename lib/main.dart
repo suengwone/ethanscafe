@@ -10,6 +10,7 @@ import 'package:naver_login_sdk/naver_login_sdk.dart';
 import 'core/services/push_notification_providers.dart';
 import 'core/services/push_notification_service.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/theme_mode_providers.dart';
 import 'core/widgets/offline_banner.dart';
 import 'core/widgets/update_gate.dart';
 import 'features/coupon/presentation/auto_coupon_providers.dart';
@@ -69,7 +70,13 @@ Future<void> main() async {
       debugPrint('Naver SDK initialization skipped: $e');
     }
   }
-  runApp(const ProviderScope(child: CafeApp()));
+  final storedThemeMode = await loadStoredThemeMode();
+  runApp(
+    ProviderScope(
+      overrides: [storedThemeModeProvider.overrideWithValue(storedThemeMode)],
+      child: const CafeApp(),
+    ),
+  );
 }
 
 class CafeApp extends ConsumerWidget {
@@ -83,7 +90,9 @@ class CafeApp extends ConsumerWidget {
 
     return MaterialApp.router(
       title: '폭스트롯',
-      theme: buildAppTheme(),
+      theme: buildAppTheme(brightness: Brightness.light),
+      darkTheme: buildAppTheme(),
+      themeMode: ref.watch(themeModeProvider),
       routerConfig: router,
       debugShowCheckedModeBanner: false,
       builder: (context, child) => OfflineBanner(
