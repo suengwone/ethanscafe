@@ -5,9 +5,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:cafe_app/core/theme/app_theme.dart';
 import 'package:cafe_app/features/catalog/presentation/banner_edit_screen.dart';
 import 'package:cafe_app/features/catalog/presentation/catalog_admin_screen.dart';
+import 'package:cafe_app/features/catalog/presentation/notice_edit_screen.dart';
 import 'package:cafe_app/features/catalog/presentation/store_edit_screen.dart';
 import 'package:cafe_app/features/home/domain/banner_models.dart';
 import 'package:cafe_app/features/home/presentation/home_providers.dart';
+import 'package:cafe_app/features/notice/domain/notice_models.dart';
+import 'package:cafe_app/features/notice/presentation/notices_providers.dart';
 import 'package:cafe_app/features/store/domain/store_models.dart';
 import 'package:cafe_app/features/store/presentation/stores_providers.dart';
 
@@ -31,12 +34,22 @@ void main() {
     weekendHours: '09:00 - 21:00',
   );
 
+  final notice = Notice(
+    id: 'notice-hours',
+    title: '8월 영업시간 안내',
+    body: '8월 한 달간 매일 오전 8시부터 오후 10시까지 운영합니다.',
+    category: NoticeCategory.notice,
+    createdAt: DateTime(2026, 8, 1, 10),
+    isImportant: true,
+  );
+
   Future<void> pumpScreen(WidgetTester tester) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
           bannersProvider.overrideWith((ref) async => const [banner]),
           storesProvider.overrideWith((ref) async => const [store]),
+          noticesProvider.overrideWith((ref) async => [notice]),
         ],
         child: MaterialApp(
           theme: buildAppTheme(),
@@ -92,6 +105,23 @@ void main() {
     );
   });
 
+  testWidgets('공지 탭은 등록된 공지를 분류·게시일과 함께 보여주고 수정 화면을 연다', (tester) async {
+    await pumpScreen(tester);
+    await openTab(tester, '공지');
+
+    expect(find.text('8월 영업시간 안내'), findsOneWidget);
+    expect(find.text('공지 · 2026.08.01'), findsOneWidget);
+
+    await tester.tap(find.text('8월 영업시간 안내'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('공지 수정'), findsOneWidget);
+    expect(
+      tester.widget<NoticeEditScreen>(find.byType(NoticeEditScreen)).notice,
+      notice,
+    );
+  });
+
   testWidgets('등록 버튼은 보고 있는 탭에 맞는 등록 화면을 연다', (tester) async {
     await pumpScreen(tester);
     await openTab(tester, '배너');
@@ -115,5 +145,15 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(StoreEditScreen), findsOneWidget);
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await openTab(tester, '공지');
+
+    expect(find.text('공지 등록'), findsOneWidget);
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(NoticeEditScreen), findsOneWidget);
   });
 }

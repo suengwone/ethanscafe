@@ -34,4 +34,34 @@ void main() {
       expect(notice.isImportant, isFalse);
     });
   });
+
+  group('noticeToFirestore', () {
+    test('Notice를 Firestore 문서 데이터로 변환한다', () {
+      final createdAt = DateTime(2026, 8, 1, 10);
+      final data = noticeToFirestore(
+        Notice(
+          id: 'notice-1',
+          title: '8월 영업시간 안내',
+          body: '매일 오전 8시부터 오후 10시까지 운영합니다.',
+          category: NoticeCategory.event,
+          createdAt: createdAt,
+          isImportant: true,
+        ),
+      );
+
+      expect(data['title'], '8월 영업시간 안내');
+      expect(data['body'], '매일 오전 8시부터 오후 10시까지 운영합니다.');
+      // 목록 정렬이 createdAt을 쓰므로 저장 때도 항상 함께 쓴다.
+      expect(data['createdAt'], Timestamp.fromDate(createdAt));
+      expect(data['isImportant'], isTrue);
+      // 카테고리는 읽기 쪽이 이름으로 되돌리므로 enum 이름 그대로 쓴다.
+      expect(data['category'], 'event');
+      expect(
+        noticeFromFirestore('notice-1', data).category,
+        NoticeCategory.event,
+      );
+      // 문서 id는 경로가 들고 있으므로 본문에 넣지 않는다.
+      expect(data.containsKey('id'), isFalse);
+    });
+  });
 }
