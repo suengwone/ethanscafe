@@ -27,9 +27,11 @@ import 'package:cafe_app/features/beans/domain/bean_models.dart';
 import 'package:cafe_app/features/beans/presentation/bean_cart_providers.dart';
 import 'package:cafe_app/features/beans/presentation/bean_cart_screen.dart';
 import 'package:cafe_app/features/beans/presentation/bean_detail_screen.dart';
+import 'package:cafe_app/features/catalog/presentation/banner_edit_screen.dart';
 import 'package:cafe_app/features/catalog/presentation/bean_edit_screen.dart';
 import 'package:cafe_app/features/catalog/presentation/catalog_admin_screen.dart';
 import 'package:cafe_app/features/catalog/presentation/menu_edit_screen.dart';
+import 'package:cafe_app/features/catalog/presentation/store_edit_screen.dart';
 import 'package:cafe_app/features/coupon/presentation/coupon_list_screen.dart';
 import 'package:cafe_app/features/coupon/presentation/coupons_providers.dart';
 import 'package:cafe_app/features/gift/presentation/bean_gift_screen.dart';
@@ -56,7 +58,9 @@ import 'package:cafe_app/features/pickup/presentation/pickup_cart_providers.dart
 import 'package:cafe_app/features/pickup/presentation/pickup_order_providers.dart';
 import 'package:cafe_app/features/pickup/presentation/pickup_cart_screen.dart';
 import 'package:cafe_app/features/pickup/presentation/pickup_order_tracking_screen.dart';
+import 'package:cafe_app/features/home/domain/banner_models.dart';
 import 'package:cafe_app/features/store/data/local_stores_repository.dart';
+import 'package:cafe_app/features/store/domain/store_models.dart';
 import 'package:cafe_app/features/store/presentation/store_list_screen.dart';
 import 'package:cafe_app/features/subscription/presentation/subscription_list_screen.dart';
 import 'package:cafe_app/features/wholesale/presentation/business_home_screen.dart';
@@ -628,7 +632,7 @@ void main() {
     await expectGolden(find.byType(AdminOrdersScreen), 'refund_failures');
   });
 
-  testWidgets('상품 관리 화면 스크린샷', (WidgetTester tester) async {
+  testWidgets('카탈로그 관리 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(
       tester,
@@ -663,6 +667,67 @@ void main() {
     );
 
     await expectGolden(find.byType(CatalogAdminScreen), 'catalog_admin_screen');
+  });
+
+  testWidgets('카탈로그 관리 배너 탭 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const CatalogAdminScreen(), user: _previewUser);
+    await tester.tap(find.widgetWithText(Tab, '배너'));
+    await tester.pumpAndSettle();
+
+    await expectGolden(find.byType(CatalogAdminScreen), 'catalog_admin_banners');
+  });
+
+  testWidgets('카탈로그 관리 매장 탭 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const CatalogAdminScreen(), user: _previewUser);
+    await tester.tap(find.widgetWithText(Tab, '매장'));
+    await tester.pumpAndSettle();
+
+    await expectGolden(find.byType(CatalogAdminScreen), 'catalog_admin_stores');
+  });
+
+  testWidgets('배너 수정 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const BannerEditScreen(
+        banner: EventBanner(
+          id: 'summer-new-menu',
+          title: '여름 시즌 신메뉴 출시',
+          subtitle: '시원한 콜드브루와 함께 여름을 즐겨보세요',
+          icon: 'snowflake',
+          sortOrder: 1,
+        ),
+      ),
+      user: _previewUser,
+    );
+
+    await expectGolden(find.byType(BannerEditScreen), 'banner_edit_screen');
+  });
+
+  testWidgets('매장 수정 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const StoreEditScreen(
+        store: CafeStore(
+          id: 'pangyo',
+          name: '폭스트롯 판교테크노밸리점',
+          address: '경기 성남시 분당구 판교역로 230 삼환하이펙스 B동 1층 114호',
+          phone: '0502-5553-5036',
+          latitude: 37.401221,
+          longitude: 127.110935,
+          weekdayHours: '08:00 - 18:30',
+          weekendHours: '10:00 - 19:00',
+          services: ['무료주차 2시간', '반려견 동반', '테라스'],
+          sortOrder: 2,
+        ),
+      ),
+      user: _previewUser,
+    );
+
+    await expectGolden(find.byType(StoreEditScreen), 'store_edit_screen');
   });
 
   testWidgets('메뉴 수정 화면 스크린샷', (WidgetTester tester) async {
