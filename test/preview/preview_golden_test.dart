@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:cafe_app/core/services/connectivity_providers.dart';
 import 'package:cafe_app/core/theme/app_theme.dart';
+import 'package:cafe_app/core/theme/theme_mode_providers.dart';
 import 'package:cafe_app/core/utils/text_utils.dart';
 import 'package:cafe_app/core/widgets/app_shell.dart';
 import 'package:cafe_app/core/widgets/offline_banner.dart';
@@ -73,6 +74,7 @@ import 'package:cafe_app/features/wholesale/presentation/wholesale_quote_screen.
 import 'package:cafe_app/features/points/presentation/admin_points_scan_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_charge_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
+import 'package:cafe_app/features/profile/presentation/appearance_settings_screen.dart';
 import 'package:cafe_app/features/profile/presentation/delivery_address_screen.dart';
 import 'package:cafe_app/features/profile/presentation/notification_settings_screen.dart';
 import 'package:cafe_app/features/profile/presentation/payment_methods_screen.dart';
@@ -515,6 +517,7 @@ void main() {
     Widget screen, {
     List<Override> overrides = const [],
     AppUser? user,
+    Brightness brightness = Brightness.dark,
   }) async {
     await tester.pumpWidget(
       ProviderScope(
@@ -526,7 +529,7 @@ void main() {
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: buildAppTheme(),
+          theme: buildAppTheme(brightness: brightness),
           home: screen,
         ),
       ),
@@ -540,6 +543,7 @@ void main() {
     AppUser? user,
     bool isOnline = true,
     List<Override> overrides = const [],
+    Brightness brightness = Brightness.dark,
   }) async {
     await tester.pumpWidget(
       ProviderScope(
@@ -555,7 +559,7 @@ void main() {
           builder: (context, ref, _) {
             final router = ref.watch(routerProvider);
             return MaterialApp.router(
-              theme: buildAppTheme(),
+              theme: buildAppTheme(brightness: brightness),
               routerConfig: router,
               builder: (context, child) =>
                   OfflineBanner(child: child ?? const SizedBox.shrink()),
@@ -1220,6 +1224,71 @@ void main() {
     await pumpScreen(tester, const ProfileScreen());
 
     await expectGolden(find.byType(ProfileScreen), 'profile_screen');
+  });
+
+  testWidgets('화면 테마 설정 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const AppearanceSettingsScreen(),
+      user: _previewUser,
+    );
+
+    await expectGolden(
+      find.byType(AppearanceSettingsScreen),
+      'appearance_settings_screen',
+    );
+  });
+
+  testWidgets('화면 테마 설정 화면(라이트) 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const AppearanceSettingsScreen(),
+      user: _previewUser,
+      brightness: Brightness.light,
+      overrides: [
+        storedThemeModeProvider.overrideWithValue(ThemeMode.light),
+      ],
+    );
+
+    await expectGolden(
+      find.byType(AppearanceSettingsScreen),
+      'appearance_settings_screen_light',
+    );
+  });
+
+  testWidgets('홈 화면(라이트) 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpApp(
+      tester,
+      user: _previewUser,
+      brightness: Brightness.light,
+    );
+
+    await expectGolden(find.byType(AppShell), 'home_screen_light');
+  });
+
+  testWidgets('메뉴 화면(라이트) 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const MenuScreen(),
+      brightness: Brightness.light,
+    );
+
+    await expectGolden(find.byType(MenuScreen), 'menu_screen_light');
+  });
+
+  testWidgets('포인트 화면(라이트) 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const PointsScreen(),
+      brightness: Brightness.light,
+    );
+
+    await expectGolden(find.byType(PointsScreen), 'points_screen_light');
   });
 
   testWidgets('알림 설정 화면 스크린샷', (WidgetTester tester) async {
