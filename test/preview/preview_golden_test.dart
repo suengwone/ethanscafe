@@ -31,6 +31,7 @@ import 'package:cafe_app/features/catalog/presentation/banner_edit_screen.dart';
 import 'package:cafe_app/features/catalog/presentation/bean_edit_screen.dart';
 import 'package:cafe_app/features/catalog/presentation/catalog_admin_screen.dart';
 import 'package:cafe_app/features/catalog/presentation/menu_edit_screen.dart';
+import 'package:cafe_app/features/catalog/presentation/notice_edit_screen.dart';
 import 'package:cafe_app/features/catalog/presentation/store_edit_screen.dart';
 import 'package:cafe_app/features/coupon/presentation/coupon_list_screen.dart';
 import 'package:cafe_app/features/coupon/presentation/coupons_providers.dart';
@@ -42,6 +43,7 @@ import 'package:cafe_app/features/menu/presentation/favorite_menu_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_detail_screen.dart';
 import 'package:cafe_app/features/menu/presentation/menu_providers.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
+import 'package:cafe_app/features/notice/domain/notice_models.dart';
 import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
 import 'package:cafe_app/features/order/domain/order_models.dart';
 import 'package:cafe_app/features/order/domain/admin_order_models.dart';
@@ -181,10 +183,7 @@ void main() {
       buildSignature: '',
     );
     SharedPreferences.setMockInitialValues({
-      'favorite_menu_ids': [
-        'espresso-vanilla-latte',
-        'beverage-matcha-latte',
-      ],
+      'favorite_menu_ids': ['espresso-vanilla-latte', 'beverage-matcha-latte'],
       'points_data': jsonEncode({
         'membershipId': 'MEMBER-12345678',
         'balance': 32250,
@@ -505,7 +504,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          authRepositoryProvider.overrideWithValue(FakeAuthRepository(user: user)),
+          authRepositoryProvider.overrideWithValue(
+            FakeAuthRepository(user: user),
+          ),
           ...overrides,
         ],
         child: MaterialApp(
@@ -573,26 +574,28 @@ void main() {
       const AdminOrdersScreen(),
       user: _previewUser,
       overrides: [
-        activePickupOrdersProvider.overrideWith((ref) async => [
-              ActivePickupOrder(
-                uid: 'u1',
-                orderId: 'p1',
-                summary: '바닐라 라떼',
-                status: PickupOrderStatus.received,
-                pickupNumber: 12,
-                storeName: '폭스트롯 마천점',
-                createdAt: DateTime(2026, 8, 18, 9, 41),
-              ),
-              ActivePickupOrder(
-                uid: 'u2',
-                orderId: 'p2',
-                summary: '플레인 베이글 외 1건',
-                status: PickupOrderStatus.preparing,
-                pickupNumber: 13,
-                storeName: '폭스트롯 마천점',
-                createdAt: DateTime(2026, 8, 18, 9, 52),
-              ),
-            ]),
+        activePickupOrdersProvider.overrideWith(
+          (ref) async => [
+            ActivePickupOrder(
+              uid: 'u1',
+              orderId: 'p1',
+              summary: '바닐라 라떼',
+              status: PickupOrderStatus.received,
+              pickupNumber: 12,
+              storeName: '폭스트롯 마천점',
+              createdAt: DateTime(2026, 8, 18, 9, 41),
+            ),
+            ActivePickupOrder(
+              uid: 'u2',
+              orderId: 'p2',
+              summary: '플레인 베이글 외 1건',
+              status: PickupOrderStatus.preparing,
+              pickupNumber: 13,
+              storeName: '폭스트롯 마천점',
+              createdAt: DateTime(2026, 8, 18, 9, 52),
+            ),
+          ],
+        ),
       ],
     );
 
@@ -606,24 +609,26 @@ void main() {
       const AdminOrdersScreen(),
       user: _previewUser,
       overrides: [
-        refundFailuresProvider.overrideWith((ref) async => [
-              RefundFailure(
-                orderType: 'pickup',
-                uid: 'u1',
-                orderId: 'p1',
-                summary: '바닐라 라떼 외 1건',
-                amount: 11600,
-                failedAt: DateTime(2026, 8, 18, 9, 41),
-              ),
-              RefundFailure(
-                orderType: 'bean',
-                uid: 'u2',
-                orderId: 'b1',
-                summary: '에티오피아 예가체프',
-                amount: 30000,
-                failedAt: DateTime(2026, 8, 18, 10, 12),
-              ),
-            ]),
+        refundFailuresProvider.overrideWith(
+          (ref) async => [
+            RefundFailure(
+              orderType: 'pickup',
+              uid: 'u1',
+              orderId: 'p1',
+              summary: '바닐라 라떼 외 1건',
+              amount: 11600,
+              failedAt: DateTime(2026, 8, 18, 9, 41),
+            ),
+            RefundFailure(
+              orderType: 'bean',
+              uid: 'u2',
+              orderId: 'b1',
+              summary: '에티오피아 예가체프',
+              amount: 30000,
+              failedAt: DateTime(2026, 8, 18, 10, 12),
+            ),
+          ],
+        ),
       ],
     );
     await tester.tap(find.text('환불 실패'));
@@ -639,30 +644,32 @@ void main() {
       const CatalogAdminScreen(),
       user: _previewUser,
       overrides: [
-        menuItemsProvider.overrideWith((ref) async => const [
-              MenuItem(
-                id: 'm1',
-                name: '바닐라 라떼',
-                description: '',
-                category: MenuCategory.espresso,
-                price: 5800,
-              ),
-              MenuItem(
-                id: 'm2',
-                name: '플레인 베이글',
-                description: '',
-                category: MenuCategory.dessert,
-                price: 3800,
-                soldOut: true,
-              ),
-              MenuItem(
-                id: 'm3',
-                name: '아메리카노',
-                description: '',
-                category: MenuCategory.espresso,
-                price: 4500,
-              ),
-            ]),
+        menuItemsProvider.overrideWith(
+          (ref) async => const [
+            MenuItem(
+              id: 'm1',
+              name: '바닐라 라떼',
+              description: '',
+              category: MenuCategory.espresso,
+              price: 5800,
+            ),
+            MenuItem(
+              id: 'm2',
+              name: '플레인 베이글',
+              description: '',
+              category: MenuCategory.dessert,
+              price: 3800,
+              soldOut: true,
+            ),
+            MenuItem(
+              id: 'm3',
+              name: '아메리카노',
+              description: '',
+              category: MenuCategory.espresso,
+              price: 4500,
+            ),
+          ],
+        ),
       ],
     );
 
@@ -675,7 +682,10 @@ void main() {
     await tester.tap(find.widgetWithText(Tab, '배너'));
     await tester.pumpAndSettle();
 
-    await expectGolden(find.byType(CatalogAdminScreen), 'catalog_admin_banners');
+    await expectGolden(
+      find.byType(CatalogAdminScreen),
+      'catalog_admin_banners',
+    );
   });
 
   testWidgets('카탈로그 관리 매장 탭 스크린샷', (WidgetTester tester) async {
@@ -685,6 +695,40 @@ void main() {
     await tester.pumpAndSettle();
 
     await expectGolden(find.byType(CatalogAdminScreen), 'catalog_admin_stores');
+  });
+
+  testWidgets('카탈로그 관리 공지 탭 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const CatalogAdminScreen(), user: _previewUser);
+    await tester.tap(find.widgetWithText(Tab, '공지'));
+    await tester.pumpAndSettle();
+
+    await expectGolden(
+      find.byType(CatalogAdminScreen),
+      'catalog_admin_notices',
+    );
+  });
+
+  testWidgets('공지 수정 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      NoticeEditScreen(
+        notice: Notice(
+          id: 'notice-august-hours',
+          title: '8월 영업시간 안내',
+          body:
+              '8월 한 달간 매일 오전 8시부터 오후 10시까지 운영합니다. '
+              '광복절(8/15)은 정상 영업하며, 라스트 오더는 마감 30분 전입니다.',
+          category: NoticeCategory.notice,
+          createdAt: DateTime(2026, 8, 1, 10),
+          isImportant: true,
+        ),
+      ),
+      user: _previewUser,
+    );
+
+    await expectGolden(find.byType(NoticeEditScreen), 'notice_edit_screen');
   });
 
   testWidgets('배너 수정 화면 스크린샷', (WidgetTester tester) async {
@@ -826,10 +870,7 @@ void main() {
     await configureView(tester);
     await pumpScreen(tester, const PointsChargeScreen(), user: _previewUser);
 
-    await expectGolden(
-      find.byType(PointsChargeScreen),
-      'points_charge_screen',
-    );
+    await expectGolden(find.byType(PointsChargeScreen), 'points_charge_screen');
   });
 
   testWidgets('메뉴 화면 스크린샷', (WidgetTester tester) async {
@@ -986,10 +1027,7 @@ void main() {
     container.read(beanPickupStoreProvider.notifier).select(stores.first);
     await tester.pumpAndSettle();
 
-    await expectGolden(
-      find.byType(BeanCartScreen),
-      'bean_cart_screen_pickup',
-    );
+    await expectGolden(find.byType(BeanCartScreen), 'bean_cart_screen_pickup');
   });
 
   testWidgets('원두 장바구니 쿠폰 선택 바텀시트 스크린샷', (WidgetTester tester) async {
@@ -1155,27 +1193,28 @@ void main() {
       const PickupOrderTrackingScreen(orderId: 'pickup-refund'),
       user: _previewUser,
       overrides: [
-        pickupOrderTrackingProvider('pickup-refund')
-            .overrideWith((ref) => Stream.value(
-              PickupOrder(
-                id: 'pickup-refund',
-                storeId: 's1',
-                storeName: '폭스트롯 마천점',
-                pickupNumber: 12,
-                items: const [
-                  PickupOrderItem(
-                    menuId: 'm1',
-                    menuName: '바닐라 라떼',
-                    quantity: 2,
-                    unitPrice: 5800,
-                  ),
-                ],
-                totalAmount: 11600,
-                status: PickupOrderStatus.cancelled,
-                refundStatus: RefundStatus.failed,
-                createdAt: DateTime(2026, 8, 18, 9, 41),
-              ),
-            )),
+        pickupOrderTrackingProvider('pickup-refund').overrideWith(
+          (ref) => Stream.value(
+            PickupOrder(
+              id: 'pickup-refund',
+              storeId: 's1',
+              storeName: '폭스트롯 마천점',
+              pickupNumber: 12,
+              items: const [
+                PickupOrderItem(
+                  menuId: 'm1',
+                  menuName: '바닐라 라떼',
+                  quantity: 2,
+                  unitPrice: 5800,
+                ),
+              ],
+              totalAmount: 11600,
+              status: PickupOrderStatus.cancelled,
+              refundStatus: RefundStatus.failed,
+              createdAt: DateTime(2026, 8, 18, 9, 41),
+            ),
+          ),
+        ),
       ],
     );
 
@@ -1248,7 +1287,10 @@ void main() {
     await configureView(tester);
     await pumpScreen(tester, const PaymentMethodsScreen());
 
-    await expectGolden(find.byType(PaymentMethodsScreen), 'payment_methods_screen');
+    await expectGolden(
+      find.byType(PaymentMethodsScreen),
+      'payment_methods_screen',
+    );
   });
 
   testWidgets('결제 수단 삭제 확인 다이얼로그 스크린샷', (WidgetTester tester) async {
@@ -1260,7 +1302,10 @@ void main() {
     await tester.tap(find.text('삭제').last);
     await tester.pumpAndSettle();
 
-    await expectGolden(find.byType(MaterialApp), 'payment_method_delete_dialog');
+    await expectGolden(
+      find.byType(MaterialApp),
+      'payment_method_delete_dialog',
+    );
   });
 
   testWidgets('배송지 관리 화면 스크린샷', (WidgetTester tester) async {
@@ -1304,10 +1349,7 @@ void main() {
             FakeAuthRepository(user: _previewUser),
           ),
         ],
-        child: MaterialApp(
-          theme: buildAppTheme(),
-          home: const ProfileScreen(),
-        ),
+        child: MaterialApp(theme: buildAppTheme(), home: const ProfileScreen()),
       ),
     );
     await tester.pumpAndSettle();
@@ -1376,9 +1418,7 @@ void main() {
       overrides: [
         accountRepositoryProvider.overrideWithValue(
           FakeAccountRepository(
-            profile: AccountProfile(
-              business: _previewBusinessProfile.business,
-            ),
+            profile: AccountProfile(business: _previewBusinessProfile.business),
           ),
         ),
       ],
