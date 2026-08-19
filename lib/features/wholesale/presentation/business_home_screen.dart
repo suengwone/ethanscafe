@@ -334,7 +334,7 @@ class _WholesaleBeanCard extends StatelessWidget {
                     child: Text(
                       'BEST',
                       style: TextStyle(
-                        color: context.palette.background,
+                        color: context.palette.onAccent,
                         fontSize: 11,
                         fontWeight: FontWeight.w800,
                       ),

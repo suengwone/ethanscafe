@@ -416,7 +416,7 @@ class BeanCartButton extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
-                    color: context.palette.background,
+                    color: context.palette.onAccent,
                   ),
                 ),
               ),

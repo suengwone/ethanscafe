@@ -42,12 +42,12 @@ class _OfflineBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(LucideIcons.wifiOff, size: 16, color: context.palette.background),
+            Icon(LucideIcons.wifiOff, size: 16, color: context.palette.onAccent),
             const SizedBox(width: 8),
             Text(
               '인터넷에 연결되어 있지 않습니다',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: context.palette.background,
+                color: context.palette.onAccent,
                 fontWeight: FontWeight.w600,
               ),
             ),

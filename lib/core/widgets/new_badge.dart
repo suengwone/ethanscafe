@@ -16,7 +16,7 @@ class NewBadge extends StatelessWidget {
       child: Text(
         'NEW',
         style: TextStyle(
-          color: context.palette.background,
+          color: context.palette.onAccent,
           fontSize: 10,
           fontWeight: FontWeight.bold,
         ),
@@ -39,7 +39,7 @@ class BestBadge extends StatelessWidget {
       child: Text(
         'BEST',
         style: TextStyle(
-          color: context.palette.background,
+          color: context.palette.onAccent,
           fontSize: 10,
           fontWeight: FontWeight.bold,
         ),
@@ -86,7 +86,7 @@ class SoldOutBadge extends StatelessWidget {
       child: Text(
         '품절',
         style: TextStyle(
-          color: context.palette.background,
+          color: context.palette.onAccent,
           fontSize: 10,
           fontWeight: FontWeight.bold,
         ),

@@ -114,14 +114,14 @@ class _CartSummaryBar extends ConsumerWidget {
               Icon(
                 LucideIcons.shoppingBag,
                 size: 18,
-                color: context.palette.background,
+                color: context.palette.onAccent,
               ),
               const SizedBox(width: 8),
               Text(
                 '장바구니 · $count개',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
-                  color: context.palette.background,
+                  color: context.palette.onAccent,
                 ),
               ),
               const Spacer(),
@@ -129,14 +129,14 @@ class _CartSummaryBar extends ConsumerWidget {
                 '${_priceFormat.format(total)}원',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
-                  color: context.palette.background,
+                  color: context.palette.onAccent,
                 ),
               ),
               const SizedBox(width: 4),
               Icon(
                 LucideIcons.chevronRight,
                 size: 16,
-                color: context.palette.background,
+                color: context.palette.onAccent,
               ),
             ],
           ),

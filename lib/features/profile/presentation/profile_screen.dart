@@ -125,7 +125,7 @@ class ProfileScreen extends ConsumerWidget {
                         child: Text(
                           '$usableCouponCount',
                           style: TextStyle(
-                            color: context.palette.background,
+                            color: context.palette.onAccent,
                             fontSize: 12,
                           ),
                         ),
@@ -150,7 +150,7 @@ class ProfileScreen extends ConsumerWidget {
                         child: Text(
                           '$subscriptionCount',
                           style: TextStyle(
-                            color: context.palette.background,
+                            color: context.palette.onAccent,
                             fontSize: 12,
                           ),
                         ),

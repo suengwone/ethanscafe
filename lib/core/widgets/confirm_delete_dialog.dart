@@ -25,7 +25,7 @@ Future<bool> confirmDelete(
           onPressed: () => Navigator.of(context).pop(true),
           style: FilledButton.styleFrom(
             backgroundColor: context.palette.danger,
-            foregroundColor: context.palette.background,
+            foregroundColor: context.palette.onAccent,
           ),
           child: Text(confirmLabel),
         ),

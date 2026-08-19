@@ -164,7 +164,7 @@ class _ImportantBadge extends StatelessWidget {
         '중요',
         style: TextStyle(
           fontSize: 11,
-          color: context.palette.background,
+          color: context.palette.onAccent,
           fontWeight: FontWeight.bold,
         ),
       ),
