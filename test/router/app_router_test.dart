@@ -27,6 +27,7 @@ import 'package:cafe_app/features/profile/presentation/delivery_address_screen.d
 import 'package:cafe_app/features/profile/presentation/payment_methods_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
 import 'package:cafe_app/features/profile/presentation/support_screen.dart';
+import 'package:cafe_app/features/referral/presentation/referral_screen.dart';
 import 'package:cafe_app/router/app_router.dart';
 
 import '../features/auth/fake_auth_repository.dart';
@@ -282,6 +283,34 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(OrderHistoryScreen), findsOneWidget);
+    expect(find.byType(LoginScreen), findsNothing);
+  });
+
+  testWidgets('비로그인 시 친구 초대는 로그인으로 리다이렉트된다', (tester) async {
+    final router = await pumpApp(tester);
+
+    router.go('/profile/referral');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LoginScreen), findsOneWidget);
+    expect(find.byType(ReferralScreen), findsNothing);
+  });
+
+  testWidgets('로그인 시 친구 초대 화면에 접근할 수 있다', (tester) async {
+    final router = await pumpApp(
+      tester,
+      user: const AppUser(
+        uid: 'test-uid',
+        displayName: '테스트 사용자',
+        email: 'test@example.com',
+        providerId: 'google',
+      ),
+    );
+
+    router.go('/profile/referral');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ReferralScreen), findsOneWidget);
     expect(find.byType(LoginScreen), findsNothing);
   });
 
