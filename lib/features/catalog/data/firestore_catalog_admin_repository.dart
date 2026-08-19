@@ -6,13 +6,15 @@ import '../../home/data/firestore_banners_repository.dart';
 import '../../home/domain/banner_models.dart';
 import '../../menu/data/firestore_menu_repository.dart';
 import '../../menu/domain/menu_models.dart';
+import '../../notice/data/firestore_notices_repository.dart';
+import '../../notice/domain/notice_models.dart';
 import '../../store/data/firestore_stores_repository.dart';
 import '../../store/domain/store_models.dart';
 import '../domain/catalog_admin_repository.dart';
 
 class FirestoreCatalogAdminRepository implements CatalogAdminRepository {
   FirestoreCatalogAdminRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
 
@@ -73,22 +75,26 @@ class FirestoreCatalogAdminRepository implements CatalogAdminRepository {
   }
 
   @override
-  Future<void> setMenuSoldOut({
-    required String menuId,
-    required bool soldOut,
-  }) {
-    return _setSoldOut(
-      FirestoreMenuRepository.collectionPath,
-      menuId,
-      soldOut,
+  Future<void> saveNotice(Notice notice) {
+    return _save(
+      FirestoreNoticesRepository.collectionPath,
+      notice.id,
+      noticeToFirestore(notice),
     );
   }
 
   @override
-  Future<void> setBeanSoldOut({
-    required String beanId,
-    required bool soldOut,
-  }) {
+  Future<void> deleteNotice(String noticeId) {
+    return _delete(FirestoreNoticesRepository.collectionPath, noticeId);
+  }
+
+  @override
+  Future<void> setMenuSoldOut({required String menuId, required bool soldOut}) {
+    return _setSoldOut(FirestoreMenuRepository.collectionPath, menuId, soldOut);
+  }
+
+  @override
+  Future<void> setBeanSoldOut({required String beanId, required bool soldOut}) {
     return _setSoldOut(
       FirestoreBeansRepository.collectionPath,
       beanId,
@@ -109,9 +115,8 @@ class FirestoreCatalogAdminRepository implements CatalogAdminRepository {
   }
 
   Future<void> _setSoldOut(String collection, String id, bool soldOut) {
-    return _firestore
-        .collection(collection)
-        .doc(id)
-        .set({'soldOut': soldOut}, SetOptions(merge: true));
+    return _firestore.collection(collection).doc(id).set({
+      'soldOut': soldOut,
+    }, SetOptions(merge: true));
   }
 }

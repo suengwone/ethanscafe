@@ -7,13 +7,14 @@ import '../../home/domain/banner_models.dart';
 import '../../home/presentation/home_providers.dart';
 import '../../menu/domain/menu_models.dart';
 import '../../menu/presentation/menu_providers.dart';
+import '../../notice/domain/notice_models.dart';
+import '../../notice/presentation/notices_providers.dart';
 import '../../store/domain/store_models.dart';
 import '../../store/presentation/stores_providers.dart';
 import '../data/firestore_catalog_admin_repository.dart';
 import '../domain/catalog_admin_repository.dart';
 
-final catalogAdminRepositoryProvider =
-    Provider<CatalogAdminRepository?>((ref) {
+final catalogAdminRepositoryProvider = Provider<CatalogAdminRepository?>((ref) {
   try {
     if (Firebase.apps.isNotEmpty) {
       return FirestoreCatalogAdminRepository();
@@ -68,6 +69,16 @@ class CatalogAdminController {
     _ref.invalidate(storesProvider);
   }
 
+  Future<void> saveNotice(Notice notice) async {
+    await _repository.saveNotice(notice);
+    _ref.invalidate(noticesProvider);
+  }
+
+  Future<void> deleteNotice(String noticeId) async {
+    await _repository.deleteNotice(noticeId);
+    _ref.invalidate(noticesProvider);
+  }
+
   Future<void> setMenuSoldOut(String menuId, bool soldOut) async {
     await _repository.setMenuSoldOut(menuId: menuId, soldOut: soldOut);
     _ref.invalidate(menuItemsProvider);
@@ -87,7 +98,6 @@ class CatalogAdminController {
   }
 }
 
-final catalogAdminControllerProvider =
-    Provider<CatalogAdminController>((ref) {
+final catalogAdminControllerProvider = Provider<CatalogAdminController>((ref) {
   return CatalogAdminController(ref);
 });

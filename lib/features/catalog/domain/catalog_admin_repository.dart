@@ -1,6 +1,7 @@
 import '../../beans/domain/bean_models.dart';
 import '../../home/domain/banner_models.dart';
 import '../../menu/domain/menu_models.dart';
+import '../../notice/domain/notice_models.dart';
 import '../../store/domain/store_models.dart';
 
 /// 매장이 상품을 등록·수정하고 판매 상태를 바꾸는 통로.
@@ -31,6 +32,12 @@ abstract class CatalogAdminRepository {
 
   /// 매장을 매장 찾기에서 내린다.
   Future<void> deleteStore(String storeId);
+
+  /// 공지를 새로 만들거나 고친다. `id`가 비어 있으면 새 문서를 만든다.
+  Future<void> saveNotice(Notice notice);
+
+  /// 공지를 알림 목록에서 내린다.
+  Future<void> deleteNotice(String noticeId);
 
   Future<void> setMenuSoldOut({required String menuId, required bool soldOut});
 

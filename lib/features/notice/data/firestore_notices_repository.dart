@@ -6,7 +6,7 @@ import '../domain/notices_repository.dart';
 
 class FirestoreNoticesRepository implements NoticesRepository {
   FirestoreNoticesRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
 
@@ -29,9 +29,20 @@ Notice noticeFromFirestore(String id, Map<String, dynamic> data) {
     id: id,
     title: data['title'] as String? ?? '',
     body: data['body'] as String? ?? '',
-    category: NoticeCategory.values.asNameMap()[data['category']] ??
+    category:
+        NoticeCategory.values.asNameMap()[data['category']] ??
         NoticeCategory.notice,
     createdAt: firestoreDateTime(data['createdAt']),
     isImportant: data['isImportant'] as bool? ?? false,
   );
+}
+
+Map<String, dynamic> noticeToFirestore(Notice notice) {
+  return {
+    'title': notice.title,
+    'body': notice.body,
+    'category': notice.category.name,
+    'createdAt': Timestamp.fromDate(notice.createdAt),
+    'isImportant': notice.isImportant,
+  };
 }
