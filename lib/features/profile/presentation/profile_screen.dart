@@ -5,6 +5,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/theme/theme_mode_providers.dart';
 import '../../auth/domain/auth_models.dart';
 import '../../auth/presentation/account_providers.dart';
 import '../../auth/presentation/auth_providers.dart';
@@ -183,6 +184,15 @@ class ProfileScreen extends ConsumerWidget {
                 icon: LucideIcons.bell,
                 title: '알림 설정',
                 onTap: () => context.push('/profile/notifications'),
+              ),
+              _buildListTile(
+                icon: LucideIcons.sunMoon,
+                title: '화면 테마',
+                trailing: Text(
+                  ref.watch(themeModeProvider).label,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                onTap: () => context.push('/profile/appearance'),
               ),
               _buildListTile(
                 icon: LucideIcons.cake,

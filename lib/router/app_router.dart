@@ -22,6 +22,7 @@ import '../features/order/presentation/admin_orders_screen.dart';
 import '../features/points/presentation/admin_points_scan_screen.dart';
 import '../features/points/presentation/points_charge_screen.dart';
 import '../features/points/presentation/points_screen.dart';
+import '../features/profile/presentation/appearance_settings_screen.dart';
 import '../features/profile/presentation/delivery_address_screen.dart';
 import '../features/profile/presentation/notification_settings_screen.dart';
 import '../features/profile/presentation/payment_methods_screen.dart';
@@ -191,6 +192,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                     path: 'notifications',
                     builder: (context, state) =>
                         const NotificationSettingsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'appearance',
+                    builder: (context, state) =>
+                        const AppearanceSettingsScreen(),
                   ),
                   GoRoute(
                     path: 'coupons',
