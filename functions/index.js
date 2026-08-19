@@ -43,6 +43,20 @@ const {
   verifyPaymentForOrder,
 } = require('./toss_payment');
 const {
+  REFERRAL_REWARD_POINTS,
+  REFERRAL_INVITER_DESCRIPTION,
+  REFERRAL_INVITEE_DESCRIPTION,
+  newReferralCode,
+  normalizeReferral,
+  validateRedeemRequest,
+  assertRedeemable,
+  referralRewardEntry,
+  invitedReferral,
+  redeemedReferral,
+  referralSummaryPayload,
+  redeemResultPayload,
+} = require('./referral');
+const {
   validatePlaceOrderRequest,
   validateUsePointsRequest,
   validateEarnByMembershipRequest,
@@ -255,6 +269,157 @@ exports.chargePoints = onCall(
     });
   },
 );
+
+const REFERRALS_COLLECTION = 'referrals';
+const REFERRAL_CODES_COLLECTION = 'referral_codes';
+
+/** 초대 문서를 읽고, 없으면 겹치지 않는 코드를 발급해 만든다. */
+async function ensureReferral(firestore, uid) {
+  const referralRef = firestore.collection(REFERRALS_COLLECTION).doc(uid);
+  const snapshot = await referralRef.get();
+  if (snapshot.exists && snapshot.data().code) {
+    return normalizeReferral(snapshot.data());
+  }
+
+  // 코드는 6자리 난수라 드물게 겹칠 수 있다. 매핑 문서를 트랜잭션으로 선점해 중복을 막는다.
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const code = newReferralCode();
+    const codeRef = firestore.collection(REFERRAL_CODES_COLLECTION).doc(code);
+    const issued = await firestore.runTransaction(async (transaction) => {
+      const codeSnapshot = await transaction.get(codeRef);
+      if (codeSnapshot.exists) {
+        return null;
+      }
+      const referralSnapshot = await transaction.get(referralRef);
+      const existing = normalizeReferral(referralSnapshot.data());
+      if (existing.code) {
+        return existing;
+      }
+      const referral = {...existing, code};
+      transaction.set(codeRef, {uid, createdAt: Timestamp.now()});
+      transaction.set(
+        referralRef,
+        {...referral, createdAt: Timestamp.now()},
+        {merge: true},
+      );
+      return referral;
+    });
+    if (issued) {
+      return issued;
+    }
+  }
+  throw new HttpsError(
+    'internal',
+    '초대 코드를 발급하지 못했습니다. 잠시 후 다시 시도해주세요.',
+  );
+}
+
+exports.issueReferralCode = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', '로그인이 필요합니다.');
+  }
+
+  const referral = await ensureReferral(getFirestore(), request.auth.uid);
+  return referralSummaryPayload(referral);
+});
+
+exports.redeemReferralCode = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError('unauthenticated', '로그인이 필요합니다.');
+  }
+
+  let code;
+  try {
+    ({code} = validateRedeemRequest(request.data));
+  } catch (error) {
+    throw new HttpsError('invalid-argument', error.message);
+  }
+
+  const firestore = getFirestore();
+  const inviteeUid = request.auth.uid;
+  // 초대받은 쪽도 자기 코드가 있어야 결과 요약을 돌려줄 수 있다.
+  await ensureReferral(firestore, inviteeUid);
+
+  const codeSnapshot = await firestore
+      .collection(REFERRAL_CODES_COLLECTION)
+      .doc(code)
+      .get();
+  const inviterUid = codeSnapshot.exists ? codeSnapshot.data().uid : null;
+  if (!inviterUid || inviterUid === inviteeUid) {
+    try {
+      assertRedeemable({inviterUid, inviteeUid, inviter: null, invitee: null});
+    } catch (error) {
+      throw new HttpsError('failed-precondition', error.message);
+    }
+  }
+
+  const inviterRef = firestore.collection(REFERRALS_COLLECTION).doc(inviterUid);
+  const inviteeRef = firestore.collection(REFERRALS_COLLECTION).doc(inviteeUid);
+  const inviterPointsRef = firestore.collection('points').doc(inviterUid);
+  const inviteePointsRef = firestore.collection('points').doc(inviteeUid);
+
+  return firestore.runTransaction(async (transaction) => {
+    const [inviterSnapshot, inviteeSnapshot, inviterPointsSnapshot,
+      inviteePointsSnapshot] = await transaction.getAll(
+        inviterRef, inviteeRef, inviterPointsRef, inviteePointsRef);
+
+    try {
+      assertRedeemable({
+        inviterUid,
+        inviteeUid,
+        inviter: inviterSnapshot.data(),
+        invitee: inviteeSnapshot.data(),
+      });
+    } catch (error) {
+      throw new HttpsError('failed-precondition', error.message);
+    }
+
+    const createdAt = Timestamp.now();
+    const inviterPoints = normalizePointsData(
+        inviterPointsSnapshot.data(), newMembershipId);
+    const inviteePoints = normalizePointsData(
+        inviteePointsSnapshot.data(), newMembershipId);
+    const inviterBalance = inviterPoints.balance + REFERRAL_REWARD_POINTS;
+    const inviteeBalance = inviteePoints.balance + REFERRAL_REWARD_POINTS;
+
+    transaction.set(inviterPointsRef, {
+      ...inviterPoints,
+      balance: inviterBalance,
+      history: [
+        referralRewardEntry({
+          id: newOrderEntryId(),
+          description: REFERRAL_INVITER_DESCRIPTION,
+          createdAt,
+        }),
+        ...inviterPoints.history,
+      ],
+    });
+    transaction.set(inviteePointsRef, {
+      ...inviteePoints,
+      balance: inviteeBalance,
+      history: [
+        referralRewardEntry({
+          id: newOrderEntryId(),
+          description: REFERRAL_INVITEE_DESCRIPTION,
+          createdAt,
+        }),
+        ...inviteePoints.history,
+      ],
+    });
+
+    const inviteeReferral = redeemedReferral(inviteeSnapshot.data(), code);
+    transaction.set(
+        inviterRef, invitedReferral(inviterSnapshot.data()), {merge: true});
+    transaction.set(
+        inviteeRef, {...inviteeReferral, redeemedAt: createdAt}, {merge: true});
+
+    return redeemResultPayload({
+      code,
+      balance: inviteeBalance,
+      summary: inviteeReferral,
+    });
+  });
+});
 
 const ORDER_COLLECTIONS = {bean: 'orders', pickup: 'pickup_orders'};
 const ORDER_DESCRIPTIONS = {

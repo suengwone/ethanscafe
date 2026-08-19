@@ -122,6 +122,18 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // 초대 코드와 초대 실적. 보상 지급이 걸려 있어 쓰기는 서버(콜러블)만 한다.
+    match /referrals/{userId} {
+      allow read: if isAdmin()
+        || (isSignedIn() && request.auth.uid == userId);
+      allow write: if false;
+    }
+
+    // 코드 → 회원 매핑. 남의 코드를 캐낼 수 있으므로 읽기도 막고 서버만 쓴다.
+    match /referral_codes/{code} {
+      allow read, write: if false;
+    }
+
     match /coupons/{couponId} {
       function isOwnAutoCouponId() {
         return couponId == 'welcome-' + request.auth.uid
