@@ -171,6 +171,15 @@ final _previewNow = DateTime(2026, 8, 19, 15); // 수요일 15시
 
 final _previewStoreOverrides = [
   storeClockProvider.overrideWithValue(() => _previewNow),
+  // 자동 집계 혼잡도도 잰 시각에 따라 달라지므로 함께 고정한다.
+  storeActivityProvider.overrideWith((ref) async => {
+        'macheon': StoreActivity(
+          storeId: 'macheon',
+          activeOrders: 8,
+          congestion: StoreCongestion.busy,
+          updatedAt: _previewNow.subtract(const Duration(minutes: 2)),
+        ),
+      }),
 ];
 
 const _previewUser = AppUser(
@@ -910,10 +919,7 @@ void main() {
             weekendHours: '10:00 - 19:00',
             services: const ['핸드드립 바', '카카오페이', '제로페이', '테라스'],
             notice: '8월 24일(월)은 매장 정기 소독으로 14시에 문을 닫습니다.',
-            congestion: StoreCongestion.busy,
-            congestionUpdatedAt: _previewNow.subtract(
-              const Duration(minutes: 20),
-            ),
+            // 직원이 올린 값을 비워 두어 자동 집계가 뜨는 모습을 담는다.
           ),
         ]),
       ],
