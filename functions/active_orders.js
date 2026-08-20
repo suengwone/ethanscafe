@@ -39,6 +39,8 @@ function activeOrderDoc({orderType, uid, order}) {
   if (orderType === 'pickup') {
     doc.pickupNumber =
       Number.isInteger(order.pickupNumber) ? order.pickupNumber : null;
+    // 매장별 혼잡도 집계가 이 색인을 매장 단위로 다시 센다.
+    doc.storeId = order.storeId || null;
     doc.storeName = order.storeName || null;
   } else {
     doc.fulfillmentMethod = order.fulfillmentMethod || 'delivery';

@@ -88,6 +88,12 @@ const {
   collectActiveOrderWrites,
 } = require('./active_orders');
 const {
+  COLLECTION: STORE_ACTIVITY_COLLECTION,
+  storeIdsToRecount,
+  liveOrderCount,
+  storeActivityDoc,
+} = require('./store_activity');
+const {
   COLLECTION: REFUND_FAILURES_COLLECTION,
   refundFailureId,
   refundFailureDoc,
@@ -1294,6 +1300,32 @@ async function syncActiveOrders({orderType, uid, beforeData, afterData}) {
   await batch.commit();
 }
 
+/**
+ * 매장별 혼잡도를 진행 중인 픽업 주문 수로 다시 잰다.
+ *
+ * 색인을 매장 단위로 통째로 세므로 트리거가 한 번 실패해 수치가 어긋나도
+ * 그 매장의 다음 주문에서 저절로 맞는다.
+ */
+async function syncStoreActivity({beforeData, afterData}) {
+  const storeIds = storeIdsToRecount({beforeData, afterData});
+  if (storeIds.length === 0) {
+    return;
+  }
+  const firestore = getFirestore();
+  await Promise.all(storeIds.map(async (storeId) => {
+    const snapshot = await firestore
+        .collection(ACTIVE_ORDERS_COLLECTION)
+        .where('orderType', '==', 'pickup')
+        .where('storeId', '==', storeId)
+        .get();
+    const count = liveOrderCount(snapshot.docs.map((doc) => doc.data()));
+    await firestore
+        .collection(STORE_ACTIVITY_COLLECTION)
+        .doc(storeId)
+        .set(storeActivityDoc({count, now: Timestamp.now()}));
+  }));
+}
+
 exports.sendBeanOrderStatusPush = onDocumentWritten(
   'orders/{uid}',
   async (event) => {
@@ -1323,6 +1355,8 @@ exports.sendPickupOrderStatusPush = onDocumentWritten(
       beforeData: before,
       afterData: after,
     });
+    // 색인을 갱신한 뒤에 세야 방금 들어온 주문이 혼잡도에 반영된다.
+    await syncStoreActivity({beforeData: before, afterData: after});
     await pushOrderStatusNotifications(
         event.params.uid,
         collectStatusChangeNotifications(

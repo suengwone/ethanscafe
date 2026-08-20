@@ -12,6 +12,7 @@ const pickupOrder = {
   id: 'p1',
   status: 'received',
   pickupNumber: 12,
+  storeId: 'macheon',
   storeName: '폭스트롯 마천점',
   totalAmount: 11600,
   createdAt: 'ts',
@@ -44,6 +45,7 @@ test('픽업 주문은 픽업 번호와 매장을 담는다', () => {
         totalAmount: 11600,
         createdAt: 'ts',
         pickupNumber: 12,
+        storeId: 'macheon',
         storeName: '폭스트롯 마천점',
       },
   );
