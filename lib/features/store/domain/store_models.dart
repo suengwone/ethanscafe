@@ -2,8 +2,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'store_models.freezed.dart';
 
-/// 매장이 직접 올리는 혼잡도. 앱이 자동으로 재는 값이 아니라
-/// 직원이 카탈로그 관리에서 눌러 바꾼다.
+/// 매장 혼잡도. 직원이 카탈로그 관리에서 눌러 올리거나,
+/// 없으면 진행 중인 픽업 주문 수로 서버가 자동으로 잰다.
 enum StoreCongestion {
   unknown('정보 없음'),
   relaxed('여유'),
@@ -101,4 +101,61 @@ abstract class CafeStore with _$CafeStore {
     }
     return congestion;
   }
+
+  /// 고객 화면에 실제로 띄울 혼잡도. 직원이 올린 값이 먼저고,
+  /// 없거나 낡았으면 진행 중인 주문으로 잰 자동 집계로 메운다.
+  StoreCongestionView congestionViewAt(DateTime now, {StoreActivity? activity}) {
+    final staff = congestionAt(now);
+    if (staff != StoreCongestion.unknown) {
+      return StoreCongestionView(staff);
+    }
+    final live = activity?.congestionAt(now) ?? StoreCongestion.unknown;
+    if (live == StoreCongestion.unknown) {
+      return const StoreCongestionView(StoreCongestion.unknown);
+    }
+    return StoreCongestionView(live, liveOrders: activity!.activeOrders);
+  }
+}
+
+/// 서버가 진행 중인 픽업 주문 수로 잰 매장별 혼잡도 (`store_activity`).
+/// 직원이 손대지 않아도 붐비는 시간대가 고객 화면에 그대로 드러난다.
+@freezed
+abstract class StoreActivity with _$StoreActivity {
+  const factory StoreActivity({
+    required String storeId,
+    /// 아직 음료가 나오지 않은 픽업 주문 수.
+    @Default(0) int activeOrders,
+    @Default(StoreCongestion.unknown) StoreCongestion congestion,
+    required DateTime updatedAt,
+  }) = _StoreActivity;
+
+  const StoreActivity._();
+
+  /// 밀린 주문이 이만큼 오래 그대로면 더 이상 현재 상태로 보지 않는다.
+  static const freshness = Duration(hours: 2);
+
+  StoreCongestion congestionAt(DateTime now) {
+    // 진행 중인 주문이 없다는 사실은 시간이 지나도 그대로다. 새 주문이 들어오면
+    // 트리거가 곧바로 다시 쓰므로, 오래된 0건은 낡은 값이 아니라 한산하다는 뜻이다.
+    if (activeOrders <= 0) {
+      return StoreCongestion.relaxed;
+    }
+    // 반면 밀린 주문은 직원이 상태를 안 넘긴 탓일 수 있어 오래되면 믿지 않는다.
+    if (now.difference(updatedAt) > freshness) {
+      return StoreCongestion.unknown;
+    }
+    return congestion;
+  }
+}
+
+/// 화면에 띄울 혼잡도 한 건 — 값과, 자동 집계라면 그 근거가 된 주문 수.
+class StoreCongestionView {
+  const StoreCongestionView(this.congestion, {this.liveOrders});
+
+  final StoreCongestion congestion;
+
+  /// 자동 집계로 잰 값이면 진행 중인 주문 수, 직원이 올린 값이면 null.
+  final int? liveOrders;
+
+  bool get isLive => liveOrders != null;
 }

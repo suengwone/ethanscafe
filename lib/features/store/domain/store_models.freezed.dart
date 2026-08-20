@@ -310,4 +310,272 @@ as DateTime?,
 
 }
 
+/// @nodoc
+mixin _$StoreActivity {
+
+ String get storeId;/// 아직 음료가 나오지 않은 픽업 주문 수.
+ int get activeOrders; StoreCongestion get congestion; DateTime get updatedAt;
+/// Create a copy of StoreActivity
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$StoreActivityCopyWith<StoreActivity> get copyWith => _$StoreActivityCopyWithImpl<StoreActivity>(this as StoreActivity, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StoreActivity&&(identical(other.storeId, storeId) || other.storeId == storeId)&&(identical(other.activeOrders, activeOrders) || other.activeOrders == activeOrders)&&(identical(other.congestion, congestion) || other.congestion == congestion)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,storeId,activeOrders,congestion,updatedAt);
+
+@override
+String toString() {
+  return 'StoreActivity(storeId: $storeId, activeOrders: $activeOrders, congestion: $congestion, updatedAt: $updatedAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $StoreActivityCopyWith<$Res>  {
+  factory $StoreActivityCopyWith(StoreActivity value, $Res Function(StoreActivity) _then) = _$StoreActivityCopyWithImpl;
+@useResult
+$Res call({
+ String storeId, int activeOrders, StoreCongestion congestion, DateTime updatedAt
+});
+
+
+
+
+}
+/// @nodoc
+class _$StoreActivityCopyWithImpl<$Res>
+    implements $StoreActivityCopyWith<$Res> {
+  _$StoreActivityCopyWithImpl(this._self, this._then);
+
+  final StoreActivity _self;
+  final $Res Function(StoreActivity) _then;
+
+/// Create a copy of StoreActivity
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? storeId = null,Object? activeOrders = null,Object? congestion = null,Object? updatedAt = null,}) {
+  return _then(_self.copyWith(
+storeId: null == storeId ? _self.storeId : storeId // ignore: cast_nullable_to_non_nullable
+as String,activeOrders: null == activeOrders ? _self.activeOrders : activeOrders // ignore: cast_nullable_to_non_nullable
+as int,congestion: null == congestion ? _self.congestion : congestion // ignore: cast_nullable_to_non_nullable
+as StoreCongestion,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [StoreActivity].
+extension StoreActivityPatterns on StoreActivity {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StoreActivity value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _StoreActivity() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StoreActivity value)  $default,){
+final _that = this;
+switch (_that) {
+case _StoreActivity():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StoreActivity value)?  $default,){
+final _that = this;
+switch (_that) {
+case _StoreActivity() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String storeId,  int activeOrders,  StoreCongestion congestion,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _StoreActivity() when $default != null:
+return $default(_that.storeId,_that.activeOrders,_that.congestion,_that.updatedAt);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String storeId,  int activeOrders,  StoreCongestion congestion,  DateTime updatedAt)  $default,) {final _that = this;
+switch (_that) {
+case _StoreActivity():
+return $default(_that.storeId,_that.activeOrders,_that.congestion,_that.updatedAt);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String storeId,  int activeOrders,  StoreCongestion congestion,  DateTime updatedAt)?  $default,) {final _that = this;
+switch (_that) {
+case _StoreActivity() when $default != null:
+return $default(_that.storeId,_that.activeOrders,_that.congestion,_that.updatedAt);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _StoreActivity extends StoreActivity {
+  const _StoreActivity({required this.storeId, this.activeOrders = 0, this.congestion = StoreCongestion.unknown, required this.updatedAt}): super._();
+  
+
+@override final  String storeId;
+/// 아직 음료가 나오지 않은 픽업 주문 수.
+@override@JsonKey() final  int activeOrders;
+@override@JsonKey() final  StoreCongestion congestion;
+@override final  DateTime updatedAt;
+
+/// Create a copy of StoreActivity
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$StoreActivityCopyWith<_StoreActivity> get copyWith => __$StoreActivityCopyWithImpl<_StoreActivity>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StoreActivity&&(identical(other.storeId, storeId) || other.storeId == storeId)&&(identical(other.activeOrders, activeOrders) || other.activeOrders == activeOrders)&&(identical(other.congestion, congestion) || other.congestion == congestion)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,storeId,activeOrders,congestion,updatedAt);
+
+@override
+String toString() {
+  return 'StoreActivity(storeId: $storeId, activeOrders: $activeOrders, congestion: $congestion, updatedAt: $updatedAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$StoreActivityCopyWith<$Res> implements $StoreActivityCopyWith<$Res> {
+  factory _$StoreActivityCopyWith(_StoreActivity value, $Res Function(_StoreActivity) _then) = __$StoreActivityCopyWithImpl;
+@override @useResult
+$Res call({
+ String storeId, int activeOrders, StoreCongestion congestion, DateTime updatedAt
+});
+
+
+
+
+}
+/// @nodoc
+class __$StoreActivityCopyWithImpl<$Res>
+    implements _$StoreActivityCopyWith<$Res> {
+  __$StoreActivityCopyWithImpl(this._self, this._then);
+
+  final _StoreActivity _self;
+  final $Res Function(_StoreActivity) _then;
+
+/// Create a copy of StoreActivity
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? storeId = null,Object? activeOrders = null,Object? congestion = null,Object? updatedAt = null,}) {
+  return _then(_StoreActivity(
+storeId: null == storeId ? _self.storeId : storeId // ignore: cast_nullable_to_non_nullable
+as String,activeOrders: null == activeOrders ? _self.activeOrders : activeOrders // ignore: cast_nullable_to_non_nullable
+as int,congestion: null == congestion ? _self.congestion : congestion // ignore: cast_nullable_to_non_nullable
+as StoreCongestion,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+
+}
+
 // dart format on
