@@ -1,0 +1,72 @@
+name: Deploy
+
+# 서버에 올라가는 것만 배포한다. 앱 빌드는 스토어 배포와 묶여 있어 여기서 다루지 않는다.
+on:
+  push:
+    branches: [main]
+    paths:
+      - firestore.rules
+      - firebase.json
+      - functions/**
+      - .github/workflows/deploy.yml
+  workflow_dispatch:
+
+# 배포를 중간에 끊으면 함수 일부만 올라간 상태가 남는다. 뒤 실행은 기다리게만 하고 취소하지 않는다.
+concurrency:
+  group: deploy-firebase
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: functions
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: functions/package-lock.json
+      - run: npm ci
+      # 여기서 앱 테스트까지 붙이지 않는 이유: 배포물은 함수와 규칙뿐이라
+      # 화면이 깨진 것 때문에 보안 규칙 수정이 막히면 곤란하다.
+      - run: npm test
+
+  deploy:
+    name: Deploy rules and functions
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Write the deploy credentials
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "FIREBASE_SERVICE_ACCOUNT 시크릿이 없습니다. 저장소 설정에 서비스 계정 키(JSON)를 넣어 주세요." >&2
+            exit 1
+          fi
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/service-account.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/service-account.json" >> "$GITHUB_ENV"
+
+      # --force: 소스에서 사라진 함수를 물어보지 않고 지운다. 소스가 곧 정답이어야
+      # 손으로 올린 함수가 남아 규칙을 우회하는 일이 없다.
+      # 내용이 그대로인 함수는 CLI가 알아서 건너뛰므로 규칙만 고쳐도 배포가 길어지지 않는다.
+      - name: Deploy
+        run: >
+          npx --yes "firebase-tools@^14" deploy
+          --only firestore:rules,functions
+          --project foxtrot-3bdba
+          --non-interactive
+          --force
+
+      - name: Remove the deploy credentials
+        if: always()
+        run: rm -f "$RUNNER_TEMP/service-account.json"
