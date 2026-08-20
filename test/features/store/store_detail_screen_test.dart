@@ -31,11 +31,13 @@ void main() {
     required CafeStore store,
     String storeId = 'macheon',
     DateTime? clock,
+    Map<String, StoreActivity> activity = const {},
   }) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
           storesProvider.overrideWith((ref) async => [store]),
+          storeActivityProvider.overrideWith((ref) async => activity),
           storeClockProvider.overrideWithValue(() => clock ?? now),
         ],
         child: MaterialApp(
@@ -90,6 +92,47 @@ void main() {
     );
 
     expect(find.text('현재 혼잡'), findsNothing);
+  });
+
+  testWidgets('직원이 올린 값이 낡으면 진행 중인 주문으로 잰 값을 보여 준다', (tester) async {
+    await pumpScreen(
+      tester,
+      store: store.copyWith(
+        congestionUpdatedAt: now.subtract(const Duration(hours: 5)),
+      ),
+      activity: {
+        'macheon': StoreActivity(
+          storeId: 'macheon',
+          activeOrders: 4,
+          congestion: StoreCongestion.normal,
+          updatedAt: now.subtract(const Duration(minutes: 5)),
+        ),
+      },
+    );
+
+    expect(find.text('현재 보통'), findsOneWidget);
+    expect(
+      find.text('진행 중인 주문 4건으로 자동 집계했어요.'.keepWord),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('직원이 올린 값이 있으면 자동 집계 안내를 붙이지 않는다', (tester) async {
+    await pumpScreen(
+      tester,
+      store: store,
+      activity: {
+        'macheon': StoreActivity(
+          storeId: 'macheon',
+          activeOrders: 4,
+          congestion: StoreCongestion.normal,
+          updatedAt: now.subtract(const Duration(minutes: 5)),
+        ),
+      },
+    );
+
+    expect(find.text('현재 혼잡'), findsOneWidget);
+    expect(find.textContaining('자동 집계'), findsNothing);
   });
 
   testWidgets('내린 매장으로 들어오면 안내를 보여 준다', (tester) async {

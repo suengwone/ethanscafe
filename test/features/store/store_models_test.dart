@@ -119,4 +119,94 @@ void main() {
       expect(noStamp.congestionAt(now), StoreCongestion.unknown);
     });
   });
+
+  group('StoreActivity.congestionAt', () {
+    final now = DateTime(2026, 8, 19, 15);
+
+    StoreActivity activity({
+      required int activeOrders,
+      required StoreCongestion congestion,
+      required Duration ago,
+    }) {
+      return StoreActivity(
+        storeId: 'macheon',
+        activeOrders: activeOrders,
+        congestion: congestion,
+        updatedAt: now.subtract(ago),
+      );
+    }
+
+    test('방금 잰 값은 그대로 쓴다', () {
+      final busy = activity(
+        activeOrders: 8,
+        congestion: StoreCongestion.busy,
+        ago: const Duration(minutes: 10),
+      );
+
+      expect(busy.congestionAt(now), StoreCongestion.busy);
+    });
+
+    test('밀린 주문이 오래 그대로면 믿지 않는다', () {
+      final stale = activity(
+        activeOrders: 8,
+        congestion: StoreCongestion.busy,
+        ago: const Duration(hours: 3),
+      );
+
+      expect(stale.congestionAt(now), StoreCongestion.unknown);
+    });
+
+    test('진행 중인 주문이 없으면 시간이 지나도 여유다', () {
+      // 주문이 들어오면 트리거가 곧바로 다시 쓰므로, 오래된 0건은 낡은 값이 아니다.
+      final quiet = activity(
+        activeOrders: 0,
+        congestion: StoreCongestion.relaxed,
+        ago: const Duration(hours: 9),
+      );
+
+      expect(quiet.congestionAt(now), StoreCongestion.relaxed);
+    });
+  });
+
+  group('CafeStore.congestionViewAt', () {
+    final now = DateTime(2026, 8, 19, 15);
+    final activity = StoreActivity(
+      storeId: 'macheon',
+      activeOrders: 4,
+      congestion: StoreCongestion.normal,
+      updatedAt: now.subtract(const Duration(minutes: 5)),
+    );
+
+    test('직원이 방금 올린 값이 자동 집계보다 앞선다', () {
+      final staffPicked = store.copyWith(
+        congestion: StoreCongestion.busy,
+        congestionUpdatedAt: now.subtract(const Duration(minutes: 20)),
+      );
+
+      final view = staffPicked.congestionViewAt(now, activity: activity);
+
+      expect(view.congestion, StoreCongestion.busy);
+      expect(view.isLive, isFalse);
+      expect(view.liveOrders, isNull);
+    });
+
+    test('직원이 올린 값이 낡으면 자동 집계로 메운다', () {
+      final stale = store.copyWith(
+        congestion: StoreCongestion.busy,
+        congestionUpdatedAt: now.subtract(const Duration(hours: 4)),
+      );
+
+      final view = stale.congestionViewAt(now, activity: activity);
+
+      expect(view.congestion, StoreCongestion.normal);
+      expect(view.liveOrders, 4);
+    });
+
+    test('집계가 없으면 정보 없음이다', () {
+      final view = store.congestionViewAt(now);
+
+      expect(view.congestion, StoreCongestion.unknown);
+      expect(view.isLive, isFalse);
+    });
+  });
 }

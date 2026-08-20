@@ -108,4 +108,27 @@ void main() {
       expect(storeFromFirestore('macheon', storeToFirestore(store)), store);
     });
   });
+
+  group('storeActivityFromFirestore', () {
+    test('자동 집계 문서를 StoreActivity로 변환한다', () {
+      final activity = storeActivityFromFirestore('macheon', {
+        'activeOrders': 5,
+        'congestion': 'normal',
+        'updatedAt': Timestamp.fromDate(DateTime(2026, 8, 20, 14, 30)),
+      });
+
+      expect(activity.storeId, 'macheon');
+      expect(activity.activeOrders, 5);
+      expect(activity.congestion, StoreCongestion.normal);
+      expect(activity.updatedAt, DateTime(2026, 8, 20, 14, 30));
+    });
+
+    test('값이 빠진 문서는 정보 없음으로 읽는다', () {
+      final activity = storeActivityFromFirestore('pangyo', {});
+
+      expect(activity.activeOrders, 0);
+      expect(activity.congestion, StoreCongestion.unknown);
+      expect(activity.updatedAt, DateTime.fromMillisecondsSinceEpoch(0));
+    });
+  });
 }

@@ -18,6 +18,16 @@ void main() {
     expect(ids.length, stores.length);
   });
 
+  test('자동 집계 표본은 실제 매장을 가리킨다', () async {
+    final stores = await repository.loadStores();
+    final activity = await repository.loadActivity();
+
+    for (final entry in activity.entries) {
+      expect(entry.value.storeId, entry.key);
+      expect(stores.map((store) => store.id), contains(entry.key));
+    }
+  });
+
   test('모든 매장은 유효한 좌표를 가진다', () async {
     final stores = await repository.loadStores();
 

@@ -22,7 +22,10 @@ void main() {
     weekendHours: '10:00 - 18:00',
   );
 
-  Future<void> pumpScreen(WidgetTester tester) async {
+  Future<void> pumpScreen(
+    WidgetTester tester, {
+    Map<String, StoreActivity> activity = const {},
+  }) async {
     final router = GoRouter(
       initialLocation: '/stores',
       routes: [
@@ -44,6 +47,7 @@ void main() {
       ProviderScope(
         overrides: [
           storesProvider.overrideWith((ref) async => [store]),
+          storeActivityProvider.overrideWith((ref) async => activity),
           storeClockProvider.overrideWithValue(() => now),
         ],
         child: MaterialApp.router(
@@ -59,6 +63,22 @@ void main() {
     await pumpScreen(tester);
 
     expect(find.text('영업 종료'), findsOneWidget);
+  });
+
+  testWidgets('직원이 올린 값이 없으면 자동 집계 혼잡도를 보여 준다', (tester) async {
+    await pumpScreen(
+      tester,
+      activity: {
+        'macheon': StoreActivity(
+          storeId: 'macheon',
+          activeOrders: 9,
+          congestion: StoreCongestion.busy,
+          updatedAt: now.subtract(const Duration(minutes: 3)),
+        ),
+      },
+    );
+
+    expect(find.text('현재 혼잡'), findsOneWidget);
   });
 
   testWidgets('매장을 누르면 매장 상세로 간다', (tester) async {
