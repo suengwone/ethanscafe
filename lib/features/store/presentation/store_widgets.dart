@@ -79,16 +79,19 @@ class StoreOpenBadge extends StatelessWidget {
   }
 }
 
-/// 매장이 올린 혼잡도. 오래된 값은 `congestionAt`이 걸러 낸다.
+/// 혼잡도 뱃지. 직원이 올린 값이 먼저고, 없으면 진행 중인 주문으로 잰 값을 쓴다.
+/// 둘 다 없거나 낡았으면 아무것도 안 보인다.
 class StoreCongestionBadge extends StatelessWidget {
   const StoreCongestionBadge({
     super.key,
     required this.store,
     required this.now,
+    this.activity,
   });
 
   final CafeStore store;
   final DateTime now;
+  final StoreActivity? activity;
 
   Color? _color(StoreCongestion? congestion, FoxtrotPalette palette) {
     return switch (congestion) {
@@ -101,12 +104,12 @@ class StoreCongestionBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final congestion = store.congestionAt(now);
-    final color = _color(congestion, context.palette);
+    final view = store.congestionViewAt(now, activity: activity);
+    final color = _color(view.congestion, context.palette);
     if (color == null) {
       return const SizedBox.shrink();
     }
-    return StoreBadge(label: '현재 ${congestion.label}', color: color);
+    return StoreBadge(label: '현재 ${view.congestion.label}', color: color);
   }
 }
 

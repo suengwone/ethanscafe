@@ -267,7 +267,8 @@ class _StoreEditScreenState extends ConsumerState<StoreEditScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              '고른 지 ${CafeStore.congestionFreshness.inHours}시간이 지나면 고객 화면에서 자동으로 숨깁니다.',
+              '고른 지 ${CafeStore.congestionFreshness.inHours}시간이 지나면 숨기고, '
+                '그때부터는 진행 중인 주문 수로 자동 집계한 값이 대신 뜹니다.',
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 12),

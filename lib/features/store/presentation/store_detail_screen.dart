@@ -42,10 +42,12 @@ class StoreDetailScreen extends ConsumerWidget {
           }
           final now = ref.watch(storeClockProvider)();
           final distance = ref.watch(storeDistancesProvider).asData?.value;
+          final activity = ref.watch(storeActivityProvider).asData?.value;
           return _StoreDetail(
             store: store,
             now: now,
             distanceMeters: distance?[store.id],
+            activity: activity?[store.id],
           );
         },
       ),
@@ -58,16 +60,19 @@ class _StoreDetail extends StatelessWidget {
     required this.store,
     required this.now,
     this.distanceMeters,
+    this.activity,
   });
 
   final CafeStore store;
   final DateTime now;
   final double? distanceMeters;
+  final StoreActivity? activity;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final todayHours = store.hoursOn(now);
+    final congestion = store.congestionViewAt(now, activity: activity);
 
     return ListView(
       padding: foxtrotListPadding,
@@ -80,7 +85,7 @@ class _StoreDetail extends StatelessWidget {
           runSpacing: 6,
           children: [
             StoreOpenBadge(store: store, now: now),
-            StoreCongestionBadge(store: store, now: now),
+            StoreCongestionBadge(store: store, now: now, activity: activity),
             if (distanceMeters != null)
               StoreBadge(
                 label: '내 위치에서 ${storeDistanceLabel(distanceMeters!)}',
@@ -88,6 +93,14 @@ class _StoreDetail extends StatelessWidget {
               ),
           ],
         ),
+        // 자동으로 잰 값은 직원이 올린 값과 성격이 달라서 근거를 같이 밝힌다.
+        if (congestion.isLive) ...[
+          const SizedBox(height: 8),
+          Text(
+            '진행 중인 주문 ${congestion.liveOrders}건으로 자동 집계했어요.'.keepWord,
+            style: textTheme.bodySmall,
+          ),
+        ],
         if (store.notice.isNotEmpty) ...[
           const SizedBox(height: 16),
           _NoticeCard(notice: store.notice),

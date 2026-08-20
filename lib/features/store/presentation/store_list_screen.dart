@@ -35,6 +35,7 @@ class StoreListScreen extends ConsumerWidget {
     final storesState = ref.watch(storesProvider);
     final distancesState = ref.watch(storeDistancesProvider);
     final distances = distancesState.asData?.value;
+    final activity = ref.watch(storeActivityProvider).asData?.value;
     final now = ref.watch(storeClockProvider)();
 
     return Scaffold(
@@ -100,6 +101,7 @@ class StoreListScreen extends ConsumerWidget {
                 store: store,
                 now: now,
                 distanceMeters: distances?[store.id],
+                activity: activity?[store.id],
               );
             },
           );
@@ -114,11 +116,13 @@ class _StoreCard extends StatelessWidget {
     required this.store,
     required this.now,
     this.distanceMeters,
+    this.activity,
   });
 
   final CafeStore store;
   final DateTime now;
   final double? distanceMeters;
+  final StoreActivity? activity;
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +159,11 @@ class _StoreCard extends StatelessWidget {
                 runSpacing: 6,
                 children: [
                   StoreOpenBadge(store: store, now: now),
-                  StoreCongestionBadge(store: store, now: now),
+                  StoreCongestionBadge(
+                    store: store,
+                    now: now,
+                    activity: activity,
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
