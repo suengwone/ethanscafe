@@ -167,7 +167,8 @@ Firebase Console에서 활성화:
 3. **Cloud Messaging** (푸시 알림)
    - 자동 활성화됨
 
-> 참고: Cloud Functions, Storage 등 Blaze(종량제) 요금제가 필요한 서비스는 사용하지 않는다. 무료(Spark) 요금제 범위에서 운영한다.
+> 참고: Cloud Functions를 쓰므로 **Blaze(종량제) 요금제가 필요하다**. 결제 승인·포인트 적립처럼
+> 금액이 걸린 쓰기가 전부 콜러블을 지난다. Storage는 사용하지 않는다.
 
 ## 9. Firestore 보안 규칙
 
@@ -200,6 +201,38 @@ flutter run -d ios
 # Android 에뮬레이터에서 실행
 flutter run -d android
 ```
+
+## 11. 배포 (GitHub Actions)
+
+함수와 보안 규칙은 `main`에 올라가면 `.github/workflows/deploy.yml`이 배포한다
+(`functions/**` · `firestore.rules` · `firebase.json`이 바뀐 커밋에서만. 수동 실행도 된다).
+배포 전에 함수 단위 테스트가 먼저 돌고, 실패하면 배포하지 않는다.
+
+### 서비스 계정 준비
+
+1. [GCP 콘솔 > IAM > 서비스 계정](https://console.cloud.google.com/iam-admin/serviceaccounts)에서
+   `foxtrot-3bdba` 프로젝트에 배포 전용 계정을 만든다 (예: `github-deployer`)
+2. 역할을 부여한다. 규칙만 올릴 때보다 함수 배포가 요구하는 것이 많다:
+   - Firebase Rules Admin — `firestore.rules` 배포
+   - Cloud Functions Admin — 함수 생성·갱신·삭제
+   - Service Account User — 함수가 쓰는 런타임 서비스 계정을 대신 지정
+   - Cloud Build Editor / Artifact Registry Administrator — 2세대 함수는 빌드를 거쳐 올라간다
+   - Secret Manager Admin — `TOSS_SECRET_KEY` 등 `defineSecret` 값을 함수에 연결
+3. 키(JSON)를 발급받아 GitHub 저장소 **Settings > Secrets and variables > Actions**에
+   `FIREBASE_SERVICE_ACCOUNT` 이름으로 파일 내용 전체를 붙여 넣는다
+
+시크릿이 없으면 워크플로가 배포를 시도하지 않고 첫 단계에서 멈춘다.
+
+### 손으로 배포하기
+
+```bash
+firebase deploy --only firestore:rules,functions
+```
+
+프로젝트는 `.firebaserc`에 기본값으로 적혀 있어 `--project`를 붙이지 않아도 된다.
+
+> 함수 시크릿은 저장소가 아니라 Secret Manager에 둔다:
+> `firebase functions:secrets:set TOSS_SECRET_KEY`
 
 ## 추가 리소스
 

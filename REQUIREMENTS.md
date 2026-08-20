@@ -302,6 +302,22 @@
 - Android: minSdk 23, compileSdk 37, AGP 9.0.1
 - 자산: `assets/images/menu/`, Pretendard 폰트
 
+### 5.5 배포 파이프라인 (GitHub Actions)
+
+| 워크플로 | 시점 | 하는 일 |
+|----------|------|---------|
+| `ci.yml` | PR · `main` 푸시 | `flutter analyze` · `flutter test` / `functions` 단위 테스트 |
+| `deploy.yml` | `main` 푸시 중 `functions/**` · `firestore.rules` · `firebase.json`이 바뀐 경우, 또는 수동 실행 | 함수 테스트를 통과하면 `firebase deploy --only firestore:rules,functions` |
+
+- 자동화 대상은 **서버에 올라가는 것(함수·보안 규칙)뿐**이다. 앱 빌드는 스토어 배포와 묶여 있어 다루지 않는다
+- 배포 자격 증명은 저장소 시크릿 `FIREBASE_SERVICE_ACCOUNT`(서비스 계정 키 JSON) 하나다.
+  러너가 임시 파일로 풀어 `GOOGLE_APPLICATION_CREDENTIALS`로 넘기고, 성공·실패와 관계없이 지운다
+- 함수 시크릿(`TOSS_SECRET_KEY` 등)은 Secret Manager에 있으므로 워크플로가 값을 알 필요가 없다
+- `--force`로 소스에서 사라진 함수를 지운다. 손으로 올린 함수가 남아 규칙을 우회하는 일이 없도록 소스를 정답으로 둔다.
+  내용이 그대로인 함수는 CLI가 건너뛰므로 규칙만 고쳐도 배포가 길어지지 않는다
+- 배포는 겹쳐 돌지 않는다(`concurrency: deploy-firebase`, 취소 없음). 중간에 끊으면 함수 일부만 올라간 상태가 남는다
+- ⚠️ 게이트는 함수 테스트뿐이다. **보안 규칙에는 아직 단위 테스트가 없어** 규칙 변경은 사람이 봐야 한다 (§7.2)
+
 ## 6. 화면 및 라우팅
 
 `/login`을 제외한 모든 화면은 하단 탭 셸(`AppShell`) 내부에 표시된다.
@@ -356,11 +372,12 @@
 
 ### 7.2 기술 · 운영
 
-1. ⬜ Cloud Functions / 보안 규칙 배포 파이프라인
-2. ⬜ 토스페이먼츠 운영 키 발급 및 등록 (미설정 시 테스트 키·모의 결제로 동작)
-3. ⬜ Remote Config 키 4종 콘솔 등록 (`min_supported_version`, `store_url`, `notice_enabled`, `notice_message`)
-4. ⬜ 생체 인증(`local_auth`) 적용 여부 결정 — 적용 시 결제/포인트 사용 중 어디에 걸지 정해야 함
-5. ⬜ 매장 지도 SDK 도입 검토 (네이버/카카오 지도 — API 키 및 네이티브 설정 필요)
+1. ⬜ 보안 규칙 단위 테스트 (에뮬레이터 + `@firebase/rules-unit-testing`) — 파이프라인이 규칙을 자동으로 올리므로 게이트가 있어야 한다
+2. ⬜ 저장소 시크릿 `FIREBASE_SERVICE_ACCOUNT` 등록 (미등록 시 `deploy.yml`이 첫 단계에서 멈춘다)
+3. ⬜ 토스페이먼츠 운영 키 발급 및 등록 (미설정 시 테스트 키·모의 결제로 동작)
+4. ⬜ Remote Config 키 4종 콘솔 등록 (`min_supported_version`, `store_url`, `notice_enabled`, `notice_message`)
+5. ⬜ 생체 인증(`local_auth`) 적용 여부 결정 — 적용 시 결제/포인트 사용 중 어디에 걸지 정해야 함
+6. ⬜ 매장 지도 SDK 도입 검토 (네이버/카카오 지도 — API 키 및 네이티브 설정 필요)
 
 ## 8. 이번 정리에서 반영한 문서-코드 차이
 
@@ -409,6 +426,7 @@
 | 2026-08-19 | 화면 테마 — 다크 고정에서 라이트/다크 두 벌로 확장. 색 상수를 `FoxtrotPalette` 테마 확장으로 옮기고 화면 46개가 `context.palette`를 읽도록 바꿨다. `/profile/appearance`에서 시스템 설정·라이트·다크를 고르고 기기에 저장한다 |
 | 2026-08-19 | 친구 초대 리퍼럴 — `/profile/referral` 신설. 계정별 6자리 초대 코드(`issueReferralCode`)와 코드 입력 시 양쪽 3,000P 지급(`redeemReferralCode`). 한 번만 입력·본인 코드 불가·최대 10명 한도를 서버 트랜잭션에서 검사하고 `referrals`·`referral_codes`는 클라이언트 쓰기를 막았다 |
 | 2026-08-19 | 매장 상세 강화 — `/stores/:storeId` 신설. 영업시간 문자열을 해석해 영업 중/종료를 표시하고, 매장 공지와 매장이 직접 올리는 혼잡도(3시간 뒤 자동 숨김)를 `CafeStore`에 추가. 매장 관리 화면에서 둘 다 편집 |
+| 2026-08-20 | 배포 파이프라인 — GitHub Actions 도입. `ci.yml`이 PR·`main`에서 `flutter analyze`·`flutter test`와 함수 테스트를 돌리고, `deploy.yml`이 함수·규칙이 바뀐 `main` 푸시에서 함수 테스트를 통과한 뒤 `firestore:rules`와 `functions`를 배포한다. 자격 증명은 시크릿 하나(`FIREBASE_SERVICE_ACCOUNT`)로 좁히고 배포가 겹쳐 돌지 않게 막았다 |
 | 2026-08-20 | 혼잡도 자동 집계 — 직원이 올린 값이 없거나 낡으면 진행 중인 픽업 주문 수로 잰 값을 보여 준다. 픽업 주문 트리거가 바뀐 매장만 `active_orders`에서 다시 세어 `store_activity`에 적고(0~2 여유 / 3~6 보통 / 7+ 혼잡), 색인에 `storeId`를 추가했다. 밀린 주문이 2시간 넘게 그대로면 감추되 0건은 그대로 여유로 본다 |
 | 2026-08-19 | 공지 등록·수정 도구 — 카탈로그 관리에 공지 탭 추가. `noticeToFirestore` 직렬화와 게시일(`createdAt`) 편집으로 마스터 데이터 5종을 모두 앱에서 관리한다 |
 | 2026-08-19 | 배너·매장 등록·수정 도구 — 상품 관리 화면을 **카탈로그 관리**로 넓혀 탭 4종(메뉴·원두·배너·매장)으로 재구성. `EventBanner`·`CafeStore`에 `sortOrder` 추가 및 쓰기 직렬화. 배너 아이콘 표를 홈 캐러셀과 관리자 화면이 함께 쓰도록 통합 |
