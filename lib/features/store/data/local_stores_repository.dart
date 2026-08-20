@@ -5,6 +5,18 @@ class LocalStoresRepository implements StoresRepository {
   @override
   Future<List<CafeStore>> loadStores() async => _stores;
 
+  /// Firebase 없이 도는 화면(테스트·미리보기)에서도 자동 집계가 어떻게 보이는지
+  /// 알 수 있게 표본을 하나 둔다.
+  @override
+  Future<Map<String, StoreActivity>> loadActivity() async => {
+        'macheon': StoreActivity(
+          storeId: 'macheon',
+          activeOrders: 4,
+          congestion: StoreCongestion.normal,
+          updatedAt: DateTime.now(),
+        ),
+      };
+
   static const _stores = <CafeStore>[
     CafeStore(
       id: 'macheon',

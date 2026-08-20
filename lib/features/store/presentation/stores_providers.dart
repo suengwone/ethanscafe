@@ -20,6 +20,13 @@ final storesProvider = FutureProvider<List<CafeStore>>((ref) {
   return ref.watch(storesRepositoryProvider).loadStores();
 });
 
+/// 서버가 진행 중인 주문으로 잰 매장별 혼잡도. 직원이 올린 값이 없을 때 쓴다.
+/// 집계를 못 읽어도 매장 정보는 그대로 떠야 하므로 화면은 실패를 무시한다.
+final storeActivityProvider =
+    FutureProvider<Map<String, StoreActivity>>((ref) {
+  return ref.watch(storesRepositoryProvider).loadActivity();
+});
+
 /// 영업 중 여부와 혼잡도 신선도를 재는 기준 시각.
 /// 화면이 `DateTime.now()`를 직접 부르면 테스트·골든이 실행 시각에 따라 흔들려서
 /// provider로 빼 두고 고정할 수 있게 한다.

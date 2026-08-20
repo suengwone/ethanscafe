@@ -11,6 +11,7 @@ class FirestoreStoresRepository implements StoresRepository {
   final FirebaseFirestore _firestore;
 
   static const collectionPath = 'stores';
+  static const activityCollectionPath = 'store_activity';
 
   @override
   Future<List<CafeStore>> loadStores() async {
@@ -22,6 +23,28 @@ class FirestoreStoresRepository implements StoresRepository {
         .map((doc) => storeFromFirestore(doc.id, doc.data()))
         .toList();
   }
+
+  @override
+  Future<Map<String, StoreActivity>> loadActivity() async {
+    final snapshot = await _firestore.collection(activityCollectionPath).get();
+    return {
+      for (final doc in snapshot.docs)
+        doc.id: storeActivityFromFirestore(doc.id, doc.data()),
+    };
+  }
+}
+
+StoreActivity storeActivityFromFirestore(String id, Map<String, dynamic> data) {
+  return StoreActivity(
+    storeId: id,
+    activeOrders: (data['activeOrders'] as num? ?? 0).toInt(),
+    congestion:
+        StoreCongestion.values.asNameMap()[data['congestion']] ??
+        StoreCongestion.unknown,
+    updatedAt: data['updatedAt'] == null
+        ? DateTime.fromMillisecondsSinceEpoch(0)
+        : firestoreDateTime(data['updatedAt']),
+  );
 }
 
 CafeStore storeFromFirestore(String id, Map<String, dynamic> data) {
