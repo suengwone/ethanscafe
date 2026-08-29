@@ -14,6 +14,7 @@ import '../../pickup/presentation/pickup_cart_screen.dart';
 import '../../pickup/presentation/pickup_option_sheet.dart';
 import '../../review/presentation/product_review_section.dart';
 import '../domain/menu_models.dart';
+import 'menu_photo.dart';
 import 'menu_providers.dart';
 
 class MenuDetailScreen extends ConsumerWidget {
@@ -260,17 +261,12 @@ class _HeaderSection extends StatelessWidget {
                 border: Border.all(color: context.palette.accent, width: 1.5),
               ),
               clipBehavior: Clip.antiAlias,
-              child: Image.asset(
-                semanticLabel: AppLocalizations.of(
-                  context,
-                ).menuPhotoOf(item.name),
-                item.imageAsset,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Icon(
-                  menuCategoryIcon(item.category),
-                  color: context.palette.accent,
-                  size: 40,
-                ),
+              child: ProductPhoto(
+                name: item.name,
+                imageUrl: item.imageUrl,
+                fallbackAsset: item.imageAsset,
+                fallbackIcon: menuCategoryIcon(item.category),
+                iconSize: 40,
               ),
             ),
             const SizedBox(height: 16),
@@ -441,15 +437,12 @@ class MenuImageThumbnail extends StatelessWidget {
         border: Border.all(color: context.palette.border),
       ),
       clipBehavior: Clip.antiAlias,
-      child: Image.asset(
-        semanticLabel: AppLocalizations.of(context).menuPhotoOf(item.name),
-        item.imageAsset,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => Icon(
-          menuCategoryIcon(item.category),
-          color: context.palette.accent,
-          size: size * 0.45,
-        ),
+      child: ProductPhoto(
+        name: item.name,
+        imageUrl: item.imageUrl,
+        fallbackAsset: item.imageAsset,
+        fallbackIcon: menuCategoryIcon(item.category),
+        iconSize: size * 0.45,
       ),
     );
   }

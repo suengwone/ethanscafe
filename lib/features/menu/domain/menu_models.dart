@@ -36,10 +36,15 @@ abstract class MenuItem with _$MenuItem {
     @Default(false) bool isRecommended,
     @Default(false) bool soldOut,
     @Default(0) int sortOrder,
+    String? imageUrl,
   }) = _MenuItem;
 
   /// 통화 표기가 언어를 타므로 화면은 `menu_labels.dart`의 확장을 쓴다.
   String get formattedPrice => _menuPriceFormat.format(price);
 
+  /// 매장이 올린 사진이 없으면 카테고리 사진으로 대신한다. 카테고리 사진은
+  /// 같은 분류의 메뉴가 전부 똑같이 보이므로 자리를 채우는 용도일 뿐이다.
   String get imageAsset => category.imageAsset;
+
+  bool get hasPhoto => imageUrl != null && imageUrl!.isNotEmpty;
 }

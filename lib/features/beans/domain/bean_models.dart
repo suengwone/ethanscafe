@@ -39,6 +39,7 @@ abstract class Bean with _$Bean {
     @Default(false) bool isNew,
     @Default(false) bool soldOut,
     @Default(0) int sortOrder,
+    String? imageUrl,
   }) = _Bean;
 
   int priceOf(BeanWeight weight) =>

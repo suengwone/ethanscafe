@@ -10,6 +10,7 @@ import '../../../../features/menu/presentation/menu_labels.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../menu/domain/menu_models.dart';
 import '../../../menu/presentation/menu_detail_screen.dart';
+import '../../../menu/presentation/menu_photo.dart';
 import '../../../menu/presentation/menu_providers.dart';
 
 final recommendedMenuItemsProvider = FutureProvider<List<MenuItem>>((
@@ -83,7 +84,6 @@ class _RecommendedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       width: 148,
       padding: const EdgeInsets.all(14),
@@ -107,17 +107,12 @@ class _RecommendedCard extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 clipBehavior: Clip.antiAlias,
-                child: Image.asset(
-                  semanticLabel: AppLocalizations.of(
-                    context,
-                  ).menuPhotoOf(item.name),
-                  item.imageAsset,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Icon(
-                    menuCategoryIcon(item.category),
-                    size: 30,
-                    color: colorScheme.primary,
-                  ),
+                child: ProductPhoto(
+                  name: item.name,
+                  imageUrl: item.imageUrl,
+                  fallbackAsset: item.imageAsset,
+                  fallbackIcon: menuCategoryIcon(item.category),
+                  iconSize: 30,
                 ),
               ),
               if (item.badge == MenuBadge.isNew)

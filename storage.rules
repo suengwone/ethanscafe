@@ -1,0 +1,30 @@
+rules_version = '2';
+
+// 상품 사진. 매장이 올리고 손님은 보기만 한다.
+//
+// 사진은 로그인 전 화면(홈, 메뉴)에도 뜨므로 읽기는 열어 둔다. 쓰기는 관리자만
+// 하고, 크기와 형식을 규칙에서 한 번 더 막는다. 여기서 막지 않으면 관리자 계정
+// 하나로 저장소에 무엇이든 올릴 수 있다.
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    // 휴대폰 사진 한 장이 넉넉히 들어가는 크기. 앱은 올리기 전에 줄인다.
+    function isPhoto() {
+      return request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp)');
+    }
+
+    match /products/{productType}/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin() && isPhoto();
+      allow delete: if isAdmin();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

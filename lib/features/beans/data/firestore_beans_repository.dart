@@ -43,6 +43,7 @@ Bean beanFromFirestore(String id, Map<String, dynamic> data) {
     isNew: data['isNew'] as bool? ?? false,
     soldOut: data['soldOut'] as bool? ?? false,
     sortOrder: (data['sortOrder'] as num? ?? 0).toInt(),
+    imageUrl: data['imageUrl'] as String?,
   );
 }
 
@@ -66,6 +67,7 @@ Map<String, dynamic> beanToFirestore(Bean bean) {
     'isNew': bean.isNew,
     'soldOut': bean.soldOut,
     'sortOrder': bean.sortOrder,
+    if (bean.imageUrl != null) 'imageUrl': bean.imageUrl,
   };
 }
 

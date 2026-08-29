@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - firestore.rules
+      - storage.rules
       - firestore.indexes.json
       - firebase.json
       - functions/**
@@ -85,7 +86,7 @@ jobs:
       - name: Deploy
         run: >
           npx --yes "firebase-tools@^14" deploy
-          --only firestore:rules,functions
+          --only firestore:rules,storage,functions
           --project foxtrot-3bdba
           --non-interactive
           --force

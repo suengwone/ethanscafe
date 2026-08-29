@@ -15,12 +15,22 @@ const rules = fs.readFileSync(
   'utf8',
 );
 
+const storageRules = fs.readFileSync(
+  process.env.STORAGE_RULES || path.join(__dirname, '..', 'storage.rules'),
+  'utf8',
+);
+
 // node --test는 파일마다 프로세스를 따로 띄운다. 프로젝트 ID가 같으면 나란히
 // 도는 파일들이 서로의 문서를 지우므로 파일마다 다른 ID를 준다.
-function testEnvironment(name) {
+//
+// Storage 규칙은 필요한 파일만 올린다. Firestore와 달리 에뮬레이터가 규칙을
+// 프로젝트별로 두지 않아서, 모든 파일이 올리면 나중에 정리하는 쪽이 먼저 돌던
+// 쪽의 규칙을 지워 버린다. 그러면 사진 테스트만 이유 없이 빨간불이 된다.
+function testEnvironment(name, {storage = false} = {}) {
   return initializeTestEnvironment({
     projectId: `cafe-rules-${name}`,
     firestore: {rules},
+    ...(storage ? {storage: {rules: storageRules}} : {}),
   });
 }
 

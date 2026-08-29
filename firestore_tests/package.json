@@ -6,7 +6,7 @@
     "node": "20"
   },
   "scripts": {
-    "test": "firebase emulators:exec --only firestore --project cafe-rules \"node --test\""
+    "test": "firebase emulators:exec --only firestore,storage --project cafe-rules \"node --test\""
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^4.0.1",
