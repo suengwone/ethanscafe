@@ -87,18 +87,18 @@ class OrderHistoryScreen extends ConsumerWidget {
     final ordersState = ref.watch(orderHistoryProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('주문 내역')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).orderHistoryTitle)),
       body: ordersState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('주문 내역을 불러오지 못했습니다.'),
+              Text(AppLocalizations.of(context).orderHistoryLoadFailed),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.invalidate(orderHistoryProvider),
-                child: const Text('다시 시도'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -139,10 +139,13 @@ class _EmptyOrders extends StatelessWidget {
         children: [
           Icon(LucideIcons.receiptText, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
-          Text('주문 내역이 없어요', style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            AppLocalizations.of(context).orderHistoryEmptyTitle,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: 8),
           Text(
-            '매장 결제나 픽업 · 원두 주문을 하면 내역이 쌓여요.',
+            AppLocalizations.of(context).orderHistoryEmptyDetail,
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
@@ -165,11 +168,11 @@ class _BeanOrderCard extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final pointsSummary = [
       if (order.couponDiscount > 0)
-        '쿠폰 -${_amountFormat.format(order.couponDiscount)}원',
+        AppLocalizations.of(context).orderCouponDiscount(_amountFormat.format(order.couponDiscount)),
       if (order.usedPoints > 0)
-        '-${_amountFormat.format(order.usedPoints)}P 사용',
+        AppLocalizations.of(context).orderPointsUsed(_amountFormat.format(order.usedPoints)),
       if (order.earnedPoints > 0)
-        '+${_amountFormat.format(order.earnedPoints)}P 적립',
+        AppLocalizations.of(context).orderPointsEarned(_amountFormat.format(order.earnedPoints)),
     ].join(' · ');
 
     return Card(
@@ -221,7 +224,7 @@ class _BeanOrderCard extends ConsumerWidget {
                 Expanded(
                   child: Text(
                     [
-                      '원두 주문',
+                      AppLocalizations.of(context).orderBeanLabel,
                       order.fulfillmentMethod == BeanFulfillmentMethod.pickup &&
                               order.storeName != null
                           ? '${AppLocalizations.of(context).fulfillmentLabel(order.fulfillmentMethod)} · '
@@ -230,7 +233,7 @@ class _BeanOrderCard extends ConsumerWidget {
                               context,
                             ).fulfillmentLabel(order.fulfillmentMethod),
                       if (order.paymentMethod != null) order.paymentMethod!,
-                      '총 ${order.itemCount}개',
+                      AppLocalizations.of(context).orderItemCount(order.itemCount),
                     ].join(' · ').keepWord,
                     style: textTheme.bodySmall,
                   ),
@@ -240,7 +243,7 @@ class _BeanOrderCard extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '${_amountFormat.format(order.paidAmount)}원',
+                      AppLocalizations.of(context).priceWon(_amountFormat.format(order.paidAmount)),
                       style: textTheme.labelLarge,
                     ),
                     if (pointsSummary.isNotEmpty) ...[
@@ -269,7 +272,7 @@ class _BeanOrderCard extends ConsumerWidget {
                 ),
                 onPressed: () => _reorder(context, ref),
                 icon: const Icon(LucideIcons.rotateCcw, size: 13),
-                label: const Text('재주문'),
+                label: Text(AppLocalizations.of(context).orderReorder),
               ),
             ),
             if (order.isCancellable) ...[
@@ -285,7 +288,7 @@ class _BeanOrderCard extends ConsumerWidget {
                     ),
                   ),
                   onPressed: () => _cancelOrder(context, ref),
-                  child: const Text('주문 취소'),
+                  child: Text(AppLocalizations.of(context).orderCancel),
                 ),
               ),
             ],
@@ -320,7 +323,7 @@ class _BeanOrderCard extends ConsumerWidget {
     final result = buildBeanReorder(order: order, beans: beans);
     if (!result.hasItems) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('지금은 판매하지 않는 상품이라 재주문할 수 없어요.')),
+        SnackBar(content: Text(AppLocalizations.of(context).orderReorderUnavailableBeans)),
       );
       return;
     }
@@ -337,8 +340,8 @@ class _BeanOrderCard extends ConsumerWidget {
       SnackBar(
         content: Text(
           result.hasMissing
-              ? '판매 종료된 ${result.missingNames.join(', ')} 상품은 제외하고 장바구니에 담았어요.'
-              : '이전 주문 구성을 장바구니에 담았어요.',
+              ? AppLocalizations.of(context).orderReorderPartialBeans(result.missingNames.join(', '))
+              : AppLocalizations.of(context).orderReorderDone,
         ),
       ),
     );
@@ -348,7 +351,7 @@ class _BeanOrderCard extends ConsumerWidget {
   Future<void> _cancelOrder(BuildContext context, WidgetRef ref) async {
     final confirmed = await showOrderCancelDialog(
       context,
-      title: '원두 주문을 취소할까요?',
+      title: AppLocalizations.of(context).orderCancelBeanTitle,
       refundSummary: orderCancelRefundSummary(
         usedPoints: order.usedPoints,
         earnedPoints: order.earnedPoints,
@@ -364,7 +367,7 @@ class _BeanOrderCard extends ConsumerWidget {
           .cancelOrder(order.id);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('주문이 취소되었어요. 사용한 쿠폰과 포인트는 복구됩니다.')),
+          SnackBar(content: Text(AppLocalizations.of(context).orderCancelledNotice)),
         );
       }
     } on StateError catch (error) {
@@ -389,11 +392,11 @@ class _PickupOrderCard extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final pointsSummary = [
       if (order.couponDiscount > 0)
-        '쿠폰 -${_amountFormat.format(order.couponDiscount)}원',
+        AppLocalizations.of(context).orderCouponDiscount(_amountFormat.format(order.couponDiscount)),
       if (order.usedPoints > 0)
-        '-${_amountFormat.format(order.usedPoints)}P 사용',
+        AppLocalizations.of(context).orderPointsUsed(_amountFormat.format(order.usedPoints)),
       if (order.earnedPoints > 0)
-        '+${_amountFormat.format(order.earnedPoints)}P 적립',
+        AppLocalizations.of(context).orderPointsEarned(_amountFormat.format(order.earnedPoints)),
     ].join(' · ');
 
     return Card(
@@ -453,7 +456,11 @@ class _PickupOrderCard extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      '픽업 주문 · ${order.storeName} · 주문번호 ${order.pickupNumber}번 · 총 ${order.itemCount}개'
+                      AppLocalizations.of(context).orderPickupSummary(
+                            order.storeName,
+                            order.pickupNumber,
+                            order.itemCount,
+                          )
                           .keepWord,
                       style: textTheme.bodySmall,
                     ),
@@ -463,7 +470,7 @@ class _PickupOrderCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '${_amountFormat.format(order.paidAmount)}원',
+                        AppLocalizations.of(context).priceWon(_amountFormat.format(order.paidAmount)),
                         style: textTheme.labelLarge,
                       ),
                       if (pointsSummary.isNotEmpty) ...[
@@ -486,7 +493,7 @@ class _PickupOrderCard extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      '주문 현황 보기',
+                      AppLocalizations.of(context).orderTrackStatus,
                       style: textTheme.bodySmall?.copyWith(
                         color: context.palette.accent,
                         fontWeight: FontWeight.w600,
@@ -546,7 +553,7 @@ class _PickupOrderCard extends ConsumerWidget {
     final result = buildPickupReorder(order: order, menuItems: menuItems);
     if (!result.hasItems) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('지금은 판매하지 않는 메뉴라 재주문할 수 없어요.')),
+        SnackBar(content: Text(AppLocalizations.of(context).orderReorderUnavailableMenu)),
       );
       return;
     }
@@ -562,8 +569,8 @@ class _PickupOrderCard extends ConsumerWidget {
       SnackBar(
         content: Text(
           result.hasMissing
-              ? '판매 종료된 ${result.missingNames.join(', ')} 메뉴는 제외하고 장바구니에 담았어요.'
-              : '이전 주문 구성을 장바구니에 담았어요.',
+              ? AppLocalizations.of(context).orderReorderPartialMenu(result.missingNames.join(', '))
+              : AppLocalizations.of(context).orderReorderDone,
         ),
       ),
     );
@@ -638,7 +645,7 @@ class _ReviewItemRow extends ConsumerWidget {
                   orderId: orderId,
                 ),
                 icon: const Icon(LucideIcons.star, size: 13),
-                label: const Text('리뷰 쓰기'),
+                label: Text(AppLocalizations.of(context).orderWriteReview),
               ),
             ),
         ],
@@ -766,12 +773,12 @@ class _OrderCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '${_amountFormat.format(paymentAmount)}원',
+                  AppLocalizations.of(context).priceWon(_amountFormat.format(paymentAmount)),
                   style: textTheme.labelLarge,
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '+${_amountFormat.format(entry.amount)}P 적립',
+                  AppLocalizations.of(context).orderPointsEarned(_amountFormat.format(entry.amount)),
                   style: textTheme.bodySmall?.copyWith(
                     color: context.palette.accent,
                   ),
