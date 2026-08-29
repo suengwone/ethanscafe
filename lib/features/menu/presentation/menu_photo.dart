@@ -27,15 +27,30 @@ class ProductPhoto extends StatelessWidget {
   Widget build(BuildContext context) {
     final label = AppLocalizations.of(context).menuPhotoOf(name);
     final url = imageUrl;
-    if (url != null && url.isNotEmpty) {
-      return Image.network(
-        url,
-        semanticLabel: label,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => _asset(label),
-      );
+    if (url == null || url.isEmpty) {
+      return _asset(label);
     }
-    return _asset(label);
+    // 자리 크기를 알아야 그만큼만 디코딩한다. 목록 썸네일이 원본 그대로를 펼치면
+    // 한 화면치 사진만으로도 메모리가 훅 올라간다.
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final ratio = MediaQuery.devicePixelRatioOf(context);
+        final width = constraints.maxWidth.isFinite
+            ? (constraints.maxWidth * ratio).round()
+            : null;
+        return Image.network(
+          url,
+          semanticLabel: label,
+          fit: BoxFit.cover,
+          cacheWidth: width,
+          // 사진이 오는 동안 빈칸 대신 분류 사진을 두고, 실패해도 같은 자리로
+          // 돌아간다. 목록에서 칸이 깜빡이지 않는다.
+          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) =>
+              frame == null && !wasSynchronouslyLoaded ? _asset(label) : child,
+          errorBuilder: (context, error, stackTrace) => _asset(label),
+        );
+      },
+    );
   }
 
   Widget _asset(String label) => Image.asset(

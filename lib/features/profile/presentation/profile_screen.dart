@@ -486,7 +486,14 @@ class _ProfileHeader extends StatelessWidget {
           CircleAvatar(
             radius: 50,
             backgroundColor: context.palette.card,
-            backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+            // 100pt 아바타에 원본을 그대로 디코딩하지 않는다.
+            backgroundImage: photoUrl != null
+                ? ResizeImage(
+                    NetworkImage(photoUrl),
+                    width: (100 * MediaQuery.devicePixelRatioOf(context))
+                        .round(),
+                  )
+                : null,
             child: photoUrl == null
                 ? Icon(
                     LucideIcons.user300,
