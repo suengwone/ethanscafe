@@ -3,7 +3,7 @@
   "description": "Security rules unit tests for Ethan's Cafe",
   "private": true,
   "engines": {
-    "node": "20"
+    "node": "22"
   },
   "scripts": {
     "test": "firebase emulators:exec --only firestore,storage --project cafe-rules \"node --test\""

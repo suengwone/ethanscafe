@@ -42,7 +42,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           # functions/package.json의 engines와 같은 메이저를 쓴다.
-          node-version: 20
+          node-version: 22
           cache: npm
           cache-dependency-path: functions/package-lock.json
       - run: npm ci
@@ -63,7 +63,7 @@ jobs:
           java-version: 17
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
           cache-dependency-path: firestore_tests/package-lock.json
       - run: npm ci
