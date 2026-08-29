@@ -1,11 +1,13 @@
 import 'package:cloud_functions/cloud_functions.dart';
 
 import '../../../core/firebase/firestore_converters.dart';
+import '../../coupon/domain/coupon_models.dart';
 import '../../payment/domain/payment_models.dart';
+import '../domain/bean_checkout.dart';
 import '../domain/order_models.dart';
 import 'firestore_bean_orders_repository.dart';
 
-class CloudFunctionsBeanCheckoutRepository {
+class CloudFunctionsBeanCheckoutRepository implements BeanCheckout {
   CloudFunctionsBeanCheckoutRepository({FirebaseFunctions? functions})
       : _functions =
             functions ?? FirebaseFunctions.instanceFor(region: _region);
@@ -16,10 +18,14 @@ class CloudFunctionsBeanCheckoutRepository {
 
   final FirebaseFunctions _functions;
 
+  // couponDiscount는 넘기지 않는다. 서버가 쿠폰을 직접 다시 계산하므로
+  // 클라이언트가 셈한 할인액은 믿지 않는다.
+  @override
   Future<BeanOrder> placeOrder({
     required List<BeanOrderItem> items,
+    List<Coupon> coupons = const [],
+    int couponDiscount = 0,
     int usedPoints = 0,
-    List<String> couponIds = const [],
     PaymentApproval? payment,
     BeanFulfillmentMethod fulfillmentMethod = BeanFulfillmentMethod.delivery,
     String? storeId,
@@ -42,7 +48,7 @@ class CloudFunctionsBeanCheckoutRepository {
           },
       ],
       'usedPoints': usedPoints,
-      'couponIds': couponIds,
+      'couponIds': [for (final coupon in coupons) coupon.id],
       if (payment != null)
         'payment': {
           'paymentKey': payment.paymentKey,
@@ -59,6 +65,7 @@ class CloudFunctionsBeanCheckoutRepository {
     return _orderFromResult(result.data);
   }
 
+  @override
   Future<BeanOrder> cancelOrder(String orderId) async {
     final result =
         await _functions.httpsCallable(cancelOrderCallableName).call({
