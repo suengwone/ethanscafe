@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../l10n/app_localizations.dart';
+
 const _themeModeKey = 'theme_mode';
 
 /// 앱을 켤 때 미리 읽어 둔 저장값. 첫 프레임이 저장된 테마와 다른 색으로
@@ -43,16 +45,16 @@ class ThemeModeController extends Notifier<ThemeMode> {
   }
 }
 
-extension ThemeModeLabel on ThemeMode {
-  String get label => switch (this) {
-    ThemeMode.system => '시스템 설정',
-    ThemeMode.light => '라이트',
-    ThemeMode.dark => '다크',
+extension ThemeModeLabels on AppLocalizations {
+  String themeModeLabel(ThemeMode mode) => switch (mode) {
+    ThemeMode.system => themeModeSystem,
+    ThemeMode.light => themeModeLight,
+    ThemeMode.dark => themeModeDark,
   };
 
-  String get description => switch (this) {
-    ThemeMode.system => '기기 설정을 따라 자동으로 바뀝니다',
-    ThemeMode.light => '밝은 배경으로 고정합니다',
-    ThemeMode.dark => '어두운 배경으로 고정합니다',
+  String themeModeDescription(ThemeMode mode) => switch (mode) {
+    ThemeMode.system => themeModeSystemDescription,
+    ThemeMode.light => themeModeLightDescription,
+    ThemeMode.dark => themeModeDarkDescription,
   };
 }

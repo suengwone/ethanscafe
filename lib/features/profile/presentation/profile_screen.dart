@@ -4,12 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../../core/l10n/locale_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_mode_providers.dart';
 import '../../auth/domain/auth_models.dart';
 import '../../auth/presentation/account_providers.dart';
 import '../../auth/presentation/auth_providers.dart';
 import '../../coupon/presentation/coupons_providers.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../subscription/presentation/subscription_providers.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -189,10 +191,26 @@ class ProfileScreen extends ConsumerWidget {
                 icon: LucideIcons.sunMoon,
                 title: '화면 테마',
                 trailing: Text(
-                  ref.watch(themeModeProvider).label,
+                  AppLocalizations.of(
+                    context,
+                  ).themeModeLabel(ref.watch(themeModeProvider)),
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 onTap: () => context.push('/profile/appearance'),
+              ),
+              _buildListTile(
+                icon: LucideIcons.languages,
+                title: '언어',
+                trailing: Text(
+                  switch (ref.watch(localeProvider)) {
+                    final locale? => localeName(locale),
+                    null => AppLocalizations.of(
+                      context,
+                    ).settingsLanguageSystem,
+                  },
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                onTap: () => context.push('/profile/language'),
               ),
               _buildListTile(
                 icon: LucideIcons.cake,

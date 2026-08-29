@@ -4,16 +4,18 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/theme_mode_providers.dart';
+import '../../../l10n/app_localizations.dart';
 
 class AppearanceSettingsScreen extends ConsumerWidget {
   const AppearanceSettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final mode = ref.watch(themeModeProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('화면 테마')),
+      appBar: AppBar(title: Text(l10n.settingsAppearanceTitle)),
       body: ListView(
         padding: foxtrotListPadding,
         children: [
@@ -22,7 +24,7 @@ class AppearanceSettingsScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Text(
-              '테마 선택',
+              l10n.settingsAppearanceThemeSection,
               style: Theme.of(context).textTheme.titleSmall,
             ),
           ),
@@ -40,8 +42,8 @@ class AppearanceSettingsScreen extends ConsumerWidget {
                   for (final option in ThemeMode.values)
                     RadioListTile<ThemeMode>(
                       value: option,
-                      title: Text(option.label),
-                      subtitle: Text(option.description),
+                      title: Text(l10n.themeModeLabel(option)),
+                      subtitle: Text(l10n.themeModeDescription(option)),
                     ),
                 ],
               ),
@@ -49,7 +51,7 @@ class AppearanceSettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            '고른 테마는 이 기기에만 저장됩니다. 다른 기기에서는 다시 골라 주세요.',
+            l10n.settingsAppearanceStoredOnThisDevice,
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
@@ -64,6 +66,7 @@ class _ThemePreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final palette = context.palette;
     final textTheme = Theme.of(context).textTheme;
 
@@ -77,7 +80,7 @@ class _ThemePreview extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('미리보기', style: textTheme.titleSmall),
+          Text(l10n.settingsAppearancePreview, style: textTheme.titleSmall),
           const SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.all(16),
@@ -94,9 +97,11 @@ class _ThemePreview extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('폭스트롯 리워드', style: textTheme.titleMedium),
+                      Text(l10n.settingsAppearancePreviewRewards,
+                          style: textTheme.titleMedium),
                       const SizedBox(height: 2),
-                      Text('보유 포인트 32,250P', style: textTheme.bodySmall),
+                      Text(l10n.settingsAppearancePreviewBalance,
+                          style: textTheme.bodySmall),
                     ],
                   ),
                 ),
@@ -116,7 +121,7 @@ class _ThemePreview extends StatelessWidget {
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(
-                  '주문하기',
+                  l10n.settingsAppearancePreviewOrder,
                   style: textTheme.labelLarge?.copyWith(
                     color: palette.onAccent,
                     fontWeight: FontWeight.w700,
@@ -134,7 +139,7 @@ class _ThemePreview extends StatelessWidget {
                   border: Border.all(color: palette.border),
                 ),
                 child: Text(
-                  '장바구니',
+                  l10n.settingsAppearancePreviewCart,
                   style: textTheme.labelLarge?.copyWith(color: palette.accent),
                 ),
               ),
