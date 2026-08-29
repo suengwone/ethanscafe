@@ -31,7 +31,7 @@
 | 프레임워크 | Flutter (Dart SDK ^3.12.2) |
 | 상태 관리 | Riverpod (`flutter_riverpod`, `riverpod_annotation`) |
 | 라우팅 | go_router (`StatefulShellRoute` 탭 셸 + 로그인 리다이렉트) |
-| 백엔드 | Firebase — Auth, Firestore, Functions, Messaging, Analytics, Crashlytics, Remote Config, Performance |
+| 백엔드 | Firebase — Auth, Firestore, Functions, Storage, Messaging, Analytics, Crashlytics, Remote Config, Performance |
 | 결제 | 토스페이먼츠 (결제창 WebView + 서버 승인) |
 | 모델/직렬화 | freezed, json_serializable |
 | 로컬 저장소 | shared_preferences (게스트/오프라인 폴백) |
@@ -177,7 +177,12 @@
 - ✅ 원격 공지 플래그 (`notice_enabled` / `notice_message`)
 - ✅ 스토어 리뷰 요청 (`in_app_review` — 주문 3회 달성 시 1회)
 - ✅ 성능 모니터링 (`firebase_performance` — 릴리스 빌드에서만 수집)
-- ✅ 크래시 리포팅 (Crashlytics 전역 에러 핸들러), 이벤트 분석 (Analytics)
+- ✅ 크래시 리포팅 (Crashlytics 전역 에러 핸들러)
+- ✅ 이벤트 분석 (Analytics) — `add_to_cart` · `begin_checkout` · `purchase` · `order_failed`
+  - `order_failed`의 `reason`이 핵심이다. 결제 승인 뒤 서버가 거절하는 일(품절, 가격 변경,
+    쿠폰 선점, 포인트 부족)이 얼마나 잦은지는 이 값으로만 보인다
+  - 이벤트는 `await` 하지 않는다. 관측이 주문을 기다리게 하면 안 된다
+  - Firebase가 뜨지 않은 자리에서는 아무것도 하지 않는 구현이 대신 들어간다
 - ✅ 화면 테마 — 라이트/다크 두 벌을 두고 **시스템 설정 / 라이트 / 다크** 중에서 고른다 (`/profile/appearance`)
   - 색은 `FoxtrotPalette`(`ThemeExtension`)에 담아 밝기별로 한 벌씩 만들고, 화면은 색 상수 대신
     `context.palette`로 읽는다. 화면이 팔레트를 거치지 않고 색을 박아 쓰면 라이트에서 대비가 무너진다
@@ -215,6 +220,7 @@
 쓰기가 통과한다 (콜러블은 클레임을 직접 확인하고, 마스터 데이터는 보안 규칙이 막는다).
 
 - ✅ 주문 관리 (`/points/orders`) — 진행 중인 주문 상태 진행, 매장 취소, 실패한 환불 재시도
+  - **환불 실패 탭**에는 주문이 서지 못한 채 남은 결제도 함께 뜬다 (요약이 `주문 미성립 결제`)
 - ✅ 회원 QR 스캔 적립 (`/points/earn-scan`)
 - ✅ 카탈로그 관리 (`/points/catalog`) — 탭 5종
   - 메뉴 · 원두: 등록·수정·내리기 + 목록에서 품절 토글
@@ -279,7 +285,21 @@
 | `product_stats` | 판매량 집계 | 공개 읽기 / 쓰기는 admin·서버만 |
 | `active_orders` | 진행 중인 주문 색인 (주문 1건 = 문서 1개, 트리거가 유지) | admin 읽기 / 쓰기 전면 차단 |
 | `store_activity` | 매장별 혼잡도 자동 집계 (매장 1곳 = 문서 1개, 트리거가 유지) | 공개 읽기 / 쓰기 전면 차단 |
-| `refund_failures` | 취소는 됐으나 환불이 실패한 주문 | admin 읽기 / 쓰기 전면 차단 |
+| `refund_failures` | 취소는 됐으나 환불이 실패한 주문, 그리고 **주문이 서지 못한 채 남은 결제** | admin 읽기 / 쓰기 전면 차단 |
+
+`menus`·`beans` 문서의 `imageUrl`은 매장이 올린 사진의 Storage 주소다. 비어 있으면 화면이
+분류별 기본 사진으로 대신한다.
+
+### 5.1.1 Cloud Storage
+
+| 경로 | 용도 | 접근 |
+|------|------|------|
+| `products/{menu\|bean}/{파일명}` | 매장이 올린 상품 사진 | 공개 읽기 / admin만 쓰기, 5MB 미만 JPEG·PNG·WebP |
+| 그 밖 | — | 전면 차단 |
+
+- 읽기를 여는 이유는 홈·메뉴가 로그인 전에 열리기 때문이다. 여기서 막으면 사진만 빈칸이 된다
+- 파일명에 시각을 붙인다. 같은 이름으로 덮어쓰면 앱과 CDN이 옛 사진을 한동안 계속 보여 준다
+- 앱도 규칙과 **같은 선**(5MB 미만, 이미지 3종)에서 먼저 막는다. 어긋나면 매장이 다 올린 뒤에 거절당한다
 | `coupons` | 쿠폰 | 소유자 읽기 / 자동 쿠폰 생성·`isUsed: true` 처리만 |
 | `menus` · `beans` · `banners` · `notices` · `stores` | 마스터 데이터 | 공개 읽기 / 쓰기는 admin |
 | `referrals` | 초대 코드·초대 실적 | 본인 읽기 / 쓰기 전면 차단 (서버만) |
@@ -334,7 +354,7 @@
 
 | 워크플로 | 시점 | 하는 일 |
 |----------|------|---------|
-| `ci.yml` | PR · `main` 푸시 | `flutter analyze` · `flutter test` / `functions` 단위 테스트 / 보안 규칙 단위 테스트 |
+| `ci.yml` | PR · `main` 푸시 | `dart format` 확인 · `flutter analyze` · `flutter test` / `functions` 단위 테스트 / 보안 규칙·색인 검사 |
 | `deploy.yml` | `main` 푸시 중 `functions/**` · `firestore.rules` · `storage.rules` · `firestore.indexes.json` · `firebase.json`이 바뀐 경우, 또는 수동 실행 | 함수 테스트와 규칙 테스트를 모두 통과하면 규칙·함수를 올리고, 색인은 `--force` 없이 따로 올린다 |
 
 - 자동화 대상은 **서버에 올라가는 것(함수·보안 규칙)뿐**이다. 앱 빌드는 스토어 배포와 묶여 있어 다루지 않는다
@@ -350,7 +370,12 @@
 
 - Firestore 에뮬레이터 위에서 `@firebase/rules-unit-testing`으로 실제 규칙 파일을 걸고 요청을 던진다. 규칙 문서를 흉내 내지 않고 `firestore.rules`를 그대로 읽는다
 - `npm --prefix firestore_tests test` — `firebase emulators:exec`가 에뮬레이터를 띄우고 `node --test`를 돌린 뒤 내린다. **JDK가 필요하다** (에뮬레이터가 JVM에서 돈다)
-- 파일 4개로 나눠 두었다: 계정·포인트(`rules_account`), 주문·서버 색인(`rules_orders`), 쿠폰·초대(`rules_rewards`), 카탈로그·기본 차단(`rules_catalog`)
+- 파일로 나눠 두었다: 계정·포인트(`rules_account`), 주문·서버 색인(`rules_orders`), 쿠폰·초대(`rules_rewards`), 카탈로그·기본 차단(`rules_catalog`), 상품 사진(`rules_storage`)
+- Storage 규칙은 필요한 파일만 올린다 (`testEnvironment(name, {storage: true})`). 에뮬레이터가 규칙을
+  프로젝트별로 두지 않아, 모든 파일이 올리면 나중에 정리하는 쪽이 먼저 돌던 쪽의 규칙을 지운다
+- `indexes.test.js`는 에뮬레이터 없이 소스를 훑어 복합 색인이 필요한 쿼리가 `firestore.indexes.json`에
+  선언돼 있는지 본다. 처음엔 `.collection(상수)`를 못 읽어 **한 건도 못 찾은 채 통과**했다.
+  "선언한 색인은 전부 쓰인다"와 "찾은 쿼리가 0건이면 실패"가 그 빈 통과를 막는다
 - `node --test`는 파일마다 프로세스를 따로 띄우므로 파일마다 프로젝트 ID를 달리 준다. 같은 ID를 쓰면 나란히 도는 파일이 서로의 문서를 지운다
 - 테스트가 정말 무는지 보려면 규칙을 풀어 놓은 사본을 만들고 `FIRESTORE_RULES=<사본 경로>`로 걸어 본다. 통과하면 그 규칙은 아직 지켜지지 않는 것이다
 
@@ -467,6 +492,10 @@
 | 2026-08-29 | 보안 규칙 단위 테스트 도입 — 에뮬레이터 위에서 `firestore.rules`를 그대로 걸고 32개 테스트를 돌린다. `ci.yml`·`deploy.yml`이 이를 게이트로 삼아, 규칙이 사람 눈만 거쳐 배포되던 구멍을 막았다 |
 | 2026-08-29 | 주문 죽은 경로 정리 — 주문 컨트롤러의 레거시 분기를 없애고 `BeanCheckout`·`PickupCheckout` 인터페이스로 한 갈래를 만들었다. 규칙상 실행될 수 없던 Firestore 주문 저장소의 쓰기 메서드와 직렬화 함수를 지우고, 주문 문서 테스트를 서버가 쓰는 모양으로 다시 썼다 |
 | 2026-08-30 | 다국어 지원 — `flutter_localizations`와 ARB 두 벌(779개)을 두고 `/profile/language`에서 시스템 설정·한국어·English를 고른다. 화면 문자열 전부를 l10n으로 옮기면서, 이름을 품고 있던 도메인 enum 12종과 문장을 만들던 모델 게터를 걷어냈다. 법률 문서·저장되는 값·매장이 올린 글은 그대로 두고 그 이유를 문서에 남겼다 |
+| 2026-08-30 | 결제 고아 건 차단 — `placeOrder`가 쓰기 트랜잭션에서 실패했을 때만 결제를 되돌렸다. 품절·가격 변경·쿠폰 선점처럼 **결제를 확인하기 전에** 던지는 검사에서는 돈만 빠져나가고 주문도 기록도 없었다. 반대로 중복 제출은 이미 성립한 주문의 결제를 환불했다. 이제 요청이 들어온 순간부터 결제 번호를 붙잡아 어디서 실패하든 되돌리되, `이미 처리된 결제입니다`만 예외로 둔다. 취소까지 실패하면 `refund_failures`로 간다 |
+| 2026-08-30 | Firestore 색인을 소스로 — `firestore.indexes.json` 신설. 복합 색인 2종이 콘솔에만 있어 새 환경에서는 주문 관리 화면과 혼잡도 트리거가 깨졌다. 색인은 `--force` 없이 따로 배포한다 |
+| 2026-08-30 | 상품 사진 — 매장이 메뉴·원두 사진을 올린다 (Cloud Storage). 없으면 기존처럼 분류별 기본 사진을 쓴다. Storage 보안 규칙과 그 테스트를 함께 넣었다 |
+| 2026-08-30 | 관측·정리 — Analytics 이벤트 4종을 실제로 남기기 시작했다(그동안 의존성만 있고 호출은 0건이었다). 미사용 의존성 3종 제거, `dart format` CI 게이트 도입과 전체 정렬, 라벨 없던 컨트롤 5곳에 접근성 이름표 |
 | 2026-08-19 | 공지 등록·수정 도구 — 카탈로그 관리에 공지 탭 추가. `noticeToFirestore` 직렬화와 게시일(`createdAt`) 편집으로 마스터 데이터 5종을 모두 앱에서 관리한다 |
 | 2026-08-19 | 배너·매장 등록·수정 도구 — 상품 관리 화면을 **카탈로그 관리**로 넓혀 탭 4종(메뉴·원두·배너·매장)으로 재구성. `EventBanner`·`CafeStore`에 `sortOrder` 추가 및 쓰기 직렬화. 배너 아이콘 표를 홈 캐러셀과 관리자 화면이 함께 쓰도록 통합 |
 | 2026-08-17 | 주문·포인트·쿠폰 쓰기를 Cloud Functions 콜러블로 이관. 보안 규칙 강화 — 서버 가격 검증, 쿠폰 복원 서버 전용화, 판매량 서버 집계. 앱 운영 기능 추가(오프라인 배너·원격 강제 업데이트·리뷰 요청·성능 모니터링). **본 문서를 코드 기준으로 전면 재작성** |
