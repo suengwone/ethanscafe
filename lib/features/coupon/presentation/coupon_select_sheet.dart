@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/coupon_models.dart';
 
 final _priceFormat = NumberFormat('#,###');
@@ -81,15 +82,15 @@ class _CouponSelectSheetState extends State<CouponSelectSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('쿠폰 선택', style: textTheme.titleMedium),
+            Text(AppLocalizations.of(context).couponSelectTitle, style: textTheme.titleMedium),
             const SizedBox(height: 4),
             Text(
-              '일반 쿠폰은 1장만 적용되고, 중복 사용 쿠폰은 함께 적용할 수 있어요.',
+              AppLocalizations.of(context).couponSelectNotice,
               style: textTheme.bodySmall,
             ),
             const SizedBox(height: 14),
             _CouponOptionCard(
-              title: '쿠폰 적용 안함',
+              title: AppLocalizations.of(context).couponSelectNone,
               highlighted: _selected.isEmpty,
               onTap: () => setState(_selected.clear),
             ),
@@ -110,14 +111,16 @@ class _CouponSelectSheetState extends State<CouponSelectSheet> {
               onPressed: () => Navigator.pop(context, List.of(_selected)),
               child: Text(
                 discount > 0
-                    ? '적용하기 (-${_priceFormat.format(discount)}원)'
-                    : '적용하기',
+                    ? AppLocalizations.of(context).couponSelectApplyWithDiscount(
+                        _priceFormat.format(discount),
+                      )
+                    : AppLocalizations.of(context).couponSelectApply,
               ),
             ),
             const SizedBox(height: 8),
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('닫기'),
+              child: Text(AppLocalizations.of(context).commonClose),
             ),
           ],
         ),
@@ -138,7 +141,7 @@ class CouponStackableBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
       ),
       child: Text(
-        '중복 사용',
+        AppLocalizations.of(context).couponStackable,
         style: TextStyle(fontSize: 10, color: context.palette.accentSoft),
       ),
     );

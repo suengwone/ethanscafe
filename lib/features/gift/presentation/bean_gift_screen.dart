@@ -24,18 +24,18 @@ class BeanGiftScreen extends ConsumerWidget {
     final beanState = ref.watch(beanProvider(beanId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('원두 선물하기')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).giftScreenTitle)),
       body: beanState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('원두 정보를 불러오지 못했습니다.'),
+              Text(AppLocalizations.of(context).beansLoadFailed),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.invalidate(beanProvider(beanId)),
-                child: const Text('다시 시도'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -97,10 +97,10 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            '${_nameController.text.trim()}님께 ${widget.bean.name} 선물을 보냈습니다.',
+            AppLocalizations.of(context).giftSent(_nameController.text.trim(), widget.bean.name),
           ),
           action: SnackBarAction(
-            label: '선물 내역',
+            label: AppLocalizations.of(context).giftViewHistory,
             onPressed: () => context.push('/profile/gifts'),
           ),
         ),
@@ -135,7 +135,7 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
                   _BeanSummaryCard(bean: widget.bean),
                   const SizedBox(height: 16),
                   _SectionCard(
-                    title: '옵션 선택',
+                    title: AppLocalizations.of(context).giftSectionOptions,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -194,7 +194,10 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
                         const SizedBox(height: 12),
                         Row(
                           children: [
-                            Text('수량', style: textTheme.titleSmall),
+                            Text(
+                              AppLocalizations.of(context).beanFieldQuantity,
+                              style: textTheme.titleSmall,
+                            ),
                             const Spacer(),
                             _QuantityButton(
                               icon: LucideIcons.minus,
@@ -221,19 +224,19 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
                   ),
                   const SizedBox(height: 16),
                   _SectionCard(
-                    title: '받는 분',
+                    title: AppLocalizations.of(context).giftSectionRecipient,
                     child: Column(
                       children: [
                         TextFormField(
                           controller: _nameController,
                           textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            labelText: '이름',
-                            hintText: '받는 분 이름',
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context).giftFieldName,
+                            hintText: AppLocalizations.of(context).giftFieldNameHint,
                           ),
                           validator: (value) =>
                               (value == null || value.trim().isEmpty)
-                                  ? '받는 분 이름을 입력해 주세요.'
+                                  ? AppLocalizations.of(context).giftFieldNameRequired
                                   : null,
                         ),
                         const SizedBox(height: 12),
@@ -241,13 +244,13 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
                           controller: _phoneController,
                           keyboardType: TextInputType.phone,
                           textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            labelText: '연락처',
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context).businessFieldPhone,
                             hintText: '010-0000-0000',
                           ),
                           validator: (value) =>
                               (value == null || value.trim().isEmpty)
-                                  ? '받는 분 연락처를 입력해 주세요.'
+                                  ? AppLocalizations.of(context).giftFieldPhoneRequired
                                   : null,
                         ),
                         const SizedBox(height: 12),
@@ -255,9 +258,9 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
                           controller: _messageController,
                           maxLines: 3,
                           maxLength: 100,
-                          decoration: const InputDecoration(
-                            labelText: '선물 메시지 (선택)',
-                            hintText: '마음을 전하는 메시지를 남겨보세요.',
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context).giftFieldMessage,
+                            hintText: AppLocalizations.of(context).giftFieldMessageHint,
                             alignLabelWithHint: true,
                           ),
                         ),
@@ -362,11 +365,11 @@ class _GiftBar extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '선물 금액',
+                      AppLocalizations.of(context).giftTotalPrice,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     Text(
-                      '${_priceFormat.format(totalPrice)}원',
+                      AppLocalizations.of(context).priceWon(_priceFormat.format(totalPrice)),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -379,7 +382,7 @@ class _GiftBar extends StatelessWidget {
               FilledButton.icon(
                 onPressed: sending ? null : onSend,
                 icon: const Icon(LucideIcons.gift, size: 18),
-                label: Text(sending ? '보내는 중...' : '선물 보내기'),
+                label: Text(sending ? AppLocalizations.of(context).giftSending : AppLocalizations.of(context).giftSend),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 28,
@@ -460,7 +463,7 @@ class _WeightOption extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '${_priceFormat.format(price)}원',
+              AppLocalizations.of(context).priceWon(_priceFormat.format(price)),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],

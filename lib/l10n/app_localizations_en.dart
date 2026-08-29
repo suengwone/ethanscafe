@@ -1404,4 +1404,136 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get qrExpired =>
       'That membership QR code has expired. Ask for a fresh one and scan again.';
+
+  @override
+  String get couponSelectTitle => 'Choose coupons';
+
+  @override
+  String get couponSelectNotice =>
+      'You can use one ordinary coupon; stacking coupons can go together.';
+
+  @override
+  String get couponSelectNone => 'No coupon';
+
+  @override
+  String couponSelectApplyWithDiscount(String amount) {
+    return 'Apply (-₩$amount)';
+  }
+
+  @override
+  String get couponSelectApply => 'Apply';
+
+  @override
+  String get couponStackable => 'Stacks';
+
+  @override
+  String get couponListTitle => 'Coupons';
+
+  @override
+  String get couponLoadFailed => 'Could not load your coupons.';
+
+  @override
+  String couponSectionUsable(int count) {
+    return '$count available';
+  }
+
+  @override
+  String get couponSectionSpent => 'Used and expired';
+
+  @override
+  String get couponMarkedUsed => 'The coupon is marked used.';
+
+  @override
+  String get couponUseFailed => 'Could not use the coupon. Try again.';
+
+  @override
+  String get couponEmpty => 'You have no coupons';
+
+  @override
+  String get couponStateUsed => 'Used';
+
+  @override
+  String get couponStateExpired => 'Expired';
+
+  @override
+  String get couponStateUsable => 'Available';
+
+  @override
+  String get couponUseTitle => 'Use this coupon';
+
+  @override
+  String get couponUseConfirm =>
+      'Have a member of staff confirm first. Once used, a coupon cannot be put back.';
+
+  @override
+  String get couponUseAction => 'Use';
+
+  @override
+  String couponValidUntil(String date) {
+    return 'Valid until $date';
+  }
+
+  @override
+  String get couponShowQr =>
+      'Show this QR code to a member of staff. Tap Use once they have scanned it.';
+
+  @override
+  String get couponUseButton => 'Use it';
+
+  @override
+  String get giftHistoryTitle => 'Gifts you sent';
+
+  @override
+  String get giftHistoryLoadFailed => 'Could not load your gifts.';
+
+  @override
+  String get giftHistoryEmptyTitle => 'You have not sent any gifts';
+
+  @override
+  String get giftHistoryEmptyDetail =>
+      'Send beans to someone from a bean\'s page.';
+
+  @override
+  String get giftScreenTitle => 'Send beans';
+
+  @override
+  String giftSent(String name, String bean) {
+    return 'Sent $bean to $name.';
+  }
+
+  @override
+  String get giftViewHistory => 'See gifts';
+
+  @override
+  String get giftSectionOptions => 'Choose options';
+
+  @override
+  String get giftSectionRecipient => 'Who it is for';
+
+  @override
+  String get giftFieldName => 'Name';
+
+  @override
+  String get giftFieldNameHint => 'The recipient\'s name';
+
+  @override
+  String get giftFieldNameRequired => 'Enter the recipient\'s name.';
+
+  @override
+  String get giftFieldPhoneRequired => 'Enter the recipient\'s phone number.';
+
+  @override
+  String get giftFieldMessage => 'Message (optional)';
+
+  @override
+  String get giftFieldMessageHint => 'Say something to go with it.';
+
+  @override
+  String get giftTotalPrice => 'Gift total';
+
+  @override
+  String get giftSending => 'Sending…';
+
+  @override
+  String get giftSend => 'Send the gift';
 }

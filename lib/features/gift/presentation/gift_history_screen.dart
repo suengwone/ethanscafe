@@ -22,18 +22,18 @@ class GiftHistoryScreen extends ConsumerWidget {
     final giftsState = ref.watch(beanGiftsControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('선물 내역')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).giftHistoryTitle)),
       body: giftsState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('선물 내역을 불러오지 못했습니다.'),
+              Text(AppLocalizations.of(context).giftHistoryLoadFailed),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.invalidate(beanGiftsControllerProvider),
-                child: const Text('다시 시도'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -65,12 +65,12 @@ class _EmptyGifts extends StatelessWidget {
           Icon(LucideIcons.gift, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text(
-            '보낸 선물이 없어요',
+            AppLocalizations.of(context).giftHistoryEmptyTitle,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           Text(
-            '원두 상세에서 소중한 분께 원두를 선물해 보세요.',
+            AppLocalizations.of(context).giftHistoryEmptyDetail,
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
@@ -149,7 +149,7 @@ class _GiftCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  '${_priceFormat.format(gift.totalPrice)}원',
+                  AppLocalizations.of(context).priceWon(_priceFormat.format(gift.totalPrice)),
                   style: textTheme.labelLarge,
                 ),
               ],

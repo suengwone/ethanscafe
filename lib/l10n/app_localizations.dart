@@ -2569,6 +2569,246 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'만료된 회원 QR 코드입니다. 갱신된 QR을 다시 스캔해주세요.'**
   String get qrExpired;
+
+  /// No description provided for @couponSelectTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'쿠폰 선택'**
+  String get couponSelectTitle;
+
+  /// No description provided for @couponSelectNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'일반 쿠폰은 1장만 적용되고, 중복 사용 쿠폰은 함께 적용할 수 있어요.'**
+  String get couponSelectNotice;
+
+  /// No description provided for @couponSelectNone.
+  ///
+  /// In ko, this message translates to:
+  /// **'쿠폰 적용 안함'**
+  String get couponSelectNone;
+
+  /// No description provided for @couponSelectApplyWithDiscount.
+  ///
+  /// In ko, this message translates to:
+  /// **'적용하기 (-{amount}원)'**
+  String couponSelectApplyWithDiscount(String amount);
+
+  /// No description provided for @couponSelectApply.
+  ///
+  /// In ko, this message translates to:
+  /// **'적용하기'**
+  String get couponSelectApply;
+
+  /// No description provided for @couponStackable.
+  ///
+  /// In ko, this message translates to:
+  /// **'중복 사용'**
+  String get couponStackable;
+
+  /// No description provided for @couponListTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'쿠폰함'**
+  String get couponListTitle;
+
+  /// No description provided for @couponLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'쿠폰을 불러오지 못했습니다.'**
+  String get couponLoadFailed;
+
+  /// No description provided for @couponSectionUsable.
+  ///
+  /// In ko, this message translates to:
+  /// **'사용 가능 {count}장'**
+  String couponSectionUsable(int count);
+
+  /// No description provided for @couponSectionSpent.
+  ///
+  /// In ko, this message translates to:
+  /// **'사용 완료 · 기간 만료'**
+  String get couponSectionSpent;
+
+  /// No description provided for @couponMarkedUsed.
+  ///
+  /// In ko, this message translates to:
+  /// **'쿠폰이 사용 처리되었습니다.'**
+  String get couponMarkedUsed;
+
+  /// No description provided for @couponUseFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'쿠폰 사용에 실패했습니다. 다시 시도해주세요.'**
+  String get couponUseFailed;
+
+  /// No description provided for @couponEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'보유한 쿠폰이 없어요'**
+  String get couponEmpty;
+
+  /// No description provided for @couponStateUsed.
+  ///
+  /// In ko, this message translates to:
+  /// **'사용 완료'**
+  String get couponStateUsed;
+
+  /// No description provided for @couponStateExpired.
+  ///
+  /// In ko, this message translates to:
+  /// **'기간 만료'**
+  String get couponStateExpired;
+
+  /// No description provided for @couponStateUsable.
+  ///
+  /// In ko, this message translates to:
+  /// **'사용 가능'**
+  String get couponStateUsable;
+
+  /// No description provided for @couponUseTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'쿠폰 사용'**
+  String get couponUseTitle;
+
+  /// No description provided for @couponUseConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 직원 확인 후 사용 처리해주세요.\n사용 처리된 쿠폰은 되돌릴 수 없습니다.'**
+  String get couponUseConfirm;
+
+  /// No description provided for @couponUseAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'사용'**
+  String get couponUseAction;
+
+  /// No description provided for @couponValidUntil.
+  ///
+  /// In ko, this message translates to:
+  /// **'~ {date}까지 사용 가능'**
+  String couponValidUntil(String date);
+
+  /// No description provided for @couponShowQr.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 직원에게 QR 코드를 보여주세요.\n직원 스캔·확인 후 사용하기 버튼을 눌러주세요.'**
+  String get couponShowQr;
+
+  /// No description provided for @couponUseButton.
+  ///
+  /// In ko, this message translates to:
+  /// **'사용하기'**
+  String get couponUseButton;
+
+  /// No description provided for @giftHistoryTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'선물 내역'**
+  String get giftHistoryTitle;
+
+  /// No description provided for @giftHistoryLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'선물 내역을 불러오지 못했습니다.'**
+  String get giftHistoryLoadFailed;
+
+  /// No description provided for @giftHistoryEmptyTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'보낸 선물이 없어요'**
+  String get giftHistoryEmptyTitle;
+
+  /// No description provided for @giftHistoryEmptyDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 상세에서 소중한 분께 원두를 선물해 보세요.'**
+  String get giftHistoryEmptyDetail;
+
+  /// No description provided for @giftScreenTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 선물하기'**
+  String get giftScreenTitle;
+
+  /// No description provided for @giftSent.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}님께 {bean} 선물을 보냈습니다.'**
+  String giftSent(String name, String bean);
+
+  /// No description provided for @giftViewHistory.
+  ///
+  /// In ko, this message translates to:
+  /// **'선물 내역'**
+  String get giftViewHistory;
+
+  /// No description provided for @giftSectionOptions.
+  ///
+  /// In ko, this message translates to:
+  /// **'옵션 선택'**
+  String get giftSectionOptions;
+
+  /// No description provided for @giftSectionRecipient.
+  ///
+  /// In ko, this message translates to:
+  /// **'받는 분'**
+  String get giftSectionRecipient;
+
+  /// No description provided for @giftFieldName.
+  ///
+  /// In ko, this message translates to:
+  /// **'이름'**
+  String get giftFieldName;
+
+  /// No description provided for @giftFieldNameHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'받는 분 이름'**
+  String get giftFieldNameHint;
+
+  /// No description provided for @giftFieldNameRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'받는 분 이름을 입력해 주세요.'**
+  String get giftFieldNameRequired;
+
+  /// No description provided for @giftFieldPhoneRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'받는 분 연락처를 입력해 주세요.'**
+  String get giftFieldPhoneRequired;
+
+  /// No description provided for @giftFieldMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'선물 메시지 (선택)'**
+  String get giftFieldMessage;
+
+  /// No description provided for @giftFieldMessageHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'마음을 전하는 메시지를 남겨보세요.'**
+  String get giftFieldMessageHint;
+
+  /// No description provided for @giftTotalPrice.
+  ///
+  /// In ko, this message translates to:
+  /// **'선물 금액'**
+  String get giftTotalPrice;
+
+  /// No description provided for @giftSending.
+  ///
+  /// In ko, this message translates to:
+  /// **'보내는 중...'**
+  String get giftSending;
+
+  /// No description provided for @giftSend.
+  ///
+  /// In ko, this message translates to:
+  /// **'선물 보내기'**
+  String get giftSend;
 }
 
 class _AppLocalizationsDelegate

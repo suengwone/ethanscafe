@@ -1376,4 +1376,134 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get qrExpired => '만료된 회원 QR 코드입니다. 갱신된 QR을 다시 스캔해주세요.';
+
+  @override
+  String get couponSelectTitle => '쿠폰 선택';
+
+  @override
+  String get couponSelectNotice => '일반 쿠폰은 1장만 적용되고, 중복 사용 쿠폰은 함께 적용할 수 있어요.';
+
+  @override
+  String get couponSelectNone => '쿠폰 적용 안함';
+
+  @override
+  String couponSelectApplyWithDiscount(String amount) {
+    return '적용하기 (-$amount원)';
+  }
+
+  @override
+  String get couponSelectApply => '적용하기';
+
+  @override
+  String get couponStackable => '중복 사용';
+
+  @override
+  String get couponListTitle => '쿠폰함';
+
+  @override
+  String get couponLoadFailed => '쿠폰을 불러오지 못했습니다.';
+
+  @override
+  String couponSectionUsable(int count) {
+    return '사용 가능 $count장';
+  }
+
+  @override
+  String get couponSectionSpent => '사용 완료 · 기간 만료';
+
+  @override
+  String get couponMarkedUsed => '쿠폰이 사용 처리되었습니다.';
+
+  @override
+  String get couponUseFailed => '쿠폰 사용에 실패했습니다. 다시 시도해주세요.';
+
+  @override
+  String get couponEmpty => '보유한 쿠폰이 없어요';
+
+  @override
+  String get couponStateUsed => '사용 완료';
+
+  @override
+  String get couponStateExpired => '기간 만료';
+
+  @override
+  String get couponStateUsable => '사용 가능';
+
+  @override
+  String get couponUseTitle => '쿠폰 사용';
+
+  @override
+  String get couponUseConfirm =>
+      '매장 직원 확인 후 사용 처리해주세요.\n사용 처리된 쿠폰은 되돌릴 수 없습니다.';
+
+  @override
+  String get couponUseAction => '사용';
+
+  @override
+  String couponValidUntil(String date) {
+    return '~ $date까지 사용 가능';
+  }
+
+  @override
+  String get couponShowQr =>
+      '매장 직원에게 QR 코드를 보여주세요.\n직원 스캔·확인 후 사용하기 버튼을 눌러주세요.';
+
+  @override
+  String get couponUseButton => '사용하기';
+
+  @override
+  String get giftHistoryTitle => '선물 내역';
+
+  @override
+  String get giftHistoryLoadFailed => '선물 내역을 불러오지 못했습니다.';
+
+  @override
+  String get giftHistoryEmptyTitle => '보낸 선물이 없어요';
+
+  @override
+  String get giftHistoryEmptyDetail => '원두 상세에서 소중한 분께 원두를 선물해 보세요.';
+
+  @override
+  String get giftScreenTitle => '원두 선물하기';
+
+  @override
+  String giftSent(String name, String bean) {
+    return '$name님께 $bean 선물을 보냈습니다.';
+  }
+
+  @override
+  String get giftViewHistory => '선물 내역';
+
+  @override
+  String get giftSectionOptions => '옵션 선택';
+
+  @override
+  String get giftSectionRecipient => '받는 분';
+
+  @override
+  String get giftFieldName => '이름';
+
+  @override
+  String get giftFieldNameHint => '받는 분 이름';
+
+  @override
+  String get giftFieldNameRequired => '받는 분 이름을 입력해 주세요.';
+
+  @override
+  String get giftFieldPhoneRequired => '받는 분 연락처를 입력해 주세요.';
+
+  @override
+  String get giftFieldMessage => '선물 메시지 (선택)';
+
+  @override
+  String get giftFieldMessageHint => '마음을 전하는 메시지를 남겨보세요.';
+
+  @override
+  String get giftTotalPrice => '선물 금액';
+
+  @override
+  String get giftSending => '보내는 중...';
+
+  @override
+  String get giftSend => '선물 보내기';
 }

@@ -6,6 +6,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/coupon_models.dart';
 import 'coupon_select_sheet.dart';
 import 'coupons_providers.dart';
@@ -21,18 +22,18 @@ class CouponListScreen extends ConsumerWidget {
     final now = ref.watch(couponNowProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('쿠폰함')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).couponListTitle)),
       body: couponsState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('쿠폰을 불러오지 못했습니다.'),
+              Text(AppLocalizations.of(context).couponLoadFailed),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.invalidate(couponsControllerProvider),
-                child: const Text('다시 시도'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -50,7 +51,9 @@ class CouponListScreen extends ConsumerWidget {
           return ListView(
             padding: foxtrotListPadding,
             children: [
-              _SectionLabel(label: '사용 가능 ${usable.length}장'),
+              _SectionLabel(
+                label: AppLocalizations.of(context).couponSectionUsable(usable.length),
+              ),
               ...usable.map(
                 (coupon) => _CouponCard(
                   coupon: coupon,
@@ -60,7 +63,7 @@ class CouponListScreen extends ConsumerWidget {
               ),
               if (unusable.isNotEmpty) ...[
                 const SizedBox(height: 16),
-                const _SectionLabel(label: '사용 완료 · 기간 만료'),
+                _SectionLabel(label: AppLocalizations.of(context).couponSectionSpent),
                 ...unusable.map(
                   (coupon) => _CouponCard(coupon: coupon, now: now),
                 ),
@@ -92,12 +95,12 @@ class CouponListScreen extends ConsumerWidget {
       await ref.read(couponsControllerProvider.notifier).useCoupon(coupon.id);
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('쿠폰이 사용 처리되었습니다.')),
+        SnackBar(content: Text(AppLocalizations.of(context).couponMarkedUsed)),
       );
     } catch (_) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('쿠폰 사용에 실패했습니다. 다시 시도해주세요.')),
+        SnackBar(content: Text(AppLocalizations.of(context).couponUseFailed)),
       );
     }
   }
@@ -115,7 +118,7 @@ class _EmptyCoupons extends StatelessWidget {
           Icon(LucideIcons.ticket, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text(
-            '보유한 쿠폰이 없어요',
+            AppLocalizations.of(context).couponEmpty,
             style: Theme.of(context).textTheme.titleMedium,
           ),
         ],
@@ -231,13 +234,13 @@ class _StatusChip extends StatelessWidget {
     final String label;
     final bool highlighted;
     if (coupon.isUsed) {
-      label = '사용 완료';
+      label = AppLocalizations.of(context).couponStateUsed;
       highlighted = false;
     } else if (coupon.isExpired(now)) {
-      label = '기간 만료';
+      label = AppLocalizations.of(context).couponStateExpired;
       highlighted = false;
     } else {
-      label = '사용 가능';
+      label = AppLocalizations.of(context).couponStateUsable;
       highlighted = true;
     }
 
@@ -270,18 +273,16 @@ class _CouponUseSheet extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('쿠폰 사용'),
-        content: const Text(
-          '매장 직원 확인 후 사용 처리해주세요.\n사용 처리된 쿠폰은 되돌릴 수 없습니다.',
-        ),
+        title: Text(AppLocalizations.of(context).couponUseTitle),
+        content: Text(AppLocalizations.of(context).couponUseConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('취소'),
+            child: Text(AppLocalizations.of(context).commonCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('사용'),
+            child: Text(AppLocalizations.of(context).couponUseAction),
           ),
         ],
       ),
@@ -341,7 +342,7 @@ class _CouponUseSheet extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              '~ ${_dateFormat.format(coupon.expiresAt)}까지 사용 가능',
+              AppLocalizations.of(context).couponValidUntil(_dateFormat.format(coupon.expiresAt)),
               style: textTheme.bodySmall,
               textAlign: TextAlign.center,
             ),
@@ -359,7 +360,7 @@ class _CouponUseSheet extends StatelessWidget {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      '매장 직원에게 QR 코드를 보여주세요.\n직원 스캔·확인 후 사용하기 버튼을 눌러주세요.',
+                      AppLocalizations.of(context).couponShowQr,
                       style: textTheme.bodySmall,
                     ),
                   ),
@@ -369,12 +370,12 @@ class _CouponUseSheet extends StatelessWidget {
             const SizedBox(height: 20),
             FilledButton(
               onPressed: () => _confirmUse(context),
-              child: const Text('사용하기'),
+              child: Text(AppLocalizations.of(context).couponUseButton),
             ),
             const SizedBox(height: 8),
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('닫기'),
+              child: Text(AppLocalizations.of(context).commonClose),
             ),
           ],
         ),

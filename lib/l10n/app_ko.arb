@@ -884,5 +884,76 @@
   "orderDestinationNoStore": "매장 미지정",
   "accountDisplayFallback": "회원",
   "qrMalformed": "회원 QR 코드가 올바르지 않습니다.",
-  "qrExpired": "만료된 회원 QR 코드입니다. 갱신된 QR을 다시 스캔해주세요."
+  "qrExpired": "만료된 회원 QR 코드입니다. 갱신된 QR을 다시 스캔해주세요.",
+  "couponSelectTitle": "쿠폰 선택",
+  "couponSelectNotice": "일반 쿠폰은 1장만 적용되고, 중복 사용 쿠폰은 함께 적용할 수 있어요.",
+  "couponSelectNone": "쿠폰 적용 안함",
+  "couponSelectApplyWithDiscount": "적용하기 (-{amount}원)",
+  "@couponSelectApplyWithDiscount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "couponSelectApply": "적용하기",
+  "couponStackable": "중복 사용",
+  "couponListTitle": "쿠폰함",
+  "couponLoadFailed": "쿠폰을 불러오지 못했습니다.",
+  "couponSectionUsable": "사용 가능 {count}장",
+  "@couponSectionUsable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "couponSectionSpent": "사용 완료 · 기간 만료",
+  "couponMarkedUsed": "쿠폰이 사용 처리되었습니다.",
+  "couponUseFailed": "쿠폰 사용에 실패했습니다. 다시 시도해주세요.",
+  "couponEmpty": "보유한 쿠폰이 없어요",
+  "couponStateUsed": "사용 완료",
+  "couponStateExpired": "기간 만료",
+  "couponStateUsable": "사용 가능",
+  "couponUseTitle": "쿠폰 사용",
+  "couponUseConfirm": "매장 직원 확인 후 사용 처리해주세요.\n사용 처리된 쿠폰은 되돌릴 수 없습니다.",
+  "couponUseAction": "사용",
+  "couponValidUntil": "~ {date}까지 사용 가능",
+  "@couponValidUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "couponShowQr": "매장 직원에게 QR 코드를 보여주세요.\n직원 스캔·확인 후 사용하기 버튼을 눌러주세요.",
+  "couponUseButton": "사용하기",
+  "giftHistoryTitle": "선물 내역",
+  "giftHistoryLoadFailed": "선물 내역을 불러오지 못했습니다.",
+  "giftHistoryEmptyTitle": "보낸 선물이 없어요",
+  "giftHistoryEmptyDetail": "원두 상세에서 소중한 분께 원두를 선물해 보세요.",
+  "giftScreenTitle": "원두 선물하기",
+  "giftSent": "{name}님께 {bean} 선물을 보냈습니다.",
+  "@giftSent": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "bean": {
+        "type": "String"
+      }
+    }
+  },
+  "giftViewHistory": "선물 내역",
+  "giftSectionOptions": "옵션 선택",
+  "giftSectionRecipient": "받는 분",
+  "giftFieldName": "이름",
+  "giftFieldNameHint": "받는 분 이름",
+  "giftFieldNameRequired": "받는 분 이름을 입력해 주세요.",
+  "giftFieldPhoneRequired": "받는 분 연락처를 입력해 주세요.",
+  "giftFieldMessage": "선물 메시지 (선택)",
+  "giftFieldMessageHint": "마음을 전하는 메시지를 남겨보세요.",
+  "giftTotalPrice": "선물 금액",
+  "giftSending": "보내는 중...",
+  "giftSend": "선물 보내기"
 }

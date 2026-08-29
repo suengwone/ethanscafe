@@ -498,9 +498,10 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
     setState(() => _coupons = selection);
   }
 
-  String _orderName(List<PickupCartItem> items) => items.length == 1
+  String _orderName(AppLocalizations l10n, List<PickupCartItem> items) =>
+      items.length == 1
       ? items.first.menuItem.name
-      : '${items.first.menuItem.name} 외 ${items.length - 1}건';
+      : l10n.orderItemsSummary(items.first.menuItem.name, items.length - 1);
 
   Future<void> _placeOrder(
     int usedPoints,
@@ -524,7 +525,7 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
               context,
               PaymentRequest(
                 orderId: generatePaymentOrderId(),
-                orderName: _orderName(items),
+                orderName: _orderName(AppLocalizations.of(context), items),
                 amount: payAmount,
               ),
             );
