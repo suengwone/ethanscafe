@@ -55,27 +55,6 @@ class _StreamPickupOrdersRepository implements PickupOrdersRepository {
 
   @override
   Stream<List<PickupOrder>> watchOrders() => _controller.stream;
-
-  @override
-  Future<PickupOrder> placeOrder({
-    required List<PickupOrderItem> items,
-    required String storeId,
-    required String storeName,
-    int usedPoints = 0,
-    int earnedPoints = 0,
-    String? couponId,
-    String? couponTitle,
-    int couponDiscount = 0,
-    String? paymentKey,
-    String? paymentMethod,
-  }) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<PickupOrder> cancelOrder(String orderId) {
-    throw UnimplementedError();
-  }
 }
 
 void main() {

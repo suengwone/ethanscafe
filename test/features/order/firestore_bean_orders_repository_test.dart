@@ -76,121 +76,136 @@ void main() {
     });
   });
 
-  group('beanOrdersToFirestore', () {
-    test('createdAt을 Timestamp로 직렬화한다', () {
-      final createdAt = DateTime(2026, 8, 5, 11, 20);
-      final map = beanOrdersToFirestore([
+  // 아래 문서는 `functions/order_checkout.js`의 buildOrderDoc이 쓰는 모양이다.
+  // 클라이언트는 주문을 쓰지 않으므로, 앱이 읽어야 하는 것은 서버가 쓴 이 모양뿐이다.
+  group('서버가 쓴 주문 문서를 읽는다', () {
+    test('쿠폰과 포인트가 걸린 주문을 읽는다', () {
+      final createdAt = DateTime(2026, 8, 6, 15, 30);
+      final order = beanOrdersFromFirestore({
+        'orders': [
+          {
+            'id': 'order-3',
+            'items': [
+              {
+                'beanId': 'ethiopia-yirgacheffe-aricha',
+                'beanName': '에티오피아 예가체프 아리차 에이미 G1',
+                'weight': 'g200',
+                'grind': 'espresso',
+                'quantity': 3,
+                'unitPrice': 18000,
+              },
+            ],
+            'totalAmount': 54000,
+            'usedPoints': 4000,
+            'earnedPoints': 5000,
+            'couponDiscount': 3000,
+            'couponId': 'bean-order-3000',
+            'couponTitle': '원두 주문 3,000원 할인',
+            'status': 'shipped',
+            'fulfillmentMethod': 'delivery',
+            'createdAt': Timestamp.fromDate(createdAt),
+          },
+        ],
+      }).first;
+
+      expect(
+        order,
         BeanOrder(
-          id: 'order-1',
+          id: 'order-3',
           items: const [
             BeanOrderItem(
-              beanId: 'brazil-monte-belo-yellow-bourbon',
-              beanName: '브라질 몬테 벨로 옐로우버본',
-              weight: BeanWeight.g500,
-              grind: GrindOption.wholeBean,
-              quantity: 1,
-              unitPrice: 32000,
+              beanId: 'ethiopia-yirgacheffe-aricha',
+              beanName: '에티오피아 예가체프 아리차 에이미 G1',
+              weight: BeanWeight.g200,
+              grind: GrindOption.espresso,
+              quantity: 3,
+              unitPrice: 18000,
             ),
           ],
-          totalAmount: 32000,
+          totalAmount: 54000,
+          usedPoints: 4000,
+          earnedPoints: 5000,
+          couponId: 'bean-order-3000',
+          couponTitle: '원두 주문 3,000원 할인',
+          couponDiscount: 3000,
+          status: BeanOrderStatus.shipped,
           createdAt: createdAt,
         ),
-      ]);
-
-      final order = (map['orders'] as List<dynamic>).first as Map<String, dynamic>;
-      expect(order['status'], 'received');
-      expect(order['createdAt'], Timestamp.fromDate(createdAt));
-      final item = (order['items'] as List<dynamic>).first as Map<String, dynamic>;
-      expect(item['weight'], 'g500');
-      expect(item['grind'], 'wholeBean');
+      );
     });
 
-    test('round trip 시 데이터가 보존된다', () {
-      final original = BeanOrder(
-        id: 'order-3',
-        items: const [
-          BeanOrderItem(
-            beanId: 'ethiopia-yirgacheffe-aricha',
-            beanName: '에티오피아 예가체프 아리차 에이미 G1',
-            weight: BeanWeight.g200,
-            grind: GrindOption.espresso,
-            quantity: 3,
-            unitPrice: 18000,
-          ),
+    test('택배 주문은 받는 사람과 주소를 읽는다', () {
+      final createdAt = DateTime(2026, 8, 7, 10);
+      final order = beanOrdersFromFirestore({
+        'orders': [
+          {
+            'id': 'order-4',
+            'items': [
+              {
+                'beanId': 'ethiopia-yirgacheffe-aricha',
+                'beanName': '에티오피아 예가체프 아리차 에이미 G1',
+                'weight': 'g200',
+                'grind': 'handDrip',
+                'quantity': 1,
+                'unitPrice': 18000,
+              },
+            ],
+            'totalAmount': 18000,
+            'usedPoints': 0,
+            'earnedPoints': 1800,
+            'couponDiscount': 0,
+            'status': 'received',
+            'fulfillmentMethod': 'delivery',
+            'recipient': '이단',
+            'recipientPhone': '010-1234-5678',
+            'shippingAddress': '서울 성동구 연무장길 47 101동 1001호',
+            'createdAt': Timestamp.fromDate(createdAt),
+          },
         ],
-        totalAmount: 54000,
-        usedPoints: 4000,
-        earnedPoints: 5000,
-        couponId: 'bean-order-3000',
-        couponTitle: '원두 주문 3,000원 할인',
-        couponDiscount: 3000,
-        status: BeanOrderStatus.shipped,
-        createdAt: DateTime(2026, 8, 6, 15, 30),
-      );
+      }).first;
 
-      final restored = beanOrdersFromFirestore(
-        beanOrdersToFirestore([original]),
-      ).first;
-
-      expect(restored, original);
+      expect(order.fulfillmentMethod, BeanFulfillmentMethod.delivery);
+      expect(order.recipient, '이단');
+      expect(order.recipientPhone, '010-1234-5678');
+      expect(order.shippingAddress, '서울 성동구 연무장길 47 101동 1001호');
+      expect(order.storeId, isNull);
+      expect(order.storeName, isNull);
     });
 
-    test('택배 배송 정보가 round trip 시 보존된다', () {
-      final original = BeanOrder(
-        id: 'order-4',
-        items: const [
-          BeanOrderItem(
-            beanId: 'ethiopia-yirgacheffe-aricha',
-            beanName: '에티오피아 예가체프 아리차 에이미 G1',
-            weight: BeanWeight.g200,
-            grind: GrindOption.handDrip,
-            quantity: 1,
-            unitPrice: 18000,
-          ),
+    test('매장 픽업 주문은 매장을 읽는다', () {
+      final createdAt = DateTime(2026, 8, 8, 14);
+      final order = beanOrdersFromFirestore({
+        'orders': [
+          {
+            'id': 'order-5',
+            'items': [
+              {
+                'beanId': 'brazil-monte-belo-yellow-bourbon',
+                'beanName': '브라질 몬테 벨로 옐로우버본',
+                'weight': 'g500',
+                'grind': 'wholeBean',
+                'quantity': 2,
+                'unitPrice': 32000,
+              },
+            ],
+            'totalAmount': 64000,
+            'usedPoints': 0,
+            'earnedPoints': 6400,
+            'couponDiscount': 0,
+            'status': 'ready',
+            'fulfillmentMethod': 'pickup',
+            'storeId': 'macheon',
+            'storeName': '폭스트롯 마천점',
+            'createdAt': Timestamp.fromDate(createdAt),
+          },
         ],
-        totalAmount: 18000,
-        recipient: '이단',
-        recipientPhone: '010-1234-5678',
-        shippingAddress: '서울 성동구 연무장길 47 101동 1001호',
-        createdAt: DateTime(2026, 8, 7, 10),
-      );
+      }).first;
 
-      final restored = beanOrdersFromFirestore(
-        beanOrdersToFirestore([original]),
-      ).first;
-
-      expect(restored, original);
-      expect(restored.fulfillmentMethod, BeanFulfillmentMethod.delivery);
-    });
-
-    test('매장 픽업 정보가 round trip 시 보존된다', () {
-      final original = BeanOrder(
-        id: 'order-5',
-        items: const [
-          BeanOrderItem(
-            beanId: 'brazil-monte-belo-yellow-bourbon',
-            beanName: '브라질 몬테 벨로 옌로우버본',
-            weight: BeanWeight.g500,
-            grind: GrindOption.wholeBean,
-            quantity: 2,
-            unitPrice: 32000,
-          ),
-        ],
-        totalAmount: 64000,
-        fulfillmentMethod: BeanFulfillmentMethod.pickup,
-        storeId: 'macheon',
-        storeName: '폭스트롯 마천점',
-        status: BeanOrderStatus.ready,
-        createdAt: DateTime(2026, 8, 8, 14),
-      );
-
-      final restored = beanOrdersFromFirestore(
-        beanOrdersToFirestore([original]),
-      ).first;
-
-      expect(restored, original);
-      expect(restored.storeName, '폭스트롯 마천점');
-      expect(restored.status, BeanOrderStatus.ready);
+      expect(order.fulfillmentMethod, BeanFulfillmentMethod.pickup);
+      expect(order.storeId, 'macheon');
+      expect(order.storeName, '폭스트롯 마천점');
+      expect(order.status, BeanOrderStatus.ready);
+      expect(order.shippingAddress, isNull);
     });
   });
 }
