@@ -8,6 +8,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/services/analytics_providers.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/points_lock_prompt.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../features/menu/presentation/menu_labels.dart';
 import '../../../l10n/app_localizations.dart';
@@ -534,6 +535,15 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context).beanCartNeedStore)),
       );
+      return;
+    }
+
+    // 포인트는 충전해 둔 잔액이라 폰을 잃어버리면 그 자리에서 소진된다.
+    // 쓰기 직전에 기기 잠금으로 본인을 확인한다.
+    if (!await confirmPointsLock(context, ref, usedPoints)) {
+      return;
+    }
+    if (!mounted) {
       return;
     }
 

@@ -1,9 +1,5 @@
-import '../../../core/theme/app_theme.dart';
-import '../../../l10n/app_localizations.dart';
-import '../../auth/presentation/auth_providers.dart';
-import '../domain/membership_qr_token.dart';
-import '../domain/points_models.dart';
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +7,13 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+
+import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/points_lock_prompt.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../auth/presentation/auth_providers.dart';
+import '../domain/membership_qr_token.dart';
+import '../domain/points_models.dart';
 import 'points_providers.dart';
 
 final _pointFormat = NumberFormat('#,###');
@@ -143,6 +146,11 @@ class _BalanceSection extends ConsumerWidget {
       ),
     );
     if (amount == null) return;
+    if (!context.mounted) return;
+    // 장바구니와 같은 잠금을 지난다. 여기만 열려 있으면 잠금을 켜 둬도
+    // 폰을 주운 사람이 이 화면에서 잔액을 그대로 쓴다.
+    if (!await confirmPointsLock(context, ref, amount)) return;
+    if (!context.mounted) return;
 
     try {
       await ref
