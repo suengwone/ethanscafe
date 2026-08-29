@@ -13,6 +13,7 @@ import '../../coupon/domain/coupon_models.dart';
 import '../../coupon/presentation/coupon_select_sheet.dart';
 import '../../coupon/presentation/coupons_providers.dart';
 import '../../order/domain/order_models.dart';
+import '../../order/presentation/order_failure_message.dart';
 import '../../order/presentation/order_providers.dart';
 import '../../payment/domain/payment_models.dart';
 import '../../payment/presentation/payment_providers.dart';
@@ -871,13 +872,16 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
       } else {
         context.go('/menu');
       }
-    } catch (_) {
+    } catch (error) {
       if (!mounted) {
         return;
       }
       setState(() => _submitting = false);
+      // 낸 돈이 어떻게 됐는지까지 알려 준다. 예전에는 사유를 통째로 버렸다.
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).beanCartOrderFailed)),
+        SnackBar(
+          content: Text(orderFailureMessage(AppLocalizations.of(context), error)),
+        ),
       );
     }
   }

@@ -3,6 +3,8 @@ const assert = require('node:assert/strict');
 
 const {
   earnPointsForPayment,
+  shouldCancelPayment,
+  PAYMENT_ALREADY_USED_MESSAGE,
   validatePlaceOrderRequest,
   validateUsePointsRequest,
   validateEarnByMembershipRequest,
@@ -503,4 +505,50 @@ test('원두 판매량은 원두 ID 기준으로 합산한다', () => {
     {...beanItem, weight: 'g500', quantity: 1},
   ]);
   assert.equal(quantities.get('bean-1'), 3);
+});
+
+test('결제를 들고 왔으면 어디서 실패하든 되돌린다', () => {
+  // 품절·쿠폰·포인트는 결제를 확인하기 전에 던진다. 그때도 돈은 이미 나갔다.
+  const failures = [
+    new Error('품절된 상품이 포함되어 있습니다. 장바구니를 다시 확인해 주세요.'),
+    new Error('상품 가격이 변경되었습니다. 장바구니를 다시 확인해 주세요.'),
+    new Error('적용할 수 없는 쿠폰입니다.'),
+    new Error('사용 포인트가 결제 금액을 벗어났습니다.'),
+    new Error('결제 정보를 확인하지 못했습니다.'),
+  ];
+
+  for (const error of failures) {
+    assert.equal(
+        shouldCancelPayment({paymentKey: 'pay_1', error}),
+        true,
+        error.message,
+    );
+  }
+});
+
+test('이미 다른 주문이 쓰는 결제는 건드리지 않는다', () => {
+  // 중복 제출이다. 취소하면 멀쩡히 성립한 주문의 돈만 돌려주게 된다.
+  assert.equal(
+      shouldCancelPayment({
+        paymentKey: 'pay_1',
+        error: new Error(PAYMENT_ALREADY_USED_MESSAGE),
+      }),
+      false,
+  );
+});
+
+test('감싼 문구 안에 들어 있어도 알아본다', () => {
+  assert.equal(
+      shouldCancelPayment({
+        paymentKey: 'pay_1',
+        error: new Error(`주문 저장 실패 (${PAYMENT_ALREADY_USED_MESSAGE})`),
+      }),
+      false,
+  );
+});
+
+test('결제 없는 주문은 되돌릴 것이 없다', () => {
+  const error = new Error('적용할 수 없는 쿠폰입니다.');
+  assert.equal(shouldCancelPayment({paymentKey: null, error}), false);
+  assert.equal(shouldCancelPayment({paymentKey: '', error}), false);
 });

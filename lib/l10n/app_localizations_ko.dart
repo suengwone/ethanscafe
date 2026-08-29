@@ -862,9 +862,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get beanCartOrderedDelivery => '원두 주문이 접수되었습니다. 로스팅 후 순차 발송됩니다.';
 
   @override
-  String get beanCartOrderFailed => '주문 처리에 실패했습니다. 다시 시도해 주세요.';
-
-  @override
   String beanCartCouponsApplied(int count) {
     return '쿠폰 $count장 적용';
   }
@@ -2598,4 +2595,17 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get notificationMarketingDetail => '할인 쿠폰, 프로모션 정보 알림';
+
+  @override
+  String get orderFailedGeneric => '주문 처리에 실패했습니다. 다시 시도해 주세요.';
+
+  @override
+  String orderFailedRefunded(String reason) {
+    return '주문이 성립되지 않아 결제를 환불했어요. ($reason)';
+  }
+
+  @override
+  String orderFailedRefundPending(String reason) {
+    return '주문이 실패했는데 환불이 처리되지 않았어요. 고객센터로 문의해 주세요. ($reason)';
+  }
 }

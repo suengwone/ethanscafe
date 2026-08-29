@@ -264,7 +264,6 @@
   "beanCartOrderedWithPoints": "Your bean order is in. You earned {points}P.",
   "beanCartOrderedPickup": "Your bean order is in. Collect it from the store once it is roasted.",
   "beanCartOrderedDelivery": "Your bean order is in. It ships once it is roasted.",
-  "beanCartOrderFailed": "Could not place the order. Try again.",
   "beanCartCouponsApplied": "{count} coupons applied",
   "beanCartNoUsableCoupons": "No coupons apply here",
   "beanCartUsableCoupons": "{count} coupons available",
@@ -778,5 +777,8 @@
   "notificationPoints": "Points",
   "notificationPointsDetail": "When your balance changes",
   "notificationMarketing": "Offers",
-  "notificationMarketingDetail": "Discount coupons and promotions"
+  "notificationMarketingDetail": "Discount coupons and promotions",
+  "orderFailedGeneric": "Could not place the order. Try again.",
+  "orderFailedRefunded": "The order did not go through, so the payment was refunded. ({reason})",
+  "orderFailedRefundPending": "The order failed and the refund did not go through. Please contact support. ({reason})"
 }

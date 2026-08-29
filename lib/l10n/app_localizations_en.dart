@@ -882,9 +882,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your bean order is in. It ships once it is roasted.';
 
   @override
-  String get beanCartOrderFailed => 'Could not place the order. Try again.';
-
-  @override
   String beanCartCouponsApplied(int count) {
     return '$count coupons applied';
   }
@@ -2656,4 +2653,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationMarketingDetail => 'Discount coupons and promotions';
+
+  @override
+  String get orderFailedGeneric => 'Could not place the order. Try again.';
+
+  @override
+  String orderFailedRefunded(String reason) {
+    return 'The order did not go through, so the payment was refunded. ($reason)';
+  }
+
+  @override
+  String orderFailedRefundPending(String reason) {
+    return 'The order failed and the refund did not go through. Please contact support. ($reason)';
+  }
 }

@@ -1682,12 +1682,6 @@ abstract class AppLocalizations {
   /// **'원두 주문이 접수되었습니다. 로스팅 후 순차 발송됩니다.'**
   String get beanCartOrderedDelivery;
 
-  /// No description provided for @beanCartOrderFailed.
-  ///
-  /// In ko, this message translates to:
-  /// **'주문 처리에 실패했습니다. 다시 시도해 주세요.'**
-  String get beanCartOrderFailed;
-
   /// No description provided for @beanCartCouponsApplied.
   ///
   /// In ko, this message translates to:
@@ -4771,6 +4765,24 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'할인 쿠폰, 프로모션 정보 알림'**
   String get notificationMarketingDetail;
+
+  /// No description provided for @orderFailedGeneric.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 처리에 실패했습니다. 다시 시도해 주세요.'**
+  String get orderFailedGeneric;
+
+  /// No description provided for @orderFailedRefunded.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문이 성립되지 않아 결제를 환불했어요. ({reason})'**
+  String orderFailedRefunded(String reason);
+
+  /// No description provided for @orderFailedRefundPending.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문이 실패했는데 환불이 처리되지 않았어요. 고객센터로 문의해 주세요. ({reason})'**
+  String orderFailedRefundPending(String reason);
 }
 
 class _AppLocalizationsDelegate

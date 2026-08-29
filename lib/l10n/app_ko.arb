@@ -477,7 +477,6 @@
   },
   "beanCartOrderedPickup": "원두 주문이 접수되었습니다. 로스팅 후 매장에서 픽업하실 수 있어요.",
   "beanCartOrderedDelivery": "원두 주문이 접수되었습니다. 로스팅 후 순차 발송됩니다.",
-  "beanCartOrderFailed": "주문 처리에 실패했습니다. 다시 시도해 주세요.",
   "beanCartCouponsApplied": "쿠폰 {count}장 적용",
   "@beanCartCouponsApplied": {
     "placeholders": {
@@ -1688,5 +1687,22 @@
   "notificationPoints": "포인트 적립/사용",
   "notificationPointsDetail": "포인트 변동 내역 알림",
   "notificationMarketing": "마케팅 정보 수신",
-  "notificationMarketingDetail": "할인 쿠폰, 프로모션 정보 알림"
+  "notificationMarketingDetail": "할인 쿠폰, 프로모션 정보 알림",
+  "orderFailedGeneric": "주문 처리에 실패했습니다. 다시 시도해 주세요.",
+  "orderFailedRefunded": "주문이 성립되지 않아 결제를 환불했어요. ({reason})",
+  "@orderFailedRefunded": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "orderFailedRefundPending": "주문이 실패했는데 환불이 처리되지 않았어요. 고객센터로 문의해 주세요. ({reason})",
+  "@orderFailedRefundPending": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  }
 }

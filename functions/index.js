@@ -73,6 +73,7 @@ const {
   buildOrderDoc,
   serializeOrder,
   newOrderEntryId,
+  shouldCancelPayment,
 } = require('./order_checkout');
 const {
   REFUND_DONE,
@@ -464,198 +465,281 @@ exports.placeOrder = onCall(
       throw new HttpsError('unauthenticated', '로그인이 필요합니다.');
     }
 
-    let orderRequest;
-    try {
-      orderRequest = validatePlaceOrderRequest(request.data);
-    } catch (error) {
-      throw new HttpsError('invalid-argument', error.message);
-    }
-
     const uid = request.auth.uid;
     const firestore = getFirestore();
 
-    // 금액을 계산하기 전에 단가가 카탈로그와 일치하는지 서버에서 확인한다.
-    const catalogCollection =
-        orderRequest.orderType === 'pickup' ? 'menus' : 'beans';
-    const itemIds = catalogItemIds(orderRequest.orderType, orderRequest.items);
-    const catalogSnapshots = await firestore.getAll(
-        ...itemIds.map((id) => firestore.collection(catalogCollection).doc(id)));
-    const catalogData = new Map();
-    catalogSnapshots.forEach((snapshot, index) => {
-      catalogData.set(itemIds[index], snapshot.exists ? snapshot.data() : null);
-    });
-    try {
-      verifyCatalogItems({
-        orderType: orderRequest.orderType,
-        items: orderRequest.items,
-        catalogData,
-      });
-    } catch (error) {
-      throw new HttpsError('failed-precondition', error.message);
-    }
-
-    const couponRefs = orderRequest.couponIds.map(
-        (id) => firestore.collection('coupons').doc(id));
-
-    const couponSnapshots = couponRefs.length > 0 ?
-      await firestore.getAll(...couponRefs) :
-      [];
-    const coupons = couponSnapshots.map((snapshot) => {
-      if (!snapshot.exists) {
-        throw new HttpsError('failed-precondition', '적용할 수 없는 쿠폰입니다.');
-      }
-      return snapshot.data();
-    });
-
-    const totalAmount = orderTotalAmount(orderRequest.items);
-    let couponDiscount;
-    try {
-      couponDiscount = validateCouponsForOrder({
-        coupons,
-        uid,
-        orderAmount: totalAmount,
-        nowMillis: Date.now(),
-      });
-    } catch (error) {
-      throw new HttpsError('failed-precondition', error.message);
-    }
-
-    if (orderRequest.usedPoints > totalAmount - couponDiscount) {
-      throw new HttpsError(
-          'failed-precondition', '사용 포인트가 결제 금액을 벗어났습니다.');
-    }
-    const paidAmount =
-        totalAmount - couponDiscount - orderRequest.usedPoints;
-
-    let approvedPayment = null;
-    if (paidAmount > 0) {
-      if (!orderRequest.payment ||
-          orderRequest.payment.amount !== paidAmount) {
-        throw new HttpsError(
-            'failed-precondition', '결제 승인 금액이 주문 금액과 일치하지 않습니다.');
-      }
-      const response = await fetch(
-          paymentLookupUrl(orderRequest.payment.paymentKey), {
-            headers: {'Authorization': basicAuthHeader(tossSecretKey.value())},
-          });
-      const payment = await response.json().catch(() => null);
-      if (!response.ok) {
-        throw new HttpsError('failed-precondition', '결제 정보를 확인하지 못했습니다.');
-      }
-      try {
-        approvedPayment = verifyPaymentForOrder(payment, {
-          orderId: orderRequest.payment.orderId,
-          amount: paidAmount,
-        });
-      } catch (error) {
-        throw new HttpsError('failed-precondition', error.message);
-      }
-    } else if (orderRequest.payment) {
-      throw new HttpsError('failed-precondition', '결제가 필요 없는 주문입니다.');
-    }
-
-    const descriptions = ORDER_DESCRIPTIONS[orderRequest.orderType];
-    const ordersRef = firestore
-        .collection(ORDER_COLLECTIONS[orderRequest.orderType])
-        .doc(uid);
-    const pointsRef = firestore.collection('points').doc(uid);
-    const usageRef = approvedPayment ?
-      firestore.collection('payment_usages').doc(approvedPayment.paymentKey) :
-      null;
+    // 클라이언트는 이 콜러블을 부르기 전에 confirmTossPayment로 결제를 승인받는다.
+    // 그래서 아래 어디서 실패하든 돈은 이미 고객 계좌에서 빠져나간 상태다. 품절·
+    // 쿠폰·포인트 검사는 결제를 확인하기 전에 던지므로, 요청을 해석하기 전에
+    // 결제 번호부터 붙잡아 둬야 그 구간에서 실패한 결제도 되돌릴 수 있다.
+    const pendingPayment = pendingPaymentOf(request.data);
 
     try {
-      const result = await firestore.runTransaction(async (transaction) => {
-        const ordersSnapshot = await transaction.get(ordersRef);
-        const pointsSnapshot = await transaction.get(pointsRef);
-        if (usageRef) {
-          const usageSnapshot = await transaction.get(usageRef);
-          if (usageSnapshot.exists) {
-            throw new Error('이미 처리된 결제입니다.');
-          }
-        }
-        const transactionCoupons = [];
-        for (const ref of couponRefs) {
-          const snapshot = await transaction.get(ref);
-          const data = snapshot.exists ? snapshot.data() : null;
-          if (!data || data.uid !== uid || data.isUsed === true) {
-            throw new Error('적용할 수 없는 쿠폰입니다.');
-          }
-          transactionCoupons.push(data);
-        }
-
-        const now = Timestamp.now();
-        const pointsData =
-            normalizePointsData(pointsSnapshot.data(), newMembershipId);
-        const {earned, data: updatedPoints} = applyOrderToPoints({
-          pointsData,
-          usedPoints: orderRequest.usedPoints,
-          paidAmount,
-          useDescription: descriptions.use,
-          earnDescription: descriptions.earn,
-          createdAt: now,
-        });
-
-        const ordersData = ordersSnapshot.data();
-        const existingOrders =
-            ordersData && Array.isArray(ordersData.orders) ?
-              ordersData.orders :
-              [];
-        const order = buildOrderDoc({
-          request: orderRequest,
-          orderId: newOrderEntryId(),
-          earnedPoints: earned,
-          couponTitle: couponTitlesLabel(transactionCoupons),
-          couponDiscount,
-          paymentMethod: approvedPayment ? approvedPayment.method : null,
-          pickupNumber: orderRequest.orderType === 'pickup' ?
-            nextPickupNumber(existingOrders, new Date()) :
-            null,
-          createdAt: now,
-        });
-
-        transaction.set(pointsRef, updatedPoints);
-        for (const ref of couponRefs) {
-          transaction.update(ref, {isUsed: true});
-        }
-        transaction.set(ordersRef, {orders: [order, ...existingOrders]});
-        for (const [productId, quantity] of salesQuantitiesByItem(
-            orderRequest.orderType, orderRequest.items)) {
-          transaction.set(
-              firestore.collection('product_stats').doc(productId),
-              {salesCount: FieldValue.increment(quantity)},
-              {merge: true},
-          );
-        }
-        if (usageRef) {
-          transaction.set(usageRef, {
-            uid,
-            orderId: order.id,
-            createdAt: now,
-          });
-        }
-        return {order, earnedPoints: earned, balance: updatedPoints.balance};
-      });
-      return {...result, order: serializeOrder(result.order)};
+      return await runPlaceOrder({request, uid, firestore});
     } catch (error) {
-      if (approvedPayment) {
-        const cancelled = await cancelTossPayment(
-            tossSecretKey.value(),
-            approvedPayment.paymentKey,
-            '주문 저장 실패 자동 취소',
-        );
-        throw new HttpsError(
-            'aborted',
-            cancelled ?
-              `주문 저장에 실패해 결제를 자동 취소(환불)했습니다. (${error.message})` :
-              '주문 저장에 실패했으나 결제 취소까지 실패했습니다. ' +
-                `고객센터로 문의해 주세요. (${error.message})`,
-        );
-      }
-      throw new HttpsError(
-          'failed-precondition', error.message || '주문 처리에 실패했습니다.');
+      throw await abortPlacedOrder({uid, error, pendingPayment});
     }
   },
 );
+
+/**
+ * 주문을 세운다. 실패는 전부 [abortPlacedOrder]가 받는다.
+ *
+ * @param {object} context 콜러블 요청과 이미 확인한 회원·Firestore 핸들.
+ * @return {Promise<object>} 화면에 돌려줄 주문 결과.
+ */
+async function runPlaceOrder({request, uid, firestore}) {
+  let orderRequest;
+  try {
+    orderRequest = validatePlaceOrderRequest(request.data);
+  } catch (error) {
+    throw new HttpsError('invalid-argument', error.message);
+  }
+
+  // 금액을 계산하기 전에 단가가 카탈로그와 일치하는지 서버에서 확인한다.
+  const catalogCollection =
+      orderRequest.orderType === 'pickup' ? 'menus' : 'beans';
+  const itemIds = catalogItemIds(orderRequest.orderType, orderRequest.items);
+  const catalogSnapshots = await firestore.getAll(
+      ...itemIds.map((id) => firestore.collection(catalogCollection).doc(id)));
+  const catalogData = new Map();
+  catalogSnapshots.forEach((snapshot, index) => {
+    catalogData.set(itemIds[index], snapshot.exists ? snapshot.data() : null);
+  });
+  try {
+    verifyCatalogItems({
+      orderType: orderRequest.orderType,
+      items: orderRequest.items,
+      catalogData,
+    });
+  } catch (error) {
+    throw new HttpsError('failed-precondition', error.message);
+  }
+
+  const couponRefs = orderRequest.couponIds.map(
+      (id) => firestore.collection('coupons').doc(id));
+
+  const couponSnapshots = couponRefs.length > 0 ?
+    await firestore.getAll(...couponRefs) :
+    [];
+  const coupons = couponSnapshots.map((snapshot) => {
+    if (!snapshot.exists) {
+      throw new HttpsError('failed-precondition', '적용할 수 없는 쿠폰입니다.');
+    }
+    return snapshot.data();
+  });
+
+  const totalAmount = orderTotalAmount(orderRequest.items);
+  let couponDiscount;
+  try {
+    couponDiscount = validateCouponsForOrder({
+      coupons,
+      uid,
+      orderAmount: totalAmount,
+      nowMillis: Date.now(),
+    });
+  } catch (error) {
+    throw new HttpsError('failed-precondition', error.message);
+  }
+
+  if (orderRequest.usedPoints > totalAmount - couponDiscount) {
+    throw new HttpsError(
+        'failed-precondition', '사용 포인트가 결제 금액을 벗어났습니다.');
+  }
+  const paidAmount =
+      totalAmount - couponDiscount - orderRequest.usedPoints;
+
+  let approvedPayment = null;
+  if (paidAmount > 0) {
+    if (!orderRequest.payment ||
+        orderRequest.payment.amount !== paidAmount) {
+      throw new HttpsError(
+          'failed-precondition', '결제 승인 금액이 주문 금액과 일치하지 않습니다.');
+    }
+    const response = await fetch(
+        paymentLookupUrl(orderRequest.payment.paymentKey), {
+          headers: {'Authorization': basicAuthHeader(tossSecretKey.value())},
+        });
+    const payment = await response.json().catch(() => null);
+    if (!response.ok) {
+      throw new HttpsError('failed-precondition', '결제 정보를 확인하지 못했습니다.');
+    }
+    try {
+      approvedPayment = verifyPaymentForOrder(payment, {
+        orderId: orderRequest.payment.orderId,
+        amount: paidAmount,
+      });
+    } catch (error) {
+      throw new HttpsError('failed-precondition', error.message);
+    }
+  } else if (orderRequest.payment) {
+    throw new HttpsError('failed-precondition', '결제가 필요 없는 주문입니다.');
+  }
+
+  const descriptions = ORDER_DESCRIPTIONS[orderRequest.orderType];
+  const ordersRef = firestore
+      .collection(ORDER_COLLECTIONS[orderRequest.orderType])
+      .doc(uid);
+  const pointsRef = firestore.collection('points').doc(uid);
+  const usageRef = approvedPayment ?
+    firestore.collection('payment_usages').doc(approvedPayment.paymentKey) :
+    null;
+
+  const result = await firestore.runTransaction(async (transaction) => {
+      const ordersSnapshot = await transaction.get(ordersRef);
+      const pointsSnapshot = await transaction.get(pointsRef);
+      if (usageRef) {
+        const usageSnapshot = await transaction.get(usageRef);
+        if (usageSnapshot.exists) {
+          throw new Error('이미 처리된 결제입니다.');
+        }
+      }
+      const transactionCoupons = [];
+      for (const ref of couponRefs) {
+        const snapshot = await transaction.get(ref);
+        const data = snapshot.exists ? snapshot.data() : null;
+        if (!data || data.uid !== uid || data.isUsed === true) {
+          throw new Error('적용할 수 없는 쿠폰입니다.');
+        }
+        transactionCoupons.push(data);
+      }
+
+      const now = Timestamp.now();
+      const pointsData =
+          normalizePointsData(pointsSnapshot.data(), newMembershipId);
+      const {earned, data: updatedPoints} = applyOrderToPoints({
+        pointsData,
+        usedPoints: orderRequest.usedPoints,
+        paidAmount,
+        useDescription: descriptions.use,
+        earnDescription: descriptions.earn,
+        createdAt: now,
+      });
+
+      const ordersData = ordersSnapshot.data();
+      const existingOrders =
+          ordersData && Array.isArray(ordersData.orders) ?
+            ordersData.orders :
+            [];
+      const order = buildOrderDoc({
+        request: orderRequest,
+        orderId: newOrderEntryId(),
+        earnedPoints: earned,
+        couponTitle: couponTitlesLabel(transactionCoupons),
+        couponDiscount,
+        paymentMethod: approvedPayment ? approvedPayment.method : null,
+        pickupNumber: orderRequest.orderType === 'pickup' ?
+          nextPickupNumber(existingOrders, new Date()) :
+          null,
+        createdAt: now,
+      });
+
+      transaction.set(pointsRef, updatedPoints);
+      for (const ref of couponRefs) {
+        transaction.update(ref, {isUsed: true});
+      }
+      transaction.set(ordersRef, {orders: [order, ...existingOrders]});
+      for (const [productId, quantity] of salesQuantitiesByItem(
+          orderRequest.orderType, orderRequest.items)) {
+        transaction.set(
+            firestore.collection('product_stats').doc(productId),
+            {salesCount: FieldValue.increment(quantity)},
+            {merge: true},
+        );
+      }
+      if (usageRef) {
+        transaction.set(usageRef, {
+          uid,
+          orderId: order.id,
+          createdAt: now,
+        });
+      }
+    return {order, earnedPoints: earned, balance: updatedPoints.balance};
+  });
+  return {...result, order: serializeOrder(result.order)};
+}
+
+/**
+ * 요청을 해석하기 전에도 읽을 수 있는 결제 정보.
+ *
+ * 값은 클라이언트가 준 그대로다. 믿고 주문을 세우는 데 쓰지 않고, 실패했을 때
+ * 취소를 걸 대상을 찾는 데만 쓴다.
+ *
+ * @param {object} data 콜러블 요청 본문.
+ * @return {?object} 결제 번호와 매장이 대조할 만한 값들. 결제가 없으면 null.
+ */
+function pendingPaymentOf(data) {
+  const payment = data && data.payment;
+  const paymentKey = payment && payment.paymentKey;
+  if (typeof paymentKey !== 'string' || paymentKey.length === 0) {
+    return null;
+  }
+  return {
+    paymentKey,
+    orderId: typeof payment.orderId === 'string' ? payment.orderId : null,
+    amount: Number.isInteger(payment.amount) ? payment.amount : 0,
+    orderType: data.orderType === 'pickup' ? 'pickup' : 'bean',
+  };
+}
+
+/**
+ * 실패한 주문을 정리하고 화면에 띄울 오류를 만든다.
+ *
+ * 되돌릴 결제가 있으면 취소한다. 취소까지 실패하면 고객 돈이 묶인 채로 아무 기록도
+ * 남지 않으므로, 매장이 목록으로 보고 재시도할 수 있게 `refund_failures`에 남긴다.
+ *
+ * @param {object} context 실패한 주문의 회원·오류·결제 정보.
+ * @return {Promise<HttpsError>} 클라이언트에 던질 오류.
+ */
+async function abortPlacedOrder({
+  uid,
+  error,
+  pendingPayment,
+  // 취소와 기록은 밖에서 갈아 끼울 수 있게 둔다. 이 순서(취소 → 실패 시 기록)가
+  // 곧 고객 돈의 행방이라 테스트로 못 박아 둬야 한다.
+  cancelPayment = (paymentKey) => cancelTossPayment(
+      tossSecretKey.value(), paymentKey, '주문 저장 실패 자동 취소'),
+  recordFailure = recordRefundFailure,
+}) {
+  const paymentKey = pendingPayment ? pendingPayment.paymentKey : null;
+  if (!shouldCancelPayment({paymentKey, error})) {
+    if (error instanceof HttpsError) {
+      return error;
+    }
+    return new HttpsError(
+        'failed-precondition', error.message || '주문 처리에 실패했습니다.');
+  }
+
+  const cancelled = await cancelPayment(paymentKey);
+  if (cancelled) {
+    return new HttpsError(
+        'aborted',
+        `주문에 실패해 결제를 자동 취소(환불)했습니다. (${error.message})`);
+  }
+
+  try {
+    await recordFailure({
+      orderType: pendingPayment.orderType,
+      uid,
+      order: {
+        // 주문이 서지 못했으니 결제의 orderId를 열쇠로 쓴다. 매장이 토스 내역과
+        // 맞춰 볼 수 있는 유일한 번호다.
+        id: pendingPayment.orderId || paymentKey,
+        paymentKey,
+        summary: '주문 미성립 결제',
+        totalAmount: pendingPayment.amount,
+        usedPoints: 0,
+      },
+    });
+  } catch (recordError) {
+    console.error('주문 미성립 결제를 남기지 못했습니다.', paymentKey, recordError);
+  }
+
+  return new HttpsError(
+      'internal',
+      '주문에 실패했고 결제 취소도 되지 않았습니다. 고객센터로 문의해 주세요. ' +
+        `(${error.message})`);
+}
 
 exports.cancelOrder = onCall({secrets: [tossSecretKey]}, async (request) => {
   if (!request.auth) {
@@ -1364,3 +1448,8 @@ exports.sendPickupOrderStatusPush = onDocumentWritten(
     );
   },
 );
+
+// 결제 실패 처리는 index.js에서 유일하게 돈의 행방을 바꾸는 분기라 테스트에서 직접
+// 부른다. 나머지 콜러블은 Firebase 런타임을 통째로 흉내 내야 해 여기서 열지 않는다.
+module.exports.abortPlacedOrder = abortPlacedOrder;
+module.exports.pendingPaymentOf = pendingPaymentOf;

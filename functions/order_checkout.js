@@ -461,6 +461,36 @@ function validateEarnByMembershipRequest(data) {
   return {membershipId, paymentAmount};
 }
 
+/**
+ * 이 결제를 이미 쓰고 있는 주문이 있다는 뜻.
+ *
+ * placeOrder 트랜잭션이 `payment_usages`에서 같은 paymentKey를 발견하면 던진다.
+ * 같은 결제로 두 번 주문이 서지 않게 막는 장치이므로, 이 실패는 "돈이 붕 떴다"가
+ * 아니라 "이미 잘 처리됐다"에 가깝다.
+ */
+const PAYMENT_ALREADY_USED_MESSAGE = '이미 처리된 결제입니다.';
+
+/**
+ * 주문이 실패했을 때 이미 승인된 결제를 되돌려야 하는지 판단한다.
+ *
+ * 클라이언트는 placeOrder를 부르기 전에 결제를 먼저 승인받는다. 그래서 이 콜러블
+ * 안에서 무엇이 실패하든 그 돈은 이미 고객 계좌에서 빠져나간 상태다. 품절·쿠폰·
+ * 포인트 검사처럼 결제를 확인하기 **전에** 던지는 것도 마찬가지라, 확인을 마친
+ * 결제만 되돌리면 그 구간에서 낸 돈이 기록 없이 남는다.
+ *
+ * 딱 하나 예외가 있다. 이미 다른 주문이 쓰고 있는 결제(중복 제출)는 건드리면 안
+ * 된다. 취소하면 멀쩡히 성립한 주문의 돈만 돌려주게 된다.
+ */
+function shouldCancelPayment({paymentKey, error}) {
+  if (typeof paymentKey !== 'string' || paymentKey.length === 0) {
+    return false;
+  }
+  const message = error && typeof error.message === 'string' ?
+    error.message :
+    '';
+  return !message.includes(PAYMENT_ALREADY_USED_MESSAGE);
+}
+
 module.exports = {
   EARN_RATE_PERCENT,
   earnPointsForPayment,
@@ -484,4 +514,6 @@ module.exports = {
   nextPickupNumber,
   buildOrderDoc,
   serializeOrder,
+  PAYMENT_ALREADY_USED_MESSAGE,
+  shouldCancelPayment,
 };
