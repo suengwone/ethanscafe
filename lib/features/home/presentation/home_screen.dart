@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/auth_providers.dart';
 import 'widgets/event_banner_carousel.dart';
 import 'widgets/recommended_menu_section.dart';
@@ -52,7 +53,8 @@ class _GreetingHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final name = displayName ?? '고객';
+    final l10n = AppLocalizations.of(context);
+    final name = displayName ?? l10n.homeGreetingGuestName;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
@@ -63,12 +65,14 @@ class _GreetingHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isLoggedIn ? '$name님,\n반가워요!' : '폭스트롯에\n어서오세요!',
+                  isLoggedIn
+                      ? l10n.homeGreetingMember(name)
+                      : l10n.homeGreetingVisitor,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  '오늘도 향긋한 커피 한 잔의 여유를 즐겨보세요',
+                  l10n.homeGreetingSubtitle,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
@@ -76,13 +80,13 @@ class _GreetingHeader extends StatelessWidget {
           ),
           _CircleIconButton(
             icon: LucideIcons.mapPin,
-            tooltip: '매장 찾기',
+            tooltip: l10n.homeFindStore,
             onPressed: () => context.push('/stores'),
           ),
           const SizedBox(width: 8),
           _CircleIconButton(
             icon: LucideIcons.bell,
-            tooltip: '알림',
+            tooltip: l10n.homeNotifications,
             onPressed: () => context.push('/notices'),
           ),
           if (!isLoggedIn) ...[
@@ -93,7 +97,7 @@ class _GreetingHeader extends StatelessWidget {
                 minimumSize: const Size(0, 40),
                 padding: const EdgeInsets.symmetric(horizontal: 16),
               ),
-              child: const Text('로그인'),
+              child: Text(l10n.homeSignIn),
             ),
           ],
         ],
@@ -135,31 +139,32 @@ class _QuickActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
-        children: const [
+        children: [
           _QuickActionItem(
             icon: LucideIcons.coffee,
-            label: '주문하기',
+            label: l10n.homeQuickOrder,
             location: '/menu',
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           _QuickActionItem(
             icon: LucideIcons.ticketPercent,
-            label: '쿠폰함',
+            label: l10n.homeQuickCoupons,
             location: '/profile/coupons',
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           _QuickActionItem(
             icon: LucideIcons.receiptText,
-            label: '주문내역',
+            label: l10n.homeQuickOrderHistory,
             location: '/profile/orders',
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           _QuickActionItem(
             icon: LucideIcons.store,
-            label: '매장찾기',
+            label: l10n.homeQuickStores,
             location: '/stores',
           ),
         ],

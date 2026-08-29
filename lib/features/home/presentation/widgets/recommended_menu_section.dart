@@ -6,6 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/text_utils.dart';
 import '../../../../core/widgets/new_badge.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../menu/domain/menu_models.dart';
 import '../../../menu/presentation/menu_detail_screen.dart';
 import '../../../menu/presentation/menu_providers.dart';
@@ -35,19 +36,19 @@ class RecommendedMenuSection extends ConsumerWidget {
           child: Row(
             children: [
               Text(
-                '이 메뉴 어때요?',
+                AppLocalizations.of(context).homeRecommendedTitle,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const Spacer(),
               TextButton(
                 onPressed: () => context.go('/menu'),
                 style: TextButton.styleFrom(foregroundColor: context.palette.muted),
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('전체보기'),
-                    SizedBox(width: 2),
-                    Icon(LucideIcons.chevronRight, size: 16),
+                    Text(AppLocalizations.of(context).homeSeeAll),
+                    const SizedBox(width: 2),
+                    const Icon(LucideIcons.chevronRight, size: 16),
                   ],
                 ),
               ),

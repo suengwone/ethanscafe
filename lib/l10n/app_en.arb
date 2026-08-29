@@ -1,8 +1,6 @@
 {
   "@@locale": "en",
-
   "appTitle": "Foxtrot",
-
   "settingsAppearanceTitle": "Theme",
   "settingsAppearanceThemeSection": "Choose a theme",
   "settingsAppearanceStoredOnThisDevice": "Your choice is saved on this device only. Pick it again on another device.",
@@ -11,18 +9,41 @@
   "settingsAppearancePreviewBalance": "32,250P available",
   "settingsAppearancePreviewOrder": "Order",
   "settingsAppearancePreviewCart": "Cart",
-
   "themeModeSystem": "System setting",
   "themeModeSystemDescription": "Follows your device setting",
   "themeModeLight": "Light",
   "themeModeLightDescription": "Always use the light background",
   "themeModeDark": "Dark",
   "themeModeDarkDescription": "Always use the dark background",
-
   "settingsLanguageTitle": "Language",
   "settingsLanguageSection": "Choose a language",
   "settingsLanguageSystem": "System setting",
   "settingsLanguageSystemDescription": "Follows your device language",
   "settingsLanguageStoredOnThisDevice": "Your choice is saved on this device only. Pick it again on another device.",
-  "settingsLanguageUnsupportedNotice": "Text the store enters itself, such as menu names and store notices, appears in the language it was written in."
+  "settingsLanguageUnsupportedNotice": "Text the store enters itself, such as menu names and store notices, appears in the language it was written in.",
+  "homeGreetingGuestName": "there",
+  "homeGreetingMember": "Hello, {name}!\nGood to see you.",
+  "homeGreetingVisitor": "Welcome to\nFoxtrot!",
+  "homeGreetingSubtitle": "Take a moment today over a good cup of coffee",
+  "homeFindStore": "Find a store",
+  "homeNotifications": "Notifications",
+  "homeSignIn": "Sign in",
+  "homeQuickOrder": "Order",
+  "homeQuickCoupons": "Coupons",
+  "homeQuickOrderHistory": "Orders",
+  "homeQuickStores": "Stores",
+  "homeRecommendedTitle": "How about these?",
+  "homeSeeAll": "See all",
+  "homeRewardsTitle": "Foxtrot Rewards",
+  "homeRewardsMineTitle": "My rewards",
+  "homeRewardsSignInPrompt": "Sign in and\nstart earning points",
+  "homeRewardsSignInDetail": "Earn 10% of what you pay, and get a free drink coupon at {goal}P.",
+  "homeRewardsSignInAction": "Sign in",
+  "homeRewardsBalance": "{balance}P",
+  "homeRewardsRemaining": "{remaining}P more for a free drink coupon!",
+  "homeRewardsGoalReached": "You can trade this for a free drink coupon!",
+  "bannerIconSparkles": "Sparkles",
+  "bannerIconSnowflake": "Snowflake",
+  "bannerIconBean": "Bean",
+  "bannerIconGift": "Gift"
 }

@@ -223,6 +223,156 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'메뉴 이름과 매장 안내처럼 매장이 직접 올리는 글은 등록된 언어 그대로 보입니다.'**
   String get settingsLanguageUnsupportedNotice;
+
+  /// No description provided for @homeGreetingGuestName.
+  ///
+  /// In ko, this message translates to:
+  /// **'고객'**
+  String get homeGreetingGuestName;
+
+  /// No description provided for @homeGreetingMember.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}님,\n반가워요!'**
+  String homeGreetingMember(String name);
+
+  /// No description provided for @homeGreetingVisitor.
+  ///
+  /// In ko, this message translates to:
+  /// **'폭스트롯에\n어서오세요!'**
+  String get homeGreetingVisitor;
+
+  /// No description provided for @homeGreetingSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘도 향긋한 커피 한 잔의 여유를 즐겨보세요'**
+  String get homeGreetingSubtitle;
+
+  /// No description provided for @homeFindStore.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 찾기'**
+  String get homeFindStore;
+
+  /// No description provided for @homeNotifications.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림'**
+  String get homeNotifications;
+
+  /// No description provided for @homeSignIn.
+  ///
+  /// In ko, this message translates to:
+  /// **'로그인'**
+  String get homeSignIn;
+
+  /// No description provided for @homeQuickOrder.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문하기'**
+  String get homeQuickOrder;
+
+  /// No description provided for @homeQuickCoupons.
+  ///
+  /// In ko, this message translates to:
+  /// **'쿠폰함'**
+  String get homeQuickCoupons;
+
+  /// No description provided for @homeQuickOrderHistory.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문내역'**
+  String get homeQuickOrderHistory;
+
+  /// No description provided for @homeQuickStores.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장찾기'**
+  String get homeQuickStores;
+
+  /// No description provided for @homeRecommendedTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 메뉴 어때요?'**
+  String get homeRecommendedTitle;
+
+  /// No description provided for @homeSeeAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'전체보기'**
+  String get homeSeeAll;
+
+  /// No description provided for @homeRewardsTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'폭스트롯 리워드'**
+  String get homeRewardsTitle;
+
+  /// No description provided for @homeRewardsMineTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'나의 리워드'**
+  String get homeRewardsMineTitle;
+
+  /// No description provided for @homeRewardsSignInPrompt.
+  ///
+  /// In ko, this message translates to:
+  /// **'로그인하고\n포인트를 모아보세요'**
+  String get homeRewardsSignInPrompt;
+
+  /// No description provided for @homeRewardsSignInDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 금액의 10%가 적립되고, {goal}P를 모으면 무료 음료 쿠폰을 드려요!'**
+  String homeRewardsSignInDetail(String goal);
+
+  /// No description provided for @homeRewardsSignInAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'로그인하기'**
+  String get homeRewardsSignInAction;
+
+  /// No description provided for @homeRewardsBalance.
+  ///
+  /// In ko, this message translates to:
+  /// **'{balance}P'**
+  String homeRewardsBalance(String balance);
+
+  /// No description provided for @homeRewardsRemaining.
+  ///
+  /// In ko, this message translates to:
+  /// **'{remaining}P 더 모으면 무료 음료 쿠폰!'**
+  String homeRewardsRemaining(String remaining);
+
+  /// No description provided for @homeRewardsGoalReached.
+  ///
+  /// In ko, this message translates to:
+  /// **'무료 음료 쿠폰으로 교환할 수 있어요!'**
+  String get homeRewardsGoalReached;
+
+  /// No description provided for @bannerIconSparkles.
+  ///
+  /// In ko, this message translates to:
+  /// **'반짝임'**
+  String get bannerIconSparkles;
+
+  /// No description provided for @bannerIconSnowflake.
+  ///
+  /// In ko, this message translates to:
+  /// **'눈꽃'**
+  String get bannerIconSnowflake;
+
+  /// No description provided for @bannerIconBean.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두'**
+  String get bannerIconBean;
+
+  /// No description provided for @bannerIconGift.
+  ///
+  /// In ko, this message translates to:
+  /// **'선물'**
+  String get bannerIconGift;
 }
 
 class _AppLocalizationsDelegate

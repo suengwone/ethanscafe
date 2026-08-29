@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../home/domain/banner_models.dart';
 import '../../home/presentation/banner_icons.dart';
 import 'catalog_admin_providers.dart';
@@ -159,9 +160,14 @@ class _BannerEditScreenState extends ConsumerState<BannerEditScreen> {
                     value: entry.key,
                     child: Row(
                       children: [
-                        Icon(entry.value.icon, size: 18),
+                        Icon(entry.value, size: 18),
                         const SizedBox(width: 8),
-                        Text(entry.value.label),
+                        Text(
+                          bannerIconLabel(
+                            AppLocalizations.of(context),
+                            entry.key,
+                          ),
+                        ),
                       ],
                     ),
                   ),

@@ -6,6 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/text_utils.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../points/presentation/points_providers.dart';
 
 const int rewardGoal = 5000;
@@ -17,6 +18,7 @@ class GuestRewardsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Material(
@@ -49,7 +51,7 @@ class GuestRewardsCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        '폭스트롯 리워드',
+                        l10n.homeRewardsTitle,
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
                       const Spacer(),
@@ -62,7 +64,7 @@ class GuestRewardsCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    '로그인하고\n포인트를 모아보세요'.keepWord,
+                    l10n.homeRewardsSignInPrompt.keepWord,
                     style: TextStyle(
                       color: context.palette.accentSoft,
                       fontSize: 22,
@@ -72,7 +74,10 @@ class GuestRewardsCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '결제 금액의 10%가 적립되고, ${_pointFormat.format(rewardGoal)}P를 모으면 무료 음료 쿠폰을 드려요!'
+                    l10n
+                        .homeRewardsSignInDetail(
+                          _pointFormat.format(rewardGoal),
+                        )
                         .keepWord,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
@@ -80,7 +85,7 @@ class GuestRewardsCard extends StatelessWidget {
                   FilledButton.icon(
                     onPressed: () => context.go('/login'),
                     icon: const Icon(LucideIcons.logIn, size: 18),
-                    label: const Text('로그인하기'),
+                    label: Text(l10n.homeRewardsSignInAction),
                     style: FilledButton.styleFrom(
                       minimumSize: const Size.fromHeight(44),
                     ),
@@ -100,6 +105,7 @@ class RewardsCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final balance =
         ref.watch(pointsControllerProvider).asData?.value.balance ?? 0;
     final progress = (balance / rewardGoal).clamp(0.0, 1.0);
@@ -137,7 +143,7 @@ class RewardsCard extends ConsumerWidget {
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        '나의 리워드',
+                        l10n.homeRewardsMineTitle,
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
                       const Spacer(),
@@ -150,7 +156,7 @@ class RewardsCard extends ConsumerWidget {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    '${_pointFormat.format(balance)}P',
+                    l10n.homeRewardsBalance(_pointFormat.format(balance)),
                     style: TextStyle(
                       color: context.palette.accentSoft,
                       fontSize: 32,
@@ -171,8 +177,10 @@ class RewardsCard extends ConsumerWidget {
                   const SizedBox(height: 8),
                   Text(
                     (remaining > 0
-                            ? '${_pointFormat.format(remaining)}P 더 모으면 무료 음료 쿠폰!'
-                            : '무료 음료 쿠폰으로 교환할 수 있어요!')
+                            ? l10n.homeRewardsRemaining(
+                                _pointFormat.format(remaining),
+                              )
+                            : l10n.homeRewardsGoalReached)
                         .keepWord,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),

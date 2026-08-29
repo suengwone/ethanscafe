@@ -73,4 +73,87 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get settingsLanguageUnsupportedNotice =>
       '메뉴 이름과 매장 안내처럼 매장이 직접 올리는 글은 등록된 언어 그대로 보입니다.';
+
+  @override
+  String get homeGreetingGuestName => '고객';
+
+  @override
+  String homeGreetingMember(String name) {
+    return '$name님,\n반가워요!';
+  }
+
+  @override
+  String get homeGreetingVisitor => '폭스트롯에\n어서오세요!';
+
+  @override
+  String get homeGreetingSubtitle => '오늘도 향긋한 커피 한 잔의 여유를 즐겨보세요';
+
+  @override
+  String get homeFindStore => '매장 찾기';
+
+  @override
+  String get homeNotifications => '알림';
+
+  @override
+  String get homeSignIn => '로그인';
+
+  @override
+  String get homeQuickOrder => '주문하기';
+
+  @override
+  String get homeQuickCoupons => '쿠폰함';
+
+  @override
+  String get homeQuickOrderHistory => '주문내역';
+
+  @override
+  String get homeQuickStores => '매장찾기';
+
+  @override
+  String get homeRecommendedTitle => '이 메뉴 어때요?';
+
+  @override
+  String get homeSeeAll => '전체보기';
+
+  @override
+  String get homeRewardsTitle => '폭스트롯 리워드';
+
+  @override
+  String get homeRewardsMineTitle => '나의 리워드';
+
+  @override
+  String get homeRewardsSignInPrompt => '로그인하고\n포인트를 모아보세요';
+
+  @override
+  String homeRewardsSignInDetail(String goal) {
+    return '결제 금액의 10%가 적립되고, ${goal}P를 모으면 무료 음료 쿠폰을 드려요!';
+  }
+
+  @override
+  String get homeRewardsSignInAction => '로그인하기';
+
+  @override
+  String homeRewardsBalance(String balance) {
+    return '${balance}P';
+  }
+
+  @override
+  String homeRewardsRemaining(String remaining) {
+    return '${remaining}P 더 모으면 무료 음료 쿠폰!';
+  }
+
+  @override
+  String get homeRewardsGoalReached => '무료 음료 쿠폰으로 교환할 수 있어요!';
+
+  @override
+  String get bannerIconSparkles => '반짝임';
+
+  @override
+  String get bannerIconSnowflake => '눈꽃';
+
+  @override
+  String get bannerIconBean => '원두';
+
+  @override
+  String get bannerIconGift => '선물';
 }

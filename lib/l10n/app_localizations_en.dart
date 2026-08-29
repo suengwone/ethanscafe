@@ -74,4 +74,89 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsLanguageUnsupportedNotice =>
       'Text the store enters itself, such as menu names and store notices, appears in the language it was written in.';
+
+  @override
+  String get homeGreetingGuestName => 'there';
+
+  @override
+  String homeGreetingMember(String name) {
+    return 'Hello, $name!\nGood to see you.';
+  }
+
+  @override
+  String get homeGreetingVisitor => 'Welcome to\nFoxtrot!';
+
+  @override
+  String get homeGreetingSubtitle =>
+      'Take a moment today over a good cup of coffee';
+
+  @override
+  String get homeFindStore => 'Find a store';
+
+  @override
+  String get homeNotifications => 'Notifications';
+
+  @override
+  String get homeSignIn => 'Sign in';
+
+  @override
+  String get homeQuickOrder => 'Order';
+
+  @override
+  String get homeQuickCoupons => 'Coupons';
+
+  @override
+  String get homeQuickOrderHistory => 'Orders';
+
+  @override
+  String get homeQuickStores => 'Stores';
+
+  @override
+  String get homeRecommendedTitle => 'How about these?';
+
+  @override
+  String get homeSeeAll => 'See all';
+
+  @override
+  String get homeRewardsTitle => 'Foxtrot Rewards';
+
+  @override
+  String get homeRewardsMineTitle => 'My rewards';
+
+  @override
+  String get homeRewardsSignInPrompt => 'Sign in and\nstart earning points';
+
+  @override
+  String homeRewardsSignInDetail(String goal) {
+    return 'Earn 10% of what you pay, and get a free drink coupon at ${goal}P.';
+  }
+
+  @override
+  String get homeRewardsSignInAction => 'Sign in';
+
+  @override
+  String homeRewardsBalance(String balance) {
+    return '${balance}P';
+  }
+
+  @override
+  String homeRewardsRemaining(String remaining) {
+    return '${remaining}P more for a free drink coupon!';
+  }
+
+  @override
+  String get homeRewardsGoalReached =>
+      'You can trade this for a free drink coupon!';
+
+  @override
+  String get bannerIconSparkles => 'Sparkles';
+
+  @override
+  String get bannerIconSnowflake => 'Snowflake';
+
+  @override
+  String get bannerIconBean => 'Bean';
+
+  @override
+  String get bannerIconGift => 'Gift';
 }
