@@ -31,9 +31,7 @@ class LanguageSettingsScreen extends ConsumerWidget {
               // null은 라디오 값으로 쓸 수 없어 기기 설정을 빈 문자열로 둔다.
               groupValue: selected?.languageCode ?? '',
               onChanged: (value) {
-                ref
-                    .read(localeProvider.notifier)
-                    .select(decodeLocale(value));
+                ref.read(localeProvider.notifier).select(decodeLocale(value));
               },
               child: Column(
                 children: [

@@ -6,13 +6,15 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/confirm_delete_dialog.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/auth_providers.dart';
 import '../data/firestore_payment_methods_repository.dart';
 import '../data/local_payment_methods_repository.dart';
 import '../domain/payment_method.dart';
 
-final paymentMethodsRepositoryProvider =
-    Provider<PaymentMethodsRepository>((ref) {
+final paymentMethodsRepositoryProvider = Provider<PaymentMethodsRepository>((
+  ref,
+) {
   try {
     if (Firebase.apps.isNotEmpty) {
       final user = ref.watch(authStateProvider).value;
@@ -24,8 +26,10 @@ final paymentMethodsRepositoryProvider =
   return LocalPaymentMethodsRepository();
 });
 
-final paymentMethodsProvider = AsyncNotifierProvider<PaymentMethodsController,
-    List<PaymentMethod>>(PaymentMethodsController.new);
+final paymentMethodsProvider =
+    AsyncNotifierProvider<PaymentMethodsController, List<PaymentMethod>>(
+      PaymentMethodsController.new,
+    );
 
 class PaymentMethodsController extends AsyncNotifier<List<PaymentMethod>> {
   @override
@@ -59,18 +63,20 @@ class PaymentMethodsScreen extends ConsumerWidget {
     final cardsState = ref.watch(paymentMethodsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('결제 수단 관리')),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).paymentMethodsTitle),
+      ),
       body: cardsState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('결제 수단을 불러오지 못했습니다.'),
+              Text(AppLocalizations.of(context).paymentMethodsLoadFailed),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.invalidate(paymentMethodsProvider),
-                child: const Text('다시 시도'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -81,9 +87,7 @@ class PaymentMethodsScreen extends ConsumerWidget {
           }
           return ListView(
             padding: foxtrotListPadding,
-            children: [
-              ...cards.map((card) => _PaymentMethodCard(card: card)),
-            ],
+            children: [...cards.map((card) => _PaymentMethodCard(card: card))],
           );
         },
       ),
@@ -98,7 +102,7 @@ class PaymentMethodsScreen extends ConsumerWidget {
           child: FilledButton.icon(
             onPressed: () => _showAddCardSheet(context, ref),
             icon: const Icon(LucideIcons.plus, size: 20),
-            label: const Text('카드 추가'),
+            label: Text(AppLocalizations.of(context).paymentMethodAdd),
           ),
         ),
       ),
@@ -130,12 +134,12 @@ class _EmptyPaymentMethods extends StatelessWidget {
           Icon(LucideIcons.creditCard, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text(
-            '등록된 결제 수단이 없어요',
+            AppLocalizations.of(context).paymentMethodsEmptyTitle,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           Text(
-            '카드를 추가하면 매장에서 빠르게 결제할 수 있어요.',
+            AppLocalizations.of(context).paymentMethodsEmptyDetail,
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
@@ -152,8 +156,10 @@ class _PaymentMethodCard extends ConsumerWidget {
   Future<void> _delete(BuildContext context, WidgetRef ref) async {
     final confirmed = await confirmDelete(
       context,
-      title: '결제 수단 삭제',
-      message: '${card.brand}(**** ${card.last4}) 카드를 삭제할까요? 삭제하면 되돌릴 수 없어요.',
+      title: AppLocalizations.of(context).paymentMethodDeleteTitle,
+      message: AppLocalizations.of(
+        context,
+      ).paymentMethodDeleteBody(card.brand, card.last4),
     );
     if (!confirmed || !context.mounted) {
       return;
@@ -164,7 +170,11 @@ class _PaymentMethodCard extends ConsumerWidget {
     }
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(const SnackBar(content: Text('결제 수단을 삭제했어요.')));
+      ..showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context).paymentMethodDeleted),
+        ),
+      );
   }
 
   @override
@@ -185,12 +195,16 @@ class _PaymentMethodCard extends ConsumerWidget {
                 color: context.palette.surface,
                 borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
                 border: Border.all(
-                  color: card.isDefault ? context.palette.accent : context.palette.border,
+                  color: card.isDefault
+                      ? context.palette.accent
+                      : context.palette.border,
                 ),
               ),
               child: Icon(
                 LucideIcons.creditCard,
-                color: card.isDefault ? context.palette.accent : context.palette.muted,
+                color: card.isDefault
+                    ? context.palette.accent
+                    : context.palette.muted,
                 size: 24,
               ),
             ),
@@ -210,12 +224,15 @@ class _PaymentMethodCard extends ConsumerWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: context.palette.accent.withValues(alpha: 0.15),
-                            borderRadius:
-                                BorderRadius.circular(foxtrotRadiusSmall),
+                            color: context.palette.accent.withValues(
+                              alpha: 0.15,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              foxtrotRadiusSmall,
+                            ),
                           ),
                           child: Text(
-                            '기본',
+                            AppLocalizations.of(context).paymentMethodDefault,
                             style: TextStyle(
                               fontSize: 11,
                               color: context.palette.accentSoft,
@@ -250,13 +267,15 @@ class _PaymentMethodCard extends ConsumerWidget {
               },
               itemBuilder: (context) => [
                 if (!card.isDefault)
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 'default',
-                    child: Text('기본 결제 수단으로 설정'),
+                    child: Text(
+                      AppLocalizations.of(context).paymentMethodSetDefault,
+                    ),
                   ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'delete',
-                  child: Text('삭제'),
+                  child: Text(AppLocalizations.of(context).commonDelete),
                 ),
               ],
             ),
@@ -290,7 +309,9 @@ class _AddCardSheetState extends ConsumerState<_AddCardSheet> {
     if (!(_formKey.currentState?.validate() ?? false)) {
       return;
     }
-    await ref.read(paymentMethodsProvider.notifier).addCard(
+    await ref
+        .read(paymentMethodsProvider.notifier)
+        .addCard(
           brand: _brandController.text.trim(),
           last4: _last4Controller.text.trim(),
         );
@@ -317,17 +338,26 @@ class _AddCardSheetState extends ConsumerState<_AddCardSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('카드 추가', style: textTheme.titleLarge),
+              Text(
+                AppLocalizations.of(context).paymentMethodAdd,
+                style: textTheme.titleLarge,
+              ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _brandController,
-                decoration: const InputDecoration(
-                  labelText: '카드사',
-                  hintText: '예: 신한카드',
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(
+                    context,
+                  ).paymentMethodFieldBrand,
+                  hintText: AppLocalizations.of(
+                    context,
+                  ).paymentMethodFieldBrandHint,
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return '카드사를 입력해주세요.';
+                    return AppLocalizations.of(
+                      context,
+                    ).paymentMethodFieldBrandRequired;
                   }
                   return null;
                 },
@@ -335,8 +365,10 @@ class _AddCardSheetState extends ConsumerState<_AddCardSheet> {
               const SizedBox(height: 12),
               TextFormField(
                 controller: _last4Controller,
-                decoration: const InputDecoration(
-                  labelText: '카드 번호 끝 4자리',
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(
+                    context,
+                  ).paymentMethodFieldLast4,
                   hintText: '1234',
                 ),
                 keyboardType: TextInputType.number,
@@ -344,7 +376,9 @@ class _AddCardSheetState extends ConsumerState<_AddCardSheet> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: (value) {
                   if (value == null || value.trim().length != 4) {
-                    return '카드 번호 끝 4자리를 입력해주세요.';
+                    return AppLocalizations.of(
+                      context,
+                    ).paymentMethodFieldLast4Required;
                   }
                   return null;
                 },
@@ -354,7 +388,7 @@ class _AddCardSheetState extends ConsumerState<_AddCardSheet> {
                 width: double.infinity,
                 child: FilledButton(
                   onPressed: _submit,
-                  child: const Text('추가하기'),
+                  child: Text(AppLocalizations.of(context).addressSubmit),
                 ),
               ),
             ],

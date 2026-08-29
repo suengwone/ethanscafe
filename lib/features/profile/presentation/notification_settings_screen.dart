@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/auth_providers.dart';
 import '../data/firestore_notification_settings_repository.dart';
 import '../data/local_notification_settings_repository.dart';
@@ -10,20 +11,21 @@ import '../domain/notification_settings.dart';
 
 final notificationSettingsRepositoryProvider =
     Provider<NotificationSettingsRepository>((ref) {
-  try {
-    if (Firebase.apps.isNotEmpty) {
-      final user = ref.watch(authStateProvider).value;
-      if (user != null) {
-        return FirestoreNotificationSettingsRepository(uid: user.uid);
-      }
-    }
-  } catch (_) {}
-  return LocalNotificationSettingsRepository();
-});
+      try {
+        if (Firebase.apps.isNotEmpty) {
+          final user = ref.watch(authStateProvider).value;
+          if (user != null) {
+            return FirestoreNotificationSettingsRepository(uid: user.uid);
+          }
+        }
+      } catch (_) {}
+      return LocalNotificationSettingsRepository();
+    });
 
-final notificationSettingsProvider = AsyncNotifierProvider<
-    NotificationSettingsController,
-    NotificationSettings>(NotificationSettingsController.new);
+final notificationSettingsProvider =
+    AsyncNotifierProvider<NotificationSettingsController, NotificationSettings>(
+      NotificationSettingsController.new,
+    );
 
 class NotificationSettingsController
     extends AsyncNotifier<NotificationSettings> {
@@ -51,19 +53,20 @@ class NotificationSettingsScreen extends ConsumerWidget {
     final controller = ref.read(notificationSettingsProvider.notifier);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('알림 설정')),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).notificationSettingsTitle),
+      ),
       body: settingsState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('알림 설정을 불러오지 못했습니다.'),
+              Text(AppLocalizations.of(context).notificationLoadFailed),
               const SizedBox(height: 8),
               TextButton(
-                onPressed: () =>
-                    ref.invalidate(notificationSettingsProvider),
-                child: const Text('다시 시도'),
+                onPressed: () => ref.invalidate(notificationSettingsProvider),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -72,11 +75,13 @@ class NotificationSettingsScreen extends ConsumerWidget {
           padding: foxtrotListPadding,
           children: [
             _SettingsSection(
-              title: '푸시 알림',
+              title: AppLocalizations.of(context).notificationSectionPush,
               children: [
                 SwitchListTile(
-                  title: const Text('앱 푸시 알림'),
-                  subtitle: const Text('주문 상태, 매장 소식 등 전체 알림'),
+                  title: Text(AppLocalizations.of(context).notificationPushAll),
+                  subtitle: Text(
+                    AppLocalizations.of(context).notificationPushAllDetail,
+                  ),
                   value: settings.pushEnabled,
                   onChanged: (value) => controller.updateSettings(
                     (s) => s.copyWith(pushEnabled: value),
@@ -85,36 +90,44 @@ class NotificationSettingsScreen extends ConsumerWidget {
               ],
             ),
             _SettingsSection(
-              title: '알림 항목',
+              title: AppLocalizations.of(context).notificationSectionTopics,
               children: [
                 SwitchListTile(
-                  title: const Text('이벤트 소식'),
-                  subtitle: const Text('신메뉴 출시, 시음회 등 이벤트 알림'),
+                  title: Text(AppLocalizations.of(context).notificationEvents),
+                  subtitle: Text(
+                    AppLocalizations.of(context).notificationEventsDetail,
+                  ),
                   value: settings.eventEnabled,
                   onChanged: settings.pushEnabled
                       ? (value) => controller.updateSettings(
-                            (s) => s.copyWith(eventEnabled: value),
-                          )
+                          (s) => s.copyWith(eventEnabled: value),
+                        )
                       : null,
                 ),
                 SwitchListTile(
-                  title: const Text('포인트 적립/사용'),
-                  subtitle: const Text('포인트 변동 내역 알림'),
+                  title: Text(AppLocalizations.of(context).notificationPoints),
+                  subtitle: Text(
+                    AppLocalizations.of(context).notificationPointsDetail,
+                  ),
                   value: settings.pointsEnabled,
                   onChanged: settings.pushEnabled
                       ? (value) => controller.updateSettings(
-                            (s) => s.copyWith(pointsEnabled: value),
-                          )
+                          (s) => s.copyWith(pointsEnabled: value),
+                        )
                       : null,
                 ),
                 SwitchListTile(
-                  title: const Text('마케팅 정보 수신'),
-                  subtitle: const Text('할인 쿠폰, 프로모션 정보 알림'),
+                  title: Text(
+                    AppLocalizations.of(context).notificationMarketing,
+                  ),
+                  subtitle: Text(
+                    AppLocalizations.of(context).notificationMarketingDetail,
+                  ),
                   value: settings.marketingEnabled,
                   onChanged: settings.pushEnabled
                       ? (value) => controller.updateSettings(
-                            (s) => s.copyWith(marketingEnabled: value),
-                          )
+                          (s) => s.copyWith(marketingEnabled: value),
+                        )
                       : null,
                 ),
               ],

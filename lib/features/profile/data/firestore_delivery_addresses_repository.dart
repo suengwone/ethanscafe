@@ -57,14 +57,12 @@ class FirestoreDeliveryAddressesRepository
   @override
   Future<List<DeliveryAddress>> removeAddress(String id) {
     return _mutate((addresses) {
-      final removedDefault =
-          addresses.any((address) => address.id == id && address.isDefault);
+      final removedDefault = addresses.any(
+        (address) => address.id == id && address.isDefault,
+      );
       var updated = addresses.where((address) => address.id != id).toList();
       if (removedDefault && updated.isNotEmpty) {
-        updated = [
-          updated.first.copyWith(isDefault: true),
-          ...updated.skip(1),
-        ];
+        updated = [updated.first.copyWith(isDefault: true), ...updated.skip(1)];
       }
       return updated;
     });
@@ -99,13 +97,17 @@ class FirestoreDeliveryAddressesRepository
 }
 
 List<DeliveryAddress> deliveryAddressesFromFirestore(
-    Map<String, dynamic> data) {
+  Map<String, dynamic> data,
+) {
   return ((data['addresses'] as List<dynamic>?) ?? const [])
-      .map((address) => DeliveryAddress.fromJson(address as Map<String, dynamic>))
+      .map(
+        (address) => DeliveryAddress.fromJson(address as Map<String, dynamic>),
+      )
       .toList();
 }
 
 Map<String, dynamic> deliveryAddressesToFirestore(
-    List<DeliveryAddress> addresses) {
+  List<DeliveryAddress> addresses,
+) {
   return {'addresses': addresses.map((address) => address.toJson()).toList()};
 }

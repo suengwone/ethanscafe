@@ -2290,4 +2290,312 @@ class AppLocalizationsKo extends AppLocalizations {
   String catalogSoldOutPrefix(String subtitle) {
     return '품절 · $subtitle';
   }
+
+  @override
+  String get addressListTitle => '배송지 관리';
+
+  @override
+  String get addressLoadFailed => '배송지를 불러오지 못했습니다.';
+
+  @override
+  String get addressAdd => '배송지 추가';
+
+  @override
+  String get addressEmptyTitle => '등록된 배송지가 없어요';
+
+  @override
+  String get addressEmptyDetail => '배송지를 추가하면 원두 주문 시 바로 사용할 수 있어요.';
+
+  @override
+  String get addressDeleteTitle => '배송지 삭제';
+
+  @override
+  String addressDeleteBody(String label) {
+    return '$label 배송지를 삭제할까요? 삭제하면 되돌릴 수 없어요.';
+  }
+
+  @override
+  String get addressDeleted => '배송지를 삭제했어요.';
+
+  @override
+  String get addressSetDefault => '기본 배송지로 설정';
+
+  @override
+  String get addressFieldLabel => '배송지 이름';
+
+  @override
+  String get addressFieldLabelHint => '예: 집, 회사';
+
+  @override
+  String get addressFieldLabelRequired => '배송지 이름을 입력해주세요.';
+
+  @override
+  String get addressFieldRecipient => '받는 사람';
+
+  @override
+  String get addressFieldRecipientRequired => '받는 사람을 입력해주세요.';
+
+  @override
+  String get addressFieldPhoneRequired => '연락처를 입력해주세요.';
+
+  @override
+  String get addressFieldAddressRequired => '주소를 입력해주세요.';
+
+  @override
+  String get addressFieldDetail => '상세 주소 (선택)';
+
+  @override
+  String get addressSubmit => '추가하기';
+
+  @override
+  String get policyTermsTitle => '이용약관';
+
+  @override
+  String get policyPrivacyTitle => '개인정보처리방침';
+
+  @override
+  String get policyEffectiveDate => '시행일: 2026년 1월 1일';
+
+  @override
+  String get policyKoreanOnlyNotice => '이 문서는 한국어 원문만 효력이 있습니다.';
+
+  @override
+  String get paymentMethodsTitle => '결제 수단 관리';
+
+  @override
+  String get paymentMethodsLoadFailed => '결제 수단을 불러오지 못했습니다.';
+
+  @override
+  String get paymentMethodAdd => '카드 추가';
+
+  @override
+  String get paymentMethodsEmptyTitle => '등록된 결제 수단이 없어요';
+
+  @override
+  String get paymentMethodsEmptyDetail => '카드를 추가하면 매장에서 빠르게 결제할 수 있어요.';
+
+  @override
+  String get paymentMethodDeleteTitle => '결제 수단 삭제';
+
+  @override
+  String paymentMethodDeleteBody(String brand, String last4) {
+    return '$brand(**** $last4) 카드를 삭제할까요? 삭제하면 되돌릴 수 없어요.';
+  }
+
+  @override
+  String get paymentMethodDeleted => '결제 수단을 삭제했어요.';
+
+  @override
+  String get paymentMethodDefault => '기본';
+
+  @override
+  String get paymentMethodSetDefault => '기본 결제 수단으로 설정';
+
+  @override
+  String get paymentMethodFieldBrand => '카드사';
+
+  @override
+  String get paymentMethodFieldBrandHint => '예: 신한카드';
+
+  @override
+  String get paymentMethodFieldBrandRequired => '카드사를 입력해주세요.';
+
+  @override
+  String get paymentMethodFieldLast4 => '카드 번호 끝 4자리';
+
+  @override
+  String get paymentMethodFieldLast4Required => '카드 번호 끝 4자리를 입력해주세요.';
+
+  @override
+  String get profileTitle => '내 정보';
+
+  @override
+  String get profileSignedOut => '로그아웃되었습니다.';
+
+  @override
+  String get profileAccountDeleted => '계정이 삭제되었습니다. 그동안 이용해주셔서 감사합니다.';
+
+  @override
+  String get profileBirthdayHelp => '생일을 선택하세요';
+
+  @override
+  String get profileBirthdaySaved => '생일이 등록되었습니다. 생일 주간에 축하 쿠폰이 자동 발급됩니다.';
+
+  @override
+  String get profileSectionActivity => '나의 활동';
+
+  @override
+  String get profileSectionSettings => '설정';
+
+  @override
+  String get profileSectionOther => '기타';
+
+  @override
+  String get profileSectionAccount => '계정';
+
+  @override
+  String get profileNotificationSettings => '알림 설정';
+
+  @override
+  String get profileBirthday => '생일 등록';
+
+  @override
+  String profileBirthdayValue(int year, int month, int day) {
+    return '$year년 $month월 $day일';
+  }
+
+  @override
+  String get profileBusinessAccount => '사업자 계정 관리';
+
+  @override
+  String get profileCompanyInfo => '사업자 정보';
+
+  @override
+  String get profileSignOut => '로그아웃';
+
+  @override
+  String get profileSignOutConfirm => '정말 로그아웃하시겠어요?';
+
+  @override
+  String get profileDeleteAccount => '회원 탈퇴';
+
+  @override
+  String get profileDeleteAccountConfirm =>
+      '탈퇴하면 계정과 포인트, 쿠폰, 주문 내역 등 모든 데이터가 삭제되며 복구할 수 없습니다.\n정말 탈퇴하시겠어요?';
+
+  @override
+  String get profileDeleteAccountAction => '탈퇴하기';
+
+  @override
+  String get companyFieldName => '상호';
+
+  @override
+  String get companyFieldOwner => '대표자';
+
+  @override
+  String get companyFieldNumber => '사업자등록번호';
+
+  @override
+  String get companyFieldAddress => '주소';
+
+  @override
+  String get companyFieldPhone => '대표번호';
+
+  @override
+  String get companyFieldEmail => '이메일';
+
+  @override
+  String get appVersionLoading => '앱 버전 확인 중...';
+
+  @override
+  String appVersion(String version) {
+    return '앱 버전 $version';
+  }
+
+  @override
+  String get profileGuest => '게스트';
+
+  @override
+  String get profileSignIn => '로그인하기';
+
+  @override
+  String get supportTitle => '고객센터';
+
+  @override
+  String supportCallFailed(String phone) {
+    return '전화 연결에 실패했습니다: $phone';
+  }
+
+  @override
+  String supportMailFailed(String email) {
+    return '메일 앱을 열지 못했습니다: $email';
+  }
+
+  @override
+  String get supportSectionContact => '문의하기';
+
+  @override
+  String get supportCall => '전화 문의';
+
+  @override
+  String supportCallHours(String phone) {
+    return '$phone (매일 09:00 ~ 18:00)';
+  }
+
+  @override
+  String get supportEmail => '이메일 문의';
+
+  @override
+  String get supportSectionFaq => '자주 묻는 질문';
+
+  @override
+  String get faqPointsEarnQ => '포인트는 어떻게 적립되나요?';
+
+  @override
+  String get faqPointsEarnA =>
+      '매장 결제 시 결제 금액의 10%가 포인트로 적립됩니다. 페이 탭의 멤버십 QR 코드를 결제 전에 제시해주세요.';
+
+  @override
+  String get faqPointsUseQ => '적립한 포인트는 어떻게 사용하나요?';
+
+  @override
+  String get faqPointsUseA =>
+      '보유 포인트는 매장에서 현금처럼 사용할 수 있습니다. 결제 시 직원에게 포인트 사용을 요청해주세요. 잔액 한도 내에서 차감됩니다.';
+
+  @override
+  String get faqCouponsQ => '쿠폰은 어디서 확인하나요?';
+
+  @override
+  String get faqCouponsA =>
+      '마이 탭 > 쿠폰함에서 보유 중인 쿠폰과 사용 기한을 확인할 수 있습니다. 만료된 쿠폰은 자동으로 사용 불가 처리됩니다.';
+
+  @override
+  String get faqDeliveryQ => '원두 배송은 얼마나 걸리나요?';
+
+  @override
+  String get faqDeliveryA =>
+      '주문 후 로스팅을 진행하며, 보통 영업일 기준 2~3일 내에 발송됩니다. 신선한 원두를 위해 주문 순서대로 로스팅해 보내드립니다.';
+
+  @override
+  String get faqDeleteAccountQ => '회원 탈퇴는 어떻게 하나요?';
+
+  @override
+  String get faqDeleteAccountA =>
+      '고객센터 전화 또는 이메일로 탈퇴를 요청하실 수 있습니다. 탈퇴 시 보유 포인트와 쿠폰은 모두 소멸되니 유의해주세요.';
+
+  @override
+  String get notificationSettingsTitle => '알림 설정';
+
+  @override
+  String get notificationLoadFailed => '알림 설정을 불러오지 못했습니다.';
+
+  @override
+  String get notificationSectionPush => '푸시 알림';
+
+  @override
+  String get notificationPushAll => '앱 푸시 알림';
+
+  @override
+  String get notificationPushAllDetail => '주문 상태, 매장 소식 등 전체 알림';
+
+  @override
+  String get notificationSectionTopics => '알림 항목';
+
+  @override
+  String get notificationEvents => '이벤트 소식';
+
+  @override
+  String get notificationEventsDetail => '신메뉴 출시, 시음회 등 이벤트 알림';
+
+  @override
+  String get notificationPoints => '포인트 적립/사용';
+
+  @override
+  String get notificationPointsDetail => '포인트 변동 내역 알림';
+
+  @override
+  String get notificationMarketing => '마케팅 정보 수신';
+
+  @override
+  String get notificationMarketingDetail => '할인 쿠폰, 프로모션 정보 알림';
 }

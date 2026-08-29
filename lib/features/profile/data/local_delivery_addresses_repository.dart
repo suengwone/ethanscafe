@@ -52,14 +52,12 @@ class LocalDeliveryAddressesRepository implements DeliveryAddressesRepository {
   Future<List<DeliveryAddress>> removeAddress(String id) async {
     final prefs = await SharedPreferences.getInstance();
     final addresses = await load();
-    final removedDefault =
-        addresses.any((address) => address.id == id && address.isDefault);
+    final removedDefault = addresses.any(
+      (address) => address.id == id && address.isDefault,
+    );
     var updated = addresses.where((address) => address.id != id).toList();
     if (removedDefault && updated.isNotEmpty) {
-      updated = [
-        updated.first.copyWith(isDefault: true),
-        ...updated.skip(1),
-      ];
+      updated = [updated.first.copyWith(isDefault: true), ...updated.skip(1)];
     }
     await _save(prefs, updated);
     return updated;
@@ -90,14 +88,14 @@ class LocalDeliveryAddressesRepository implements DeliveryAddressesRepository {
       '${DateTime.now().microsecondsSinceEpoch}-${Random().nextInt(0xFFFF)}';
 
   List<DeliveryAddress> _seedAddresses() => const [
-        DeliveryAddress(
-          id: 'seed-home',
-          label: '집',
-          recipient: '이단',
-          phone: '010-1234-5678',
-          address1: '서울 성동구 연무장길 47',
-          address2: '101동 1001호',
-          isDefault: true,
-        ),
-      ];
+    DeliveryAddress(
+      id: 'seed-home',
+      label: '집',
+      recipient: '이단',
+      phone: '010-1234-5678',
+      address1: '서울 성동구 연무장길 47',
+      address2: '101동 1001호',
+      isDefault: true,
+    ),
+  ];
 }

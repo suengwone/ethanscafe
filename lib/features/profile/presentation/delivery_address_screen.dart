@@ -5,6 +5,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/confirm_delete_dialog.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/auth_providers.dart';
 import '../data/firestore_delivery_addresses_repository.dart';
 import '../data/local_delivery_addresses_repository.dart';
@@ -12,20 +13,21 @@ import '../domain/delivery_address.dart';
 
 final deliveryAddressesRepositoryProvider =
     Provider<DeliveryAddressesRepository>((ref) {
-  try {
-    if (Firebase.apps.isNotEmpty) {
-      final user = ref.watch(authStateProvider).value;
-      if (user != null) {
-        return FirestoreDeliveryAddressesRepository(uid: user.uid);
-      }
-    }
-  } catch (_) {}
-  return LocalDeliveryAddressesRepository();
-});
+      try {
+        if (Firebase.apps.isNotEmpty) {
+          final user = ref.watch(authStateProvider).value;
+          if (user != null) {
+            return FirestoreDeliveryAddressesRepository(uid: user.uid);
+          }
+        }
+      } catch (_) {}
+      return LocalDeliveryAddressesRepository();
+    });
 
-final deliveryAddressesProvider = AsyncNotifierProvider<
-    DeliveryAddressesController,
-    List<DeliveryAddress>>(DeliveryAddressesController.new);
+final deliveryAddressesProvider =
+    AsyncNotifierProvider<DeliveryAddressesController, List<DeliveryAddress>>(
+      DeliveryAddressesController.new,
+    );
 
 class DeliveryAddressesController extends AsyncNotifier<List<DeliveryAddress>> {
   @override
@@ -71,18 +73,20 @@ class DeliveryAddressScreen extends ConsumerWidget {
     final addressesState = ref.watch(deliveryAddressesProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('배송지 관리')),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).addressListTitle),
+      ),
       body: addressesState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('배송지를 불러오지 못했습니다.'),
+              Text(AppLocalizations.of(context).addressLoadFailed),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.invalidate(deliveryAddressesProvider),
-                child: const Text('다시 시도'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -94,9 +98,7 @@ class DeliveryAddressScreen extends ConsumerWidget {
           return ListView(
             padding: foxtrotListPadding,
             children: [
-              ...addresses.map(
-                (address) => _AddressCard(address: address),
-              ),
+              ...addresses.map((address) => _AddressCard(address: address)),
             ],
           );
         },
@@ -112,7 +114,7 @@ class DeliveryAddressScreen extends ConsumerWidget {
           child: FilledButton.icon(
             onPressed: () => _showAddAddressSheet(context),
             icon: const Icon(LucideIcons.plus, size: 20),
-            label: const Text('배송지 추가'),
+            label: Text(AppLocalizations.of(context).addressAdd),
           ),
         ),
       ),
@@ -144,12 +146,12 @@ class _EmptyAddresses extends StatelessWidget {
           Icon(LucideIcons.mapPin, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text(
-            '등록된 배송지가 없어요',
+            AppLocalizations.of(context).addressEmptyTitle,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           Text(
-            '배송지를 추가하면 원두 주문 시 바로 사용할 수 있어요.',
+            AppLocalizations.of(context).addressEmptyDetail,
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
@@ -166,20 +168,23 @@ class _AddressCard extends ConsumerWidget {
   Future<void> _delete(BuildContext context, WidgetRef ref) async {
     final confirmed = await confirmDelete(
       context,
-      title: '배송지 삭제',
-      message: '${address.label} 배송지를 삭제할까요? 삭제하면 되돌릴 수 없어요.',
+      title: AppLocalizations.of(context).addressDeleteTitle,
+      message: AppLocalizations.of(context).addressDeleteBody(address.label),
     );
     if (!confirmed || !context.mounted) {
       return;
     }
-    await ref.read(deliveryAddressesProvider.notifier)
+    await ref
+        .read(deliveryAddressesProvider.notifier)
         .removeAddress(address.id);
     if (!context.mounted) {
       return;
     }
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(const SnackBar(content: Text('배송지를 삭제했어요.')));
+      ..showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).addressDeleted)),
+      );
   }
 
   @override
@@ -204,12 +209,18 @@ class _AddressCard extends ConsumerWidget {
                 color: context.palette.surface,
                 borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
                 border: Border.all(
-                  color: address.isDefault ? context.palette.accent : context.palette.border,
+                  color: address.isDefault
+                      ? context.palette.accent
+                      : context.palette.border,
                 ),
               ),
               child: Icon(
-                address.label == '회사' ? LucideIcons.building2 : LucideIcons.house,
-                color: address.isDefault ? context.palette.accent : context.palette.muted,
+                address.label == '회사'
+                    ? LucideIcons.building2
+                    : LucideIcons.house,
+                color: address.isDefault
+                    ? context.palette.accent
+                    : context.palette.muted,
                 size: 24,
               ),
             ),
@@ -229,12 +240,15 @@ class _AddressCard extends ConsumerWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: context.palette.accent.withValues(alpha: 0.15),
-                            borderRadius:
-                                BorderRadius.circular(foxtrotRadiusSmall),
+                            color: context.palette.accent.withValues(
+                              alpha: 0.15,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              foxtrotRadiusSmall,
+                            ),
                           ),
                           child: Text(
-                            '기본 배송지',
+                            AppLocalizations.of(context).beanCartDefaultAddress,
                             style: TextStyle(
                               fontSize: 11,
                               color: context.palette.accentSoft,
@@ -271,13 +285,13 @@ class _AddressCard extends ConsumerWidget {
               },
               itemBuilder: (context) => [
                 if (!address.isDefault)
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 'default',
-                    child: Text('기본 배송지로 설정'),
+                    child: Text(AppLocalizations.of(context).addressSetDefault),
                   ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'delete',
-                  child: Text('삭제'),
+                  child: Text(AppLocalizations.of(context).commonDelete),
                 ),
               ],
             ),
@@ -317,7 +331,9 @@ class _AddAddressSheetState extends ConsumerState<_AddAddressSheet> {
     if (!(_formKey.currentState?.validate() ?? false)) {
       return;
     }
-    await ref.read(deliveryAddressesProvider.notifier).addAddress(
+    await ref
+        .read(deliveryAddressesProvider.notifier)
+        .addAddress(
           label: _labelController.text.trim(),
           recipient: _recipientController.text.trim(),
           phone: _phoneController.text.trim(),
@@ -355,47 +371,66 @@ class _AddAddressSheetState extends ConsumerState<_AddAddressSheet> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('배송지 추가', style: textTheme.titleLarge),
+                Text(
+                  AppLocalizations.of(context).addressAdd,
+                  style: textTheme.titleLarge,
+                ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _labelController,
-                  decoration: const InputDecoration(
-                    labelText: '배송지 이름',
-                    hintText: '예: 집, 회사',
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context).addressFieldLabel,
+                    hintText: AppLocalizations.of(
+                      context,
+                    ).addressFieldLabelHint,
                   ),
-                  validator: (value) =>
-                      _requiredValidator(value, '배송지 이름을 입력해주세요.'),
+                  validator: (value) => _requiredValidator(
+                    value,
+                    AppLocalizations.of(context).addressFieldLabelRequired,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _recipientController,
-                  decoration: const InputDecoration(labelText: '받는 사람'),
-                  validator: (value) =>
-                      _requiredValidator(value, '받는 사람을 입력해주세요.'),
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(
+                      context,
+                    ).addressFieldRecipient,
+                  ),
+                  validator: (value) => _requiredValidator(
+                    value,
+                    AppLocalizations.of(context).addressFieldRecipientRequired,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _phoneController,
-                  decoration: const InputDecoration(
-                    labelText: '연락처',
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context).businessFieldPhone,
                     hintText: '010-0000-0000',
                   ),
                   keyboardType: TextInputType.phone,
-                  validator: (value) =>
-                      _requiredValidator(value, '연락처를 입력해주세요.'),
+                  validator: (value) => _requiredValidator(
+                    value,
+                    AppLocalizations.of(context).addressFieldPhoneRequired,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _address1Controller,
-                  decoration: const InputDecoration(labelText: '주소'),
-                  validator: (value) =>
-                      _requiredValidator(value, '주소를 입력해주세요.'),
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context).storeFieldAddress,
+                  ),
+                  validator: (value) => _requiredValidator(
+                    value,
+                    AppLocalizations.of(context).addressFieldAddressRequired,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _address2Controller,
-                  decoration: const InputDecoration(
-                    labelText: '상세 주소 (선택)',
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context).addressFieldDetail,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -403,7 +438,7 @@ class _AddAddressSheetState extends ConsumerState<_AddAddressSheet> {
                   width: double.infinity,
                   child: FilledButton(
                     onPressed: _submit,
-                    child: const Text('추가하기'),
+                    child: Text(AppLocalizations.of(context).addressSubmit),
                   ),
                 ),
               ],

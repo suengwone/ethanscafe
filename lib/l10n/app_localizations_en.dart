@@ -2341,4 +2341,319 @@ class AppLocalizationsEn extends AppLocalizations {
   String catalogSoldOutPrefix(String subtitle) {
     return 'Sold out · $subtitle';
   }
+
+  @override
+  String get addressListTitle => 'Addresses';
+
+  @override
+  String get addressLoadFailed => 'Could not load your addresses.';
+
+  @override
+  String get addressAdd => 'Add an address';
+
+  @override
+  String get addressEmptyTitle => 'No addresses saved';
+
+  @override
+  String get addressEmptyDetail =>
+      'Save one and it is ready the next time you order beans.';
+
+  @override
+  String get addressDeleteTitle => 'Delete address';
+
+  @override
+  String addressDeleteBody(String label) {
+    return 'Delete the $label address? This cannot be undone.';
+  }
+
+  @override
+  String get addressDeleted => 'Address deleted.';
+
+  @override
+  String get addressSetDefault => 'Make this the default';
+
+  @override
+  String get addressFieldLabel => 'Label';
+
+  @override
+  String get addressFieldLabelHint => 'e.g. Home, Work';
+
+  @override
+  String get addressFieldLabelRequired => 'Enter a label.';
+
+  @override
+  String get addressFieldRecipient => 'Recipient';
+
+  @override
+  String get addressFieldRecipientRequired => 'Enter the recipient.';
+
+  @override
+  String get addressFieldPhoneRequired => 'Enter a phone number.';
+
+  @override
+  String get addressFieldAddressRequired => 'Enter the address.';
+
+  @override
+  String get addressFieldDetail => 'Flat, floor, etc. (optional)';
+
+  @override
+  String get addressSubmit => 'Add it';
+
+  @override
+  String get policyTermsTitle => 'Terms of service';
+
+  @override
+  String get policyPrivacyTitle => 'Privacy policy';
+
+  @override
+  String get policyEffectiveDate => 'In effect from 1 January 2026';
+
+  @override
+  String get policyKoreanOnlyNotice =>
+      'Only the Korean text of this document is legally binding.';
+
+  @override
+  String get paymentMethodsTitle => 'Payment methods';
+
+  @override
+  String get paymentMethodsLoadFailed => 'Could not load your cards.';
+
+  @override
+  String get paymentMethodAdd => 'Add a card';
+
+  @override
+  String get paymentMethodsEmptyTitle => 'No cards saved';
+
+  @override
+  String get paymentMethodsEmptyDetail =>
+      'Save one and paying in store gets quicker.';
+
+  @override
+  String get paymentMethodDeleteTitle => 'Delete card';
+
+  @override
+  String paymentMethodDeleteBody(String brand, String last4) {
+    return 'Delete the $brand card ending $last4? This cannot be undone.';
+  }
+
+  @override
+  String get paymentMethodDeleted => 'Card deleted.';
+
+  @override
+  String get paymentMethodDefault => 'Default';
+
+  @override
+  String get paymentMethodSetDefault => 'Make this the default';
+
+  @override
+  String get paymentMethodFieldBrand => 'Card issuer';
+
+  @override
+  String get paymentMethodFieldBrandHint => 'e.g. Shinhan Card';
+
+  @override
+  String get paymentMethodFieldBrandRequired => 'Enter the card issuer.';
+
+  @override
+  String get paymentMethodFieldLast4 => 'Last four digits';
+
+  @override
+  String get paymentMethodFieldLast4Required => 'Enter the last four digits.';
+
+  @override
+  String get profileTitle => 'You';
+
+  @override
+  String get profileSignedOut => 'You are signed out.';
+
+  @override
+  String get profileAccountDeleted =>
+      'Your account is deleted. Thank you for being with us.';
+
+  @override
+  String get profileBirthdayHelp => 'Pick your birthday';
+
+  @override
+  String get profileBirthdaySaved =>
+      'Birthday saved. A coupon arrives on your birthday week.';
+
+  @override
+  String get profileSectionActivity => 'Your activity';
+
+  @override
+  String get profileSectionSettings => 'Settings';
+
+  @override
+  String get profileSectionOther => 'More';
+
+  @override
+  String get profileSectionAccount => 'Account';
+
+  @override
+  String get profileNotificationSettings => 'Notifications';
+
+  @override
+  String get profileBirthday => 'Birthday';
+
+  @override
+  String profileBirthdayValue(int year, int month, int day) {
+    return '$day/$month/$year';
+  }
+
+  @override
+  String get profileBusinessAccount => 'Business account';
+
+  @override
+  String get profileCompanyInfo => 'Company details';
+
+  @override
+  String get profileSignOut => 'Sign out';
+
+  @override
+  String get profileSignOutConfirm => 'Sign out of your account?';
+
+  @override
+  String get profileDeleteAccount => 'Delete account';
+
+  @override
+  String get profileDeleteAccountConfirm =>
+      'Deleting your account removes your points, coupons and order history for good. Are you sure?';
+
+  @override
+  String get profileDeleteAccountAction => 'Delete my account';
+
+  @override
+  String get companyFieldName => 'Company';
+
+  @override
+  String get companyFieldOwner => 'Director';
+
+  @override
+  String get companyFieldNumber => 'Business number';
+
+  @override
+  String get companyFieldAddress => 'Address';
+
+  @override
+  String get companyFieldPhone => 'Phone';
+
+  @override
+  String get companyFieldEmail => 'Email';
+
+  @override
+  String get appVersionLoading => 'Checking the app version…';
+
+  @override
+  String appVersion(String version) {
+    return 'App version $version';
+  }
+
+  @override
+  String get profileGuest => 'Guest';
+
+  @override
+  String get profileSignIn => 'Sign in';
+
+  @override
+  String get supportTitle => 'Support';
+
+  @override
+  String supportCallFailed(String phone) {
+    return 'Could not place the call: $phone';
+  }
+
+  @override
+  String supportMailFailed(String email) {
+    return 'Could not open your mail app: $email';
+  }
+
+  @override
+  String get supportSectionContact => 'Get in touch';
+
+  @override
+  String get supportCall => 'Call us';
+
+  @override
+  String supportCallHours(String phone) {
+    return '$phone (every day, 09:00–18:00)';
+  }
+
+  @override
+  String get supportEmail => 'Email us';
+
+  @override
+  String get supportSectionFaq => 'Common questions';
+
+  @override
+  String get faqPointsEarnQ => 'How do I earn points?';
+
+  @override
+  String get faqPointsEarnA =>
+      'You earn 10% of what you pay in store. Show the membership QR from the Pay tab before you pay.';
+
+  @override
+  String get faqPointsUseQ => 'How do I spend my points?';
+
+  @override
+  String get faqPointsUseA =>
+      'Points work like cash in store. Ask a member of staff to use them when you pay; they come off up to your balance.';
+
+  @override
+  String get faqCouponsQ => 'Where are my coupons?';
+
+  @override
+  String get faqCouponsA =>
+      'Under You › Coupons, with the date each one runs out. Expired ones stop working on their own.';
+
+  @override
+  String get faqDeliveryQ => 'How long does bean delivery take?';
+
+  @override
+  String get faqDeliveryA =>
+      'We roast after you order and usually ship within two to three working days. We roast in the order the orders come in, so the beans arrive fresh.';
+
+  @override
+  String get faqDeleteAccountQ => 'How do I close my account?';
+
+  @override
+  String get faqDeleteAccountA =>
+      'Call or email support and ask. Note that your points and coupons go with the account.';
+
+  @override
+  String get notificationSettingsTitle => 'Notifications';
+
+  @override
+  String get notificationLoadFailed =>
+      'Could not load your notification settings.';
+
+  @override
+  String get notificationSectionPush => 'Push notifications';
+
+  @override
+  String get notificationPushAll => 'App notifications';
+
+  @override
+  String get notificationPushAllDetail =>
+      'Order updates, store news, everything';
+
+  @override
+  String get notificationSectionTopics => 'What you hear about';
+
+  @override
+  String get notificationEvents => 'Events';
+
+  @override
+  String get notificationEventsDetail => 'New drinks, tastings and the like';
+
+  @override
+  String get notificationPoints => 'Points';
+
+  @override
+  String get notificationPointsDetail => 'When your balance changes';
+
+  @override
+  String get notificationMarketing => 'Offers';
+
+  @override
+  String get notificationMarketingDetail => 'Discount coupons and promotions';
 }

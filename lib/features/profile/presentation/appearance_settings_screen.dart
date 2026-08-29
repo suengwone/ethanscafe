@@ -97,11 +97,15 @@ class _ThemePreview extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(l10n.settingsAppearancePreviewRewards,
-                          style: textTheme.titleMedium),
+                      Text(
+                        l10n.settingsAppearancePreviewRewards,
+                        style: textTheme.titleMedium,
+                      ),
                       const SizedBox(height: 2),
-                      Text(l10n.settingsAppearancePreviewBalance,
-                          style: textTheme.bodySmall),
+                      Text(
+                        l10n.settingsAppearancePreviewBalance,
+                        style: textTheme.bodySmall,
+                      ),
                     ],
                   ),
                 ),

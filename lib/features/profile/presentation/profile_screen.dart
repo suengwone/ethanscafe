@@ -30,7 +30,7 @@ class ProfileScreen extends ConsumerWidget {
       return;
     }
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('로그아웃되었습니다.')),
+      SnackBar(content: Text(AppLocalizations.of(context).profileSignedOut)),
     );
   }
 
@@ -42,32 +42,37 @@ class ProfileScreen extends ConsumerWidget {
     if (confirmed != true || !context.mounted) {
       return;
     }
-    final success =
-        await ref.read(authControllerProvider.notifier).deleteAccount();
+    final success = await ref
+        .read(authControllerProvider.notifier)
+        .deleteAccount();
     if (!context.mounted) {
       return;
     }
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('계정이 삭제되었습니다. 그동안 이용해주셔서 감사합니다.')),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).profileAccountDeleted),
+        ),
       );
     } else {
       final error = ref.read(authControllerProvider).error;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.toString())),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error.toString())));
     }
   }
 
   Future<void> _pickBirthDate(BuildContext context, WidgetRef ref) async {
-    final birthDate =
-        ref.read(accountProfileControllerProvider).value?.birthDate;
+    final birthDate = ref
+        .read(accountProfileControllerProvider)
+        .value
+        ?.birthDate;
     final picked = await showDatePicker(
       context: context,
       initialDate: birthDate ?? DateTime(2000, 1, 1),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
-      helpText: '생일을 선택하세요',
+      helpText: AppLocalizations.of(context).profileBirthdayHelp,
     );
     if (picked == null || !context.mounted) {
       return;
@@ -79,8 +84,8 @@ class ProfileScreen extends ConsumerWidget {
       return;
     }
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('생일이 등록되었습니다. 생일 주간에 축하 쿠폰이 자동 발급됩니다.'),
+      SnackBar(
+        content: Text(AppLocalizations.of(context).profileBirthdaySaved),
       ),
     );
   }
@@ -88,31 +93,31 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authStateProvider).value;
-    final birthDate =
-        ref.watch(accountProfileControllerProvider).value?.birthDate;
+    final birthDate = ref
+        .watch(accountProfileControllerProvider)
+        .value
+        ?.birthDate;
     final usableCouponCount = ref.watch(usableCouponCountProvider).value ?? 0;
     final subscriptionCount = ref.watch(activeSubscriptionCountProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('내 정보'),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).profileTitle)),
       body: ListView(
         children: [
           _ProfileHeader(user: user),
           const SizedBox(height: 8),
           _buildSection(
             context,
-            '나의 활동',
+            AppLocalizations.of(context).profileSectionActivity,
             [
               _buildListTile(
                 icon: LucideIcons.receiptText,
-                title: '주문 내역',
+                title: AppLocalizations.of(context).orderHistoryTitle,
                 onTap: () => context.push('/profile/orders'),
               ),
               _buildListTile(
                 icon: LucideIcons.ticket,
-                title: '쿠폰함',
+                title: AppLocalizations.of(context).couponListTitle,
                 trailing: usableCouponCount > 0
                     ? Container(
                         padding: const EdgeInsets.symmetric(
@@ -121,8 +126,9 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                         decoration: BoxDecoration(
                           color: context.palette.accent,
-                          borderRadius:
-                              BorderRadius.circular(foxtrotRadiusMedium),
+                          borderRadius: BorderRadius.circular(
+                            foxtrotRadiusMedium,
+                          ),
                         ),
                         child: Text(
                           '$usableCouponCount',
@@ -137,7 +143,7 @@ class ProfileScreen extends ConsumerWidget {
               ),
               _buildListTile(
                 icon: LucideIcons.repeat,
-                title: '원두 정기구독',
+                title: AppLocalizations.of(context).subscriptionListTitle,
                 trailing: subscriptionCount > 0
                     ? Container(
                         padding: const EdgeInsets.symmetric(
@@ -146,8 +152,9 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                         decoration: BoxDecoration(
                           color: context.palette.accent,
-                          borderRadius:
-                              BorderRadius.circular(foxtrotRadiusMedium),
+                          borderRadius: BorderRadius.circular(
+                            foxtrotRadiusMedium,
+                          ),
                         ),
                         child: Text(
                           '$subscriptionCount',
@@ -162,17 +169,17 @@ class ProfileScreen extends ConsumerWidget {
               ),
               _buildListTile(
                 icon: LucideIcons.gift,
-                title: '선물 내역',
+                title: AppLocalizations.of(context).giftHistoryTitle,
                 onTap: () => context.push('/profile/gifts'),
               ),
               _buildListTile(
                 icon: LucideIcons.heart,
-                title: '즐겨찾기 메뉴',
+                title: AppLocalizations.of(context).favoriteMenuTitle,
                 onTap: () => context.push('/profile/favorites'),
               ),
               _buildListTile(
                 icon: LucideIcons.userPlus,
-                title: '친구 초대',
+                title: AppLocalizations.of(context).referralTitle,
                 onTap: () => context.push('/profile/referral'),
               ),
             ],
@@ -180,16 +187,16 @@ class ProfileScreen extends ConsumerWidget {
           const SizedBox(height: 8),
           _buildSection(
             context,
-            '설정',
+            AppLocalizations.of(context).profileSectionSettings,
             [
               _buildListTile(
                 icon: LucideIcons.bell,
-                title: '알림 설정',
+                title: AppLocalizations.of(context).notificationSettingsTitle,
                 onTap: () => context.push('/profile/notifications'),
               ),
               _buildListTile(
                 icon: LucideIcons.sunMoon,
-                title: '화면 테마',
+                title: AppLocalizations.of(context).settingsAppearanceTitle,
                 trailing: Text(
                   AppLocalizations.of(
                     context,
@@ -200,24 +207,23 @@ class ProfileScreen extends ConsumerWidget {
               ),
               _buildListTile(
                 icon: LucideIcons.languages,
-                title: '언어',
-                trailing: Text(
-                  switch (ref.watch(localeProvider)) {
-                    final locale? => localeName(locale),
-                    null => AppLocalizations.of(
-                      context,
-                    ).settingsLanguageSystem,
-                  },
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+                title: AppLocalizations.of(context).settingsLanguageTitle,
+                trailing: Text(switch (ref.watch(localeProvider)) {
+                  final locale? => localeName(locale),
+                  null => AppLocalizations.of(context).settingsLanguageSystem,
+                }, style: Theme.of(context).textTheme.bodySmall),
                 onTap: () => context.push('/profile/language'),
               ),
               _buildListTile(
                 icon: LucideIcons.cake,
-                title: '생일 등록',
+                title: AppLocalizations.of(context).profileBirthday,
                 trailing: birthDate != null
                     ? Text(
-                        '${birthDate.year}년 ${birthDate.month}월 ${birthDate.day}일',
+                        AppLocalizations.of(context).profileBirthdayValue(
+                          birthDate.year,
+                          birthDate.month,
+                          birthDate.day,
+                        ),
                         style: Theme.of(context).textTheme.bodySmall,
                       )
                     : null,
@@ -225,17 +231,17 @@ class ProfileScreen extends ConsumerWidget {
               ),
               _buildListTile(
                 icon: LucideIcons.creditCard,
-                title: '결제 수단 관리',
+                title: AppLocalizations.of(context).paymentMethodsTitle,
                 onTap: () => context.push('/profile/payment-methods'),
               ),
               _buildListTile(
                 icon: LucideIcons.mapPin,
-                title: '배송지 관리',
+                title: AppLocalizations.of(context).addressListTitle,
                 onTap: () => context.push('/profile/addresses'),
               ),
               _buildListTile(
                 icon: LucideIcons.briefcaseBusiness,
-                title: '사업자 계정 관리',
+                title: AppLocalizations.of(context).profileBusinessAccount,
                 onTap: () => context.push('/profile/business'),
               ),
             ],
@@ -243,26 +249,26 @@ class ProfileScreen extends ConsumerWidget {
           const SizedBox(height: 8),
           _buildSection(
             context,
-            '기타',
+            AppLocalizations.of(context).profileSectionOther,
             [
               _buildListTile(
                 icon: LucideIcons.circleQuestionMark,
-                title: '고객센터',
+                title: AppLocalizations.of(context).supportTitle,
                 onTap: () => context.push('/profile/support'),
               ),
               _buildListTile(
                 icon: LucideIcons.info,
-                title: '이용약관',
+                title: AppLocalizations.of(context).policyTermsTitle,
                 onTap: () => context.push('/profile/terms'),
               ),
               _buildListTile(
                 icon: LucideIcons.shieldCheck,
-                title: '개인정보처리방침',
+                title: AppLocalizations.of(context).policyPrivacyTitle,
                 onTap: () => context.push('/profile/privacy'),
               ),
               _buildListTile(
                 icon: LucideIcons.building2,
-                title: '사업자 정보',
+                title: AppLocalizations.of(context).profileCompanyInfo,
                 onTap: () => _showBusinessInfo(context),
               ),
             ],
@@ -271,17 +277,17 @@ class ProfileScreen extends ConsumerWidget {
           if (user != null)
             _buildSection(
               context,
-              '계정',
+              AppLocalizations.of(context).profileSectionAccount,
               [
                 _buildListTile(
                   icon: LucideIcons.logOut,
-                  title: '로그아웃',
+                  title: AppLocalizations.of(context).profileSignOut,
                   textColor: Theme.of(context).colorScheme.error,
                   onTap: () => _signOut(context, ref),
                 ),
                 _buildListTile(
                   icon: LucideIcons.userX,
-                  title: '회원 탈퇴',
+                  title: AppLocalizations.of(context).profileDeleteAccount,
                   textColor: Theme.of(context).colorScheme.error,
                   onTap: () => _deleteAccount(context, ref),
                 ),
@@ -319,15 +325,10 @@ class ProfileScreen extends ConsumerWidget {
             horizontal: foxtrotScreenHPadding,
             vertical: 8,
           ),
-          child: Text(
-            title,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
+          child: Text(title, style: Theme.of(context).textTheme.titleSmall),
         ),
         Card(
-          margin: const EdgeInsets.symmetric(
-            horizontal: foxtrotScreenHPadding,
-          ),
+          margin: const EdgeInsets.symmetric(horizontal: foxtrotScreenHPadding),
           child: Column(children: children),
         ),
       ],
@@ -343,10 +344,7 @@ class ProfileScreen extends ConsumerWidget {
   }) {
     return ListTile(
       leading: Icon(icon, color: textColor),
-      title: Text(
-        title,
-        style: TextStyle(color: textColor),
-      ),
+      title: Text(title, style: TextStyle(color: textColor)),
       trailing: trailing ?? const Icon(LucideIcons.chevronRight, size: 18),
       onTap: onTap,
     );
@@ -359,16 +357,16 @@ class _SignOutDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('로그아웃'),
-      content: const Text('정말 로그아웃하시겠어요?'),
+      title: Text(AppLocalizations.of(context).profileSignOut),
+      content: Text(AppLocalizations.of(context).profileSignOutConfirm),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: const Text('취소'),
+          child: Text(AppLocalizations.of(context).commonCancel),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(true),
-          child: const Text('로그아웃'),
+          child: Text(AppLocalizations.of(context).profileSignOut),
         ),
       ],
     );
@@ -381,22 +379,19 @@ class _DeleteAccountDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('회원 탈퇴'),
-      content: const Text(
-        '탈퇴하면 계정과 포인트, 쿠폰, 주문 내역 등 모든 데이터가 삭제되며 복구할 수 없습니다.\n'
-        '정말 탈퇴하시겠어요?',
-      ),
+      title: Text(AppLocalizations.of(context).profileDeleteAccount),
+      content: Text(AppLocalizations.of(context).profileDeleteAccountConfirm),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: const Text('취소'),
+          child: Text(AppLocalizations.of(context).commonCancel),
         ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(true),
           style: TextButton.styleFrom(
             foregroundColor: Theme.of(context).colorScheme.error,
           ),
-          child: const Text('탈퇴하기'),
+          child: Text(AppLocalizations.of(context).profileDeleteAccountAction),
         ),
       ],
     );
@@ -406,17 +401,18 @@ class _DeleteAccountDialog extends StatelessWidget {
 class _BusinessInfoSheet extends StatelessWidget {
   const _BusinessInfoSheet();
 
-  static const _entries = [
-    ('상호', "Ethan's Cafe"),
-    ('대표자', '이단'),
-    ('사업자등록번호', '123-45-67890'),
-    ('주소', '서울 성동구 연무장길 47 1층'),
-    ('대표번호', '02-1234-5678'),
-    ('이메일', 'hello@ethanscafe.com'),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    // 값은 사업자 등록 원부 그대로다. 이름표만 언어를 탄다.
+    final entries = [
+      (l10n.companyFieldName, "Ethan's Cafe"),
+      (l10n.companyFieldOwner, '이단'),
+      (l10n.companyFieldNumber, '123-45-67890'),
+      (l10n.companyFieldAddress, '서울 성동구 연무장길 47 1층'),
+      (l10n.companyFieldPhone, '02-1234-5678'),
+      (l10n.companyFieldEmail, 'hello@ethanscafe.com'),
+    ];
     final textTheme = Theme.of(context).textTheme;
 
     return SafeArea(
@@ -426,9 +422,12 @@ class _BusinessInfoSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('사업자 정보', style: textTheme.titleLarge),
+            Text(
+              AppLocalizations.of(context).profileCompanyInfo,
+              style: textTheme.titleLarge,
+            ),
             const SizedBox(height: 16),
-            for (final (label, value) in _entries)
+            for (final (label, value) in entries)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: Row(
@@ -438,9 +437,7 @@ class _BusinessInfoSheet extends StatelessWidget {
                       width: 110,
                       child: Text(label, style: textTheme.bodySmall),
                     ),
-                    Expanded(
-                      child: Text(value, style: textTheme.bodyMedium),
-                    ),
+                    Expanded(child: Text(value, style: textTheme.bodyMedium)),
                   ],
                 ),
               ),
@@ -461,7 +458,9 @@ class _AppVersionLabel extends StatelessWidget {
       builder: (context, snapshot) {
         final version = snapshot.data?.version;
         return Text(
-          version == null ? '앱 버전 확인 중...' : '앱 버전 $version',
+          version == null
+              ? AppLocalizations.of(context).appVersionLoading
+              : AppLocalizations.of(context).appVersion(version),
           style: Theme.of(context).textTheme.bodySmall,
         );
       },
@@ -498,7 +497,7 @@ class _ProfileHeader extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            user?.displayLabel ?? '게스트',
+            user?.displayLabel ?? AppLocalizations.of(context).profileGuest,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 8),
@@ -506,15 +505,14 @@ class _ProfileHeader extends StatelessWidget {
             TextButton.icon(
               onPressed: () => context.go('/login'),
               icon: const Icon(LucideIcons.logIn, size: 20),
-              label: const Text('로그인하기'),
+              label: Text(AppLocalizations.of(context).profileSignIn),
             )
           else if (email != null)
             Text(
               email,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(fontSize: 14),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(fontSize: 14),
             ),
         ],
       ),

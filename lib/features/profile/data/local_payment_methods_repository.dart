@@ -46,14 +46,10 @@ class LocalPaymentMethodsRepository implements PaymentMethodsRepository {
   Future<List<PaymentMethod>> removeCard(String id) async {
     final prefs = await SharedPreferences.getInstance();
     final cards = await load();
-    final removedDefault =
-        cards.any((card) => card.id == id && card.isDefault);
+    final removedDefault = cards.any((card) => card.id == id && card.isDefault);
     var updated = cards.where((card) => card.id != id).toList();
     if (removedDefault && updated.isNotEmpty) {
-      updated = [
-        updated.first.copyWith(isDefault: true),
-        ...updated.skip(1),
-      ];
+      updated = [updated.first.copyWith(isDefault: true), ...updated.skip(1)];
     }
     await _save(prefs, updated);
     return updated;
@@ -70,10 +66,7 @@ class LocalPaymentMethodsRepository implements PaymentMethodsRepository {
     return updated;
   }
 
-  Future<void> _save(
-    SharedPreferences prefs,
-    List<PaymentMethod> cards,
-  ) async {
+  Future<void> _save(SharedPreferences prefs, List<PaymentMethod> cards) async {
     await prefs.setString(
       _storageKey,
       jsonEncode(cards.map((card) => card.toJson()).toList()),
@@ -84,16 +77,12 @@ class LocalPaymentMethodsRepository implements PaymentMethodsRepository {
       '${DateTime.now().microsecondsSinceEpoch}-${Random().nextInt(0xFFFF)}';
 
   List<PaymentMethod> _seedCards() => const [
-        PaymentMethod(
-          id: 'seed-shinhan-1234',
-          brand: '신한카드',
-          last4: '1234',
-          isDefault: true,
-        ),
-        PaymentMethod(
-          id: 'seed-hyundai-5678',
-          brand: '현대카드',
-          last4: '5678',
-        ),
-      ];
+    PaymentMethod(
+      id: 'seed-shinhan-1234',
+      brand: '신한카드',
+      last4: '1234',
+      isDefault: true,
+    ),
+    PaymentMethod(id: 'seed-hyundai-5678', brand: '현대카드', last4: '5678'),
+  ];
 }

@@ -50,14 +50,12 @@ class FirestorePaymentMethodsRepository implements PaymentMethodsRepository {
   @override
   Future<List<PaymentMethod>> removeCard(String id) {
     return _mutate((cards) {
-      final removedDefault =
-          cards.any((card) => card.id == id && card.isDefault);
+      final removedDefault = cards.any(
+        (card) => card.id == id && card.isDefault,
+      );
       var updated = cards.where((card) => card.id != id).toList();
       if (removedDefault && updated.isNotEmpty) {
-        updated = [
-          updated.first.copyWith(isDefault: true),
-          ...updated.skip(1),
-        ];
+        updated = [updated.first.copyWith(isDefault: true), ...updated.skip(1)];
       }
       return updated;
     });

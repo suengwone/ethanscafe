@@ -4195,6 +4195,582 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'품절 · {subtitle}'**
   String catalogSoldOutPrefix(String subtitle);
+
+  /// No description provided for @addressListTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'배송지 관리'**
+  String get addressListTitle;
+
+  /// No description provided for @addressLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'배송지를 불러오지 못했습니다.'**
+  String get addressLoadFailed;
+
+  /// No description provided for @addressAdd.
+  ///
+  /// In ko, this message translates to:
+  /// **'배송지 추가'**
+  String get addressAdd;
+
+  /// No description provided for @addressEmptyTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 배송지가 없어요'**
+  String get addressEmptyTitle;
+
+  /// No description provided for @addressEmptyDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'배송지를 추가하면 원두 주문 시 바로 사용할 수 있어요.'**
+  String get addressEmptyDetail;
+
+  /// No description provided for @addressDeleteTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'배송지 삭제'**
+  String get addressDeleteTitle;
+
+  /// No description provided for @addressDeleteBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'{label} 배송지를 삭제할까요? 삭제하면 되돌릴 수 없어요.'**
+  String addressDeleteBody(String label);
+
+  /// No description provided for @addressDeleted.
+  ///
+  /// In ko, this message translates to:
+  /// **'배송지를 삭제했어요.'**
+  String get addressDeleted;
+
+  /// No description provided for @addressSetDefault.
+  ///
+  /// In ko, this message translates to:
+  /// **'기본 배송지로 설정'**
+  String get addressSetDefault;
+
+  /// No description provided for @addressFieldLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'배송지 이름'**
+  String get addressFieldLabel;
+
+  /// No description provided for @addressFieldLabelHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 집, 회사'**
+  String get addressFieldLabelHint;
+
+  /// No description provided for @addressFieldLabelRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'배송지 이름을 입력해주세요.'**
+  String get addressFieldLabelRequired;
+
+  /// No description provided for @addressFieldRecipient.
+  ///
+  /// In ko, this message translates to:
+  /// **'받는 사람'**
+  String get addressFieldRecipient;
+
+  /// No description provided for @addressFieldRecipientRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'받는 사람을 입력해주세요.'**
+  String get addressFieldRecipientRequired;
+
+  /// No description provided for @addressFieldPhoneRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'연락처를 입력해주세요.'**
+  String get addressFieldPhoneRequired;
+
+  /// No description provided for @addressFieldAddressRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'주소를 입력해주세요.'**
+  String get addressFieldAddressRequired;
+
+  /// No description provided for @addressFieldDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'상세 주소 (선택)'**
+  String get addressFieldDetail;
+
+  /// No description provided for @addressSubmit.
+  ///
+  /// In ko, this message translates to:
+  /// **'추가하기'**
+  String get addressSubmit;
+
+  /// No description provided for @policyTermsTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'이용약관'**
+  String get policyTermsTitle;
+
+  /// No description provided for @policyPrivacyTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'개인정보처리방침'**
+  String get policyPrivacyTitle;
+
+  /// No description provided for @policyEffectiveDate.
+  ///
+  /// In ko, this message translates to:
+  /// **'시행일: 2026년 1월 1일'**
+  String get policyEffectiveDate;
+
+  /// No description provided for @policyKoreanOnlyNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 문서는 한국어 원문만 효력이 있습니다.'**
+  String get policyKoreanOnlyNotice;
+
+  /// No description provided for @paymentMethodsTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 수단 관리'**
+  String get paymentMethodsTitle;
+
+  /// No description provided for @paymentMethodsLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 수단을 불러오지 못했습니다.'**
+  String get paymentMethodsLoadFailed;
+
+  /// No description provided for @paymentMethodAdd.
+  ///
+  /// In ko, this message translates to:
+  /// **'카드 추가'**
+  String get paymentMethodAdd;
+
+  /// No description provided for @paymentMethodsEmptyTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 결제 수단이 없어요'**
+  String get paymentMethodsEmptyTitle;
+
+  /// No description provided for @paymentMethodsEmptyDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'카드를 추가하면 매장에서 빠르게 결제할 수 있어요.'**
+  String get paymentMethodsEmptyDetail;
+
+  /// No description provided for @paymentMethodDeleteTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 수단 삭제'**
+  String get paymentMethodDeleteTitle;
+
+  /// No description provided for @paymentMethodDeleteBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'{brand}(**** {last4}) 카드를 삭제할까요? 삭제하면 되돌릴 수 없어요.'**
+  String paymentMethodDeleteBody(String brand, String last4);
+
+  /// No description provided for @paymentMethodDeleted.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 수단을 삭제했어요.'**
+  String get paymentMethodDeleted;
+
+  /// No description provided for @paymentMethodDefault.
+  ///
+  /// In ko, this message translates to:
+  /// **'기본'**
+  String get paymentMethodDefault;
+
+  /// No description provided for @paymentMethodSetDefault.
+  ///
+  /// In ko, this message translates to:
+  /// **'기본 결제 수단으로 설정'**
+  String get paymentMethodSetDefault;
+
+  /// No description provided for @paymentMethodFieldBrand.
+  ///
+  /// In ko, this message translates to:
+  /// **'카드사'**
+  String get paymentMethodFieldBrand;
+
+  /// No description provided for @paymentMethodFieldBrandHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'예: 신한카드'**
+  String get paymentMethodFieldBrandHint;
+
+  /// No description provided for @paymentMethodFieldBrandRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'카드사를 입력해주세요.'**
+  String get paymentMethodFieldBrandRequired;
+
+  /// No description provided for @paymentMethodFieldLast4.
+  ///
+  /// In ko, this message translates to:
+  /// **'카드 번호 끝 4자리'**
+  String get paymentMethodFieldLast4;
+
+  /// No description provided for @paymentMethodFieldLast4Required.
+  ///
+  /// In ko, this message translates to:
+  /// **'카드 번호 끝 4자리를 입력해주세요.'**
+  String get paymentMethodFieldLast4Required;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 정보'**
+  String get profileTitle;
+
+  /// No description provided for @profileSignedOut.
+  ///
+  /// In ko, this message translates to:
+  /// **'로그아웃되었습니다.'**
+  String get profileSignedOut;
+
+  /// No description provided for @profileAccountDeleted.
+  ///
+  /// In ko, this message translates to:
+  /// **'계정이 삭제되었습니다. 그동안 이용해주셔서 감사합니다.'**
+  String get profileAccountDeleted;
+
+  /// No description provided for @profileBirthdayHelp.
+  ///
+  /// In ko, this message translates to:
+  /// **'생일을 선택하세요'**
+  String get profileBirthdayHelp;
+
+  /// No description provided for @profileBirthdaySaved.
+  ///
+  /// In ko, this message translates to:
+  /// **'생일이 등록되었습니다. 생일 주간에 축하 쿠폰이 자동 발급됩니다.'**
+  String get profileBirthdaySaved;
+
+  /// No description provided for @profileSectionActivity.
+  ///
+  /// In ko, this message translates to:
+  /// **'나의 활동'**
+  String get profileSectionActivity;
+
+  /// No description provided for @profileSectionSettings.
+  ///
+  /// In ko, this message translates to:
+  /// **'설정'**
+  String get profileSectionSettings;
+
+  /// No description provided for @profileSectionOther.
+  ///
+  /// In ko, this message translates to:
+  /// **'기타'**
+  String get profileSectionOther;
+
+  /// No description provided for @profileSectionAccount.
+  ///
+  /// In ko, this message translates to:
+  /// **'계정'**
+  String get profileSectionAccount;
+
+  /// No description provided for @profileNotificationSettings.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 설정'**
+  String get profileNotificationSettings;
+
+  /// No description provided for @profileBirthday.
+  ///
+  /// In ko, this message translates to:
+  /// **'생일 등록'**
+  String get profileBirthday;
+
+  /// No description provided for @profileBirthdayValue.
+  ///
+  /// In ko, this message translates to:
+  /// **'{year}년 {month}월 {day}일'**
+  String profileBirthdayValue(int year, int month, int day);
+
+  /// No description provided for @profileBusinessAccount.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자 계정 관리'**
+  String get profileBusinessAccount;
+
+  /// No description provided for @profileCompanyInfo.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자 정보'**
+  String get profileCompanyInfo;
+
+  /// No description provided for @profileSignOut.
+  ///
+  /// In ko, this message translates to:
+  /// **'로그아웃'**
+  String get profileSignOut;
+
+  /// No description provided for @profileSignOutConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'정말 로그아웃하시겠어요?'**
+  String get profileSignOutConfirm;
+
+  /// No description provided for @profileDeleteAccount.
+  ///
+  /// In ko, this message translates to:
+  /// **'회원 탈퇴'**
+  String get profileDeleteAccount;
+
+  /// No description provided for @profileDeleteAccountConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'탈퇴하면 계정과 포인트, 쿠폰, 주문 내역 등 모든 데이터가 삭제되며 복구할 수 없습니다.\n정말 탈퇴하시겠어요?'**
+  String get profileDeleteAccountConfirm;
+
+  /// No description provided for @profileDeleteAccountAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'탈퇴하기'**
+  String get profileDeleteAccountAction;
+
+  /// No description provided for @companyFieldName.
+  ///
+  /// In ko, this message translates to:
+  /// **'상호'**
+  String get companyFieldName;
+
+  /// No description provided for @companyFieldOwner.
+  ///
+  /// In ko, this message translates to:
+  /// **'대표자'**
+  String get companyFieldOwner;
+
+  /// No description provided for @companyFieldNumber.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자등록번호'**
+  String get companyFieldNumber;
+
+  /// No description provided for @companyFieldAddress.
+  ///
+  /// In ko, this message translates to:
+  /// **'주소'**
+  String get companyFieldAddress;
+
+  /// No description provided for @companyFieldPhone.
+  ///
+  /// In ko, this message translates to:
+  /// **'대표번호'**
+  String get companyFieldPhone;
+
+  /// No description provided for @companyFieldEmail.
+  ///
+  /// In ko, this message translates to:
+  /// **'이메일'**
+  String get companyFieldEmail;
+
+  /// No description provided for @appVersionLoading.
+  ///
+  /// In ko, this message translates to:
+  /// **'앱 버전 확인 중...'**
+  String get appVersionLoading;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In ko, this message translates to:
+  /// **'앱 버전 {version}'**
+  String appVersion(String version);
+
+  /// No description provided for @profileGuest.
+  ///
+  /// In ko, this message translates to:
+  /// **'게스트'**
+  String get profileGuest;
+
+  /// No description provided for @profileSignIn.
+  ///
+  /// In ko, this message translates to:
+  /// **'로그인하기'**
+  String get profileSignIn;
+
+  /// No description provided for @supportTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'고객센터'**
+  String get supportTitle;
+
+  /// No description provided for @supportCallFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'전화 연결에 실패했습니다: {phone}'**
+  String supportCallFailed(String phone);
+
+  /// No description provided for @supportMailFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'메일 앱을 열지 못했습니다: {email}'**
+  String supportMailFailed(String email);
+
+  /// No description provided for @supportSectionContact.
+  ///
+  /// In ko, this message translates to:
+  /// **'문의하기'**
+  String get supportSectionContact;
+
+  /// No description provided for @supportCall.
+  ///
+  /// In ko, this message translates to:
+  /// **'전화 문의'**
+  String get supportCall;
+
+  /// No description provided for @supportCallHours.
+  ///
+  /// In ko, this message translates to:
+  /// **'{phone} (매일 09:00 ~ 18:00)'**
+  String supportCallHours(String phone);
+
+  /// No description provided for @supportEmail.
+  ///
+  /// In ko, this message translates to:
+  /// **'이메일 문의'**
+  String get supportEmail;
+
+  /// No description provided for @supportSectionFaq.
+  ///
+  /// In ko, this message translates to:
+  /// **'자주 묻는 질문'**
+  String get supportSectionFaq;
+
+  /// No description provided for @faqPointsEarnQ.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트는 어떻게 적립되나요?'**
+  String get faqPointsEarnQ;
+
+  /// No description provided for @faqPointsEarnA.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 결제 시 결제 금액의 10%가 포인트로 적립됩니다. 페이 탭의 멤버십 QR 코드를 결제 전에 제시해주세요.'**
+  String get faqPointsEarnA;
+
+  /// No description provided for @faqPointsUseQ.
+  ///
+  /// In ko, this message translates to:
+  /// **'적립한 포인트는 어떻게 사용하나요?'**
+  String get faqPointsUseQ;
+
+  /// No description provided for @faqPointsUseA.
+  ///
+  /// In ko, this message translates to:
+  /// **'보유 포인트는 매장에서 현금처럼 사용할 수 있습니다. 결제 시 직원에게 포인트 사용을 요청해주세요. 잔액 한도 내에서 차감됩니다.'**
+  String get faqPointsUseA;
+
+  /// No description provided for @faqCouponsQ.
+  ///
+  /// In ko, this message translates to:
+  /// **'쿠폰은 어디서 확인하나요?'**
+  String get faqCouponsQ;
+
+  /// No description provided for @faqCouponsA.
+  ///
+  /// In ko, this message translates to:
+  /// **'마이 탭 > 쿠폰함에서 보유 중인 쿠폰과 사용 기한을 확인할 수 있습니다. 만료된 쿠폰은 자동으로 사용 불가 처리됩니다.'**
+  String get faqCouponsA;
+
+  /// No description provided for @faqDeliveryQ.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 배송은 얼마나 걸리나요?'**
+  String get faqDeliveryQ;
+
+  /// No description provided for @faqDeliveryA.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 후 로스팅을 진행하며, 보통 영업일 기준 2~3일 내에 발송됩니다. 신선한 원두를 위해 주문 순서대로 로스팅해 보내드립니다.'**
+  String get faqDeliveryA;
+
+  /// No description provided for @faqDeleteAccountQ.
+  ///
+  /// In ko, this message translates to:
+  /// **'회원 탈퇴는 어떻게 하나요?'**
+  String get faqDeleteAccountQ;
+
+  /// No description provided for @faqDeleteAccountA.
+  ///
+  /// In ko, this message translates to:
+  /// **'고객센터 전화 또는 이메일로 탈퇴를 요청하실 수 있습니다. 탈퇴 시 보유 포인트와 쿠폰은 모두 소멸되니 유의해주세요.'**
+  String get faqDeleteAccountA;
+
+  /// No description provided for @notificationSettingsTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 설정'**
+  String get notificationSettingsTitle;
+
+  /// No description provided for @notificationLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 설정을 불러오지 못했습니다.'**
+  String get notificationLoadFailed;
+
+  /// No description provided for @notificationSectionPush.
+  ///
+  /// In ko, this message translates to:
+  /// **'푸시 알림'**
+  String get notificationSectionPush;
+
+  /// No description provided for @notificationPushAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'앱 푸시 알림'**
+  String get notificationPushAll;
+
+  /// No description provided for @notificationPushAllDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 상태, 매장 소식 등 전체 알림'**
+  String get notificationPushAllDetail;
+
+  /// No description provided for @notificationSectionTopics.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 항목'**
+  String get notificationSectionTopics;
+
+  /// No description provided for @notificationEvents.
+  ///
+  /// In ko, this message translates to:
+  /// **'이벤트 소식'**
+  String get notificationEvents;
+
+  /// No description provided for @notificationEventsDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'신메뉴 출시, 시음회 등 이벤트 알림'**
+  String get notificationEventsDetail;
+
+  /// No description provided for @notificationPoints.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 적립/사용'**
+  String get notificationPoints;
+
+  /// No description provided for @notificationPointsDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 변동 내역 알림'**
+  String get notificationPointsDetail;
+
+  /// No description provided for @notificationMarketing.
+  ///
+  /// In ko, this message translates to:
+  /// **'마케팅 정보 수신'**
+  String get notificationMarketing;
+
+  /// No description provided for @notificationMarketingDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'할인 쿠폰, 프로모션 정보 알림'**
+  String get notificationMarketingDetail;
 }
 
 class _AppLocalizationsDelegate
