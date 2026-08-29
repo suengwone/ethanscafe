@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - firestore.rules
+      - firestore.indexes.json
       - firebase.json
       - functions/**
       - .github/workflows/deploy.yml
@@ -88,6 +89,16 @@ jobs:
           --project foxtrot-3bdba
           --non-interactive
           --force
+
+      # 색인만 --force 없이 올린다. 색인은 소스가 아니라 콘솔에서 손으로 만들어진
+      # 것이 남아 있을 수 있는데, --force를 주면 CLI가 그것들을 말없이 지운다.
+      # 지금은 지울 것이 있으면 배포가 멈추고 사람이 보게 둔다.
+      - name: Deploy indexes
+        run: >
+          npx --yes "firebase-tools@^14" deploy
+          --only firestore:indexes
+          --project foxtrot-3bdba
+          --non-interactive
 
       - name: Remove the deploy credentials
         if: always()

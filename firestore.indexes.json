@@ -1,0 +1,21 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "active_orders",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "orderType", "order": "ASCENDING"},
+        {"fieldPath": "createdAt", "order": "ASCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "active_orders",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "orderType", "order": "ASCENDING"},
+        {"fieldPath": "storeId", "order": "ASCENDING"}
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
