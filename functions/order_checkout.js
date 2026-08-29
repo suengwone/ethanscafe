@@ -343,6 +343,9 @@ function applyCancelToPoints({
       description: `${description} 적립 회수`,
       amount: -reclaimed,
       createdAt,
+      // 알림은 이 표시를 보고 건너뛴다. 문구로 가려내면 사용자가 적어 넣는
+      // 설명에 '취소'가 들어갔을 때 멀쩡한 알림이 사라진다.
+      cancelled: true,
     });
   }
   if (usedPoints > 0) {
@@ -352,6 +355,7 @@ function applyCancelToPoints({
       description: `${description} 포인트 환급`,
       amount: usedPoints,
       createdAt,
+      cancelled: true,
     });
   }
   return {
