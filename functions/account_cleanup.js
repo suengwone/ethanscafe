@@ -7,6 +7,7 @@ const USER_DATA_COLLECTIONS = [
   'paymentMethods',
   'deliveryAddresses',
   'orders',
+  'notifications',
 ];
 
 function userDataDocPaths(uid) {

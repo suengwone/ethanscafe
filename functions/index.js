@@ -18,6 +18,7 @@ const {
   validateUpdateOrderStatusRequest,
 } = require('./order_transitions');
 const {userDataDocPaths} = require('./account_cleanup');
+const {orderFeedEntries, mergeFeedItems} = require('./notification_feed');
 const {
   NAVER_PROFILE_URL,
   validateNaverSignInRequest,
@@ -1289,6 +1290,36 @@ const INVALID_TOKEN_CODES = [
   'messaging/invalid-argument',
 ];
 
+const NOTIFICATION_FEED_COLLECTION = 'notifications';
+
+/**
+ * 보낸 알림을 사용자 알림함(`notifications/{uid}`)에도 남긴다.
+ *
+ * 새 알림을 붙이는 이 쓰기와 사용자가 읽음 표시를 하는 쓰기가 같은 문서를
+ * 다투므로 트랜잭션으로 감싼다.
+ */
+async function saveNotificationFeed(uid, notifications) {
+  const firestore = getFirestore();
+  const entries = orderFeedEntries({
+    notifications,
+    route: ORDER_HISTORY_ROUTE,
+    createdAt: Timestamp.now(),
+  });
+  const doc = firestore.collection(NOTIFICATION_FEED_COLLECTION).doc(uid);
+  await firestore.runTransaction(async (transaction) => {
+    const snapshot = await transaction.get(doc);
+    const data = snapshot.data();
+    transaction.set(
+        doc,
+        {
+          items: mergeFeedItems(data && data.items, entries),
+          updatedAt: Timestamp.now(),
+        },
+        {merge: true},
+    );
+  });
+}
+
 /**
  * 주문 상태 변경 알림 발송. 원두·픽업 트리거가 공유한다.
  * 알림 설정이 꺼져 있거나 토큰이 없으면 조용히 끝낸다.
@@ -1296,6 +1327,13 @@ const INVALID_TOKEN_CODES = [
 async function pushOrderStatusNotifications(uid, notifications) {
   if (notifications.length === 0) {
     return;
+  }
+  // 알림함은 푸시 설정과 상관없이 쌓는다. 푸시를 꺼 둔 사람도 앱을 열면 주문이
+  // 어디까지 갔는지 볼 수 있어야 한다. 여기서 넘어져도 푸시는 보낸다.
+  try {
+    await saveNotificationFeed(uid, notifications);
+  } catch (error) {
+    console.error('알림함에 알림을 남기지 못했습니다.', uid, error);
   }
   {
     const firestore = getFirestore();
