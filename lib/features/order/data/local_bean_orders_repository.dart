@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../domain/bean_orders_repository.dart';
 import '../domain/order_models.dart';
 
-class LocalBeanOrdersRepository implements BeanOrdersRepository {
+class LocalBeanOrdersRepository implements WritableBeanOrdersRepository {
   static const _storageKey = 'bean_orders';
 
   @override

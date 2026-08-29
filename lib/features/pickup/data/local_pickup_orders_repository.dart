@@ -6,7 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../domain/pickup_order_models.dart';
 import '../domain/pickup_orders_repository.dart';
 
-class LocalPickupOrdersRepository implements PickupOrdersRepository {
+class LocalPickupOrdersRepository
+    implements WritablePickupOrdersRepository {
   static const _storageKey = 'pickup_orders';
 
   @override
