@@ -306,8 +306,8 @@
 
 | 워크플로 | 시점 | 하는 일 |
 |----------|------|---------|
-| `ci.yml` | PR · `main` 푸시 | `flutter analyze` · `flutter test` / `functions` 단위 테스트 |
-| `deploy.yml` | `main` 푸시 중 `functions/**` · `firestore.rules` · `firebase.json`이 바뀐 경우, 또는 수동 실행 | 함수 테스트를 통과하면 `firebase deploy --only firestore:rules,functions` |
+| `ci.yml` | PR · `main` 푸시 | `flutter analyze` · `flutter test` / `functions` 단위 테스트 / 보안 규칙 단위 테스트 |
+| `deploy.yml` | `main` 푸시 중 `functions/**` · `firestore.rules` · `firebase.json`이 바뀐 경우, 또는 수동 실행 | 함수 테스트와 규칙 테스트를 모두 통과하면 `firebase deploy --only firestore:rules,functions` |
 
 - 자동화 대상은 **서버에 올라가는 것(함수·보안 규칙)뿐**이다. 앱 빌드는 스토어 배포와 묶여 있어 다루지 않는다
 - 배포 자격 증명은 저장소 시크릿 `FIREBASE_SERVICE_ACCOUNT`(서비스 계정 키 JSON) 하나다.
@@ -316,7 +316,15 @@
 - `--force`로 소스에서 사라진 함수를 지운다. 손으로 올린 함수가 남아 규칙을 우회하는 일이 없도록 소스를 정답으로 둔다.
   내용이 그대로인 함수는 CLI가 건너뛰므로 규칙만 고쳐도 배포가 길어지지 않는다
 - 배포는 겹쳐 돌지 않는다(`concurrency: deploy-firebase`, 취소 없음). 중간에 끊으면 함수 일부만 올라간 상태가 남는다
-- ⚠️ 게이트는 함수 테스트뿐이다. **보안 규칙에는 아직 단위 테스트가 없어** 규칙 변경은 사람이 봐야 한다 (§7.2)
+- 게이트는 함수 테스트와 **보안 규칙 단위 테스트** 둘이다. 규칙 테스트가 깨지면 배포 잡이 시작되지 않는다
+
+#### 보안 규칙 단위 테스트 (`firestore_tests/`)
+
+- Firestore 에뮬레이터 위에서 `@firebase/rules-unit-testing`으로 실제 규칙 파일을 걸고 요청을 던진다. 규칙 문서를 흉내 내지 않고 `firestore.rules`를 그대로 읽는다
+- `npm --prefix firestore_tests test` — `firebase emulators:exec`가 에뮬레이터를 띄우고 `node --test`를 돌린 뒤 내린다. **JDK가 필요하다** (에뮬레이터가 JVM에서 돈다)
+- 파일 4개로 나눠 두었다: 계정·포인트(`rules_account`), 주문·서버 색인(`rules_orders`), 쿠폰·초대(`rules_rewards`), 카탈로그·기본 차단(`rules_catalog`)
+- `node --test`는 파일마다 프로세스를 따로 띄우므로 파일마다 프로젝트 ID를 달리 준다. 같은 ID를 쓰면 나란히 도는 파일이 서로의 문서를 지운다
+- 테스트가 정말 무는지 보려면 규칙을 풀어 놓은 사본을 만들고 `FIRESTORE_RULES=<사본 경로>`로 걸어 본다. 통과하면 그 규칙은 아직 지켜지지 않는 것이다
 
 ## 6. 화면 및 라우팅
 
@@ -372,12 +380,11 @@
 
 ### 7.2 기술 · 운영
 
-1. ⬜ 보안 규칙 단위 테스트 (에뮬레이터 + `@firebase/rules-unit-testing`) — 파이프라인이 규칙을 자동으로 올리므로 게이트가 있어야 한다
-2. ⬜ 저장소 시크릿 `FIREBASE_SERVICE_ACCOUNT` 등록 (미등록 시 `deploy.yml`이 첫 단계에서 멈춘다)
-3. ⬜ 토스페이먼츠 운영 키 발급 및 등록 (미설정 시 테스트 키·모의 결제로 동작)
-4. ⬜ Remote Config 키 4종 콘솔 등록 (`min_supported_version`, `store_url`, `notice_enabled`, `notice_message`)
-5. ⬜ 생체 인증(`local_auth`) 적용 여부 결정 — 적용 시 결제/포인트 사용 중 어디에 걸지 정해야 함
-6. ⬜ 매장 지도 SDK 도입 검토 (네이버/카카오 지도 — API 키 및 네이티브 설정 필요)
+1. ⬜ 저장소 시크릿 `FIREBASE_SERVICE_ACCOUNT` 등록 (미등록 시 `deploy.yml`이 첫 단계에서 멈춘다)
+2. ⬜ 토스페이먼츠 운영 키 발급 및 등록 (미설정 시 테스트 키·모의 결제로 동작)
+3. ⬜ Remote Config 키 4종 콘솔 등록 (`min_supported_version`, `store_url`, `notice_enabled`, `notice_message`)
+4. ⬜ 생체 인증(`local_auth`) 적용 여부 결정 — 적용 시 결제/포인트 사용 중 어디에 걸지 정해야 함
+5. ⬜ 매장 지도 SDK 도입 검토 (네이버/카카오 지도 — API 키 및 네이티브 설정 필요)
 
 ## 8. 이번 정리에서 반영한 문서-코드 차이
 
