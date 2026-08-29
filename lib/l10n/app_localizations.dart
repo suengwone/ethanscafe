@@ -4807,6 +4807,66 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'{name} 사진'**
   String menuPhotoOf(String name);
+
+  /// No description provided for @photoSectionTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'상품 사진'**
+  String get photoSectionTitle;
+
+  /// No description provided for @photoAdd.
+  ///
+  /// In ko, this message translates to:
+  /// **'사진 올리기'**
+  String get photoAdd;
+
+  /// No description provided for @photoReplace.
+  ///
+  /// In ko, this message translates to:
+  /// **'사진 바꾸기'**
+  String get photoReplace;
+
+  /// No description provided for @photoRemove.
+  ///
+  /// In ko, this message translates to:
+  /// **'사진 지우기'**
+  String get photoRemove;
+
+  /// No description provided for @photoUploading.
+  ///
+  /// In ko, this message translates to:
+  /// **'올리는 중...'**
+  String get photoUploading;
+
+  /// No description provided for @photoFallbackNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'사진을 올리지 않으면 분류별 기본 사진이 보입니다.'**
+  String get photoFallbackNotice;
+
+  /// No description provided for @photoTooLarge.
+  ///
+  /// In ko, this message translates to:
+  /// **'사진이 너무 큽니다. 5MB보다 작은 사진을 올려 주세요.'**
+  String get photoTooLarge;
+
+  /// No description provided for @photoUnsupportedType.
+  ///
+  /// In ko, this message translates to:
+  /// **'JPEG, PNG, WebP 사진만 올릴 수 있습니다.'**
+  String get photoUnsupportedType;
+
+  /// No description provided for @photoEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'사진을 읽지 못했습니다.'**
+  String get photoEmpty;
+
+  /// No description provided for @photoUploadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'사진을 올리지 못했습니다: {error}'**
+  String photoUploadFailed(String error);
 }
 
 class _AppLocalizationsDelegate

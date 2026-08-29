@@ -2624,4 +2624,36 @@ class AppLocalizationsKo extends AppLocalizations {
   String menuPhotoOf(String name) {
     return '$name 사진';
   }
+
+  @override
+  String get photoSectionTitle => '상품 사진';
+
+  @override
+  String get photoAdd => '사진 올리기';
+
+  @override
+  String get photoReplace => '사진 바꾸기';
+
+  @override
+  String get photoRemove => '사진 지우기';
+
+  @override
+  String get photoUploading => '올리는 중...';
+
+  @override
+  String get photoFallbackNotice => '사진을 올리지 않으면 분류별 기본 사진이 보입니다.';
+
+  @override
+  String get photoTooLarge => '사진이 너무 큽니다. 5MB보다 작은 사진을 올려 주세요.';
+
+  @override
+  String get photoUnsupportedType => 'JPEG, PNG, WebP 사진만 올릴 수 있습니다.';
+
+  @override
+  String get photoEmpty => '사진을 읽지 못했습니다.';
+
+  @override
+  String photoUploadFailed(String error) {
+    return '사진을 올리지 못했습니다: $error';
+  }
 }

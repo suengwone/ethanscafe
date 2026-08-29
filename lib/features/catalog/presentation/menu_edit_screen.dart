@@ -6,6 +6,7 @@ import '../../../features/menu/presentation/menu_labels.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../menu/domain/menu_models.dart';
 import 'catalog_admin_providers.dart';
+import 'product_photo_field.dart';
 
 /// 메뉴 한 건을 등록하거나 고친다.
 /// 가격은 주문 시 서버가 이 값과 대조하므로 여기서 바꾸면 곧바로 결제 금액이 바뀐다.
@@ -33,7 +34,14 @@ class _MenuEditScreenState extends ConsumerState<MenuEditScreen> {
   late bool _soldOut;
   bool _busy = false;
 
+  String? _imageUrl;
+
   bool get _isNew => widget.item == null;
+
+  /// 새 메뉴는 아직 문서 번호가 없다. 사진 파일 이름에만 쓰므로 시각으로 대신한다.
+  String get _photoId => widget.item?.id.isNotEmpty == true
+      ? widget.item!.id
+      : 'new-${DateTime.now().millisecondsSinceEpoch}';
 
   @override
   void initState() {
@@ -49,6 +57,7 @@ class _MenuEditScreenState extends ConsumerState<MenuEditScreen> {
     _priceFrom = item?.priceFrom ?? false;
     _isRecommended = item?.isRecommended ?? false;
     _soldOut = item?.soldOut ?? false;
+    _imageUrl = item?.imageUrl;
   }
 
   @override
@@ -80,6 +89,7 @@ class _MenuEditScreenState extends ConsumerState<MenuEditScreen> {
       isRecommended: _isRecommended,
       soldOut: _soldOut,
       sortOrder: int.tryParse(_sortOrder.text.trim()) ?? 0,
+      imageUrl: _imageUrl,
     );
     try {
       await ref.read(catalogAdminControllerProvider).saveMenuItem(item);
@@ -164,6 +174,13 @@ class _MenuEditScreenState extends ConsumerState<MenuEditScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            ProductPhotoField(
+              productType: 'menu',
+              productId: _photoId,
+              imageUrl: _imageUrl,
+              onChanged: (url) => setState(() => _imageUrl = url),
+            ),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _name,
               decoration: InputDecoration(

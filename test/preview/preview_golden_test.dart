@@ -90,6 +90,8 @@ import '../features/auth/fake_account_repository.dart';
 import '../features/auth/fake_auth_repository.dart';
 
 import '../support/localized_app.dart';
+import 'package:cafe_app/features/catalog/domain/product_photos_repository.dart';
+import 'package:cafe_app/features/catalog/presentation/product_photo_providers.dart';
 
 Future<void> _loadFont(String family, String path) async {
   final file = File(path);
@@ -841,6 +843,12 @@ void main() {
         ),
       ),
       user: _previewUser,
+      // Firebase가 없으면 사진 칸이 숨는다. 매장이 실제로 보는 화면을 찍는다.
+      overrides: [
+        productPhotosRepositoryProvider.overrideWithValue(
+          _PreviewProductPhotos(),
+        ),
+      ],
     );
 
     await expectGolden(find.byType(MenuEditScreen), 'menu_edit_screen');
@@ -1731,4 +1739,18 @@ void main() {
 
     await expectGolden(find.byType(MaterialApp), 'delete_account_dialog');
   });
+}
+
+/// 사진 칸을 그리기 위한 자리. 프리뷰는 올리지 않는다.
+class _PreviewProductPhotos implements ProductPhotosRepository {
+  @override
+  Future<String> upload({
+    required String productType,
+    required String productId,
+    required Uint8List bytes,
+    required String contentType,
+  }) async => '';
+
+  @override
+  Future<void> delete(String downloadUrl) async {}
 }

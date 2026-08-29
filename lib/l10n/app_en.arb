@@ -784,5 +784,15 @@
   "reviewRatingStars": "{count} stars",
   "wholesaleDecreaseKg": "Decrease",
   "wholesaleIncreaseKg": "Increase",
-  "menuPhotoOf": "Photo of {name}"
+  "menuPhotoOf": "Photo of {name}",
+  "photoSectionTitle": "Product photo",
+  "photoAdd": "Add a photo",
+  "photoReplace": "Replace the photo",
+  "photoRemove": "Remove the photo",
+  "photoUploading": "Uploading…",
+  "photoFallbackNotice": "Without a photo, the stock picture for the category is shown.",
+  "photoTooLarge": "That photo is too big. Use one under 5MB.",
+  "photoUnsupportedType": "Only JPEG, PNG and WebP photos can be uploaded.",
+  "photoEmpty": "Could not read that photo.",
+  "photoUploadFailed": "Could not upload the photo: {error}"
 }

@@ -2682,4 +2682,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String menuPhotoOf(String name) {
     return 'Photo of $name';
   }
+
+  @override
+  String get photoSectionTitle => 'Product photo';
+
+  @override
+  String get photoAdd => 'Add a photo';
+
+  @override
+  String get photoReplace => 'Replace the photo';
+
+  @override
+  String get photoRemove => 'Remove the photo';
+
+  @override
+  String get photoUploading => 'Uploading…';
+
+  @override
+  String get photoFallbackNotice =>
+      'Without a photo, the stock picture for the category is shown.';
+
+  @override
+  String get photoTooLarge => 'That photo is too big. Use one under 5MB.';
+
+  @override
+  String get photoUnsupportedType =>
+      'Only JPEG, PNG and WebP photos can be uploaded.';
+
+  @override
+  String get photoEmpty => 'Could not read that photo.';
+
+  @override
+  String photoUploadFailed(String error) {
+    return 'Could not upload the photo: $error';
+  }
 }

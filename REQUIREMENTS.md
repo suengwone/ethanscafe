@@ -317,6 +317,7 @@
 | 알림 | 푸시 알림 | Android `POST_NOTIFICATIONS`, iOS APNs |
 | 카메라 | 관리자 회원 QR 스캔 | iOS `NSCameraUsageDescription` (Android는 `mobile_scanner` 매니페스트 병합) |
 | 위치 | 매장 찾기 | iOS `NSLocationWhenInUseUsageDescription` (Android는 `geolocator` 병합) |
+| 사진 | 매장이 메뉴·원두 사진 등록 | iOS `NSPhotoLibraryUsageDescription` (Android는 `image_picker` 매니페스트 병합) |
 
 ### 5.4 환경 설정
 

@@ -7,6 +7,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../beans/domain/bean_models.dart';
 import '../domain/comma_list.dart';
 import 'catalog_admin_providers.dart';
+import 'product_photo_field.dart';
 
 /// 원두 한 건을 등록하거나 고친다.
 /// 200g·500g 가격은 주문 시 서버가 이 값과 대조하므로 바꾸면 곧바로 결제 금액이 바뀐다.
@@ -31,12 +32,20 @@ class _BeanEditScreenState extends ConsumerState<BeanEditScreen> {
   late bool _soldOut;
   bool _busy = false;
 
+  String? _imageUrl;
+
   bool get _isCreating => widget.bean == null;
+
+  /// 새 원두는 아직 문서 번호가 없다. 사진 파일 이름에만 쓰므로 시각으로 대신한다.
+  String get _photoId => widget.bean?.id.isNotEmpty == true
+      ? widget.bean!.id
+      : 'new-${DateTime.now().millisecondsSinceEpoch}';
 
   @override
   void initState() {
     super.initState();
     final bean = widget.bean;
+    _imageUrl = bean?.imageUrl;
     _fields = {
       'name': TextEditingController(text: bean?.name ?? ''),
       'origin': TextEditingController(text: bean?.origin ?? ''),
@@ -94,6 +103,7 @@ class _BeanEditScreenState extends ConsumerState<BeanEditScreen> {
       isNew: _isNew,
       soldOut: _soldOut,
       sortOrder: int.tryParse(_text('sortOrder')) ?? 0,
+      imageUrl: _imageUrl,
     );
     try {
       await ref.read(catalogAdminControllerProvider).saveBean(bean);
@@ -239,6 +249,13 @@ class _BeanEditScreenState extends ConsumerState<BeanEditScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            ProductPhotoField(
+              productType: 'bean',
+              productId: _photoId,
+              imageUrl: _imageUrl,
+              onChanged: (url) => setState(() => _imageUrl = url),
+            ),
+            const SizedBox(height: 16),
             _textField(
               'name',
               AppLocalizations.of(context).adminFieldName,

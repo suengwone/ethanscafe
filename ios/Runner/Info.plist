@@ -57,6 +57,8 @@
 	<string>포인트 적립 QR코드 스캔을 위해 카메라 접근이 필요합니다.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>가까운 매장을 찾기 위해 위치 정보가 필요합니다.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>메뉴와 원두 사진을 등록하기 위해 사진 접근이 필요합니다.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
