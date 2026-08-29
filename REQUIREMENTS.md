@@ -35,9 +35,13 @@
 | 결제 | 토스페이먼츠 (결제창 WebView + 서버 승인) |
 | 모델/직렬화 | freezed, json_serializable |
 | 로컬 저장소 | shared_preferences (게스트/오프라인 폴백) |
+| 다국어 | `flutter_localizations` + ARB (`lib/l10n/app_ko.arb`, `app_en.arb` → `flutter gen-l10n`) |
 | 아키텍처 | Feature-first (`lib/features/{기능}/{data,domain,presentation}` + `lib/core/{constants,firebase,services,theme,utils,widgets}`) |
 
 > **데이터 레이어 공통 패턴**: 기능별 repository 인터페이스(domain)에 대해 Firestore 구현과 로컬 구현을 두고, Firebase 초기화 여부·로그인 여부에 따라 provider가 선택한다.
+>
+> **문구 원칙**: 화면에 뜨는 말은 도메인 모델이 아니라 ARB에 산다. enum·모델은 사실(상태, 개수, 실패한 까닭)만 들고,
+> 문장은 화면이 자기 `AppLocalizations`로 만든다.
 >
 > **쓰기 경로 원칙**: 금액이 걸린 쓰기(주문 생성/취소, 포인트 적립/사용/충전, 쿠폰 사용, 판매량 집계)는 **전부 Cloud Functions 콜러블을 경유**한다. 클라이언트 직접 쓰기는 보안 규칙에서 차단한다.
 
@@ -181,6 +185,29 @@
   - 저장값은 `main`에서 미리 읽어 `storedThemeModeProvider`로 주입한다. 첫 프레임이 다른 테마로
     잠깐 그려지는 것을 막기 위해서다
   - 기본값은 **시스템 설정**
+
+- ✅ 다국어 — 한국어와 영어 두 벌을 두고 **시스템 설정 / 한국어 / English** 중에서 고른다 (`/profile/language`)
+  - 문구는 `lib/l10n/app_ko.arb`(원본)와 `app_en.arb`에 담고, `flutter gen-l10n`이 `AppLocalizations`를 만든다.
+    화면은 `AppLocalizations.of(context)`로 읽는다
+  - **enum에 이름을 박지 않는다.** 주문 상태·로스팅 정도·분쇄도처럼 화면에 뜨는 이름은 언어를 타므로
+    `<feature>_labels.dart`의 `AppLocalizations` 확장이 꺼내 온다 (예: `l10n.beanOrderStatusLabel(status)`)
+  - **모델은 문장을 만들지 않는다.** `firstItemName`·`itemCount`처럼 사실만 들고, "외 N건"은 화면이 붙인다.
+    BuildContext가 없는 provider·도메인은 까닭만 올려 보낸다 (`LocationUnavailable`, `MembershipQrException`)
+  - 고른 값은 기기에만 남는다 (`shared_preferences`의 `locale`, 비우면 기기 설정). 계정을 따라다니지 않는다
+  - 저장값은 `main`에서 미리 읽어 `storedLocaleProvider`로 주입한다. 첫 프레임이 다른 언어로 그려지지 않게 한다
+  - 기본값은 **시스템 설정**. 기기 언어가 한국어도 영어도 아니면 한국어로 뜬다
+
+#### 번역하지 않는 것
+
+| 대상 | 왜 |
+|------|-----|
+| 이용약관 · 개인정보처리방침 본문 | 법적 효력이 있는 문서다. 기계 번역은 원문과 다른 의무를 말할 수 있어, 법률 검토를 거친 번역문이 있을 때만 넣는다. 화면에 한국어 원문만 효력이 있다고 적어 둔다 |
+| 포인트 내역 설명 (`원두 주문`, `선불권 충전` 등) | Firestore에 그대로 저장된다. 번역하면 이미 쌓인 내역과 새 내역이 서로 다른 말을 하게 된다 |
+| 자동 발급 쿠폰의 제목·설명 | 위와 같다. 쿠폰 문서에 저장되는 값이다 |
+| 메뉴·원두·매장·공지·배너 내용 | 매장이 직접 올리는 글이다. 등록된 언어 그대로 보인다 |
+| 사업자 등록 정보 값, 네이버 SDK `clientName`, 토스 결제수단 인자(`'카드'`) | 등록된 사실이거나 API 인자다 |
+| Android 알림 채널 이름 | `const`로 앱을 켤 때 한 번 등록한다. 그 시점에는 읽는 사람의 언어를 알 수 없다 |
+
 
 ### 4.17 매장 운영 도구 (admin)
 
@@ -366,6 +393,7 @@
 | `/profile/payment-methods` | 결제 수단 관리 | 마이 |
 | `/profile/addresses` | 배송지 관리 | 마이 |
 | `/profile/business` | 사업자 계정 등록 | 마이 |
+| `/profile/language` | 언어 설정 | 마이 |
 | `/profile/support` | 고객센터 | 마이 |
 | `/profile/terms` | 이용약관 | 마이 |
 | `/profile/privacy` | 개인정보처리방침 | 마이 |
@@ -374,17 +402,16 @@
 
 ### 7.1 기능
 
-| 추천도 | 기능 | 설명 |
-|--------|------|------|
-| ★ | 다국어 지원 | 영어 로케일 (`flutter_localizations`) |
+지금은 비어 있다.
 
 ### 7.2 기술 · 운영
 
-1. ⬜ 저장소 시크릿 `FIREBASE_SERVICE_ACCOUNT` 등록 (미등록 시 `deploy.yml`이 첫 단계에서 멈춘다)
-2. ⬜ 토스페이먼츠 운영 키 발급 및 등록 (미설정 시 테스트 키·모의 결제로 동작)
-3. ⬜ Remote Config 키 4종 콘솔 등록 (`min_supported_version`, `store_url`, `notice_enabled`, `notice_message`)
-4. ⬜ 생체 인증(`local_auth`) 적용 여부 결정 — 적용 시 결제/포인트 사용 중 어디에 걸지 정해야 함
-5. ⬜ 매장 지도 SDK 도입 검토 (네이버/카카오 지도 — API 키 및 네이티브 설정 필요)
+1. ⬜ 이용약관·개인정보처리방침의 영문본 — 법률 검토를 거친 번역문이 있어야 넣을 수 있다 (§4.16 참고)
+2. ⬜ 저장소 시크릿 `FIREBASE_SERVICE_ACCOUNT` 등록 (미등록 시 `deploy.yml`이 첫 단계에서 멈춘다)
+3. ⬜ 토스페이먼츠 운영 키 발급 및 등록 (미설정 시 테스트 키·모의 결제로 동작)
+4. ⬜ Remote Config 키 4종 콘솔 등록 (`min_supported_version`, `store_url`, `notice_enabled`, `notice_message`)
+5. ⬜ 생체 인증(`local_auth`) 적용 여부 결정 — 적용 시 결제/포인트 사용 중 어디에 걸지 정해야 함
+6. ⬜ 매장 지도 SDK 도입 검토 (네이버/카카오 지도 — API 키 및 네이티브 설정 필요)
 
 ## 8. 이번 정리에서 반영한 문서-코드 차이
 
@@ -438,6 +465,7 @@
 | 2026-08-20 | 혼잡도 자동 집계 — 직원이 올린 값이 없거나 낡으면 진행 중인 픽업 주문 수로 잰 값을 보여 준다. 픽업 주문 트리거가 바뀐 매장만 `active_orders`에서 다시 세어 `store_activity`에 적고(0~2 여유 / 3~6 보통 / 7+ 혼잡), 색인에 `storeId`를 추가했다. 밀린 주문이 2시간 넘게 그대로면 감추되 0건은 그대로 여유로 본다 |
 | 2026-08-29 | 보안 규칙 단위 테스트 도입 — 에뮬레이터 위에서 `firestore.rules`를 그대로 걸고 32개 테스트를 돌린다. `ci.yml`·`deploy.yml`이 이를 게이트로 삼아, 규칙이 사람 눈만 거쳐 배포되던 구멍을 막았다 |
 | 2026-08-29 | 주문 죽은 경로 정리 — 주문 컨트롤러의 레거시 분기를 없애고 `BeanCheckout`·`PickupCheckout` 인터페이스로 한 갈래를 만들었다. 규칙상 실행될 수 없던 Firestore 주문 저장소의 쓰기 메서드와 직렬화 함수를 지우고, 주문 문서 테스트를 서버가 쓰는 모양으로 다시 썼다 |
+| 2026-08-30 | 다국어 지원 — `flutter_localizations`와 ARB 두 벌(779개)을 두고 `/profile/language`에서 시스템 설정·한국어·English를 고른다. 화면 문자열 전부를 l10n으로 옮기면서, 이름을 품고 있던 도메인 enum 12종과 문장을 만들던 모델 게터를 걷어냈다. 법률 문서·저장되는 값·매장이 올린 글은 그대로 두고 그 이유를 문서에 남겼다 |
 | 2026-08-19 | 공지 등록·수정 도구 — 카탈로그 관리에 공지 탭 추가. `noticeToFirestore` 직렬화와 게시일(`createdAt`) 편집으로 마스터 데이터 5종을 모두 앱에서 관리한다 |
 | 2026-08-19 | 배너·매장 등록·수정 도구 — 상품 관리 화면을 **카탈로그 관리**로 넓혀 탭 4종(메뉴·원두·배너·매장)으로 재구성. `EventBanner`·`CafeStore`에 `sortOrder` 추가 및 쓰기 직렬화. 배너 아이콘 표를 홈 캐러셀과 관리자 화면이 함께 쓰도록 통합 |
 | 2026-08-17 | 주문·포인트·쿠폰 쓰기를 Cloud Functions 콜러블로 이관. 보안 규칙 강화 — 서버 가격 검증, 쿠폰 복원 서버 전용화, 판매량 서버 집계. 앱 운영 기능 추가(오프라인 배너·원격 강제 업데이트·리뷰 요청·성능 모니터링). **본 문서를 코드 기준으로 전면 재작성** |
