@@ -86,10 +86,19 @@ jobs:
       - name: Deploy
         run: >
           npx --yes "firebase-tools@^14" deploy
-          --only firestore:rules,storage,functions
+          --only firestore:rules,functions
           --project foxtrot-3bdba
           --non-interactive
           --force
+
+      # Storage는 따로 올린다. 버킷이 아직 없으면 CLI가 맨 앞에서 멈추는데,
+      # 한 명령에 묶어 두면 그 때문에 규칙과 함수까지 배포되지 않는다.
+      - name: Deploy storage rules
+        run: >
+          npx --yes "firebase-tools@^14" deploy
+          --only storage
+          --project foxtrot-3bdba
+          --non-interactive
 
       # 색인만 --force 없이 올린다. 색인은 소스가 아니라 콘솔에서 손으로 만들어진
       # 것이 남아 있을 수 있는데, --force를 주면 CLI가 그것들을 말없이 지운다.

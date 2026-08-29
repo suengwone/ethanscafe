@@ -355,7 +355,7 @@
 | 워크플로 | 시점 | 하는 일 |
 |----------|------|---------|
 | `ci.yml` | PR · `main` 푸시 | `dart format` 확인 · `flutter analyze` · `flutter test` / `functions` 단위 테스트 / 보안 규칙·색인 검사 |
-| `deploy.yml` | `main` 푸시 중 `functions/**` · `firestore.rules` · `storage.rules` · `firestore.indexes.json` · `firebase.json`이 바뀐 경우, 또는 수동 실행 | 함수 테스트와 규칙 테스트를 모두 통과하면 규칙·함수를 올리고, 색인은 `--force` 없이 따로 올린다 |
+| `deploy.yml` | `main` 푸시 중 `functions/**` · `firestore.rules` · `storage.rules` · `firestore.indexes.json` · `firebase.json`이 바뀐 경우, 또는 수동 실행 | 함수 테스트와 규칙 테스트를 모두 통과하면 규칙·함수를 올리고, Storage 규칙과 색인은 각각 따로 올린다 |
 
 - 자동화 대상은 **서버에 올라가는 것(함수·보안 규칙)뿐**이다. 앱 빌드는 스토어 배포와 묶여 있어 다루지 않는다
 - 배포 자격 증명은 저장소 시크릿 `FIREBASE_SERVICE_ACCOUNT`(서비스 계정 키 JSON) 하나다.
@@ -365,6 +365,10 @@
   내용이 그대로인 함수는 CLI가 건너뛰므로 규칙만 고쳐도 배포가 길어지지 않는다
 - 배포는 겹쳐 돌지 않는다(`concurrency: deploy-firebase`, 취소 없음). 중간에 끊으면 함수 일부만 올라간 상태가 남는다
 - 게이트는 함수 테스트와 **보안 규칙 단위 테스트** 둘이다. 규칙 테스트가 깨지면 배포 잡이 시작되지 않는다
+- 배포는 세 단계로 나뉜다. 한 명령에 묶으면 아직 준비되지 않은 하나 때문에 나머지가 통째로 막힌다
+  - **규칙·함수** — `--force`로 소스에서 사라진 함수를 지운다
+  - **Storage 규칙** — 버킷이 없으면 CLI가 맨 앞에서 멈춘다. 그래서 규칙·함수 뒤로 뺐다
+  - **색인** — `--force` 없이. 지울 것이 있으면 배포가 멈추고 사람이 본다
 
 #### 보안 규칙 단위 테스트 (`firestore_tests/`)
 
