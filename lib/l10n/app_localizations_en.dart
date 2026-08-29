@@ -2765,12 +2765,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationCategoryPoints => 'Points';
 
   @override
-  String get notificationCategoryGift => 'Gift';
-
-  @override
-  String get notificationCategoryEvent => 'Event';
-
-  @override
   String get notificationTimeJustNow => 'Just now';
 
   @override

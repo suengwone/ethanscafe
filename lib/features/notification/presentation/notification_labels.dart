@@ -6,8 +6,6 @@ extension AppNotificationLabels on AppLocalizations {
       switch (category) {
         AppNotificationCategory.order => notificationCategoryOrder,
         AppNotificationCategory.points => notificationCategoryPoints,
-        AppNotificationCategory.gift => notificationCategoryGift,
-        AppNotificationCategory.event => notificationCategoryEvent,
       };
 
   /// 받은 지 얼마 안 된 알림은 "3분 전"처럼, 일주일이 넘으면 날짜로 적는다.

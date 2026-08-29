@@ -809,8 +809,6 @@
   "notificationOpenNotices": "See notices",
   "notificationCategoryOrder": "Order",
   "notificationCategoryPoints": "Points",
-  "notificationCategoryGift": "Gift",
-  "notificationCategoryEvent": "Event",
   "notificationTimeJustNow": "Just now",
   "notificationTimeMinutesAgo": "{minutes} min ago",
   "notificationTimeHoursAgo": "{hours} hr ago",

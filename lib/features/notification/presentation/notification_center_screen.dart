@@ -249,8 +249,6 @@ class _CategoryIcon extends StatelessWidget {
   IconData _iconOf(AppNotificationCategory category) => switch (category) {
     AppNotificationCategory.order => LucideIcons.receiptText,
     AppNotificationCategory.points => LucideIcons.coins,
-    AppNotificationCategory.gift => LucideIcons.gift,
-    AppNotificationCategory.event => LucideIcons.megaphone,
   };
 }
 

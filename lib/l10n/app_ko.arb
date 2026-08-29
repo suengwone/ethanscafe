@@ -1761,8 +1761,6 @@
   "notificationOpenNotices": "공지사항 보기",
   "notificationCategoryOrder": "주문",
   "notificationCategoryPoints": "포인트",
-  "notificationCategoryGift": "선물",
-  "notificationCategoryEvent": "이벤트",
   "notificationTimeJustNow": "방금 전",
   "notificationTimeMinutesAgo": "{minutes}분 전",
   "@notificationTimeMinutesAgo": {

@@ -2702,12 +2702,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get notificationCategoryPoints => '포인트';
 
   @override
-  String get notificationCategoryGift => '선물';
-
-  @override
-  String get notificationCategoryEvent => '이벤트';
-
-  @override
   String get notificationTimeJustNow => '방금 전';
 
   @override

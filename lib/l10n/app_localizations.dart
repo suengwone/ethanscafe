@@ -4952,18 +4952,6 @@ abstract class AppLocalizations {
   /// **'포인트'**
   String get notificationCategoryPoints;
 
-  /// No description provided for @notificationCategoryGift.
-  ///
-  /// In ko, this message translates to:
-  /// **'선물'**
-  String get notificationCategoryGift;
-
-  /// No description provided for @notificationCategoryEvent.
-  ///
-  /// In ko, this message translates to:
-  /// **'이벤트'**
-  String get notificationCategoryEvent;
-
   /// No description provided for @notificationTimeJustNow.
   ///
   /// In ko, this message translates to:
