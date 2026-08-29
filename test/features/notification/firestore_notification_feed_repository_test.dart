@@ -42,7 +42,7 @@ void main() {
         'id': 'n1',
         'title': '제목',
         'body': '본문',
-        'category': 'event',
+        'category': 'points',
         'createdAt': '2026-08-30T09:00:00.000',
         'route': 'https://example.com/promo',
       });
