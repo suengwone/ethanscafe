@@ -85,6 +85,7 @@ import 'package:cafe_app/features/profile/presentation/notification_settings_scr
 import 'package:cafe_app/features/profile/presentation/payment_methods_screen.dart';
 import 'package:cafe_app/features/profile/presentation/policy_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
+import 'package:cafe_app/features/profile/presentation/security_settings_screen.dart';
 import 'package:cafe_app/features/profile/presentation/support_screen.dart';
 import 'package:cafe_app/features/referral/presentation/referral_screen.dart';
 import 'package:cafe_app/router/app_router.dart';
@@ -970,6 +971,20 @@ void main() {
     await pumpScreen(tester, const NoticeListScreen());
 
     await expectGolden(find.byType(NoticeListScreen), 'notice_list_screen');
+  });
+
+  testWidgets('보안 설정 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const SecuritySettingsScreen(),
+      user: _previewUser,
+    );
+
+    await expectGolden(
+      find.byType(SecuritySettingsScreen),
+      'security_settings_screen',
+    );
   });
 
   testWidgets('알림함 화면 스크린샷', (WidgetTester tester) async {

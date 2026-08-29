@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:cafe_app/core/services/points_lock_providers.dart';
+import 'package:cafe_app/core/services/points_lock_service.dart';
 import 'package:cafe_app/features/auth/domain/auth_models.dart';
 import 'package:cafe_app/features/auth/presentation/auth_providers.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
@@ -12,6 +14,18 @@ import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'features/auth/fake_auth_repository.dart';
 
 import 'support/localized_app.dart';
+
+/// 포인트 사용 잠금은 기기 잠금을 물어본다. 테스트에는 물어볼 기기가 없으므로
+/// 통과시키는 확인기를 끼운다. 잠금 자체는 `test/core/points_lock_test.dart`와
+/// `test/features/points/points_lock_gate_test.dart`가 잰다.
+class _PassingAuthenticator implements DeviceAuthenticator {
+  @override
+  Future<bool> isSupported() async => false;
+
+  @override
+  Future<DeviceAuthResult> authenticate(String reason) async =>
+      DeviceAuthResult.passed;
+}
 
 void main() {
   setUp(() {
@@ -49,6 +63,9 @@ void main() {
               user: const AppUser(uid: 'test-uid'),
               admin: admin,
             ),
+          ),
+          deviceAuthenticatorProvider.overrideWithValue(
+            _PassingAuthenticator(),
           ),
         ],
         child: const MaterialApp(
