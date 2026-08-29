@@ -47,6 +47,9 @@ import 'package:cafe_app/features/menu/presentation/menu_providers.dart';
 import 'package:cafe_app/features/menu/presentation/menu_screen.dart';
 import 'package:cafe_app/features/notice/domain/notice_models.dart';
 import 'package:cafe_app/features/notice/presentation/notice_list_screen.dart';
+import 'package:cafe_app/features/notification/domain/notification_models.dart';
+import 'package:cafe_app/features/notification/presentation/notification_center_screen.dart';
+import 'package:cafe_app/features/notification/presentation/notification_feed_providers.dart';
 import 'package:cafe_app/features/order/domain/order_models.dart';
 import 'package:cafe_app/features/order/domain/admin_order_models.dart';
 import 'package:cafe_app/features/order/domain/refund_failure_models.dart';
@@ -188,6 +191,52 @@ final _previewStoreOverrides = [
       ),
     },
   ),
+];
+
+/// 알림함은 "3분 전"처럼 지금 시각을 기준으로 적으므로 골든에서 못 박는다.
+final _previewNotificationNow = DateTime(2026, 8, 30, 10);
+
+final _previewNotifications = [
+  AppNotification(
+    id: 'pickup-1:ready',
+    title: '주문하신 음료가 나왔어요',
+    body: '바닐라 라떼 외 1건 주문을 픽업대에서 찾아가세요.',
+    category: AppNotificationCategory.order,
+    createdAt: _previewNotificationNow.subtract(const Duration(minutes: 3)),
+    route: '/profile/orders',
+  ),
+  AppNotification(
+    id: 'points-1',
+    title: '포인트가 적립됐어요',
+    body: '방금 주문으로 320P를 모았어요.',
+    category: AppNotificationCategory.points,
+    createdAt: _previewNotificationNow.subtract(const Duration(hours: 5)),
+  ),
+  AppNotification(
+    id: 'gift-1',
+    title: '선물이 도착했어요',
+    body: '이단 님이 에티오피아 예가체프 200g을 보냈어요.',
+    category: AppNotificationCategory.gift,
+    createdAt: _previewNotificationNow.subtract(const Duration(days: 2)),
+    isRead: true,
+    route: '/profile/gifts',
+  ),
+  AppNotification(
+    id: 'event-1',
+    title: '가을 시즌 메뉴가 나왔어요',
+    body: '메이플 라떼를 이번 주 내내 20% 깎아 드려요.',
+    category: AppNotificationCategory.event,
+    createdAt: DateTime(2026, 8, 1, 9),
+    isRead: true,
+    route: '/notices',
+  ),
+];
+
+final _previewNotificationOverrides = [
+  notificationFeedProvider.overrideWith(
+    (ref) => Stream.value(_previewNotifications),
+  ),
+  notificationClockProvider.overrideWithValue(() => _previewNotificationNow),
 ];
 
 const _previewUser = AppUser(
@@ -899,7 +948,11 @@ void main() {
 
   testWidgets('홈 화면(로그인) 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
-    await pumpApp(tester, user: _previewUser);
+    await pumpApp(
+      tester,
+      user: _previewUser,
+      overrides: _previewNotificationOverrides,
+    );
 
     await expectGolden(find.byType(AppShell), 'home_screen_logged_in');
   });
@@ -916,6 +969,38 @@ void main() {
     await pumpScreen(tester, const NoticeListScreen());
 
     await expectGolden(find.byType(NoticeListScreen), 'notice_list_screen');
+  });
+
+  testWidgets('알림함 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const NotificationCenterScreen(),
+      user: _previewUser,
+      overrides: _previewNotificationOverrides,
+    );
+
+    await expectGolden(
+      find.byType(NotificationCenterScreen),
+      'notification_center_screen',
+    );
+  });
+
+  testWidgets('알림함 빈 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const NotificationCenterScreen(),
+      user: _previewUser,
+      overrides: [
+        notificationFeedProvider.overrideWith((ref) => Stream.value(const [])),
+      ],
+    );
+
+    await expectGolden(
+      find.byType(NotificationCenterScreen),
+      'notification_center_empty',
+    );
   });
 
   testWidgets('매장 찾기 화면 스크린샷', (WidgetTester tester) async {
