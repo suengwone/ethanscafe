@@ -186,9 +186,9 @@
   "noticeCategoryEvent": "이벤트",
   "noticeCategoryNotice": "공지",
   "noticeCategoryBenefit": "혜택",
-  "noticeListTitle": "알림",
-  "noticeLoadFailed": "알림을 불러오지 못했습니다.",
-  "noticeEmpty": "새로운 알림이 없어요",
+  "noticeListTitle": "공지사항",
+  "noticeLoadFailed": "공지를 불러오지 못했습니다.",
+  "noticeEmpty": "새로운 공지가 없어요",
   "noticeImportant": "중요",
   "reviewProductTypeMenu": "메뉴",
   "reviewProductTypeBean": "원두",
@@ -1737,6 +1737,64 @@
     "placeholders": {
       "error": {
         "type": "String"
+      }
+    }
+  },
+  "notificationCenterTitle": "알림",
+  "notificationCenterEmpty": "받은 알림이 없어요",
+  "notificationCenterEmptyDetail": "주문 상태와 이벤트 소식을 여기에 모아 둘게요.",
+  "notificationCenterLoadFailed": "알림을 불러오지 못했습니다.",
+  "notificationMarkAllRead": "모두 읽음",
+  "notificationClearAll": "모두 지우기",
+  "notificationClearAllTitle": "알림을 모두 지울까요?",
+  "notificationClearAllBody": "지운 알림은 되돌릴 수 없어요.",
+  "notificationRemoveOne": "알림 지우기",
+  "notificationUnread": "읽지 않음",
+  "notificationUnreadCount": "읽지 않은 알림 {count}건",
+  "@notificationUnreadCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationOpenNotices": "공지사항 보기",
+  "notificationCategoryOrder": "주문",
+  "notificationCategoryPoints": "포인트",
+  "notificationCategoryGift": "선물",
+  "notificationCategoryEvent": "이벤트",
+  "notificationTimeJustNow": "방금 전",
+  "notificationTimeMinutesAgo": "{minutes}분 전",
+  "@notificationTimeMinutesAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationTimeHoursAgo": "{hours}시간 전",
+  "@notificationTimeHoursAgo": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationTimeDaysAgo": "{days}일 전",
+  "@notificationTimeDaysAgo": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationTimeOn": "{date}",
+  "@notificationTimeOn": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yyyy.MM.dd",
+        "isCustomDateFormat": "true"
       }
     }
   }

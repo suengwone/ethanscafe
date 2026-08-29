@@ -821,19 +821,19 @@ abstract class AppLocalizations {
   /// No description provided for @noticeListTitle.
   ///
   /// In ko, this message translates to:
-  /// **'알림'**
+  /// **'공지사항'**
   String get noticeListTitle;
 
   /// No description provided for @noticeLoadFailed.
   ///
   /// In ko, this message translates to:
-  /// **'알림을 불러오지 못했습니다.'**
+  /// **'공지를 불러오지 못했습니다.'**
   String get noticeLoadFailed;
 
   /// No description provided for @noticeEmpty.
   ///
   /// In ko, this message translates to:
-  /// **'새로운 알림이 없어요'**
+  /// **'새로운 공지가 없어요'**
   String get noticeEmpty;
 
   /// No description provided for @noticeImportant.
@@ -4867,6 +4867,132 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'사진을 올리지 못했습니다: {error}'**
   String photoUploadFailed(String error);
+
+  /// No description provided for @notificationCenterTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림'**
+  String get notificationCenterTitle;
+
+  /// No description provided for @notificationCenterEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'받은 알림이 없어요'**
+  String get notificationCenterEmpty;
+
+  /// No description provided for @notificationCenterEmptyDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 상태와 이벤트 소식을 여기에 모아 둘게요.'**
+  String get notificationCenterEmptyDetail;
+
+  /// No description provided for @notificationCenterLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림을 불러오지 못했습니다.'**
+  String get notificationCenterLoadFailed;
+
+  /// No description provided for @notificationMarkAllRead.
+  ///
+  /// In ko, this message translates to:
+  /// **'모두 읽음'**
+  String get notificationMarkAllRead;
+
+  /// No description provided for @notificationClearAll.
+  ///
+  /// In ko, this message translates to:
+  /// **'모두 지우기'**
+  String get notificationClearAll;
+
+  /// No description provided for @notificationClearAllTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림을 모두 지울까요?'**
+  String get notificationClearAllTitle;
+
+  /// No description provided for @notificationClearAllBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'지운 알림은 되돌릴 수 없어요.'**
+  String get notificationClearAllBody;
+
+  /// No description provided for @notificationRemoveOne.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림 지우기'**
+  String get notificationRemoveOne;
+
+  /// No description provided for @notificationUnread.
+  ///
+  /// In ko, this message translates to:
+  /// **'읽지 않음'**
+  String get notificationUnread;
+
+  /// No description provided for @notificationUnreadCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'읽지 않은 알림 {count}건'**
+  String notificationUnreadCount(int count);
+
+  /// No description provided for @notificationOpenNotices.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지사항 보기'**
+  String get notificationOpenNotices;
+
+  /// No description provided for @notificationCategoryOrder.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문'**
+  String get notificationCategoryOrder;
+
+  /// No description provided for @notificationCategoryPoints.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트'**
+  String get notificationCategoryPoints;
+
+  /// No description provided for @notificationCategoryGift.
+  ///
+  /// In ko, this message translates to:
+  /// **'선물'**
+  String get notificationCategoryGift;
+
+  /// No description provided for @notificationCategoryEvent.
+  ///
+  /// In ko, this message translates to:
+  /// **'이벤트'**
+  String get notificationCategoryEvent;
+
+  /// No description provided for @notificationTimeJustNow.
+  ///
+  /// In ko, this message translates to:
+  /// **'방금 전'**
+  String get notificationTimeJustNow;
+
+  /// No description provided for @notificationTimeMinutesAgo.
+  ///
+  /// In ko, this message translates to:
+  /// **'{minutes}분 전'**
+  String notificationTimeMinutesAgo(int minutes);
+
+  /// No description provided for @notificationTimeHoursAgo.
+  ///
+  /// In ko, this message translates to:
+  /// **'{hours}시간 전'**
+  String notificationTimeHoursAgo(int hours);
+
+  /// No description provided for @notificationTimeDaysAgo.
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일 전'**
+  String notificationTimeDaysAgo(int days);
+
+  /// No description provided for @notificationTimeOn.
+  ///
+  /// In ko, this message translates to:
+  /// **'{date}'**
+  String notificationTimeOn(DateTime date);
 }
 
 class _AppLocalizationsDelegate

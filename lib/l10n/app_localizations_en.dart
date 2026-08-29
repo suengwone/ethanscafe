@@ -404,13 +404,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noticeCategoryBenefit => 'Perk';
 
   @override
-  String get noticeListTitle => 'Notifications';
+  String get noticeListTitle => 'Notices';
 
   @override
-  String get noticeLoadFailed => 'Could not load your notifications.';
+  String get noticeLoadFailed => 'Could not load the notices.';
 
   @override
-  String get noticeEmpty => 'Nothing new';
+  String get noticeEmpty => 'No notices yet';
 
   @override
   String get noticeImportant => 'Important';
@@ -2715,5 +2715,87 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String photoUploadFailed(String error) {
     return 'Could not upload the photo: $error';
+  }
+
+  @override
+  String get notificationCenterTitle => 'Notifications';
+
+  @override
+  String get notificationCenterEmpty => 'No notifications yet';
+
+  @override
+  String get notificationCenterEmptyDetail =>
+      'Order updates and event news will gather here.';
+
+  @override
+  String get notificationCenterLoadFailed =>
+      'Could not load your notifications.';
+
+  @override
+  String get notificationMarkAllRead => 'Mark all read';
+
+  @override
+  String get notificationClearAll => 'Clear all';
+
+  @override
+  String get notificationClearAllTitle => 'Clear every notification?';
+
+  @override
+  String get notificationClearAllBody =>
+      'Cleared notifications cannot be brought back.';
+
+  @override
+  String get notificationRemoveOne => 'Delete notification';
+
+  @override
+  String get notificationUnread => 'Unread';
+
+  @override
+  String notificationUnreadCount(int count) {
+    return '$count unread notifications';
+  }
+
+  @override
+  String get notificationOpenNotices => 'See notices';
+
+  @override
+  String get notificationCategoryOrder => 'Order';
+
+  @override
+  String get notificationCategoryPoints => 'Points';
+
+  @override
+  String get notificationCategoryGift => 'Gift';
+
+  @override
+  String get notificationCategoryEvent => 'Event';
+
+  @override
+  String get notificationTimeJustNow => 'Just now';
+
+  @override
+  String notificationTimeMinutesAgo(int minutes) {
+    return '$minutes min ago';
+  }
+
+  @override
+  String notificationTimeHoursAgo(int hours) {
+    return '$hours hr ago';
+  }
+
+  @override
+  String notificationTimeDaysAgo(int days) {
+    return '$days days ago';
+  }
+
+  @override
+  String notificationTimeOn(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat(
+      'yyyy.MM.dd',
+      localeName,
+    );
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
   }
 }

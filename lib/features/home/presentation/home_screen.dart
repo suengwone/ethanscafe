@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/circle_icon_button.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/auth_providers.dart';
+import '../../notification/presentation/notification_bell_button.dart';
 import 'widgets/event_banner_carousel.dart';
 import 'widgets/recommended_menu_section.dart';
 import 'widgets/rewards_card.dart';
@@ -75,17 +77,21 @@ class _GreetingHeader extends StatelessWidget {
               ],
             ),
           ),
-          _CircleIconButton(
+          CircleIconButton(
             icon: LucideIcons.mapPin,
             tooltip: l10n.homeFindStore,
             onPressed: () => context.push('/stores'),
           ),
           const SizedBox(width: 8),
-          _CircleIconButton(
-            icon: LucideIcons.bell,
-            tooltip: l10n.homeNotifications,
-            onPressed: () => context.push('/notices'),
-          ),
+          // 회원은 자기 알림함으로, 게스트는 알림함이 빌 수밖에 없으니 공지로 보낸다.
+          if (isLoggedIn)
+            const NotificationBellButton()
+          else
+            CircleIconButton(
+              icon: LucideIcons.bell,
+              tooltip: l10n.noticeListTitle,
+              onPressed: () => context.push('/notices'),
+            ),
           if (!isLoggedIn) ...[
             const SizedBox(width: 8),
             OutlinedButton(
@@ -103,35 +109,6 @@ class _GreetingHeader extends StatelessWidget {
   }
 }
 
-class _CircleIconButton extends StatelessWidget {
-  const _CircleIconButton({
-    required this.icon,
-    required this.tooltip,
-    required this.onPressed,
-  });
-
-  final IconData icon;
-  final String tooltip;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: onPressed,
-      tooltip: tooltip,
-      style: IconButton.styleFrom(
-        backgroundColor: context.palette.card,
-        shape: CircleBorder(
-          side: BorderSide(
-            color: context.palette.border.withValues(alpha: 0.7),
-          ),
-        ),
-        minimumSize: const Size(40, 40),
-      ),
-      icon: Icon(icon, size: 18, color: context.palette.ink),
-    );
-  }
-}
 
 class _QuickActions extends StatelessWidget {
   const _QuickActions();

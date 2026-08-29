@@ -15,6 +15,7 @@ import '../features/menu/presentation/favorite_menu_screen.dart';
 import '../features/menu/presentation/menu_detail_screen.dart';
 import '../features/menu/presentation/menu_screen.dart';
 import '../features/notice/presentation/notice_list_screen.dart';
+import '../features/notification/presentation/notification_center_screen.dart';
 import '../features/order/presentation/order_history_screen.dart';
 import '../features/pickup/presentation/pickup_cart_screen.dart';
 import '../features/pickup/presentation/pickup_order_tracking_screen.dart';
@@ -83,6 +84,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'notices',
                     builder: (context, state) => const NoticeListScreen(),
+                  ),
+                  GoRoute(
+                    path: 'notifications',
+                    builder: (context, state) =>
+                        const NotificationCenterScreen(),
                   ),
                   GoRoute(
                     path: 'stores',

@@ -5,11 +5,13 @@ import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/circle_icon_button.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../features/beans/presentation/bean_labels.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/account_providers.dart';
 import '../../auth/presentation/auth_providers.dart';
+import '../../notification/presentation/notification_bell_button.dart';
 import '../domain/wholesale_models.dart';
 import 'wholesale_providers.dart';
 
@@ -146,52 +148,19 @@ class _BusinessHeader extends StatelessWidget {
               ],
             ),
           ),
-          _CircleIconButton(
+          CircleIconButton(
             icon: LucideIcons.mapPin,
             tooltip: AppLocalizations.of(context).homeFindStore,
             onPressed: () => context.push('/stores'),
           ),
           const SizedBox(width: 8),
-          _CircleIconButton(
-            icon: LucideIcons.bell,
-            tooltip: AppLocalizations.of(context).homeNotifications,
-            onPressed: () => context.push('/notices'),
-          ),
+          const NotificationBellButton(),
         ],
       ),
     );
   }
 }
 
-class _CircleIconButton extends StatelessWidget {
-  const _CircleIconButton({
-    required this.icon,
-    required this.tooltip,
-    required this.onPressed,
-  });
-
-  final IconData icon;
-  final String tooltip;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: onPressed,
-      tooltip: tooltip,
-      style: IconButton.styleFrom(
-        backgroundColor: context.palette.card,
-        shape: CircleBorder(
-          side: BorderSide(
-            color: context.palette.border.withValues(alpha: 0.7),
-          ),
-        ),
-        minimumSize: const Size(40, 40),
-      ),
-      icon: Icon(icon, size: 18, color: context.palette.ink),
-    );
-  }
-}
 
 class _WholesaleInfoCard extends StatelessWidget {
   const _WholesaleInfoCard();

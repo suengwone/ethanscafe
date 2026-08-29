@@ -394,13 +394,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get noticeCategoryBenefit => '혜택';
 
   @override
-  String get noticeListTitle => '알림';
+  String get noticeListTitle => '공지사항';
 
   @override
-  String get noticeLoadFailed => '알림을 불러오지 못했습니다.';
+  String get noticeLoadFailed => '공지를 불러오지 못했습니다.';
 
   @override
-  String get noticeEmpty => '새로운 알림이 없어요';
+  String get noticeEmpty => '새로운 공지가 없어요';
 
   @override
   String get noticeImportant => '중요';
@@ -2655,5 +2655,84 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String photoUploadFailed(String error) {
     return '사진을 올리지 못했습니다: $error';
+  }
+
+  @override
+  String get notificationCenterTitle => '알림';
+
+  @override
+  String get notificationCenterEmpty => '받은 알림이 없어요';
+
+  @override
+  String get notificationCenterEmptyDetail => '주문 상태와 이벤트 소식을 여기에 모아 둘게요.';
+
+  @override
+  String get notificationCenterLoadFailed => '알림을 불러오지 못했습니다.';
+
+  @override
+  String get notificationMarkAllRead => '모두 읽음';
+
+  @override
+  String get notificationClearAll => '모두 지우기';
+
+  @override
+  String get notificationClearAllTitle => '알림을 모두 지울까요?';
+
+  @override
+  String get notificationClearAllBody => '지운 알림은 되돌릴 수 없어요.';
+
+  @override
+  String get notificationRemoveOne => '알림 지우기';
+
+  @override
+  String get notificationUnread => '읽지 않음';
+
+  @override
+  String notificationUnreadCount(int count) {
+    return '읽지 않은 알림 $count건';
+  }
+
+  @override
+  String get notificationOpenNotices => '공지사항 보기';
+
+  @override
+  String get notificationCategoryOrder => '주문';
+
+  @override
+  String get notificationCategoryPoints => '포인트';
+
+  @override
+  String get notificationCategoryGift => '선물';
+
+  @override
+  String get notificationCategoryEvent => '이벤트';
+
+  @override
+  String get notificationTimeJustNow => '방금 전';
+
+  @override
+  String notificationTimeMinutesAgo(int minutes) {
+    return '$minutes분 전';
+  }
+
+  @override
+  String notificationTimeHoursAgo(int hours) {
+    return '$hours시간 전';
+  }
+
+  @override
+  String notificationTimeDaysAgo(int days) {
+    return '$days일 전';
+  }
+
+  @override
+  String notificationTimeOn(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat(
+      'yyyy.MM.dd',
+      localeName,
+    );
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
   }
 }

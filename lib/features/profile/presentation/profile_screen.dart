@@ -190,6 +190,11 @@ class ProfileScreen extends ConsumerWidget {
             AppLocalizations.of(context).profileSectionSettings,
             [
               _buildListTile(
+                icon: LucideIcons.bellRing,
+                title: AppLocalizations.of(context).notificationCenterTitle,
+                onTap: () => context.push('/notifications'),
+              ),
+              _buildListTile(
                 icon: LucideIcons.bell,
                 title: AppLocalizations.of(context).notificationSettingsTitle,
                 onTap: () => context.push('/profile/notifications'),
