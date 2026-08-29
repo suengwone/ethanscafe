@@ -159,4 +159,109 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bannerIconGift => 'Gift';
+
+  @override
+  String get authSignIn => 'Sign in';
+
+  @override
+  String get authSignedIn => 'You are signed in.';
+
+  @override
+  String get authSignInWithKakao => 'Continue with Kakao';
+
+  @override
+  String get authSignInWithNaver => 'Continue with Naver';
+
+  @override
+  String get authSignInWithGoogle => 'Continue with Google';
+
+  @override
+  String get authSignInLater => 'Maybe later';
+
+  @override
+  String get businessAccountTitle => 'Business account';
+
+  @override
+  String get businessMissingFields =>
+      'Enter the company name and the business number.';
+
+  @override
+  String get businessNumberInvalid =>
+      'Check the 10-digit business number again.';
+
+  @override
+  String get businessSwitched =>
+      'Switched to a business account. Opening the wholesale home.';
+
+  @override
+  String businessSwitchFailed(String error) {
+    return 'Could not switch to a business account: $error';
+  }
+
+  @override
+  String get businessSwitchFailedRetry =>
+      'Could not switch to a business account. Try again.';
+
+  @override
+  String get businessSwitchedBack => 'Switched back to a personal account.';
+
+  @override
+  String get businessIntro =>
+      'A business account turns the home tab into the wholesale view, where you can request quotes at per-kilogram trade prices.';
+
+  @override
+  String get businessSectionInfo => 'Business details';
+
+  @override
+  String get businessFieldCompany => 'Company name *';
+
+  @override
+  String get businessFieldCompanyHint => 'e.g. Cafe Around';
+
+  @override
+  String get businessFieldNumber => 'Business number *';
+
+  @override
+  String get businessFieldManager => 'Contact name';
+
+  @override
+  String get businessFieldPhone => 'Phone';
+
+  @override
+  String get businessSwitchAction => 'Switch to a business account';
+
+  @override
+  String get businessSavedTitle => 'Saved business details';
+
+  @override
+  String get businessSavedIntro =>
+      'You already registered business details. You can switch over without entering them again.';
+
+  @override
+  String get businessSavedSwitch => 'Switch to a business account';
+
+  @override
+  String get businessSavedEdit => 'Edit business details';
+
+  @override
+  String get businessLabelCompany => 'Company name';
+
+  @override
+  String get businessLabelNumber => 'Business number';
+
+  @override
+  String get businessLabelManager => 'Contact name';
+
+  @override
+  String get businessLabelPhone => 'Phone';
+
+  @override
+  String get businessActiveTitle => 'Business account active';
+
+  @override
+  String get businessActiveDescription =>
+      'The home tab shows wholesale bean prices and lets you request a quote.';
+
+  @override
+  String get businessSwitchBackAction => 'Switch back to a personal account';
 }

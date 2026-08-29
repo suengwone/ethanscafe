@@ -373,6 +373,198 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'선물'**
   String get bannerIconGift;
+
+  /// No description provided for @authSignIn.
+  ///
+  /// In ko, this message translates to:
+  /// **'로그인'**
+  String get authSignIn;
+
+  /// No description provided for @authSignedIn.
+  ///
+  /// In ko, this message translates to:
+  /// **'로그인되었습니다.'**
+  String get authSignedIn;
+
+  /// No description provided for @authSignInWithKakao.
+  ///
+  /// In ko, this message translates to:
+  /// **'카카오로 시작하기'**
+  String get authSignInWithKakao;
+
+  /// No description provided for @authSignInWithNaver.
+  ///
+  /// In ko, this message translates to:
+  /// **'네이버로 시작하기'**
+  String get authSignInWithNaver;
+
+  /// No description provided for @authSignInWithGoogle.
+  ///
+  /// In ko, this message translates to:
+  /// **'구글로 시작하기'**
+  String get authSignInWithGoogle;
+
+  /// No description provided for @authSignInLater.
+  ///
+  /// In ko, this message translates to:
+  /// **'나중에 로그인하기'**
+  String get authSignInLater;
+
+  /// No description provided for @businessAccountTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자 계정'**
+  String get businessAccountTitle;
+
+  /// No description provided for @businessMissingFields.
+  ///
+  /// In ko, this message translates to:
+  /// **'상호명과 사업자등록번호를 입력해주세요.'**
+  String get businessMissingFields;
+
+  /// No description provided for @businessNumberInvalid.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자등록번호 10자리를 다시 확인해주세요.'**
+  String get businessNumberInvalid;
+
+  /// No description provided for @businessSwitched.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자 계정으로 전환되었습니다. 도매 홈으로 이동합니다.'**
+  String get businessSwitched;
+
+  /// No description provided for @businessSwitchFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자 전환에 실패했습니다: {error}'**
+  String businessSwitchFailed(String error);
+
+  /// No description provided for @businessSwitchFailedRetry.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자 전환에 실패했습니다. 다시 시도해주세요.'**
+  String get businessSwitchFailedRetry;
+
+  /// No description provided for @businessSwitchedBack.
+  ///
+  /// In ko, this message translates to:
+  /// **'일반 고객 계정으로 전환되었습니다.'**
+  String get businessSwitchedBack;
+
+  /// No description provided for @businessIntro.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자 계정으로 전환하면 홈 화면이 원두 도매(B2B) 화면으로 바뀌고, kg 단위 도매가로 견적을 요청할 수 있어요.'**
+  String get businessIntro;
+
+  /// No description provided for @businessSectionInfo.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자 정보'**
+  String get businessSectionInfo;
+
+  /// No description provided for @businessFieldCompany.
+  ///
+  /// In ko, this message translates to:
+  /// **'상호명 *'**
+  String get businessFieldCompany;
+
+  /// No description provided for @businessFieldCompanyHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'예) 카페 어라운드'**
+  String get businessFieldCompanyHint;
+
+  /// No description provided for @businessFieldNumber.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자등록번호 *'**
+  String get businessFieldNumber;
+
+  /// No description provided for @businessFieldManager.
+  ///
+  /// In ko, this message translates to:
+  /// **'담당자명'**
+  String get businessFieldManager;
+
+  /// No description provided for @businessFieldPhone.
+  ///
+  /// In ko, this message translates to:
+  /// **'연락처'**
+  String get businessFieldPhone;
+
+  /// No description provided for @businessSwitchAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자 계정으로 전환하기'**
+  String get businessSwitchAction;
+
+  /// No description provided for @businessSavedTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 사업자 정보'**
+  String get businessSavedTitle;
+
+  /// No description provided for @businessSavedIntro.
+  ///
+  /// In ko, this message translates to:
+  /// **'이전에 등록한 사업자 정보가 있어요. 다시 입력하지 않고 바로 사업자 계정으로 전환할 수 있어요.'**
+  String get businessSavedIntro;
+
+  /// No description provided for @businessSavedSwitch.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자 계정으로 전환'**
+  String get businessSavedSwitch;
+
+  /// No description provided for @businessSavedEdit.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자 정보 수정'**
+  String get businessSavedEdit;
+
+  /// No description provided for @businessLabelCompany.
+  ///
+  /// In ko, this message translates to:
+  /// **'상호명'**
+  String get businessLabelCompany;
+
+  /// No description provided for @businessLabelNumber.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자등록번호'**
+  String get businessLabelNumber;
+
+  /// No description provided for @businessLabelManager.
+  ///
+  /// In ko, this message translates to:
+  /// **'담당자명'**
+  String get businessLabelManager;
+
+  /// No description provided for @businessLabelPhone.
+  ///
+  /// In ko, this message translates to:
+  /// **'연락처'**
+  String get businessLabelPhone;
+
+  /// No description provided for @businessActiveTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자 계정 사용 중'**
+  String get businessActiveTitle;
+
+  /// No description provided for @businessActiveDescription.
+  ///
+  /// In ko, this message translates to:
+  /// **'홈 화면에서 도매 원두 시세를 확인하고 견적을 요청할 수 있어요.'**
+  String get businessActiveDescription;
+
+  /// No description provided for @businessSwitchBackAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'일반 고객 계정으로 전환'**
+  String get businessSwitchBackAction;
 }
 
 class _AppLocalizationsDelegate

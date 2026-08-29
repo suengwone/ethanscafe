@@ -156,4 +156,105 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get bannerIconGift => '선물';
+
+  @override
+  String get authSignIn => '로그인';
+
+  @override
+  String get authSignedIn => '로그인되었습니다.';
+
+  @override
+  String get authSignInWithKakao => '카카오로 시작하기';
+
+  @override
+  String get authSignInWithNaver => '네이버로 시작하기';
+
+  @override
+  String get authSignInWithGoogle => '구글로 시작하기';
+
+  @override
+  String get authSignInLater => '나중에 로그인하기';
+
+  @override
+  String get businessAccountTitle => '사업자 계정';
+
+  @override
+  String get businessMissingFields => '상호명과 사업자등록번호를 입력해주세요.';
+
+  @override
+  String get businessNumberInvalid => '사업자등록번호 10자리를 다시 확인해주세요.';
+
+  @override
+  String get businessSwitched => '사업자 계정으로 전환되었습니다. 도매 홈으로 이동합니다.';
+
+  @override
+  String businessSwitchFailed(String error) {
+    return '사업자 전환에 실패했습니다: $error';
+  }
+
+  @override
+  String get businessSwitchFailedRetry => '사업자 전환에 실패했습니다. 다시 시도해주세요.';
+
+  @override
+  String get businessSwitchedBack => '일반 고객 계정으로 전환되었습니다.';
+
+  @override
+  String get businessIntro =>
+      '사업자 계정으로 전환하면 홈 화면이 원두 도매(B2B) 화면으로 바뀌고, kg 단위 도매가로 견적을 요청할 수 있어요.';
+
+  @override
+  String get businessSectionInfo => '사업자 정보';
+
+  @override
+  String get businessFieldCompany => '상호명 *';
+
+  @override
+  String get businessFieldCompanyHint => '예) 카페 어라운드';
+
+  @override
+  String get businessFieldNumber => '사업자등록번호 *';
+
+  @override
+  String get businessFieldManager => '담당자명';
+
+  @override
+  String get businessFieldPhone => '연락처';
+
+  @override
+  String get businessSwitchAction => '사업자 계정으로 전환하기';
+
+  @override
+  String get businessSavedTitle => '등록된 사업자 정보';
+
+  @override
+  String get businessSavedIntro =>
+      '이전에 등록한 사업자 정보가 있어요. 다시 입력하지 않고 바로 사업자 계정으로 전환할 수 있어요.';
+
+  @override
+  String get businessSavedSwitch => '사업자 계정으로 전환';
+
+  @override
+  String get businessSavedEdit => '사업자 정보 수정';
+
+  @override
+  String get businessLabelCompany => '상호명';
+
+  @override
+  String get businessLabelNumber => '사업자등록번호';
+
+  @override
+  String get businessLabelManager => '담당자명';
+
+  @override
+  String get businessLabelPhone => '연락처';
+
+  @override
+  String get businessActiveTitle => '사업자 계정 사용 중';
+
+  @override
+  String get businessActiveDescription =>
+      '홈 화면에서 도매 원두 시세를 확인하고 견적을 요청할 수 있어요.';
+
+  @override
+  String get businessSwitchBackAction => '일반 고객 계정으로 전환';
 }

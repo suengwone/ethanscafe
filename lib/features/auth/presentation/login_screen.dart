@@ -5,6 +5,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/foxtrot_logo.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/auth_models.dart';
 import 'auth_providers.dart';
 
@@ -25,7 +26,9 @@ class LoginScreen extends ConsumerWidget {
     if (success) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('로그인되었습니다.')));
+      ).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).authSignedIn)),
+      );
       context.go('/');
     }
   }
@@ -41,10 +44,11 @@ class LoginScreen extends ConsumerWidget {
       }
     });
 
+    final l10n = AppLocalizations.of(context);
     final isLoading = ref.watch(authControllerProvider).isLoading;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('로그인')),
+      appBar: AppBar(title: Text(l10n.authSignIn)),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -53,7 +57,10 @@ class LoginScreen extends ConsumerWidget {
             children: [
               const FoxtrotLogo(size: 112),
               const SizedBox(height: 24),
-              Text('폭스트롯', style: Theme.of(context).textTheme.headlineMedium),
+              Text(
+                l10n.appTitle,
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
               const SizedBox(height: 8),
               Text(
                 'NOT FAST. JUST BETTER.',
@@ -66,7 +73,7 @@ class LoginScreen extends ConsumerWidget {
                     : () => _signIn(context, ref, AuthProviderType.kakao),
                 backgroundColor: const Color(0xFFFEE500),
                 icon: const Icon(LucideIcons.messageCircle600, size: 22),
-                label: '카카오로 시작하기',
+                label: l10n.authSignInWithKakao,
                 textColor: Colors.black87,
               ),
               const SizedBox(height: 12),
@@ -83,7 +90,7 @@ class LoginScreen extends ConsumerWidget {
                     color: Colors.white,
                   ),
                 ),
-                label: '네이버로 시작하기',
+                label: l10n.authSignInWithNaver,
                 textColor: Colors.white,
               ),
               const SizedBox(height: 12),
@@ -96,7 +103,7 @@ class LoginScreen extends ConsumerWidget {
                   'G',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
                 ),
-                label: '구글로 시작하기',
+                label: l10n.authSignInWithGoogle,
                 textColor: Colors.black87,
                 borderColor: context.palette.border,
               ),
@@ -108,7 +115,7 @@ class LoginScreen extends ConsumerWidget {
                 ),
               TextButton(
                 onPressed: isLoading ? null : () => context.go('/'),
-                child: const Text('나중에 로그인하기'),
+                child: Text(l10n.authSignInLater),
               ),
             ],
           ),

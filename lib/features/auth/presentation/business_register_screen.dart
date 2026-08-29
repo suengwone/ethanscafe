@@ -5,6 +5,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/account_models.dart';
 import '../domain/account_repository.dart';
 import 'account_providers.dart';
@@ -43,13 +44,14 @@ class _BusinessRegisterScreenState
     if (_companyNameController.text.trim().isEmpty ||
         _businessNumberController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('상호명과 사업자등록번호를 입력해주세요.')),
+        SnackBar(content: Text(AppLocalizations.of(context).businessMissingFields)),
       );
       return;
     }
     if (!isValidBusinessNumber(_businessNumberController.text)) {
       setState(
-        () => _businessNumberError = '사업자등록번호 10자리를 다시 확인해주세요.',
+        () => _businessNumberError =
+            AppLocalizations.of(context).businessNumberInvalid,
       );
       return;
     }
@@ -73,7 +75,7 @@ class _BusinessRegisterScreenState
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('사업자 계정으로 전환되었습니다. 도매 홈으로 이동합니다.')),
+        SnackBar(content: Text(AppLocalizations.of(context).businessSwitched)),
       );
       context.go('/');
     } catch (error) {
@@ -81,7 +83,11 @@ class _BusinessRegisterScreenState
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('사업자 전환에 실패했습니다: $error')),
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context).businessSwitchFailed('$error'),
+          ),
+        ),
       );
     } finally {
       if (mounted) {
@@ -103,7 +109,7 @@ class _BusinessRegisterScreenState
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('사업자 계정으로 전환되었습니다. 도매 홈으로 이동합니다.')),
+        SnackBar(content: Text(AppLocalizations.of(context).businessSwitched)),
       );
       context.go('/');
     } catch (error) {
@@ -111,7 +117,9 @@ class _BusinessRegisterScreenState
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('사업자 전환에 실패했습니다. 다시 시도해주세요.')),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).businessSwitchFailedRetry),
+        ),
       );
     } finally {
       if (mounted) {
@@ -141,7 +149,7 @@ class _BusinessRegisterScreenState
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('일반 고객 계정으로 전환되었습니다.')),
+        SnackBar(content: Text(AppLocalizations.of(context).businessSwitchedBack)),
       );
       context.go('/');
     } finally {
@@ -158,7 +166,7 @@ class _BusinessRegisterScreenState
     final savedBusiness = profile?.business;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('사업자 계정')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).businessAccountTitle)),
       body: profile == null
           ? const Center(child: CircularProgressIndicator())
           : profile.isBusiness
@@ -225,7 +233,7 @@ class _RegisterForm extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    '사업자 계정으로 전환하면 홈 화면이 원두 도매(B2B) 화면으로 바뀌고, kg 단위 도매가로 견적을 요청할 수 있어요.'
+                    AppLocalizations.of(context).businessIntro
                         .keepWord,
                     style: textTheme.bodySmall,
                   ),
@@ -235,20 +243,23 @@ class _RegisterForm extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        Text('사업자 정보', style: textTheme.titleSmall),
+        Text(
+          AppLocalizations.of(context).businessSectionInfo,
+          style: textTheme.titleSmall,
+        ),
         const SizedBox(height: 12),
         TextField(
           controller: companyNameController,
-          decoration: const InputDecoration(
-            labelText: '상호명 *',
-            hintText: '예) 카페 어라운드',
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context).businessFieldCompany,
+            hintText: AppLocalizations.of(context).businessFieldCompanyHint,
           ),
         ),
         const SizedBox(height: 12),
         TextField(
           controller: businessNumberController,
           decoration: InputDecoration(
-            labelText: '사업자등록번호 *',
+            labelText: AppLocalizations.of(context).businessFieldNumber,
             hintText: '000-00-00000',
             errorText: businessNumberError,
           ),
@@ -257,13 +268,15 @@ class _RegisterForm extends StatelessWidget {
         const SizedBox(height: 12),
         TextField(
           controller: managerNameController,
-          decoration: const InputDecoration(labelText: '담당자명'),
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context).businessFieldManager,
+          ),
         ),
         const SizedBox(height: 12),
         TextField(
           controller: phoneController,
-          decoration: const InputDecoration(
-            labelText: '연락처',
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context).businessFieldPhone,
             hintText: '010-0000-0000',
           ),
           keyboardType: TextInputType.phone,
@@ -271,7 +284,7 @@ class _RegisterForm extends StatelessWidget {
         const SizedBox(height: 24),
         FilledButton(
           onPressed: submitting ? null : onSubmit,
-          child: const Text('사업자 계정으로 전환하기'),
+          child: Text(AppLocalizations.of(context).businessSwitchAction),
         ),
       ],
     );
@@ -310,12 +323,15 @@ class _SavedBusinessView extends StatelessWidget {
                     Icon(LucideIcons.building2,
                         color: context.palette.accent, size: 22),
                     const SizedBox(width: 10),
-                    Text('등록된 사업자 정보', style: textTheme.titleMedium),
+                    Text(
+                      AppLocalizations.of(context).businessSavedTitle,
+                      style: textTheme.titleMedium,
+                    ),
                   ],
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  '이전에 등록한 사업자 정보가 있어요. 다시 입력하지 않고 바로 사업자 계정으로 전환할 수 있어요.'
+                  AppLocalizations.of(context).businessSavedIntro
                       .keepWord,
                   style: textTheme.bodySmall,
                 ),
@@ -328,12 +344,12 @@ class _SavedBusinessView extends StatelessWidget {
         const SizedBox(height: 24),
         FilledButton(
           onPressed: submitting ? null : onSwitchToBusiness,
-          child: const Text('사업자 계정으로 전환'),
+          child: Text(AppLocalizations.of(context).businessSavedSwitch),
         ),
         const SizedBox(height: 12),
         OutlinedButton(
           onPressed: submitting ? null : onEdit,
-          child: const Text('사업자 정보 수정'),
+          child: Text(AppLocalizations.of(context).businessSavedEdit),
         ),
       ],
     );
@@ -347,12 +363,14 @@ class _BusinessInfoRows extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
     final entries = [
-      ('상호명', business.companyName),
-      ('사업자등록번호', business.businessNumber),
-      if (business.managerName.isNotEmpty) ('담당자명', business.managerName),
-      if (business.phone.isNotEmpty) ('연락처', business.phone),
+      (l10n.businessLabelCompany, business.companyName),
+      (l10n.businessLabelNumber, business.businessNumber),
+      if (business.managerName.isNotEmpty)
+        (l10n.businessLabelManager, business.managerName),
+      if (business.phone.isNotEmpty) (l10n.businessLabelPhone, business.phone),
     ];
 
     return Column(
@@ -408,7 +426,10 @@ class _RegisteredView extends StatelessWidget {
                     Icon(LucideIcons.badgeCheck,
                         color: context.palette.accent, size: 22),
                     const SizedBox(width: 10),
-                    Text('사업자 계정 사용 중', style: textTheme.titleMedium),
+                    Text(
+                      AppLocalizations.of(context).businessActiveTitle,
+                      style: textTheme.titleMedium,
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -419,13 +440,13 @@ class _RegisteredView extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          '홈 화면에서 도매 원두 시세를 확인하고 견적을 요청할 수 있어요.',
+          AppLocalizations.of(context).businessActiveDescription,
           style: textTheme.bodySmall,
         ),
         const SizedBox(height: 24),
         OutlinedButton(
           onPressed: submitting ? null : onSwitchToCustomer,
-          child: const Text('일반 고객 계정으로 전환'),
+          child: Text(AppLocalizations.of(context).businessSwitchBackAction),
         ),
       ],
     );

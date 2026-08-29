@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import 'auth_providers.dart';
 
 /// 비회원이 주문·구독 같은 거래 흐름을 시작하면 왜 막혔는지 알려주고 로그인으로 안내한다.
@@ -23,7 +24,7 @@ bool requireLogin(
       SnackBar(
         content: Text(message),
         action: SnackBarAction(
-          label: '로그인',
+          label: AppLocalizations.of(context).authSignIn,
           onPressed: () => context.push('/login'),
         ),
       ),
