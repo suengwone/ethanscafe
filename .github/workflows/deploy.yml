@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   verify:
-    name: Verify
+    name: Verify functions
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -35,9 +35,31 @@ jobs:
       # 화면이 깨진 것 때문에 보안 규칙 수정이 막히면 곤란하다.
       - run: npm test
 
+  rules:
+    name: Verify rules
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: firestore_tests
+    steps:
+      - uses: actions/checkout@v4
+      # Firestore 에뮬레이터는 JVM에서 돈다.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: firestore_tests/package-lock.json
+      - run: npm ci
+      # 규칙은 여기서 막지 않으면 그대로 운영에 올라간다. 배포 직전 마지막 관문이다.
+      - run: npm test
+
   deploy:
     name: Deploy rules and functions
-    needs: verify
+    needs: [verify, rules]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
