@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../../core/services/analytics_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../features/menu/presentation/menu_labels.dart';
@@ -80,10 +83,7 @@ class PickupCartButton extends ConsumerWidget {
               top: -4,
               right: -6,
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 5,
-                  vertical: 1,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                 decoration: BoxDecoration(
                   color: context.palette.accent,
                   borderRadius: BorderRadius.circular(9),
@@ -187,7 +187,9 @@ class _StoreCard extends ConsumerWidget {
                 children: [
                   Text(
                     store == null
-                        ? AppLocalizations.of(context).pickupCartChooseStorePrompt
+                        ? AppLocalizations.of(
+                            context,
+                          ).pickupCartChooseStorePrompt
                         : store.name.keepWord,
                     style: textTheme.labelLarge,
                   ),
@@ -206,7 +208,9 @@ class _StoreCard extends ConsumerWidget {
             TextButton(
               onPressed: () => _selectStore(context, ref),
               child: Text(
-                store == null ? AppLocalizations.of(context).beanCartChooseStore : AppLocalizations.of(context).beanCartChange,
+                store == null
+                    ? AppLocalizations.of(context).beanCartChooseStore
+                    : AppLocalizations.of(context).beanCartChange,
               ),
             ),
           ],
@@ -237,34 +241,40 @@ class _StoreSelectSheet extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(AppLocalizations.of(context).beanCartStoreSheetTitle, style: textTheme.titleMedium),
+            Text(
+              AppLocalizations.of(context).beanCartStoreSheetTitle,
+              style: textTheme.titleMedium,
+            ),
             const SizedBox(height: 4),
-            Text(AppLocalizations.of(context).pickupCartStoreSheetDetail, style: textTheme.bodySmall),
+            Text(
+              AppLocalizations.of(context).pickupCartStoreSheetDetail,
+              style: textTheme.bodySmall,
+            ),
             const SizedBox(height: 14),
             ...switch (storesState) {
               AsyncData(:final value) => value.map(
-                  (store) => _StoreOptionCard(
-                    store: store,
-                    highlighted: store.id == selected?.id,
-                    onTap: () => Navigator.pop(context, store),
+                (store) => _StoreOptionCard(
+                  store: store,
+                  highlighted: store.id == selected?.id,
+                  onTap: () => Navigator.pop(context, store),
+                ),
+              ),
+              AsyncError() => [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    AppLocalizations.of(context).beanCartStoreLoadFailed,
+                    textAlign: TextAlign.center,
+                    style: textTheme.bodySmall,
                   ),
                 ),
-              AsyncError() => [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Text(
-                      AppLocalizations.of(context).beanCartStoreLoadFailed,
-                      textAlign: TextAlign.center,
-                      style: textTheme.bodySmall,
-                    ),
-                  ),
-                ],
+              ],
               _ => const [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                ],
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+              ],
             },
             const SizedBox(height: 8),
             TextButton(
@@ -298,7 +308,9 @@ class _StoreOptionCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-        side: BorderSide(color: highlighted ? context.palette.accent : context.palette.border),
+        side: BorderSide(
+          color: highlighted ? context.palette.accent : context.palette.border,
+        ),
       ),
       child: InkWell(
         onTap: onTap,
@@ -309,7 +321,9 @@ class _StoreOptionCard extends StatelessWidget {
               Icon(
                 LucideIcons.store,
                 size: 20,
-                color: highlighted ? context.palette.accent : context.palette.muted,
+                color: highlighted
+                    ? context.palette.accent
+                    : context.palette.muted,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -345,7 +359,11 @@ class _CartItemCard extends ConsumerWidget {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context).pickupCartRemoved(removed.menuItem.name)),
+          content: Text(
+            AppLocalizations.of(
+              context,
+            ).pickupCartRemoved(removed.menuItem.name),
+          ),
           action: SnackBarAction(
             label: AppLocalizations.of(context).beanCartUndo,
             onPressed: () => notifier.insertAt(index, removed),
@@ -423,7 +441,9 @@ class _CartItemCard extends ConsumerWidget {
                 ),
                 const Spacer(),
                 Text(
-                  AppLocalizations.of(context).priceWon(_priceFormat.format(item.totalPrice)),
+                  AppLocalizations.of(
+                    context,
+                  ).priceWon(_priceFormat.format(item.totalPrice)),
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 16,
@@ -518,11 +538,18 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
     }
 
     final items = ref.read(pickupCartProvider);
+    final analytics = ref.read(analyticsServiceProvider);
     setState(() => _submitting = true);
+    // 관측은 사용자를 기다리게 하지 않는다.
+    unawaited(
+      analytics.beginCheckout(amount: payAmount, itemCount: items.length),
+    );
     try {
       PaymentApproval? payment;
       if (payAmount > 0) {
-        payment = await ref.read(paymentGatewayProvider).pay(
+        payment = await ref
+            .read(paymentGatewayProvider)
+            .pay(
               context,
               PaymentRequest(
                 orderId: generatePaymentOrderId(),
@@ -536,7 +563,11 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
           }
           setState(() => _submitting = false);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(AppLocalizations.of(context).beanCartPaymentIncomplete)),
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context).beanCartPaymentIncomplete,
+              ),
+            ),
           );
           return;
         }
@@ -551,6 +582,13 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
             coupons: coupons,
             payment: payment,
           );
+      unawaited(
+        analytics.purchase(
+          orderType: 'pickup',
+          amount: order.paidAmount,
+          itemCount: items.length,
+        ),
+      );
       if (!mounted) {
         return;
       }
@@ -563,7 +601,9 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                     order.pickupNumber,
                     _priceFormat.format(order.earnedPoints),
                   )
-                : AppLocalizations.of(context).pickupCartOrdered(order.pickupNumber),
+                : AppLocalizations.of(
+                    context,
+                  ).pickupCartOrdered(order.pickupNumber),
           ),
         ),
       );
@@ -573,6 +613,13 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
         context.go('/menu');
       }
     } catch (error) {
+      // 결제 승인 뒤 서버가 거절하는 일이 얼마나 잦은지는 이 기록으로만 보인다.
+      unawaited(
+        analytics.orderFailed(
+          orderType: 'pickup',
+          reason: analyticsReason(error),
+        ),
+      );
       if (!mounted) {
         return;
       }
@@ -580,7 +627,9 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
       // 낸 돈이 어떻게 됐는지까지 알려 준다. 예전에는 사유를 통째로 버렸다.
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(orderFailureMessage(AppLocalizations.of(context), error)),
+          content: Text(
+            orderFailureMessage(AppLocalizations.of(context), error),
+          ),
         ),
       );
     }
@@ -599,15 +648,13 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
         .toList();
     final coupons = _coupons
         .where(
-          (coupon) =>
-              applicable.any((candidate) => candidate.id == coupon.id),
+          (coupon) => applicable.any((candidate) => candidate.id == coupon.id),
         )
         .toList();
     final couponDiscount = totalCouponDiscount(coupons, total);
     final usablePoints = balance.clamp(0, total - couponDiscount);
     final usedPoints = _usePoints ? usablePoints : 0;
     final payAmount = total - couponDiscount - usedPoints;
-
 
     return Container(
       decoration: BoxDecoration(
@@ -622,28 +669,37 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
             children: [
               Row(
                 children: [
-                  Icon(LucideIcons.ticket, size: 16, color: context.palette.accent),
+                  Icon(
+                    LucideIcons.ticket,
+                    size: 16,
+                    color: context.palette.accent,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       coupons.length > 1
-                          ? AppLocalizations.of(context).beanCartCouponsApplied(coupons.length)
+                          ? AppLocalizations.of(
+                              context,
+                            ).beanCartCouponsApplied(coupons.length)
                           : coupons.isNotEmpty
-                              ? coupons.first.title
-                              : applicable.isEmpty
-                                ? AppLocalizations.of(context).beanCartNoUsableCoupons
-                                : AppLocalizations.of(context).beanCartUsableCoupons(applicable.length),
+                          ? coupons.first.title
+                          : applicable.isEmpty
+                          ? AppLocalizations.of(context).beanCartNoUsableCoupons
+                          : AppLocalizations.of(
+                              context,
+                            ).beanCartUsableCoupons(applicable.length),
                       style: Theme.of(context).textTheme.bodySmall,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   if (couponDiscount > 0)
                     Text(
-                      AppLocalizations.of(context).discountAmount(_priceFormat.format(couponDiscount)),
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: context.palette.accent),
+                      AppLocalizations.of(
+                        context,
+                      ).discountAmount(_priceFormat.format(couponDiscount)),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: context.palette.accent,
+                      ),
                     ),
                   TextButton(
                     onPressed: applicable.isEmpty || _submitting
@@ -659,23 +715,28 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
               ),
               Row(
                 children: [
-                  Icon(LucideIcons.coins, size: 16, color: context.palette.accent),
+                  Icon(
+                    LucideIcons.coins,
+                    size: 16,
+                    color: context.palette.accent,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       usablePoints > 0
-                        ? AppLocalizations.of(context).beanCartUsePoints(_priceFormat.format(balance))
-                        : AppLocalizations.of(context).beanCartNoPoints,
+                          ? AppLocalizations.of(
+                              context,
+                            ).beanCartUsePoints(_priceFormat.format(balance))
+                          : AppLocalizations.of(context).beanCartNoPoints,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
                   if (usedPoints > 0)
                     Text(
                       '-${_priceFormat.format(usedPoints)}P',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: context.palette.accent),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: context.palette.accent,
+                      ),
                     ),
                   Switch(
                     value: _usePoints,
@@ -698,7 +759,9 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         Text(
-                          AppLocalizations.of(context).priceWon(_priceFormat.format(payAmount)),
+                          AppLocalizations.of(
+                            context,
+                          ).priceWon(_priceFormat.format(payAmount)),
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -720,10 +783,10 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                     ),
                     label: Text(
                       _submitting
-                        ? AppLocalizations.of(context).beanCartOrdering
-                        : payAmount > 0
-                        ? AppLocalizations.of(context).beanCartPay
-                        : AppLocalizations.of(context).beanCartOrder,
+                          ? AppLocalizations.of(context).beanCartOrdering
+                          : payAmount > 0
+                          ? AppLocalizations.of(context).beanCartPay
+                          : AppLocalizations.of(context).beanCartOrder,
                     ),
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(

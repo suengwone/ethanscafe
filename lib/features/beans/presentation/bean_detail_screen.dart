@@ -1,9 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
-
+import '../../../core/services/analytics_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
@@ -15,6 +10,12 @@ import '../../subscription/presentation/bean_subscribe_sheet.dart';
 import '../domain/bean_models.dart';
 import 'bean_cart_providers.dart';
 import 'beans_providers.dart';
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 final _priceFormat = NumberFormat('#,###');
 
@@ -128,10 +129,7 @@ class _HeaderSection extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                if (bean.isNew) ...[
-                  const SizedBox(width: 8),
-                  const NewBadge(),
-                ],
+                if (bean.isNew) ...[const SizedBox(width: 8), const NewBadge()],
               ],
             ),
             const SizedBox(height: 6),
@@ -150,7 +148,9 @@ class _HeaderSection extends StatelessWidget {
                 _InfoChip(
                   icon: LucideIcons.flame,
                   label: AppLocalizations.of(context).beanRoastBadge(
-                    AppLocalizations.of(context).roastLevelLabel(bean.roastLevel),
+                    AppLocalizations.of(
+                      context,
+                    ).roastLevelLabel(bean.roastLevel),
                   ),
                 ),
                 _InfoChip(icon: LucideIcons.droplets, label: bean.process),
@@ -242,11 +242,20 @@ class _FlavorProfileSection extends StatelessWidget {
       title: AppLocalizations.of(context).beanSectionProfile,
       child: Column(
         children: [
-          _ProfileRow(label: AppLocalizations.of(context).beanProfileAcidity, level: bean.acidity),
+          _ProfileRow(
+            label: AppLocalizations.of(context).beanProfileAcidity,
+            level: bean.acidity,
+          ),
           const SizedBox(height: 12),
-          _ProfileRow(label: AppLocalizations.of(context).beanProfileBody, level: bean.body),
+          _ProfileRow(
+            label: AppLocalizations.of(context).beanProfileBody,
+            level: bean.body,
+          ),
           const SizedBox(height: 12),
-          _ProfileRow(label: AppLocalizations.of(context).beanProfileSweetness, level: bean.sweetness),
+          _ProfileRow(
+            label: AppLocalizations.of(context).beanProfileSweetness,
+            level: bean.sweetness,
+          ),
         ],
       ),
     );
@@ -277,9 +286,13 @@ class _ProfileRow extends StatelessWidget {
                   height: 6,
                   margin: EdgeInsets.only(right: index < 4 ? 6 : 0),
                   decoration: BoxDecoration(
-                    color: filled ? context.palette.accent : context.palette.surface,
+                    color: filled
+                        ? context.palette.accent
+                        : context.palette.surface,
                     borderRadius: BorderRadius.circular(3),
-                    border: filled ? null : Border.all(color: context.palette.border),
+                    border: filled
+                        ? null
+                        : Border.all(color: context.palette.border),
                   ),
                 ),
               );
@@ -321,11 +334,19 @@ class _InfoSection extends StatelessWidget {
       title: AppLocalizations.of(context).beanSectionDetails,
       child: Column(
         children: [
-          _InfoRow(label: AppLocalizations.of(context).beanFieldOrigin, value: bean.origin),
-          _InfoRow(label: AppLocalizations.of(context).beanFieldProcess, value: bean.process),
+          _InfoRow(
+            label: AppLocalizations.of(context).beanFieldOrigin,
+            value: bean.origin,
+          ),
+          _InfoRow(
+            label: AppLocalizations.of(context).beanFieldProcess,
+            value: bean.process,
+          ),
           _InfoRow(
             label: AppLocalizations.of(context).beanFieldRoast,
-            value: AppLocalizations.of(context).roastLevelLabel(bean.roastLevel),
+            value: AppLocalizations.of(
+              context,
+            ).roastLevelLabel(bean.roastLevel),
           ),
           _InfoRow(
             label: AppLocalizations.of(context).beanFieldBrews,
@@ -333,11 +354,10 @@ class _InfoSection extends StatelessWidget {
           ),
           _InfoRow(
             label: AppLocalizations.of(context).beanFieldPrice,
-            value:
-                AppLocalizations.of(context).beanPriceBoth(
-                  _priceFormat.format(bean.price200),
-                  _priceFormat.format(bean.price500),
-                ),
+            value: AppLocalizations.of(context).beanPriceBoth(
+              _priceFormat.format(bean.price200),
+              _priceFormat.format(bean.price500),
+            ),
           ),
         ],
       ),
@@ -359,10 +379,7 @@ class _InfoRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 72,
-            child: Text(label, style: textTheme.bodySmall),
-          ),
+          SizedBox(width: 72, child: Text(label, style: textTheme.bodySmall)),
           Expanded(child: Text(value.keepWord, style: textTheme.bodyMedium)),
         ],
       ),
@@ -413,10 +430,7 @@ class BeanCartButton extends ConsumerWidget {
               top: -4,
               right: -6,
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 5,
-                  vertical: 1,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                 decoration: BoxDecoration(
                   color: context.palette.accent,
                   borderRadius: BorderRadius.circular(9),
@@ -466,7 +480,9 @@ class _OrderBar extends ConsumerWidget {
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     Text(
-                      AppLocalizations.of(context).priceWon(_priceFormat.format(bean.price200)),
+                      AppLocalizations.of(
+                        context,
+                      ).priceWon(_priceFormat.format(bean.price200)),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -502,11 +518,14 @@ class _OrderBar extends ConsumerWidget {
               ),
               const SizedBox(width: 8),
               FilledButton.icon(
-                onPressed:
-                    bean.soldOut ? null : () => _showOrderSheet(context, ref),
+                onPressed: bean.soldOut
+                    ? null
+                    : () => _showOrderSheet(context, ref),
                 icon: const Icon(LucideIcons.shoppingBag, size: 18),
                 label: Text(
-                  bean.soldOut ? AppLocalizations.of(context).beanSoldOut : AppLocalizations.of(context).beanOrder,
+                  bean.soldOut
+                      ? AppLocalizations.of(context).beanSoldOut
+                      : AppLocalizations.of(context).beanOrder,
                 ),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
@@ -562,10 +581,21 @@ class _OrderBar extends ConsumerWidget {
           quantity: result.quantity,
         );
 
+    unawaited(
+      ref
+          .read(analyticsServiceProvider)
+          .addToCart(
+            itemId: bean.id,
+            amount: bean.priceOf(result.weight) * result.quantity,
+          ),
+    );
+
     if (result.action == BeanOrderAction.addToCart) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context).beanAddedToCart(bean.name)),
+          content: Text(
+            AppLocalizations.of(context).beanAddedToCart(bean.name),
+          ),
           action: SnackBarAction(
             label: AppLocalizations.of(context).beanViewCart,
             onPressed: () => context.push('/menu/beans-cart'),
@@ -641,15 +671,21 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
             Text(widget.bean.name.keepWord, style: textTheme.titleLarge),
             const SizedBox(height: 4),
             Text(
-              AppLocalizations.of(context).beansRoastOf(
+              AppLocalizations.of(context)
+                  .beansRoastOf(
                     widget.bean.origin,
-                    AppLocalizations.of(context).roastLevelLabel(widget.bean.roastLevel),
+                    AppLocalizations.of(
+                      context,
+                    ).roastLevelLabel(widget.bean.roastLevel),
                   )
                   .keepWord,
               style: textTheme.bodySmall,
             ),
             const SizedBox(height: 20),
-            Text(AppLocalizations.of(context).beanFieldWeight, style: textTheme.titleSmall),
+            Text(
+              AppLocalizations.of(context).beanFieldWeight,
+              style: textTheme.titleSmall,
+            ),
             const SizedBox(height: 8),
             Row(
               children: BeanWeight.values
@@ -671,7 +707,10 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
                   .toList(),
             ),
             const SizedBox(height: 20),
-            Text(AppLocalizations.of(context).beanFieldGrind, style: textTheme.titleSmall),
+            Text(
+              AppLocalizations.of(context).beanFieldGrind,
+              style: textTheme.titleSmall,
+            ),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -679,10 +718,14 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
               children: GrindOption.values
                   .map(
                     (grind) => ChoiceChip(
-                      label: Text(AppLocalizations.of(context).grindLabel(grind)),
+                      label: Text(
+                        AppLocalizations.of(context).grindLabel(grind),
+                      ),
                       selected: _grind == grind,
                       onSelected: (_) => setState(() => _grind = grind),
-                      selectedColor: context.palette.accent.withValues(alpha: 0.25),
+                      selectedColor: context.palette.accent.withValues(
+                        alpha: 0.25,
+                      ),
                       labelStyle: TextStyle(
                         fontSize: 13,
                         color: _grind == grind
@@ -690,7 +733,9 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
                             : context.palette.ink,
                       ),
                       side: BorderSide(
-                        color: _grind == grind ? context.palette.accent : context.palette.border,
+                        color: _grind == grind
+                            ? context.palette.accent
+                            : context.palette.border,
                       ),
                       backgroundColor: context.palette.surface,
                       showCheckmark: false,
@@ -706,7 +751,10 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
             const SizedBox(height: 20),
             Row(
               children: [
-                Text(AppLocalizations.of(context).beanFieldQuantity, style: textTheme.titleSmall),
+                Text(
+                  AppLocalizations.of(context).beanFieldQuantity,
+                  style: textTheme.titleSmall,
+                ),
                 const Spacer(),
                 _QuantityButton(
                   icon: LucideIcons.minus,
@@ -733,10 +781,15 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
             const SizedBox(height: 12),
             Row(
               children: [
-                Text(AppLocalizations.of(context).beanTotalPrice, style: textTheme.bodyMedium),
+                Text(
+                  AppLocalizations.of(context).beanTotalPrice,
+                  style: textTheme.bodyMedium,
+                ),
                 const Spacer(),
                 Text(
-                  AppLocalizations.of(context).priceWon(_priceFormat.format(_totalPrice)),
+                  AppLocalizations.of(
+                    context,
+                  ).priceWon(_priceFormat.format(_totalPrice)),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -768,7 +821,9 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     child: Text(
-                      AppLocalizations.of(context).beanOrderForAmount(_priceFormat.format(_totalPrice)),
+                      AppLocalizations.of(
+                        context,
+                      ).beanOrderForAmount(_priceFormat.format(_totalPrice)),
                     ),
                   ),
                 ),
@@ -817,7 +872,9 @@ class _WeightOption extends StatelessWidget {
               weight.label,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: selected ? context.palette.accentSoft : context.palette.ink,
+                color: selected
+                    ? context.palette.accentSoft
+                    : context.palette.ink,
               ),
             ),
             const SizedBox(height: 4),

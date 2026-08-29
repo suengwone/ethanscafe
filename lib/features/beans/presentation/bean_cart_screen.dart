@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../../core/services/analytics_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../features/beans/presentation/bean_labels.dart';
@@ -118,9 +121,8 @@ class _FulfillmentCard extends ConsumerWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => _AddressSelectSheet(
-        selected: _effectiveDeliveryAddress(ref),
-      ),
+      builder: (context) =>
+          _AddressSelectSheet(selected: _effectiveDeliveryAddress(ref)),
     );
     if (address == null) return;
     ref.read(beanDeliveryAddressProvider.notifier).select(address);
@@ -152,16 +154,19 @@ class _FulfillmentCard extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppLocalizations.of(context).beanCartFulfillment, style: textTheme.labelLarge),
+            Text(
+              AppLocalizations.of(context).beanCartFulfillment,
+              style: textTheme.labelLarge,
+            ),
             const SizedBox(height: 10),
             Row(
               children: [
                 Expanded(
                   child: _MethodChip(
                     icon: LucideIcons.truck,
-                    label: AppLocalizations.of(context).fulfillmentLabel(
-                      BeanFulfillmentMethod.delivery,
-                    ),
+                    label: AppLocalizations.of(
+                      context,
+                    ).fulfillmentLabel(BeanFulfillmentMethod.delivery),
                     selected: method == BeanFulfillmentMethod.delivery,
                     onTap: () => ref
                         .read(beanFulfillmentMethodProvider.notifier)
@@ -172,7 +177,9 @@ class _FulfillmentCard extends ConsumerWidget {
                 Expanded(
                   child: _MethodChip(
                     icon: LucideIcons.store,
-                    label: AppLocalizations.of(context).fulfillmentLabel(BeanFulfillmentMethod.pickup),
+                    label: AppLocalizations.of(
+                      context,
+                    ).fulfillmentLabel(BeanFulfillmentMethod.pickup),
                     selected: method == BeanFulfillmentMethod.pickup,
                     onTap: () => ref
                         .read(beanFulfillmentMethodProvider.notifier)
@@ -183,13 +190,9 @@ class _FulfillmentCard extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             if (method == BeanFulfillmentMethod.delivery)
-              _DeliverySummaryRow(
-                onChange: () => _selectAddress(context, ref),
-              )
+              _DeliverySummaryRow(onChange: () => _selectAddress(context, ref))
             else
-              _PickupSummaryRow(
-                onChange: () => _selectStore(context, ref),
-              ),
+              _PickupSummaryRow(onChange: () => _selectStore(context, ref)),
           ],
         ),
       ),
@@ -220,7 +223,9 @@ class _MethodChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: context.palette.surface,
           borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-          border: Border.all(color: selected ? context.palette.accent : context.palette.border),
+          border: Border.all(
+            color: selected ? context.palette.accent : context.palette.border,
+          ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -234,8 +239,10 @@ class _MethodChip extends StatelessWidget {
             Text(
               label,
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: selected ? context.palette.accentSoft : context.palette.muted,
-                  ),
+                color: selected
+                    ? context.palette.accentSoft
+                    : context.palette.muted,
+              ),
             ),
           ],
         ),
@@ -259,7 +266,11 @@ class _DeliverySummaryRow extends ConsumerWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(top: 2),
-          child: Icon(LucideIcons.mapPin, size: 16, color: context.palette.accent),
+          child: Icon(
+            LucideIcons.mapPin,
+            size: 16,
+            color: context.palette.accent,
+          ),
         ),
         const SizedBox(width: 8),
         Expanded(
@@ -278,8 +289,9 @@ class _DeliverySummaryRow extends ConsumerWidget {
                     const SizedBox(height: 2),
                     Text(
                       _fullAddress(address).keepWord,
-                      style: textTheme.bodySmall
-                          ?.copyWith(color: context.palette.ink),
+                      style: textTheme.bodySmall?.copyWith(
+                        color: context.palette.ink,
+                      ),
                     ),
                   ],
                 ),
@@ -293,7 +305,9 @@ class _DeliverySummaryRow extends ConsumerWidget {
             minimumSize: const Size(0, 32),
           ),
           child: Text(
-            address == null ? AppLocalizations.of(context).beanCartAddAddress : AppLocalizations.of(context).beanCartChange,
+            address == null
+                ? AppLocalizations.of(context).beanCartAddAddress
+                : AppLocalizations.of(context).beanCartChange,
           ),
         ),
       ],
@@ -316,7 +330,11 @@ class _PickupSummaryRow extends ConsumerWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(top: 2),
-          child: Icon(LucideIcons.store, size: 16, color: context.palette.accent),
+          child: Icon(
+            LucideIcons.store,
+            size: 16,
+            color: context.palette.accent,
+          ),
         ),
         const SizedBox(width: 8),
         Expanded(
@@ -330,14 +348,12 @@ class _PickupSummaryRow extends ConsumerWidget {
                   children: [
                     Text(
                       store.name.keepWord,
-                      style: textTheme.bodySmall
-                          ?.copyWith(color: context.palette.ink),
+                      style: textTheme.bodySmall?.copyWith(
+                        color: context.palette.ink,
+                      ),
                     ),
                     const SizedBox(height: 2),
-                    Text(
-                      store.address.keepWord,
-                      style: textTheme.bodySmall,
-                    ),
+                    Text(store.address.keepWord, style: textTheme.bodySmall),
                   ],
                 ),
         ),
@@ -348,7 +364,9 @@ class _PickupSummaryRow extends ConsumerWidget {
             minimumSize: const Size(0, 32),
           ),
           child: Text(
-            store == null ? AppLocalizations.of(context).beanCartChooseStore : AppLocalizations.of(context).beanCartChange,
+            store == null
+                ? AppLocalizations.of(context).beanCartChooseStore
+                : AppLocalizations.of(context).beanCartChange,
           ),
         ),
       ],
@@ -378,34 +396,40 @@ class _AddressSelectSheet extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(AppLocalizations.of(context).beanCartAddressSheetTitle, style: textTheme.titleMedium),
+            Text(
+              AppLocalizations.of(context).beanCartAddressSheetTitle,
+              style: textTheme.titleMedium,
+            ),
             const SizedBox(height: 4),
-            Text(AppLocalizations.of(context).beanCartAddressSheetDetail, style: textTheme.bodySmall),
+            Text(
+              AppLocalizations.of(context).beanCartAddressSheetDetail,
+              style: textTheme.bodySmall,
+            ),
             const SizedBox(height: 14),
             ...switch (addressesState) {
               AsyncData(:final value) => value.map(
-                  (address) => _AddressOptionCard(
-                    address: address,
-                    highlighted: address.id == selected?.id,
-                    onTap: () => Navigator.pop(context, address),
+                (address) => _AddressOptionCard(
+                  address: address,
+                  highlighted: address.id == selected?.id,
+                  onTap: () => Navigator.pop(context, address),
+                ),
+              ),
+              AsyncError() => [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    AppLocalizations.of(context).beanCartAddressLoadFailed,
+                    textAlign: TextAlign.center,
+                    style: textTheme.bodySmall,
                   ),
                 ),
-              AsyncError() => [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Text(
-                      AppLocalizations.of(context).beanCartAddressLoadFailed,
-                      textAlign: TextAlign.center,
-                      style: textTheme.bodySmall,
-                    ),
-                  ),
-                ],
+              ],
               _ => const [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                ],
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+              ],
             },
             const SizedBox(height: 8),
             TextButton(
@@ -446,7 +470,9 @@ class _AddressOptionCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-        side: BorderSide(color: highlighted ? context.palette.accent : context.palette.border),
+        side: BorderSide(
+          color: highlighted ? context.palette.accent : context.palette.border,
+        ),
       ),
       child: InkWell(
         onTap: onTap,
@@ -459,7 +485,9 @@ class _AddressOptionCard extends StatelessWidget {
                     ? LucideIcons.building2
                     : LucideIcons.house,
                 size: 20,
-                color: highlighted ? context.palette.accent : context.palette.muted,
+                color: highlighted
+                    ? context.palette.accent
+                    : context.palette.muted,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -473,8 +501,9 @@ class _AddressOptionCard extends StatelessWidget {
                           const SizedBox(width: 8),
                           Text(
                             AppLocalizations.of(context).beanCartDefaultAddress,
-                            style: textTheme.bodySmall
-                                ?.copyWith(color: context.palette.accentSoft),
+                            style: textTheme.bodySmall?.copyWith(
+                              color: context.palette.accentSoft,
+                            ),
                           ),
                         ],
                       ],
@@ -521,34 +550,40 @@ class _BeanStoreSelectSheet extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(AppLocalizations.of(context).beanCartStoreSheetTitle, style: textTheme.titleMedium),
+            Text(
+              AppLocalizations.of(context).beanCartStoreSheetTitle,
+              style: textTheme.titleMedium,
+            ),
             const SizedBox(height: 4),
-            Text(AppLocalizations.of(context).beanCartStoreSheetDetail, style: textTheme.bodySmall),
+            Text(
+              AppLocalizations.of(context).beanCartStoreSheetDetail,
+              style: textTheme.bodySmall,
+            ),
             const SizedBox(height: 14),
             ...switch (storesState) {
               AsyncData(:final value) => value.map(
-                  (store) => _StoreOptionCard(
-                    store: store,
-                    highlighted: store.id == selected?.id,
-                    onTap: () => Navigator.pop(context, store),
+                (store) => _StoreOptionCard(
+                  store: store,
+                  highlighted: store.id == selected?.id,
+                  onTap: () => Navigator.pop(context, store),
+                ),
+              ),
+              AsyncError() => [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    AppLocalizations.of(context).beanCartStoreLoadFailed,
+                    textAlign: TextAlign.center,
+                    style: textTheme.bodySmall,
                   ),
                 ),
-              AsyncError() => [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Text(
-                      AppLocalizations.of(context).beanCartStoreLoadFailed,
-                      textAlign: TextAlign.center,
-                      style: textTheme.bodySmall,
-                    ),
-                  ),
-                ],
+              ],
               _ => const [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                ],
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+              ],
             },
             const SizedBox(height: 8),
             TextButton(
@@ -582,7 +617,9 @@ class _StoreOptionCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-        side: BorderSide(color: highlighted ? context.palette.accent : context.palette.border),
+        side: BorderSide(
+          color: highlighted ? context.palette.accent : context.palette.border,
+        ),
       ),
       child: InkWell(
         onTap: onTap,
@@ -593,7 +630,9 @@ class _StoreOptionCard extends StatelessWidget {
               Icon(
                 LucideIcons.store,
                 size: 20,
-                color: highlighted ? context.palette.accent : context.palette.muted,
+                color: highlighted
+                    ? context.palette.accent
+                    : context.palette.muted,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -629,7 +668,9 @@ class _CartItemCard extends ConsumerWidget {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context).beanCartRemoved(removed.bean.name)),
+          content: Text(
+            AppLocalizations.of(context).beanCartRemoved(removed.bean.name),
+          ),
           action: SnackBarAction(
             label: AppLocalizations.of(context).beanCartUndo,
             onPressed: () => notifier.insertAt(index, removed),
@@ -672,10 +713,15 @@ class _CartItemCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(item.bean.name.keepWord, style: textTheme.labelLarge),
+                      Text(
+                        item.bean.name.keepWord,
+                        style: textTheme.labelLarge,
+                      ),
                       const SizedBox(height: 3),
                       Text(
-                        AppLocalizations.of(context).beanOption(item.weight, item.grind),
+                        AppLocalizations.of(
+                          context,
+                        ).beanOption(item.weight, item.grind),
                         style: textTheme.bodySmall,
                       ),
                     ],
@@ -695,7 +741,8 @@ class _CartItemCard extends ConsumerWidget {
                 _QuantityButton(
                   icon: LucideIcons.minus,
                   enabled: item.quantity > 1,
-                  onTap: () => notifier.changeQuantity(index, item.quantity - 1),
+                  onTap: () =>
+                      notifier.changeQuantity(index, item.quantity - 1),
                 ),
                 SizedBox(
                   width: 40,
@@ -708,11 +755,14 @@ class _CartItemCard extends ConsumerWidget {
                 _QuantityButton(
                   icon: LucideIcons.plus,
                   enabled: item.quantity < beanCartMaxQuantity,
-                  onTap: () => notifier.changeQuantity(index, item.quantity + 1),
+                  onTap: () =>
+                      notifier.changeQuantity(index, item.quantity + 1),
                 ),
                 const Spacer(),
                 Text(
-                  AppLocalizations.of(context).priceWon(_priceFormat.format(item.totalPrice)),
+                  AppLocalizations.of(
+                    context,
+                  ).priceWon(_priceFormat.format(item.totalPrice)),
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 16,
@@ -803,7 +853,9 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
   ) async {
     if (method == BeanFulfillmentMethod.delivery && address == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).beanCartNeedAddress)),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).beanCartNeedAddress),
+        ),
       );
       return;
     }
@@ -815,11 +867,18 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
     }
 
     final items = ref.read(beanCartProvider);
+    final analytics = ref.read(analyticsServiceProvider);
     setState(() => _submitting = true);
+    // 관측은 사용자를 기다리게 하지 않는다.
+    unawaited(
+      analytics.beginCheckout(amount: payAmount, itemCount: items.length),
+    );
     try {
       PaymentApproval? payment;
       if (payAmount > 0) {
-        payment = await ref.read(paymentGatewayProvider).pay(
+        payment = await ref
+            .read(paymentGatewayProvider)
+            .pay(
               context,
               PaymentRequest(
                 orderId: generatePaymentOrderId(),
@@ -833,7 +892,11 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
           }
           setState(() => _submitting = false);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(AppLocalizations.of(context).beanCartPaymentIncomplete)),
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context).beanCartPaymentIncomplete,
+              ),
+            ),
           );
           return;
         }
@@ -850,6 +913,13 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
             deliveryAddress: address,
             pickupStore: store,
           );
+      unawaited(
+        analytics.purchase(
+          orderType: 'bean',
+          amount: order.paidAmount,
+          itemCount: items.length,
+        ),
+      );
       if (!mounted) {
         return;
       }
@@ -873,6 +943,13 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
         context.go('/menu');
       }
     } catch (error) {
+      // 결제 승인 뒤 서버가 거절하는 일이 얼마나 잦은지는 이 기록으로만 보인다.
+      unawaited(
+        analytics.orderFailed(
+          orderType: 'bean',
+          reason: analyticsReason(error),
+        ),
+      );
       if (!mounted) {
         return;
       }
@@ -880,7 +957,9 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
       // 낸 돈이 어떻게 됐는지까지 알려 준다. 예전에는 사유를 통째로 버렸다.
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(orderFailureMessage(AppLocalizations.of(context), error)),
+          content: Text(
+            orderFailureMessage(AppLocalizations.of(context), error),
+          ),
         ),
       );
     }
@@ -893,8 +972,7 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
     final method = ref.watch(beanFulfillmentMethodProvider);
     final address = _effectiveDeliveryAddress(ref);
     final store = ref.watch(beanPickupStoreProvider);
-    final balance =
-        ref.watch(pointsControllerProvider).value?.balance ?? 0;
+    final balance = ref.watch(pointsControllerProvider).value?.balance ?? 0;
     final allCoupons =
         ref.watch(couponsControllerProvider).value ?? const <Coupon>[];
     final now = ref.watch(couponNowProvider);
@@ -903,8 +981,7 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
         .toList();
     final coupons = _coupons
         .where(
-          (coupon) =>
-              applicable.any((candidate) => candidate.id == coupon.id),
+          (coupon) => applicable.any((candidate) => candidate.id == coupon.id),
         )
         .toList();
     final couponDiscount = totalCouponDiscount(coupons, total);
@@ -925,28 +1002,37 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
             children: [
               Row(
                 children: [
-                  Icon(LucideIcons.ticket, size: 16, color: context.palette.accent),
+                  Icon(
+                    LucideIcons.ticket,
+                    size: 16,
+                    color: context.palette.accent,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       coupons.length > 1
-                          ? AppLocalizations.of(context).beanCartCouponsApplied(coupons.length)
+                          ? AppLocalizations.of(
+                              context,
+                            ).beanCartCouponsApplied(coupons.length)
                           : coupons.isNotEmpty
-                              ? coupons.first.title
-                              : applicable.isEmpty
-                                ? AppLocalizations.of(context).beanCartNoUsableCoupons
-                                : AppLocalizations.of(context).beanCartUsableCoupons(applicable.length),
+                          ? coupons.first.title
+                          : applicable.isEmpty
+                          ? AppLocalizations.of(context).beanCartNoUsableCoupons
+                          : AppLocalizations.of(
+                              context,
+                            ).beanCartUsableCoupons(applicable.length),
                       style: Theme.of(context).textTheme.bodySmall,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   if (couponDiscount > 0)
                     Text(
-                      AppLocalizations.of(context).discountAmount(_priceFormat.format(couponDiscount)),
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: context.palette.accent),
+                      AppLocalizations.of(
+                        context,
+                      ).discountAmount(_priceFormat.format(couponDiscount)),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: context.palette.accent,
+                      ),
                     ),
                   TextButton(
                     onPressed: applicable.isEmpty || _submitting
@@ -962,23 +1048,28 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
               ),
               Row(
                 children: [
-                  Icon(LucideIcons.coins, size: 16, color: context.palette.accent),
+                  Icon(
+                    LucideIcons.coins,
+                    size: 16,
+                    color: context.palette.accent,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       usablePoints > 0
-                        ? AppLocalizations.of(context).beanCartUsePoints(_priceFormat.format(balance))
-                        : AppLocalizations.of(context).beanCartNoPoints,
+                          ? AppLocalizations.of(
+                              context,
+                            ).beanCartUsePoints(_priceFormat.format(balance))
+                          : AppLocalizations.of(context).beanCartNoPoints,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
                   if (usedPoints > 0)
                     Text(
                       '-${_priceFormat.format(usedPoints)}P',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: context.palette.accent),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: context.palette.accent,
+                      ),
                     ),
                   Switch(
                     value: _usePoints,
@@ -1001,7 +1092,9 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         Text(
-                          AppLocalizations.of(context).priceWon(_priceFormat.format(payAmount)),
+                          AppLocalizations.of(
+                            context,
+                          ).priceWon(_priceFormat.format(payAmount)),
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -1015,13 +1108,13 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                     onPressed: _submitting
                         ? null
                         : () => _placeOrder(
-                              usedPoints,
-                              coupons,
-                              payAmount,
-                              method,
-                              address,
-                              store,
-                            ),
+                            usedPoints,
+                            coupons,
+                            payAmount,
+                            method,
+                            address,
+                            store,
+                          ),
                     icon: Icon(
                       payAmount > 0
                           ? LucideIcons.creditCard
@@ -1030,10 +1123,10 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                     ),
                     label: Text(
                       _submitting
-                        ? AppLocalizations.of(context).beanCartOrdering
-                        : payAmount > 0
-                        ? AppLocalizations.of(context).beanCartPay
-                        : AppLocalizations.of(context).beanCartOrder,
+                          ? AppLocalizations.of(context).beanCartOrdering
+                          : payAmount > 0
+                          ? AppLocalizations.of(context).beanCartPay
+                          : AppLocalizations.of(context).beanCartOrder,
                     ),
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(

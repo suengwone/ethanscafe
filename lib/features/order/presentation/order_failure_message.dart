@@ -25,3 +25,27 @@ String orderFailureMessage(AppLocalizations l10n, Object error) {
     _ => reason,
   };
 }
+
+/// 이벤트에 남길 실패 사유. 사람이 읽을 문장 대신 묶어서 셀 수 있는 값으로 줄인다.
+///
+/// 사유 문장을 그대로 남기면 문구를 고칠 때마다 다른 지표가 되고, 개인정보가
+/// 섞여 들어갈 여지도 생긴다.
+String analyticsReason(Object error) {
+  if (error is! FirebaseFunctionsException) {
+    return 'unknown';
+  }
+  final message = error.message ?? '';
+  if (message.contains('품절')) {
+    return 'sold_out';
+  }
+  if (message.contains('가격이 변경')) {
+    return 'price_changed';
+  }
+  if (message.contains('쿠폰')) {
+    return 'coupon';
+  }
+  if (message.contains('포인트')) {
+    return 'points';
+  }
+  return error.code;
+}
