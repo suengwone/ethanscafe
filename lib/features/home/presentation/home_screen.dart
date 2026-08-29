@@ -109,7 +109,6 @@ class _GreetingHeader extends StatelessWidget {
   }
 }
 
-
 class _QuickActions extends StatelessWidget {
   const _QuickActions();
 

@@ -57,9 +57,8 @@ class NotificationCenterScreen extends ConsumerWidget {
       ),
       body: feedState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => _FeedError(
-          onRetry: () => ref.invalidate(notificationFeedProvider),
-        ),
+        error: (error, _) =>
+            _FeedError(onRetry: () => ref.invalidate(notificationFeedProvider)),
         data: (notifications) {
           if (notifications.isEmpty) {
             return const _EmptyFeed();
@@ -191,10 +190,7 @@ class _NotificationCard extends ConsumerWidget {
                             color: context.palette.accentSoft,
                           ),
                         ),
-                        Text(
-                          ' · ',
-                          style: textTheme.bodySmall,
-                        ),
+                        Text(' · ', style: textTheme.bodySmall),
                         Text(
                           l10n.notificationTimeLabel(
                             notification.createdAt,
@@ -288,10 +284,7 @@ class _DismissBackground extends StatelessWidget {
         color: context.palette.danger,
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
       ),
-      child: Text(
-        label,
-        style: TextStyle(color: context.palette.onAccent),
-      ),
+      child: Text(label, style: TextStyle(color: context.palette.onAccent)),
     );
   }
 }

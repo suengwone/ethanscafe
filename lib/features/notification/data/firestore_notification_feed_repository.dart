@@ -9,7 +9,8 @@ import '../domain/notification_models.dart';
 /// 배열이라 서버가 새 알림을 붙이는 쓰기와 사용자가 읽음 표시를 하는 쓰기가
 /// 같은 문서를 다투므로, 클라이언트 쪽 수정은 전부 트랜잭션으로 감싼다.
 /// 그래야 방금 도착한 알림을 읽음 처리가 덮어쓰지 않는다.
-class FirestoreNotificationFeedRepository implements NotificationFeedRepository {
+class FirestoreNotificationFeedRepository
+    implements NotificationFeedRepository {
   FirestoreNotificationFeedRepository({
     required this.uid,
     FirebaseFirestore? firestore,
@@ -52,9 +53,7 @@ class FirestoreNotificationFeedRepository implements NotificationFeedRepository 
 
   @override
   Future<void> remove(String id) {
-    return _update(
-      (items) => items.where((item) => item.id != id).toList(),
-    );
+    return _update((items) => items.where((item) => item.id != id).toList());
   }
 
   @override
@@ -79,9 +78,7 @@ class FirestoreNotificationFeedRepository implements NotificationFeedRepository 
 
 List<AppNotification> appNotificationsFromFirestore(Map<String, dynamic> data) {
   final items = ((data['items'] as List<dynamic>?) ?? const [])
-      .map(
-        (item) => appNotificationFromFirestore(item as Map<String, dynamic>),
-      )
+      .map((item) => appNotificationFromFirestore(item as Map<String, dynamic>))
       .toList();
   items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
   return items;

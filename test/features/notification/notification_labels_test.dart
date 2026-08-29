@@ -14,7 +14,10 @@ void main() {
 
   test('막 도착한 알림은 방금 전으로 적는다', () {
     expect(
-      l10n.notificationTimeLabel(now.subtract(const Duration(seconds: 20)), now),
+      l10n.notificationTimeLabel(
+        now.subtract(const Duration(seconds: 20)),
+        now,
+      ),
       '방금 전',
     );
   });

@@ -161,7 +161,6 @@ class _BusinessHeader extends StatelessWidget {
   }
 }
 
-
 class _WholesaleInfoCard extends StatelessWidget {
   const _WholesaleInfoCard();
 
