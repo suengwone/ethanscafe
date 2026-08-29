@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/store_models.dart';
 import 'store_widgets.dart';
 import 'stores_providers.dart';
@@ -19,18 +20,18 @@ class StoreDetailScreen extends ConsumerWidget {
     final storesState = ref.watch(storesProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('매장 정보')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).storeDetailTitle)),
       body: storesState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('매장 정보를 불러오지 못했습니다.'),
+              Text(AppLocalizations.of(context).storeLoadFailed),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.invalidate(storesProvider),
-                child: const Text('다시 시도'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -38,7 +39,9 @@ class StoreDetailScreen extends ConsumerWidget {
         data: (stores) {
           final store = stores.where((s) => s.id == storeId).firstOrNull;
           if (store == null) {
-            return const Center(child: Text('문 닫은 매장이거나 없는 매장입니다.'));
+            return Center(
+              child: Text(AppLocalizations.of(context).storeNotFound),
+            );
           }
           final now = ref.watch(storeClockProvider)();
           final distance = ref.watch(storeDistancesProvider).asData?.value;
@@ -88,7 +91,9 @@ class _StoreDetail extends StatelessWidget {
             StoreCongestionBadge(store: store, now: now, activity: activity),
             if (distanceMeters != null)
               StoreBadge(
-                label: '내 위치에서 ${storeDistanceLabel(distanceMeters!)}',
+                label: AppLocalizations.of(
+                  context,
+                ).storeDistanceFromYou(storeDistanceLabel(distanceMeters!)),
                 color: context.palette.accentSoft,
               ),
           ],
@@ -97,7 +102,9 @@ class _StoreDetail extends StatelessWidget {
         if (congestion.isLive) ...[
           const SizedBox(height: 8),
           Text(
-            '진행 중인 주문 ${congestion.liveOrders}건으로 자동 집계했어요.'.keepWord,
+            AppLocalizations.of(
+              context,
+            ).storeCongestionMeasured(congestion.liveOrders ?? 0).keepWord,
             style: textTheme.bodySmall,
           ),
         ],
@@ -119,8 +126,8 @@ class _StoreDetail extends StatelessWidget {
                 StoreInfoRow(
                   icon: LucideIcons.clock,
                   text: todayHours.isEmpty
-                      ? '영업시간 정보가 없습니다.'
-                      : '오늘 $todayHours',
+                      ? AppLocalizations.of(context).storeHoursUnknown
+                      : AppLocalizations.of(context).storeHoursToday(todayHours),
                 ),
                 const SizedBox(height: 12),
                 StoreActionRow(store: store),
@@ -129,14 +136,26 @@ class _StoreDetail extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        Text('영업시간', style: textTheme.titleMedium),
+        Text(
+          AppLocalizations.of(context).storeSectionHours,
+          style: textTheme.titleMedium,
+        ),
         const SizedBox(height: 8),
-        _HoursRow(label: '평일', hours: store.weekdayHours),
+        _HoursRow(
+          label: AppLocalizations.of(context).storeHoursWeekday,
+          hours: store.weekdayHours,
+        ),
         const SizedBox(height: 4),
-        _HoursRow(label: '주말', hours: store.weekendHours),
+        _HoursRow(
+          label: AppLocalizations.of(context).storeHoursWeekend,
+          hours: store.weekendHours,
+        ),
         if (store.services.isNotEmpty) ...[
           const SizedBox(height: 20),
-          Text('편의시설', style: textTheme.titleMedium),
+          Text(
+            AppLocalizations.of(context).storeSectionFacilities,
+            style: textTheme.titleMedium,
+          ),
           const SizedBox(height: 8),
           Wrap(
             spacing: 6,
@@ -175,7 +194,7 @@ class _NoticeCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '매장 공지',
+                  AppLocalizations.of(context).storeNoticeTitle,
                   style: TextStyle(fontSize: 12, color: context.palette.accentSoft),
                 ),
                 const SizedBox(height: 4),
@@ -209,7 +228,7 @@ class _HoursRow extends StatelessWidget {
         ),
         Expanded(
           child: Text(
-            hours.isEmpty ? '정보 없음' : hours,
+            hours.isEmpty ? AppLocalizations.of(context).storeNoInfo : hours,
             style: textTheme.bodySmall?.copyWith(color: context.palette.ink),
           ),
         ),

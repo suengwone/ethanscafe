@@ -5,6 +5,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../l10n/app_localizations.dart';
+import '../domain/location_failure.dart';
 import '../domain/store_models.dart';
 import 'store_widgets.dart';
 import 'stores_providers.dart';
@@ -23,7 +25,7 @@ class StoreListScreen extends ConsumerWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            error is StateError ? error.message : '현재 위치를 확인할 수 없습니다.',
+            _locationErrorMessage(AppLocalizations.of(context), error),
           ),
         ),
       );
@@ -34,13 +36,14 @@ class StoreListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final storesState = ref.watch(storesProvider);
     final distancesState = ref.watch(storeDistancesProvider);
+    final l10n = AppLocalizations.of(context);
     final distances = distancesState.asData?.value;
     final activity = ref.watch(storeActivityProvider).asData?.value;
     final now = ref.watch(storeClockProvider)();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('매장 찾기'),
+        title: Text(l10n.storeListTitle),
         actions: [
           IconButton(
             icon: distancesState.isLoading
@@ -50,7 +53,7 @@ class StoreListScreen extends ConsumerWidget {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : const Icon(LucideIcons.locateFixed),
-            tooltip: '내 주변 거리 보기',
+            tooltip: l10n.storeSortByDistance,
             onPressed: distancesState.isLoading
                 ? null
                 : () => _locate(context, ref),
@@ -63,11 +66,11 @@ class StoreListScreen extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('매장 정보를 불러오지 못했습니다.'),
+              Text(l10n.storeLoadFailed),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.invalidate(storesProvider),
-                child: const Text('다시 시도'),
+                child: Text(l10n.retry),
               ),
             ],
           ),
@@ -89,8 +92,8 @@ class StoreListScreen extends ConsumerWidget {
                   padding: const EdgeInsets.only(top: 8, bottom: 12),
                   child: Text(
                     (distances == null
-                            ? '우측 상단 버튼을 누르면 내 위치에서 가까운 순으로 정렬됩니다.'
-                            : '내 위치에서 가까운 순으로 정렬되었습니다.')
+                            ? l10n.storeSortHint
+                            : l10n.storeSortedByDistance)
                         .keepWord,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
@@ -171,7 +174,10 @@ class _StoreCard extends StatelessWidget {
               const SizedBox(height: 4),
               StoreInfoRow(
                 icon: LucideIcons.clock,
-                text: '평일 ${store.weekdayHours} · 주말 ${store.weekendHours}',
+                text: AppLocalizations.of(context).storeHoursSummary(
+                  store.weekdayHours,
+                  store.weekendHours,
+                ),
               ),
               const SizedBox(height: 4),
               StoreInfoRow(icon: LucideIcons.phone, text: store.phone),
@@ -200,4 +206,14 @@ class _StoreCard extends StatelessWidget {
       ),
     );
   }
+}
+
+String _locationErrorMessage(AppLocalizations l10n, Object error) {
+  if (error is! LocationUnavailable) {
+    return l10n.storeLocationUnavailable;
+  }
+  return switch (error.reason) {
+    LocationFailure.serviceOff => l10n.storeLocationServiceOff,
+    LocationFailure.permissionDenied => l10n.storeLocationPermissionDenied,
+  };
 }

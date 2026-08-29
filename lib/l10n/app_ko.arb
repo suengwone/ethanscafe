@@ -244,5 +244,70 @@
         "type": "String"
       }
     }
-  }
+  },
+  "storeCallFailed": "전화 연결에 실패했습니다: {phone}",
+  "@storeCallFailed": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "storeMapFailed": "지도를 열 수 없습니다.",
+  "storeOpenNow": "영업 중",
+  "storeClosedNow": "영업 종료",
+  "storeCall": "전화",
+  "storeOpenMap": "지도 보기",
+  "storeListTitle": "매장 찾기",
+  "storeLocationUnavailable": "현재 위치를 확인할 수 없습니다.",
+  "storeSortByDistance": "내 주변 거리 보기",
+  "storeLoadFailed": "매장 정보를 불러오지 못했습니다.",
+  "storeSortHint": "우측 상단 버튼을 누르면 내 위치에서 가까운 순으로 정렬됩니다.",
+  "storeSortedByDistance": "내 위치에서 가까운 순으로 정렬되었습니다.",
+  "storeHoursSummary": "평일 {weekday} · 주말 {weekend}",
+  "@storeHoursSummary": {
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      },
+      "weekend": {
+        "type": "String"
+      }
+    }
+  },
+  "storeDetailTitle": "매장 정보",
+  "storeNotFound": "문 닫은 매장이거나 없는 매장입니다.",
+  "storeDistanceFromYou": "내 위치에서 {distance}",
+  "@storeDistanceFromYou": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "storeCongestionMeasured": "진행 중인 주문 {count}건으로 자동 집계했어요.",
+  "@storeCongestionMeasured": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "storeHoursUnknown": "영업시간 정보가 없습니다.",
+  "storeHoursToday": "오늘 {hours}",
+  "@storeHoursToday": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "storeSectionHours": "영업시간",
+  "storeHoursWeekday": "평일",
+  "storeHoursWeekend": "주말",
+  "storeSectionFacilities": "편의시설",
+  "storeNoticeTitle": "매장 공지",
+  "storeNoInfo": "정보 없음",
+  "storeLocationServiceOff": "위치 서비스가 꺼져 있습니다. 설정에서 위치 서비스를 켜주세요.",
+  "storeLocationPermissionDenied": "위치 권한이 없어 거리를 계산할 수 없습니다."
 }

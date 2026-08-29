@@ -985,6 +985,168 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'현재 {congestion}'**
   String storeCongestionNow(String congestion);
+
+  /// No description provided for @storeCallFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'전화 연결에 실패했습니다: {phone}'**
+  String storeCallFailed(String phone);
+
+  /// No description provided for @storeMapFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'지도를 열 수 없습니다.'**
+  String get storeMapFailed;
+
+  /// No description provided for @storeOpenNow.
+  ///
+  /// In ko, this message translates to:
+  /// **'영업 중'**
+  String get storeOpenNow;
+
+  /// No description provided for @storeClosedNow.
+  ///
+  /// In ko, this message translates to:
+  /// **'영업 종료'**
+  String get storeClosedNow;
+
+  /// No description provided for @storeCall.
+  ///
+  /// In ko, this message translates to:
+  /// **'전화'**
+  String get storeCall;
+
+  /// No description provided for @storeOpenMap.
+  ///
+  /// In ko, this message translates to:
+  /// **'지도 보기'**
+  String get storeOpenMap;
+
+  /// No description provided for @storeListTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 찾기'**
+  String get storeListTitle;
+
+  /// No description provided for @storeLocationUnavailable.
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 위치를 확인할 수 없습니다.'**
+  String get storeLocationUnavailable;
+
+  /// No description provided for @storeSortByDistance.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 주변 거리 보기'**
+  String get storeSortByDistance;
+
+  /// No description provided for @storeLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 정보를 불러오지 못했습니다.'**
+  String get storeLoadFailed;
+
+  /// No description provided for @storeSortHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'우측 상단 버튼을 누르면 내 위치에서 가까운 순으로 정렬됩니다.'**
+  String get storeSortHint;
+
+  /// No description provided for @storeSortedByDistance.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 위치에서 가까운 순으로 정렬되었습니다.'**
+  String get storeSortedByDistance;
+
+  /// No description provided for @storeHoursSummary.
+  ///
+  /// In ko, this message translates to:
+  /// **'평일 {weekday} · 주말 {weekend}'**
+  String storeHoursSummary(String weekday, String weekend);
+
+  /// No description provided for @storeDetailTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 정보'**
+  String get storeDetailTitle;
+
+  /// No description provided for @storeNotFound.
+  ///
+  /// In ko, this message translates to:
+  /// **'문 닫은 매장이거나 없는 매장입니다.'**
+  String get storeNotFound;
+
+  /// No description provided for @storeDistanceFromYou.
+  ///
+  /// In ko, this message translates to:
+  /// **'내 위치에서 {distance}'**
+  String storeDistanceFromYou(String distance);
+
+  /// No description provided for @storeCongestionMeasured.
+  ///
+  /// In ko, this message translates to:
+  /// **'진행 중인 주문 {count}건으로 자동 집계했어요.'**
+  String storeCongestionMeasured(int count);
+
+  /// No description provided for @storeHoursUnknown.
+  ///
+  /// In ko, this message translates to:
+  /// **'영업시간 정보가 없습니다.'**
+  String get storeHoursUnknown;
+
+  /// No description provided for @storeHoursToday.
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘 {hours}'**
+  String storeHoursToday(String hours);
+
+  /// No description provided for @storeSectionHours.
+  ///
+  /// In ko, this message translates to:
+  /// **'영업시간'**
+  String get storeSectionHours;
+
+  /// No description provided for @storeHoursWeekday.
+  ///
+  /// In ko, this message translates to:
+  /// **'평일'**
+  String get storeHoursWeekday;
+
+  /// No description provided for @storeHoursWeekend.
+  ///
+  /// In ko, this message translates to:
+  /// **'주말'**
+  String get storeHoursWeekend;
+
+  /// No description provided for @storeSectionFacilities.
+  ///
+  /// In ko, this message translates to:
+  /// **'편의시설'**
+  String get storeSectionFacilities;
+
+  /// No description provided for @storeNoticeTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 공지'**
+  String get storeNoticeTitle;
+
+  /// No description provided for @storeNoInfo.
+  ///
+  /// In ko, this message translates to:
+  /// **'정보 없음'**
+  String get storeNoInfo;
+
+  /// No description provided for @storeLocationServiceOff.
+  ///
+  /// In ko, this message translates to:
+  /// **'위치 서비스가 꺼져 있습니다. 설정에서 위치 서비스를 켜주세요.'**
+  String get storeLocationServiceOff;
+
+  /// No description provided for @storeLocationPermissionDenied.
+  ///
+  /// In ko, this message translates to:
+  /// **'위치 권한이 없어 거리를 계산할 수 없습니다.'**
+  String get storeLocationPermissionDenied;
 }
 
 class _AppLocalizationsDelegate

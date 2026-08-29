@@ -22,7 +22,9 @@ Future<void> callStore(BuildContext context, CafeStore store) async {
   final launched = await canLaunchUrl(uri) && await launchUrl(uri);
   if (!launched && context.mounted) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('전화 연결에 실패했습니다: ${store.phone}')),
+      SnackBar(
+        content: Text(AppLocalizations.of(context).storeCallFailed(store.phone)),
+      ),
     );
   }
 }
@@ -34,7 +36,7 @@ Future<void> openStoreMap(BuildContext context, CafeStore store) async {
   final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
   if (!launched && context.mounted) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('지도를 열 수 없습니다.')),
+      SnackBar(content: Text(AppLocalizations.of(context).storeMapFailed)),
     );
   }
 }
@@ -75,7 +77,9 @@ class StoreOpenBadge extends StatelessWidget {
       return const SizedBox.shrink();
     }
     return StoreBadge(
-      label: isOpen ? '영업 중' : '영업 종료',
+      label: isOpen
+          ? AppLocalizations.of(context).storeOpenNow
+          : AppLocalizations.of(context).storeClosedNow,
       color: isOpen ? context.palette.accentSoft : context.palette.muted,
     );
   }
@@ -178,7 +182,7 @@ class StoreActionRow extends StatelessWidget {
           child: OutlinedButton.icon(
             onPressed: () => callStore(context, store),
             icon: const Icon(LucideIcons.phone, size: 16),
-            label: const Text('전화'),
+            label: Text(AppLocalizations.of(context).storeCall),
           ),
         ),
         const SizedBox(width: 8),
@@ -186,7 +190,7 @@ class StoreActionRow extends StatelessWidget {
           child: OutlinedButton.icon(
             onPressed: () => openStoreMap(context, store),
             icon: const Icon(LucideIcons.map, size: 16),
-            label: const Text('지도 보기'),
+            label: Text(AppLocalizations.of(context).storeOpenMap),
           ),
         ),
       ],

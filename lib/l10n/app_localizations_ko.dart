@@ -484,4 +484,95 @@ class AppLocalizationsKo extends AppLocalizations {
   String storeCongestionNow(String congestion) {
     return '현재 $congestion';
   }
+
+  @override
+  String storeCallFailed(String phone) {
+    return '전화 연결에 실패했습니다: $phone';
+  }
+
+  @override
+  String get storeMapFailed => '지도를 열 수 없습니다.';
+
+  @override
+  String get storeOpenNow => '영업 중';
+
+  @override
+  String get storeClosedNow => '영업 종료';
+
+  @override
+  String get storeCall => '전화';
+
+  @override
+  String get storeOpenMap => '지도 보기';
+
+  @override
+  String get storeListTitle => '매장 찾기';
+
+  @override
+  String get storeLocationUnavailable => '현재 위치를 확인할 수 없습니다.';
+
+  @override
+  String get storeSortByDistance => '내 주변 거리 보기';
+
+  @override
+  String get storeLoadFailed => '매장 정보를 불러오지 못했습니다.';
+
+  @override
+  String get storeSortHint => '우측 상단 버튼을 누르면 내 위치에서 가까운 순으로 정렬됩니다.';
+
+  @override
+  String get storeSortedByDistance => '내 위치에서 가까운 순으로 정렬되었습니다.';
+
+  @override
+  String storeHoursSummary(String weekday, String weekend) {
+    return '평일 $weekday · 주말 $weekend';
+  }
+
+  @override
+  String get storeDetailTitle => '매장 정보';
+
+  @override
+  String get storeNotFound => '문 닫은 매장이거나 없는 매장입니다.';
+
+  @override
+  String storeDistanceFromYou(String distance) {
+    return '내 위치에서 $distance';
+  }
+
+  @override
+  String storeCongestionMeasured(int count) {
+    return '진행 중인 주문 $count건으로 자동 집계했어요.';
+  }
+
+  @override
+  String get storeHoursUnknown => '영업시간 정보가 없습니다.';
+
+  @override
+  String storeHoursToday(String hours) {
+    return '오늘 $hours';
+  }
+
+  @override
+  String get storeSectionHours => '영업시간';
+
+  @override
+  String get storeHoursWeekday => '평일';
+
+  @override
+  String get storeHoursWeekend => '주말';
+
+  @override
+  String get storeSectionFacilities => '편의시설';
+
+  @override
+  String get storeNoticeTitle => '매장 공지';
+
+  @override
+  String get storeNoInfo => '정보 없음';
+
+  @override
+  String get storeLocationServiceOff => '위치 서비스가 꺼져 있습니다. 설정에서 위치 서비스를 켜주세요.';
+
+  @override
+  String get storeLocationPermissionDenied => '위치 권한이 없어 거리를 계산할 수 없습니다.';
 }

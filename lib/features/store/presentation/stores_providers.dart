@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 
 import '../data/firestore_stores_repository.dart';
 import '../data/local_stores_repository.dart';
+import '../domain/location_failure.dart';
 import '../domain/store_models.dart';
 import '../domain/stores_repository.dart';
 
@@ -45,7 +46,7 @@ class StoreDistancesController extends AsyncNotifier<Map<String, double>?> {
     state = await AsyncValue.guard(() async {
       final serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        throw StateError('위치 서비스가 꺼져 있습니다. 설정에서 위치 서비스를 켜주세요.');
+        throw const LocationUnavailable(LocationFailure.serviceOff);
       }
 
       var permission = await Geolocator.checkPermission();
@@ -54,7 +55,7 @@ class StoreDistancesController extends AsyncNotifier<Map<String, double>?> {
       }
       if (permission == LocationPermission.denied ||
           permission == LocationPermission.deniedForever) {
-        throw StateError('위치 권한이 없어 거리를 계산할 수 없습니다.');
+        throw const LocationUnavailable(LocationFailure.permissionDenied);
       }
 
       final position = await Geolocator.getCurrentPosition();

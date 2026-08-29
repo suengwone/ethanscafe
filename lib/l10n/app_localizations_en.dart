@@ -496,4 +496,98 @@ class AppLocalizationsEn extends AppLocalizations {
   String storeCongestionNow(String congestion) {
     return '$congestion right now';
   }
+
+  @override
+  String storeCallFailed(String phone) {
+    return 'Could not place the call: $phone';
+  }
+
+  @override
+  String get storeMapFailed => 'Could not open the map.';
+
+  @override
+  String get storeOpenNow => 'Open';
+
+  @override
+  String get storeClosedNow => 'Closed';
+
+  @override
+  String get storeCall => 'Call';
+
+  @override
+  String get storeOpenMap => 'Open map';
+
+  @override
+  String get storeListTitle => 'Find a store';
+
+  @override
+  String get storeLocationUnavailable => 'Could not find your location.';
+
+  @override
+  String get storeSortByDistance => 'Sort by distance';
+
+  @override
+  String get storeLoadFailed => 'Could not load the stores.';
+
+  @override
+  String get storeSortHint =>
+      'Tap the button at the top right to sort by how close each store is.';
+
+  @override
+  String get storeSortedByDistance => 'Sorted by distance from you.';
+
+  @override
+  String storeHoursSummary(String weekday, String weekend) {
+    return 'Weekdays $weekday · Weekends $weekend';
+  }
+
+  @override
+  String get storeDetailTitle => 'Store';
+
+  @override
+  String get storeNotFound => 'This store is closed or does not exist.';
+
+  @override
+  String storeDistanceFromYou(String distance) {
+    return '$distance from you';
+  }
+
+  @override
+  String storeCongestionMeasured(int count) {
+    return 'Measured from $count orders in progress.';
+  }
+
+  @override
+  String get storeHoursUnknown => 'No opening hours listed.';
+
+  @override
+  String storeHoursToday(String hours) {
+    return 'Today $hours';
+  }
+
+  @override
+  String get storeSectionHours => 'Opening hours';
+
+  @override
+  String get storeHoursWeekday => 'Weekdays';
+
+  @override
+  String get storeHoursWeekend => 'Weekends';
+
+  @override
+  String get storeSectionFacilities => 'Facilities';
+
+  @override
+  String get storeNoticeTitle => 'Store notice';
+
+  @override
+  String get storeNoInfo => 'Not listed';
+
+  @override
+  String get storeLocationServiceOff =>
+      'Location services are off. Turn them on in Settings.';
+
+  @override
+  String get storeLocationPermissionDenied =>
+      'Without location access we cannot work out the distance.';
 }
