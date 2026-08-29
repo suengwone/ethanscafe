@@ -111,7 +111,7 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
           left: 20,
           right: 20,
           top: 20,
-          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+          bottom: MediaQuery.viewInsetsOf(context).bottom + 20,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

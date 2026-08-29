@@ -362,7 +362,7 @@ class _AddAddressSheetState extends ConsumerState<_AddAddressSheet> {
           20,
           20,
           20,
-          20 + MediaQuery.of(context).viewInsets.bottom,
+          20 + MediaQuery.viewInsetsOf(context).bottom,
         ),
         child: Form(
           key: _formKey,
