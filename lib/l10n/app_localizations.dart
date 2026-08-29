@@ -2809,6 +2809,486 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'선물 보내기'**
   String get giftSend;
+
+  /// No description provided for @navHome.
+  ///
+  /// In ko, this message translates to:
+  /// **'홈'**
+  String get navHome;
+
+  /// No description provided for @navOrder.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문'**
+  String get navOrder;
+
+  /// No description provided for @navPay.
+  ///
+  /// In ko, this message translates to:
+  /// **'페이'**
+  String get navPay;
+
+  /// No description provided for @navProfile.
+  ///
+  /// In ko, this message translates to:
+  /// **'마이'**
+  String get navProfile;
+
+  /// No description provided for @badgeSoldOut.
+  ///
+  /// In ko, this message translates to:
+  /// **'품절'**
+  String get badgeSoldOut;
+
+  /// No description provided for @updateRequiredTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'업데이트가 필요합니다'**
+  String get updateRequiredTitle;
+
+  /// No description provided for @updateRequiredDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'더 안전하고 편리한 이용을 위해\n최신 버전으로 업데이트해 주세요.'**
+  String get updateRequiredDetail;
+
+  /// No description provided for @updateGo.
+  ///
+  /// In ko, this message translates to:
+  /// **'업데이트하러 가기'**
+  String get updateGo;
+
+  /// No description provided for @offlineBanner.
+  ///
+  /// In ko, this message translates to:
+  /// **'인터넷에 연결되어 있지 않습니다'**
+  String get offlineBanner;
+
+  /// No description provided for @commonDelete.
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제'**
+  String get commonDelete;
+
+  /// No description provided for @orderCancelRestoreCoupon.
+  ///
+  /// In ko, this message translates to:
+  /// **'쿠폰({title}) 복구'**
+  String orderCancelRestoreCoupon(String title);
+
+  /// No description provided for @orderCancelRefundPoints.
+  ///
+  /// In ko, this message translates to:
+  /// **'사용 포인트 {amount}P 환급'**
+  String orderCancelRefundPoints(String amount);
+
+  /// No description provided for @orderCancelTakeBackPoints.
+  ///
+  /// In ko, this message translates to:
+  /// **'적립 포인트 {amount}P 회수'**
+  String orderCancelTakeBackPoints(String amount);
+
+  /// No description provided for @orderCancelIrreversible.
+  ///
+  /// In ko, this message translates to:
+  /// **'취소 후에는 되돌릴 수 없어요.'**
+  String get orderCancelIrreversible;
+
+  /// No description provided for @orderCancelWithSummary.
+  ///
+  /// In ko, this message translates to:
+  /// **'취소 후에는 되돌릴 수 없어요.\n{summary} 처리가 함께 진행돼요.'**
+  String orderCancelWithSummary(String summary);
+
+  /// No description provided for @orderCancelGoBack.
+  ///
+  /// In ko, this message translates to:
+  /// **'돌아가기'**
+  String get orderCancelGoBack;
+
+  /// No description provided for @notificationChannelName.
+  ///
+  /// In ko, this message translates to:
+  /// **'중요 알림'**
+  String get notificationChannelName;
+
+  /// No description provided for @notificationChannelDescription.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 상태, 이벤트 등 앱 푸시 알림'**
+  String get notificationChannelDescription;
+
+  /// No description provided for @referralInvitation.
+  ///
+  /// In ko, this message translates to:
+  /// **'폭스트롯에서 커피 한 잔 어때요? 가입하고 초대 코드 {code}를 입력하면 {reward}P를 드려요.'**
+  String referralInvitation(String code, String reward);
+
+  /// No description provided for @referralCodeInvalid.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드 6자리를 다시 확인해주세요.'**
+  String get referralCodeInvalid;
+
+  /// No description provided for @referralRedeemed.
+  ///
+  /// In ko, this message translates to:
+  /// **'{reward}P가 적립됐어요. 친구도 같은 포인트를 받았습니다.'**
+  String referralRedeemed(String reward);
+
+  /// No description provided for @referralRedeemFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드를 확인하지 못했습니다. 잠시 후 다시 시도해주세요.'**
+  String get referralRedeemFailed;
+
+  /// No description provided for @referralTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'친구 초대'**
+  String get referralTitle;
+
+  /// No description provided for @referralLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드를 불러오지 못했습니다.'**
+  String get referralLoadFailed;
+
+  /// No description provided for @referralCodeCopied.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드를 복사했어요.'**
+  String get referralCodeCopied;
+
+  /// No description provided for @referralMessageCopied.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 문구를 복사했어요.'**
+  String get referralMessageCopied;
+
+  /// No description provided for @referralRewardTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 리워드'**
+  String get referralRewardTitle;
+
+  /// No description provided for @referralRewardBoth.
+  ///
+  /// In ko, this message translates to:
+  /// **'친구도 나도 {reward}P'**
+  String referralRewardBoth(String reward);
+
+  /// No description provided for @referralRewardHow.
+  ///
+  /// In ko, this message translates to:
+  /// **'친구가 가입 후 내 초대 코드를 입력하면 두 사람 모두 포인트를 받습니다.'**
+  String get referralRewardHow;
+
+  /// No description provided for @referralMyCode.
+  ///
+  /// In ko, this message translates to:
+  /// **'나의 초대 코드'**
+  String get referralMyCode;
+
+  /// No description provided for @referralCopyCode.
+  ///
+  /// In ko, this message translates to:
+  /// **'코드 복사'**
+  String get referralCopyCode;
+
+  /// No description provided for @referralCopyMessage.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 문구 복사'**
+  String get referralCopyMessage;
+
+  /// No description provided for @referralInvitedCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대한 친구'**
+  String get referralInvitedCount;
+
+  /// No description provided for @referralPeopleCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}명'**
+  String referralPeopleCount(int count);
+
+  /// No description provided for @referralRewardEarned.
+  ///
+  /// In ko, this message translates to:
+  /// **'받은 보상'**
+  String get referralRewardEarned;
+
+  /// No description provided for @referralRemaining.
+  ///
+  /// In ko, this message translates to:
+  /// **'남은 초대'**
+  String get referralRemaining;
+
+  /// No description provided for @referralEnterCode.
+  ///
+  /// In ko, this message translates to:
+  /// **'받은 초대 코드 입력'**
+  String get referralEnterCode;
+
+  /// No description provided for @referralCodeHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'예: A2K9PX'**
+  String get referralCodeHint;
+
+  /// No description provided for @referralChecking.
+  ///
+  /// In ko, this message translates to:
+  /// **'확인 중...'**
+  String get referralChecking;
+
+  /// No description provided for @referralClaim.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 받기'**
+  String get referralClaim;
+
+  /// No description provided for @referralAlreadyRedeemed.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드 입력 완료'**
+  String get referralAlreadyRedeemed;
+
+  /// No description provided for @referralRedeemedDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'{code} 코드로 {reward}P를 받았습니다.'**
+  String referralRedeemedDetail(String code, String reward);
+
+  /// No description provided for @referralRuleOnce.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 코드는 계정당 한 번만 입력할 수 있습니다.'**
+  String get referralRuleOnce;
+
+  /// No description provided for @referralRuleNotSelf.
+  ///
+  /// In ko, this message translates to:
+  /// **'본인의 초대 코드는 사용할 수 없습니다.'**
+  String get referralRuleNotSelf;
+
+  /// No description provided for @referralRuleLimit.
+  ///
+  /// In ko, this message translates to:
+  /// **'초대 보상은 최대 {limit}명까지 받을 수 있습니다.'**
+  String referralRuleLimit(int limit);
+
+  /// No description provided for @referralRuleImmediate.
+  ///
+  /// In ko, this message translates to:
+  /// **'보상 포인트는 입력 즉시 적립되며 포인트 화면에서 확인할 수 있습니다.'**
+  String get referralRuleImmediate;
+
+  /// No description provided for @referralNoticeTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'안내'**
+  String get referralNoticeTitle;
+
+  /// No description provided for @wholesaleMemberFallback.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자 회원'**
+  String get wholesaleMemberFallback;
+
+  /// No description provided for @wholesaleQuoteSubmitted.
+  ///
+  /// In ko, this message translates to:
+  /// **'견적 요청이 접수되었습니다. 담당자가 곧 연락드릴게요.'**
+  String get wholesaleQuoteSubmitted;
+
+  /// No description provided for @wholesaleQuoteFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'견적 요청에 실패했습니다: {error}'**
+  String wholesaleQuoteFailed(String error);
+
+  /// No description provided for @wholesaleQuoteTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'도매 견적 요청'**
+  String get wholesaleQuoteTitle;
+
+  /// No description provided for @wholesaleBeansLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'도매 원두를 불러오지 못했습니다.'**
+  String get wholesaleBeansLoadFailed;
+
+  /// No description provided for @wholesaleSectionBeans.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 선택'**
+  String get wholesaleSectionBeans;
+
+  /// No description provided for @wholesaleSectionNotes.
+  ///
+  /// In ko, this message translates to:
+  /// **'요청 사항'**
+  String get wholesaleSectionNotes;
+
+  /// No description provided for @wholesaleNotesHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'납품 주기, 희망 일정, 분쇄도 등 요청 사항을 적어주세요'**
+  String get wholesaleNotesHint;
+
+  /// No description provided for @wholesaleBusinessNumber.
+  ///
+  /// In ko, this message translates to:
+  /// **'사업자등록번호 {number}'**
+  String wholesaleBusinessNumber(String number);
+
+  /// No description provided for @wholesalePricePerKg.
+  ///
+  /// In ko, this message translates to:
+  /// **'kg당 {price}원~ · 최소 {minKg}kg'**
+  String wholesalePricePerKg(String price, int minKg);
+
+  /// No description provided for @wholesaleAppliedPrice.
+  ///
+  /// In ko, this message translates to:
+  /// **'적용 단가 kg당 {price}원 · 합계 {total}원'**
+  String wholesaleAppliedPrice(String price, String total);
+
+  /// No description provided for @wholesaleTotalKg.
+  ///
+  /// In ko, this message translates to:
+  /// **'총 {kg}kg'**
+  String wholesaleTotalKg(int kg);
+
+  /// No description provided for @wholesaleEstimate.
+  ///
+  /// In ko, this message translates to:
+  /// **'예상 {amount}원'**
+  String wholesaleEstimate(String amount);
+
+  /// No description provided for @wholesaleSubmit.
+  ///
+  /// In ko, this message translates to:
+  /// **'견적 요청하기'**
+  String get wholesaleSubmit;
+
+  /// No description provided for @wholesaleHistoryTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'견적 요청 내역'**
+  String get wholesaleHistoryTitle;
+
+  /// No description provided for @wholesaleHistoryLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'견적 내역을 불러오지 못했습니다.'**
+  String get wholesaleHistoryLoadFailed;
+
+  /// No description provided for @wholesaleHistoryEmptyTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 견적 요청이 없어요'**
+  String get wholesaleHistoryEmptyTitle;
+
+  /// No description provided for @wholesaleHistoryEmptyDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'도매 원두 리스트에서 원하는 원두로 견적을 요청해 보세요.'**
+  String get wholesaleHistoryEmptyDetail;
+
+  /// No description provided for @wholesaleCompanyAndKg.
+  ///
+  /// In ko, this message translates to:
+  /// **'{company} · 총 {kg}kg'**
+  String wholesaleCompanyAndKg(String company, int kg);
+
+  /// No description provided for @wholesaleBeanList.
+  ///
+  /// In ko, this message translates to:
+  /// **'도매 원두 리스트'**
+  String get wholesaleBeanList;
+
+  /// No description provided for @wholesaleRequestQuote.
+  ///
+  /// In ko, this message translates to:
+  /// **'견적 요청'**
+  String get wholesaleRequestQuote;
+
+  /// No description provided for @wholesaleGreeting.
+  ///
+  /// In ko, this message translates to:
+  /// **'{company}님,\n좋은 거래 되세요!'**
+  String wholesaleGreeting(String company);
+
+  /// No description provided for @wholesaleGreetingSubtitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 후 로스팅한 신선한 원두를 도매가로 공급해 드려요'**
+  String get wholesaleGreetingSubtitle;
+
+  /// No description provided for @wholesalePerkMinimum.
+  ///
+  /// In ko, this message translates to:
+  /// **'최소 주문 5kg부터, 구간별 도매 단가 적용'**
+  String get wholesalePerkMinimum;
+
+  /// No description provided for @wholesalePerkRoast.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 확인 후 당일 로스팅 · 전국 2~3일 배송'**
+  String get wholesalePerkRoast;
+
+  /// No description provided for @wholesalePerkInvoice.
+  ///
+  /// In ko, this message translates to:
+  /// **'세금계산서 발행 · 정기 납품 계약 지원'**
+  String get wholesalePerkInvoice;
+
+  /// No description provided for @wholesaleGuideTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 도매 공급 안내'**
+  String get wholesaleGuideTitle;
+
+  /// No description provided for @wholesaleQuoteHistory.
+  ///
+  /// In ko, this message translates to:
+  /// **'견적 내역'**
+  String get wholesaleQuoteHistory;
+
+  /// No description provided for @wholesaleSupport.
+  ///
+  /// In ko, this message translates to:
+  /// **'고객센터'**
+  String get wholesaleSupport;
+
+  /// No description provided for @wholesaleTierPrice.
+  ///
+  /// In ko, this message translates to:
+  /// **'{minKg}kg~ {price}원'**
+  String wholesaleTierPrice(int minKg, String price);
+
+  /// No description provided for @wholesaleFromPricePerKg.
+  ///
+  /// In ko, this message translates to:
+  /// **'kg당 {price}원~'**
+  String wholesaleFromPricePerKg(String price);
+
+  /// No description provided for @wholesaleMinOrder.
+  ///
+  /// In ko, this message translates to:
+  /// **'최소 주문 {minKg}kg'**
+  String wholesaleMinOrder(int minKg);
+
+  /// No description provided for @wholesaleAddToQuote.
+  ///
+  /// In ko, this message translates to:
+  /// **'견적 담기'**
+  String get wholesaleAddToQuote;
 }
 
 class _AppLocalizationsDelegate

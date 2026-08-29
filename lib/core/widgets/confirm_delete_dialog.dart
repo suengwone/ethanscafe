@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../theme/app_theme.dart';
 import '../utils/text_utils.dart';
 
@@ -9,7 +10,7 @@ Future<bool> confirmDelete(
   BuildContext context, {
   required String title,
   required String message,
-  String confirmLabel = '삭제',
+  String? confirmLabel,
 }) async {
   final confirmed = await showDialog<bool>(
     context: context,
@@ -19,7 +20,7 @@ Future<bool> confirmDelete(
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: const Text('취소'),
+          child: Text(AppLocalizations.of(context).commonCancel),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(true),
@@ -27,7 +28,7 @@ Future<bool> confirmDelete(
             backgroundColor: context.palette.danger,
             foregroundColor: context.palette.onAccent,
           ),
-          child: Text(confirmLabel),
+          child: Text(confirmLabel ?? AppLocalizations.of(context).commonDelete),
         ),
       ],
     ),

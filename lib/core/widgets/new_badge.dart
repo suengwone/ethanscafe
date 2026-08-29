@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../theme/app_theme.dart';
 
 class NewBadge extends StatelessWidget {
@@ -84,7 +85,7 @@ class SoldOutBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
       ),
       child: Text(
-        '품절',
+        AppLocalizations.of(context).badgeSoldOut,
         style: TextStyle(
           color: context.palette.onAccent,
           fontSize: 10,

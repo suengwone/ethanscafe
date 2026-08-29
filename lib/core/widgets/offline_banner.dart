@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../services/connectivity_providers.dart';
 import '../theme/app_theme.dart';
 
@@ -45,7 +46,7 @@ class _OfflineBar extends StatelessWidget {
             Icon(LucideIcons.wifiOff, size: 16, color: context.palette.onAccent),
             const SizedBox(width: 8),
             Text(
-              '인터넷에 연결되어 있지 않습니다',
+              AppLocalizations.of(context).offlineBanner,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: context.palette.onAccent,
                 fontWeight: FontWeight.w600,

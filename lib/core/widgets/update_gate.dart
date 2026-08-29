@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../services/remote_config_providers.dart';
 import '../theme/app_theme.dart';
 import 'foxtrot_logo.dart';
@@ -52,7 +53,7 @@ class UpdateRequiredView extends StatelessWidget {
                 const FoxtrotLogo(size: 96),
                 const SizedBox(height: 32),
                 Text(
-                  '업데이트가 필요합니다',
+                  AppLocalizations.of(context).updateRequiredTitle,
                   style: theme.textTheme.headlineSmall?.copyWith(
                     color: context.palette.ink,
                     fontWeight: FontWeight.w700,
@@ -61,7 +62,7 @@ class UpdateRequiredView extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  '더 안전하고 편리한 이용을 위해\n최신 버전으로 업데이트해 주세요.',
+                  AppLocalizations.of(context).updateRequiredDetail,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: context.palette.muted,
                     height: 1.5,
@@ -74,7 +75,7 @@ class UpdateRequiredView extends StatelessWidget {
                     width: double.infinity,
                     child: FilledButton(
                       onPressed: _openStore,
-                      child: const Text('업데이트하러 가기'),
+                      child: Text(AppLocalizations.of(context).updateGo),
                     ),
                   ),
                 ],

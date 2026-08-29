@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../l10n/app_localizations.dart';
+
 class AppShell extends StatelessWidget {
   const AppShell({super.key, required this.navigationShell});
 
@@ -17,26 +19,26 @@ class AppShell extends StatelessWidget {
           index,
           initialLocation: index == navigationShell.currentIndex,
         ),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(LucideIcons.house),
-            selectedIcon: Icon(LucideIcons.house600),
-            label: '홈',
+            icon: const Icon(LucideIcons.house),
+            selectedIcon: const Icon(LucideIcons.house600),
+            label: AppLocalizations.of(context).navHome,
           ),
           NavigationDestination(
-            icon: Icon(LucideIcons.coffee),
-            selectedIcon: Icon(LucideIcons.coffee600),
-            label: '주문',
+            icon: const Icon(LucideIcons.coffee),
+            selectedIcon: const Icon(LucideIcons.coffee600),
+            label: AppLocalizations.of(context).navOrder,
           ),
           NavigationDestination(
-            icon: Icon(LucideIcons.qrCode),
-            selectedIcon: Icon(LucideIcons.qrCode600),
-            label: '페이',
+            icon: const Icon(LucideIcons.qrCode),
+            selectedIcon: const Icon(LucideIcons.qrCode600),
+            label: AppLocalizations.of(context).navPay,
           ),
           NavigationDestination(
-            icon: Icon(LucideIcons.user),
-            selectedIcon: Icon(LucideIcons.user600),
-            label: '마이',
+            icon: const Icon(LucideIcons.user),
+            selectedIcon: const Icon(LucideIcons.user600),
+            label: AppLocalizations.of(context).navProfile,
           ),
         ],
       ),

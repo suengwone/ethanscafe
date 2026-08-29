@@ -5,11 +5,7 @@ import '../../beans/domain/bean_models.dart';
 part 'wholesale_models.freezed.dart';
 part 'wholesale_models.g.dart';
 
-enum WholesaleQuoteStatus {
-  requested,
-  quoted,
-  confirmed;
-}
+enum WholesaleQuoteStatus { requested, quoted, confirmed }
 
 @freezed
 abstract class WholesalePriceTier with _$WholesalePriceTier {
@@ -88,6 +84,5 @@ abstract class WholesaleQuote with _$WholesaleQuote {
   int get totalAmount => items.fold(0, (sum, item) => sum + item.totalPrice);
 
   /// 목록에 보이는 대표 상품. 나머지 개수는 화면이 언어에 맞게 붙인다.
-  String get firstItemName =>
-      items.isEmpty ? '' : items.first.beanName;
+  String get firstItemName => items.isEmpty ? '' : items.first.beanName;
 }

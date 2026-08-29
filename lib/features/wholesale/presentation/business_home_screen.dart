@@ -21,8 +21,10 @@ class BusinessHomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authStateProvider).value;
-    final business =
-        ref.watch(accountProfileControllerProvider).value?.business;
+    final business = ref
+        .watch(accountProfileControllerProvider)
+        .value
+        ?.business;
     final beansState = ref.watch(wholesaleBeansProvider);
 
     return Scaffold(
@@ -32,7 +34,9 @@ class BusinessHomeScreen extends ConsumerWidget {
           children: [
             _BusinessHeader(
               companyName:
-                  business?.companyName ?? user?.displayLabel ?? '사업자 회원',
+                  business?.companyName ??
+                  user?.displayLabel ??
+                  AppLocalizations.of(context).wholesaleMemberFallback,
             ),
             const SizedBox(height: 20),
             const _WholesaleInfoCard(),
@@ -45,13 +49,15 @@ class BusinessHomeScreen extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      '도매 원두 리스트',
+                      AppLocalizations.of(context).wholesaleBeanList,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
                   TextButton(
                     onPressed: () => context.push('/wholesale/quote'),
-                    child: const Text('견적 요청'),
+                    child: Text(
+                      AppLocalizations.of(context).wholesaleRequestQuote,
+                    ),
                   ),
                 ],
               ),
@@ -62,9 +68,13 @@ class BusinessHomeScreen extends ConsumerWidget {
                 padding: EdgeInsets.symmetric(vertical: 40),
                 child: Center(child: CircularProgressIndicator()),
               ),
-              error: (error, _) => const Padding(
-                padding: EdgeInsets.symmetric(vertical: 40),
-                child: Center(child: Text('도매 원두를 불러오지 못했습니다.')),
+              error: (error, _) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 40),
+                child: Center(
+                  child: Text(
+                    AppLocalizations.of(context).wholesaleBeansLoadFailed,
+                  ),
+                ),
               ),
               data: (beans) => Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -100,8 +110,10 @@ class _BusinessHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: context.palette.accent.withValues(alpha: 0.16),
                     borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
@@ -110,21 +122,25 @@ class _BusinessHeader extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    '사업자 회원',
+                    AppLocalizations.of(context).wholesaleMemberFallback,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: context.palette.accentSoft,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      color: context.palette.accentSoft,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  '$companyName님,\n좋은 거래 되세요!'.keepWord,
+                  AppLocalizations.of(
+                    context,
+                  ).wholesaleGreeting(companyName).keepWord,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  '주문 후 로스팅한 신선한 원두를 도매가로 공급해 드려요'.keepWord,
+                  AppLocalizations.of(
+                    context,
+                  ).wholesaleGreetingSubtitle.keepWord,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
@@ -132,13 +148,13 @@ class _BusinessHeader extends StatelessWidget {
           ),
           _CircleIconButton(
             icon: LucideIcons.mapPin,
-            tooltip: '매장 찾기',
+            tooltip: AppLocalizations.of(context).homeFindStore,
             onPressed: () => context.push('/stores'),
           ),
           const SizedBox(width: 8),
           _CircleIconButton(
             icon: LucideIcons.bell,
-            tooltip: '알림',
+            tooltip: AppLocalizations.of(context).homeNotifications,
             onPressed: () => context.push('/notices'),
           ),
         ],
@@ -166,7 +182,9 @@ class _CircleIconButton extends StatelessWidget {
       style: IconButton.styleFrom(
         backgroundColor: context.palette.card,
         shape: CircleBorder(
-          side: BorderSide(color: context.palette.border.withValues(alpha: 0.7)),
+          side: BorderSide(
+            color: context.palette.border.withValues(alpha: 0.7),
+          ),
         ),
         minimumSize: const Size(40, 40),
       ),
@@ -195,7 +213,10 @@ class _WholesaleInfoCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('원두 도매 공급 안내', style: textTheme.titleMedium),
+            Text(
+              AppLocalizations.of(context).wholesaleGuideTitle,
+              style: textTheme.titleMedium,
+            ),
             const SizedBox(height: 12),
             for (final (icon, label) in _entries)
               Padding(
@@ -225,28 +246,28 @@ class _BusinessQuickActions extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
-        children: const [
+        children: [
           _QuickActionItem(
             icon: LucideIcons.calculator,
-            label: '견적 요청',
+            label: AppLocalizations.of(context).wholesaleRequestQuote,
             location: '/wholesale/quote',
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           _QuickActionItem(
             icon: LucideIcons.fileText,
-            label: '견적 내역',
+            label: AppLocalizations.of(context).wholesaleQuoteHistory,
             location: '/wholesale/quotes',
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           _QuickActionItem(
             icon: LucideIcons.store,
-            label: '매장찾기',
+            label: AppLocalizations.of(context).homeQuickStores,
             location: '/stores',
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           _QuickActionItem(
             icon: LucideIcons.headset,
-            label: '고객센터',
+            label: AppLocalizations.of(context).wholesaleSupport,
             location: '/profile/support',
           ),
         ],
@@ -273,7 +294,9 @@ class _QuickActionItem extends StatelessWidget {
         color: context.palette.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-          side: BorderSide(color: context.palette.border.withValues(alpha: 0.7)),
+          side: BorderSide(
+            color: context.palette.border.withValues(alpha: 0.7),
+          ),
         ),
         child: InkWell(
           onTap: () => context.push(location),
@@ -287,9 +310,9 @@ class _QuickActionItem extends StatelessWidget {
                 Text(
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: context.palette.ink,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: context.palette.ink,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
@@ -356,7 +379,9 @@ class _WholesaleBeanCard extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               bean.tastingNotes.join(' · '),
-              style: textTheme.bodySmall?.copyWith(color: context.palette.accentSoft),
+              style: textTheme.bodySmall?.copyWith(
+                color: context.palette.accentSoft,
+              ),
             ),
             const SizedBox(height: 12),
             Container(
@@ -369,10 +394,16 @@ class _WholesaleBeanCard extends StatelessWidget {
               ),
               child: Text(
                 bean.tiers
-                    .map((tier) =>
-                        '${tier.minKg}kg~ ${_priceFormat.format(tier.pricePerKg)}원')
+                    .map(
+                      (tier) => AppLocalizations.of(context).wholesaleTierPrice(
+                        tier.minKg,
+                        _priceFormat.format(tier.pricePerKg),
+                      ),
+                    )
                     .join('  ·  '),
-                style: textTheme.bodySmall?.copyWith(color: context.palette.ink),
+                style: textTheme.bodySmall?.copyWith(
+                  color: context.palette.ink,
+                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -384,13 +415,18 @@ class _WholesaleBeanCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'kg당 ${_priceFormat.format(bean.basePricePerKg)}원~',
-                        style: textTheme.titleMedium
-                            ?.copyWith(color: context.palette.accent),
+                        AppLocalizations.of(context).wholesaleFromPricePerKg(
+                          _priceFormat.format(bean.basePricePerKg),
+                        ),
+                        style: textTheme.titleMedium?.copyWith(
+                          color: context.palette.accent,
+                        ),
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '최소 주문 ${bean.minOrderKg}kg',
+                        AppLocalizations.of(
+                          context,
+                        ).wholesaleMinOrder(bean.minOrderKg),
                         style: textTheme.bodySmall,
                       ),
                     ],
@@ -403,7 +439,7 @@ class _WholesaleBeanCard extends StatelessWidget {
                     minimumSize: const Size(0, 40),
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                   ),
-                  child: const Text('견적 담기'),
+                  child: Text(AppLocalizations.of(context).wholesaleAddToQuote),
                 ),
               ],
             ),

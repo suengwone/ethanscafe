@@ -63,7 +63,9 @@ class FirestoreWholesaleQuotesRepository implements WholesaleQuotesRepository {
 
 List<WholesaleQuote> wholesaleQuotesFromFirestore(Map<String, dynamic> data) {
   return ((data['quotes'] as List<dynamic>?) ?? const [])
-      .map((quote) => wholesaleQuoteFromFirestore(quote as Map<String, dynamic>))
+      .map(
+        (quote) => wholesaleQuoteFromFirestore(quote as Map<String, dynamic>),
+      )
       .toList();
 }
 
@@ -72,11 +74,14 @@ WholesaleQuote wholesaleQuoteFromFirestore(Map<String, dynamic> data) {
     id: data['id'] as String? ?? '',
     companyName: data['companyName'] as String? ?? '',
     items: ((data['items'] as List<dynamic>?) ?? const [])
-        .map((item) => wholesaleQuoteItemFromFirestore(
-            item as Map<String, dynamic>))
+        .map(
+          (item) =>
+              wholesaleQuoteItemFromFirestore(item as Map<String, dynamic>),
+        )
         .toList(),
     memo: data['memo'] as String? ?? '',
-    status: WholesaleQuoteStatus.values.asNameMap()[data['status']] ??
+    status:
+        WholesaleQuoteStatus.values.asNameMap()[data['status']] ??
         WholesaleQuoteStatus.requested,
     createdAt: firestoreDateTime(data['createdAt']),
   );

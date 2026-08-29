@@ -1506,4 +1506,286 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get giftSend => '선물 보내기';
+
+  @override
+  String get navHome => '홈';
+
+  @override
+  String get navOrder => '주문';
+
+  @override
+  String get navPay => '페이';
+
+  @override
+  String get navProfile => '마이';
+
+  @override
+  String get badgeSoldOut => '품절';
+
+  @override
+  String get updateRequiredTitle => '업데이트가 필요합니다';
+
+  @override
+  String get updateRequiredDetail => '더 안전하고 편리한 이용을 위해\n최신 버전으로 업데이트해 주세요.';
+
+  @override
+  String get updateGo => '업데이트하러 가기';
+
+  @override
+  String get offlineBanner => '인터넷에 연결되어 있지 않습니다';
+
+  @override
+  String get commonDelete => '삭제';
+
+  @override
+  String orderCancelRestoreCoupon(String title) {
+    return '쿠폰($title) 복구';
+  }
+
+  @override
+  String orderCancelRefundPoints(String amount) {
+    return '사용 포인트 ${amount}P 환급';
+  }
+
+  @override
+  String orderCancelTakeBackPoints(String amount) {
+    return '적립 포인트 ${amount}P 회수';
+  }
+
+  @override
+  String get orderCancelIrreversible => '취소 후에는 되돌릴 수 없어요.';
+
+  @override
+  String orderCancelWithSummary(String summary) {
+    return '취소 후에는 되돌릴 수 없어요.\n$summary 처리가 함께 진행돼요.';
+  }
+
+  @override
+  String get orderCancelGoBack => '돌아가기';
+
+  @override
+  String get notificationChannelName => '중요 알림';
+
+  @override
+  String get notificationChannelDescription => '주문 상태, 이벤트 등 앱 푸시 알림';
+
+  @override
+  String referralInvitation(String code, String reward) {
+    return '폭스트롯에서 커피 한 잔 어때요? 가입하고 초대 코드 $code를 입력하면 ${reward}P를 드려요.';
+  }
+
+  @override
+  String get referralCodeInvalid => '초대 코드 6자리를 다시 확인해주세요.';
+
+  @override
+  String referralRedeemed(String reward) {
+    return '${reward}P가 적립됐어요. 친구도 같은 포인트를 받았습니다.';
+  }
+
+  @override
+  String get referralRedeemFailed => '초대 코드를 확인하지 못했습니다. 잠시 후 다시 시도해주세요.';
+
+  @override
+  String get referralTitle => '친구 초대';
+
+  @override
+  String get referralLoadFailed => '초대 코드를 불러오지 못했습니다.';
+
+  @override
+  String get referralCodeCopied => '초대 코드를 복사했어요.';
+
+  @override
+  String get referralMessageCopied => '초대 문구를 복사했어요.';
+
+  @override
+  String get referralRewardTitle => '초대 리워드';
+
+  @override
+  String referralRewardBoth(String reward) {
+    return '친구도 나도 ${reward}P';
+  }
+
+  @override
+  String get referralRewardHow => '친구가 가입 후 내 초대 코드를 입력하면 두 사람 모두 포인트를 받습니다.';
+
+  @override
+  String get referralMyCode => '나의 초대 코드';
+
+  @override
+  String get referralCopyCode => '코드 복사';
+
+  @override
+  String get referralCopyMessage => '초대 문구 복사';
+
+  @override
+  String get referralInvitedCount => '초대한 친구';
+
+  @override
+  String referralPeopleCount(int count) {
+    return '$count명';
+  }
+
+  @override
+  String get referralRewardEarned => '받은 보상';
+
+  @override
+  String get referralRemaining => '남은 초대';
+
+  @override
+  String get referralEnterCode => '받은 초대 코드 입력';
+
+  @override
+  String get referralCodeHint => '예: A2K9PX';
+
+  @override
+  String get referralChecking => '확인 중...';
+
+  @override
+  String get referralClaim => '포인트 받기';
+
+  @override
+  String get referralAlreadyRedeemed => '초대 코드 입력 완료';
+
+  @override
+  String referralRedeemedDetail(String code, String reward) {
+    return '$code 코드로 ${reward}P를 받았습니다.';
+  }
+
+  @override
+  String get referralRuleOnce => '초대 코드는 계정당 한 번만 입력할 수 있습니다.';
+
+  @override
+  String get referralRuleNotSelf => '본인의 초대 코드는 사용할 수 없습니다.';
+
+  @override
+  String referralRuleLimit(int limit) {
+    return '초대 보상은 최대 $limit명까지 받을 수 있습니다.';
+  }
+
+  @override
+  String get referralRuleImmediate => '보상 포인트는 입력 즉시 적립되며 포인트 화면에서 확인할 수 있습니다.';
+
+  @override
+  String get referralNoticeTitle => '안내';
+
+  @override
+  String get wholesaleMemberFallback => '사업자 회원';
+
+  @override
+  String get wholesaleQuoteSubmitted => '견적 요청이 접수되었습니다. 담당자가 곧 연락드릴게요.';
+
+  @override
+  String wholesaleQuoteFailed(String error) {
+    return '견적 요청에 실패했습니다: $error';
+  }
+
+  @override
+  String get wholesaleQuoteTitle => '도매 견적 요청';
+
+  @override
+  String get wholesaleBeansLoadFailed => '도매 원두를 불러오지 못했습니다.';
+
+  @override
+  String get wholesaleSectionBeans => '원두 선택';
+
+  @override
+  String get wholesaleSectionNotes => '요청 사항';
+
+  @override
+  String get wholesaleNotesHint => '납품 주기, 희망 일정, 분쇄도 등 요청 사항을 적어주세요';
+
+  @override
+  String wholesaleBusinessNumber(String number) {
+    return '사업자등록번호 $number';
+  }
+
+  @override
+  String wholesalePricePerKg(String price, int minKg) {
+    return 'kg당 $price원~ · 최소 ${minKg}kg';
+  }
+
+  @override
+  String wholesaleAppliedPrice(String price, String total) {
+    return '적용 단가 kg당 $price원 · 합계 $total원';
+  }
+
+  @override
+  String wholesaleTotalKg(int kg) {
+    return '총 ${kg}kg';
+  }
+
+  @override
+  String wholesaleEstimate(String amount) {
+    return '예상 $amount원';
+  }
+
+  @override
+  String get wholesaleSubmit => '견적 요청하기';
+
+  @override
+  String get wholesaleHistoryTitle => '견적 요청 내역';
+
+  @override
+  String get wholesaleHistoryLoadFailed => '견적 내역을 불러오지 못했습니다.';
+
+  @override
+  String get wholesaleHistoryEmptyTitle => '아직 견적 요청이 없어요';
+
+  @override
+  String get wholesaleHistoryEmptyDetail => '도매 원두 리스트에서 원하는 원두로 견적을 요청해 보세요.';
+
+  @override
+  String wholesaleCompanyAndKg(String company, int kg) {
+    return '$company · 총 ${kg}kg';
+  }
+
+  @override
+  String get wholesaleBeanList => '도매 원두 리스트';
+
+  @override
+  String get wholesaleRequestQuote => '견적 요청';
+
+  @override
+  String wholesaleGreeting(String company) {
+    return '$company님,\n좋은 거래 되세요!';
+  }
+
+  @override
+  String get wholesaleGreetingSubtitle => '주문 후 로스팅한 신선한 원두를 도매가로 공급해 드려요';
+
+  @override
+  String get wholesalePerkMinimum => '최소 주문 5kg부터, 구간별 도매 단가 적용';
+
+  @override
+  String get wholesalePerkRoast => '주문 확인 후 당일 로스팅 · 전국 2~3일 배송';
+
+  @override
+  String get wholesalePerkInvoice => '세금계산서 발행 · 정기 납품 계약 지원';
+
+  @override
+  String get wholesaleGuideTitle => '원두 도매 공급 안내';
+
+  @override
+  String get wholesaleQuoteHistory => '견적 내역';
+
+  @override
+  String get wholesaleSupport => '고객센터';
+
+  @override
+  String wholesaleTierPrice(int minKg, String price) {
+    return '${minKg}kg~ $price원';
+  }
+
+  @override
+  String wholesaleFromPricePerKg(String price) {
+    return 'kg당 $price원~';
+  }
+
+  @override
+  String wholesaleMinOrder(int minKg) {
+    return '최소 주문 ${minKg}kg';
+  }
+
+  @override
+  String get wholesaleAddToQuote => '견적 담기';
 }

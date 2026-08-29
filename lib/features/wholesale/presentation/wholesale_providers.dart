@@ -9,8 +9,9 @@ import '../domain/wholesale_beans_repository.dart';
 import '../domain/wholesale_models.dart';
 import '../domain/wholesale_quotes_repository.dart';
 
-final wholesaleBeansRepositoryProvider =
-    Provider<WholesaleBeansRepository>((ref) {
+final wholesaleBeansRepositoryProvider = Provider<WholesaleBeansRepository>((
+  ref,
+) {
   return LocalWholesaleBeansRepository();
 });
 
@@ -18,8 +19,9 @@ final wholesaleBeansProvider = FutureProvider<List<WholesaleBean>>((ref) {
   return ref.watch(wholesaleBeansRepositoryProvider).loadWholesaleBeans();
 });
 
-final wholesaleQuotesRepositoryProvider =
-    Provider<WholesaleQuotesRepository>((ref) {
+final wholesaleQuotesRepositoryProvider = Provider<WholesaleQuotesRepository>((
+  ref,
+) {
   try {
     if (Firebase.apps.isNotEmpty) {
       final user = ref.watch(authStateProvider).value;
@@ -33,8 +35,8 @@ final wholesaleQuotesRepositoryProvider =
 
 final wholesaleQuotesControllerProvider =
     AsyncNotifierProvider<WholesaleQuotesController, List<WholesaleQuote>>(
-  WholesaleQuotesController.new,
-);
+      WholesaleQuotesController.new,
+    );
 
 class WholesaleQuotesController extends AsyncNotifier<List<WholesaleQuote>> {
   @override
@@ -47,11 +49,9 @@ class WholesaleQuotesController extends AsyncNotifier<List<WholesaleQuote>> {
     required List<WholesaleQuoteItem> items,
     String memo = '',
   }) async {
-    final quote = await ref.read(wholesaleQuotesRepositoryProvider).submitQuote(
-          companyName: companyName,
-          items: items,
-          memo: memo,
-        );
+    final quote = await ref
+        .read(wholesaleQuotesRepositoryProvider)
+        .submitQuote(companyName: companyName, items: items, memo: memo);
     state = AsyncValue.data([quote, ...state.value ?? const []]);
     return quote;
   }

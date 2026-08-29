@@ -405,6 +405,7 @@ class _CancelOrderButton extends ConsumerWidget {
       context,
       title: AppLocalizations.of(context).pickupCancelTitle,
       refundSummary: orderCancelRefundSummary(
+        AppLocalizations.of(context),
         usedPoints: order.usedPoints,
         earnedPoints: order.earnedPoints,
         couponTitle: order.couponTitle,

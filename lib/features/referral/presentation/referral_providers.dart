@@ -11,21 +11,23 @@ import '../domain/referral_repository.dart';
 
 final referralRepositoryProvider = Provider<ReferralRepository>((ref) {
   try {
-    if (Firebase.apps.isNotEmpty && ref.watch(authStateProvider).value != null) {
+    if (Firebase.apps.isNotEmpty &&
+        ref.watch(authStateProvider).value != null) {
       return CloudFunctionsReferralRepository();
     }
   } catch (_) {}
   final pointsRepository = ref.watch(pointsRepositoryProvider);
   return LocalReferralRepository(
-    pointsRepository:
-        pointsRepository is LocalPointsRepository ? pointsRepository : null,
+    pointsRepository: pointsRepository is LocalPointsRepository
+        ? pointsRepository
+        : null,
   );
 });
 
 final referralControllerProvider =
     AsyncNotifierProvider<ReferralController, ReferralSummary>(
-  ReferralController.new,
-);
+      ReferralController.new,
+    );
 
 class ReferralController extends AsyncNotifier<ReferralSummary> {
   @override

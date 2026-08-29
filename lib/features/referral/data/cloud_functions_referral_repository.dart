@@ -5,8 +5,7 @@ import '../domain/referral_repository.dart';
 
 class CloudFunctionsReferralRepository implements ReferralRepository {
   CloudFunctionsReferralRepository({FirebaseFunctions? functions})
-      : _functions =
-            functions ?? FirebaseFunctions.instanceFor(region: _region);
+    : _functions = functions ?? FirebaseFunctions.instanceFor(region: _region);
 
   static const _region = 'asia-northeast3';
   static const issueCallableName = 'issueReferralCode';
@@ -52,12 +51,11 @@ class CloudFunctionsReferralRepository implements ReferralRepository {
   }
 
   ReferralSummary _summaryOf(Map<String, dynamic> data) => ReferralSummary(
-        code: data['code'] as String? ?? '',
-        invitedCount: (data['invitedCount'] as num? ?? 0).toInt(),
-        earnedPoints: (data['earnedPoints'] as num? ?? 0).toInt(),
-        redeemedCode: data['redeemedCode'] as String?,
-        reward: (data['reward'] as num? ?? referralRewardPoints).toInt(),
-        inviteLimit: (data['inviteLimit'] as num? ?? referralInviteLimit)
-            .toInt(),
-      );
+    code: data['code'] as String? ?? '',
+    invitedCount: (data['invitedCount'] as num? ?? 0).toInt(),
+    earnedPoints: (data['earnedPoints'] as num? ?? 0).toInt(),
+    redeemedCode: data['redeemedCode'] as String?,
+    reward: (data['reward'] as num? ?? referralRewardPoints).toInt(),
+    inviteLimit: (data['inviteLimit'] as num? ?? referralInviteLimit).toInt(),
+  );
 }

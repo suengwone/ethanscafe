@@ -1536,4 +1536,298 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get giftSend => 'Send the gift';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navOrder => 'Order';
+
+  @override
+  String get navPay => 'Pay';
+
+  @override
+  String get navProfile => 'You';
+
+  @override
+  String get badgeSoldOut => 'Sold out';
+
+  @override
+  String get updateRequiredTitle => 'Time to update';
+
+  @override
+  String get updateRequiredDetail =>
+      'Update to the newest version for a safer, smoother app.';
+
+  @override
+  String get updateGo => 'Go and update';
+
+  @override
+  String get offlineBanner => 'You are offline';
+
+  @override
+  String get commonDelete => 'Delete';
+
+  @override
+  String orderCancelRestoreCoupon(String title) {
+    return 'Coupon ($title) returned';
+  }
+
+  @override
+  String orderCancelRefundPoints(String amount) {
+    return '${amount}P refunded';
+  }
+
+  @override
+  String orderCancelTakeBackPoints(String amount) {
+    return '${amount}P earned taken back';
+  }
+
+  @override
+  String get orderCancelIrreversible => 'You cannot undo a cancellation.';
+
+  @override
+  String orderCancelWithSummary(String summary) {
+    return 'You cannot undo a cancellation.\n$summary happens at the same time.';
+  }
+
+  @override
+  String get orderCancelGoBack => 'Go back';
+
+  @override
+  String get notificationChannelName => 'Important alerts';
+
+  @override
+  String get notificationChannelDescription =>
+      'Order updates, events and other app notifications';
+
+  @override
+  String referralInvitation(String code, String reward) {
+    return 'Fancy a coffee at Foxtrot? Sign up, enter invite code $code, and we will give you ${reward}P.';
+  }
+
+  @override
+  String get referralCodeInvalid =>
+      'Check the six-character invite code again.';
+
+  @override
+  String referralRedeemed(String reward) {
+    return 'You earned ${reward}P, and so did your friend.';
+  }
+
+  @override
+  String get referralRedeemFailed =>
+      'We could not check that invite code. Try again in a moment.';
+
+  @override
+  String get referralTitle => 'Invite a friend';
+
+  @override
+  String get referralLoadFailed => 'Could not load your invite code.';
+
+  @override
+  String get referralCodeCopied => 'Invite code copied.';
+
+  @override
+  String get referralMessageCopied => 'Invitation copied.';
+
+  @override
+  String get referralRewardTitle => 'Invite reward';
+
+  @override
+  String referralRewardBoth(String reward) {
+    return '${reward}P for both of you';
+  }
+
+  @override
+  String get referralRewardHow =>
+      'When a friend signs up and enters your code, you both get the points.';
+
+  @override
+  String get referralMyCode => 'Your invite code';
+
+  @override
+  String get referralCopyCode => 'Copy the code';
+
+  @override
+  String get referralCopyMessage => 'Copy the invitation';
+
+  @override
+  String get referralInvitedCount => 'Friends invited';
+
+  @override
+  String referralPeopleCount(int count) {
+    return '$count';
+  }
+
+  @override
+  String get referralRewardEarned => 'Rewards earned';
+
+  @override
+  String get referralRemaining => 'Invites left';
+
+  @override
+  String get referralEnterCode => 'Enter an invite code';
+
+  @override
+  String get referralCodeHint => 'e.g. A2K9PX';
+
+  @override
+  String get referralChecking => 'Checking…';
+
+  @override
+  String get referralClaim => 'Claim the points';
+
+  @override
+  String get referralAlreadyRedeemed => 'Code already used';
+
+  @override
+  String referralRedeemedDetail(String code, String reward) {
+    return 'You got ${reward}P with code $code.';
+  }
+
+  @override
+  String get referralRuleOnce => 'One invite code per account.';
+
+  @override
+  String get referralRuleNotSelf => 'You cannot use your own code.';
+
+  @override
+  String referralRuleLimit(int limit) {
+    return 'Invite rewards stop after $limit friends.';
+  }
+
+  @override
+  String get referralRuleImmediate =>
+      'The points land straight away and show on your points screen.';
+
+  @override
+  String get referralNoticeTitle => 'Good to know';
+
+  @override
+  String get wholesaleMemberFallback => 'Business member';
+
+  @override
+  String get wholesaleQuoteSubmitted =>
+      'Your quote request is in. Someone will be in touch shortly.';
+
+  @override
+  String wholesaleQuoteFailed(String error) {
+    return 'The quote request failed: $error';
+  }
+
+  @override
+  String get wholesaleQuoteTitle => 'Request a wholesale quote';
+
+  @override
+  String get wholesaleBeansLoadFailed => 'Could not load the wholesale beans.';
+
+  @override
+  String get wholesaleSectionBeans => 'Choose beans';
+
+  @override
+  String get wholesaleSectionNotes => 'Anything else';
+
+  @override
+  String get wholesaleNotesHint =>
+      'Delivery schedule, dates, grind — tell us what you need';
+
+  @override
+  String wholesaleBusinessNumber(String number) {
+    return 'Business number $number';
+  }
+
+  @override
+  String wholesalePricePerKg(String price, int minKg) {
+    return 'From ₩$price/kg · minimum ${minKg}kg';
+  }
+
+  @override
+  String wholesaleAppliedPrice(String price, String total) {
+    return '₩$price/kg applied · ₩$total total';
+  }
+
+  @override
+  String wholesaleTotalKg(int kg) {
+    return '${kg}kg total';
+  }
+
+  @override
+  String wholesaleEstimate(String amount) {
+    return 'About ₩$amount';
+  }
+
+  @override
+  String get wholesaleSubmit => 'Request a quote';
+
+  @override
+  String get wholesaleHistoryTitle => 'Quote requests';
+
+  @override
+  String get wholesaleHistoryLoadFailed => 'Could not load your quotes.';
+
+  @override
+  String get wholesaleHistoryEmptyTitle => 'No quote requests yet';
+
+  @override
+  String get wholesaleHistoryEmptyDetail =>
+      'Pick beans from the wholesale list and ask for a quote.';
+
+  @override
+  String wholesaleCompanyAndKg(String company, int kg) {
+    return '$company · ${kg}kg total';
+  }
+
+  @override
+  String get wholesaleBeanList => 'Wholesale beans';
+
+  @override
+  String get wholesaleRequestQuote => 'Request a quote';
+
+  @override
+  String wholesaleGreeting(String company) {
+    return 'Hello $company,\nhere is to good business!';
+  }
+
+  @override
+  String get wholesaleGreetingSubtitle =>
+      'We roast to order and supply at trade prices';
+
+  @override
+  String get wholesalePerkMinimum => 'From 5kg up, with trade prices by volume';
+
+  @override
+  String get wholesalePerkRoast =>
+      'Roasted the day we confirm · two to three days nationwide';
+
+  @override
+  String get wholesalePerkInvoice =>
+      'Tax invoices and standing supply contracts';
+
+  @override
+  String get wholesaleGuideTitle => 'How wholesale supply works';
+
+  @override
+  String get wholesaleQuoteHistory => 'Your quotes';
+
+  @override
+  String get wholesaleSupport => 'Support';
+
+  @override
+  String wholesaleTierPrice(int minKg, String price) {
+    return '${minKg}kg+ ₩$price';
+  }
+
+  @override
+  String wholesaleFromPricePerKg(String price) {
+    return 'From ₩$price/kg';
+  }
+
+  @override
+  String wholesaleMinOrder(int minKg) {
+    return 'Minimum ${minKg}kg';
+  }
+
+  @override
+  String get wholesaleAddToQuote => 'Add to quote';
 }

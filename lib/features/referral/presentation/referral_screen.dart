@@ -6,14 +6,14 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/referral_models.dart';
 import 'referral_providers.dart';
 
 final _amountFormat = NumberFormat('#,###');
 
-String invitationMessage(ReferralSummary summary) =>
-    '폭스트롯에서 커피 한 잔 어때요? 가입하고 초대 코드 ${summary.code}를 입력하면 '
-    '${_amountFormat.format(summary.reward)}P를 드려요.';
+String invitationMessage(AppLocalizations l10n, ReferralSummary summary) =>
+    l10n.referralInvitation(summary.code, _amountFormat.format(summary.reward));
 
 class ReferralScreen extends ConsumerStatefulWidget {
   const ReferralScreen({super.key});
@@ -51,15 +51,18 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text('초대 코드 6자리를 다시 확인해주세요.')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).referralCodeInvalid),
+          ),
         );
       return;
     }
 
     setState(() => _submitting = true);
     try {
-      final result =
-          await ref.read(referralControllerProvider.notifier).redeem(code);
+      final result = await ref
+          .read(referralControllerProvider.notifier)
+          .redeem(code);
       if (!mounted) {
         return;
       }
@@ -69,8 +72,9 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
         ..showSnackBar(
           SnackBar(
             content: Text(
-              '${_amountFormat.format(result.reward)}P가 적립됐어요. '
-              '친구도 같은 포인트를 받았습니다.',
+              AppLocalizations.of(
+                context,
+              ).referralRedeemed(_amountFormat.format(result.reward)),
             ),
           ),
         );
@@ -88,7 +92,9 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text('초대 코드를 확인하지 못했습니다. 잠시 후 다시 시도해주세요.')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).referralRedeemFailed),
+          ),
         );
     } finally {
       if (mounted) {
@@ -102,18 +108,18 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
     final referralState = ref.watch(referralControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('친구 초대')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).referralTitle)),
       body: referralState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('초대 코드를 불러오지 못했습니다.'),
+              Text(AppLocalizations.of(context).referralLoadFailed),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.invalidate(referralControllerProvider),
-                child: const Text('다시 시도'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -125,9 +131,14 @@ class _ReferralScreenState extends ConsumerState<ReferralScreen> {
             const SizedBox(height: 16),
             _MyCodeCard(
               summary: summary,
-              onCopyCode: () => _copy(summary.code, '초대 코드를 복사했어요.'),
-              onCopyMessage: () =>
-                  _copy(invitationMessage(summary), '초대 문구를 복사했어요.'),
+              onCopyCode: () => _copy(
+                summary.code,
+                AppLocalizations.of(context).referralCodeCopied,
+              ),
+              onCopyMessage: () => _copy(
+                invitationMessage(AppLocalizations.of(context), summary),
+                AppLocalizations.of(context).referralMessageCopied,
+              ),
             ),
             const SizedBox(height: 16),
             _InviteStats(summary: summary),
@@ -173,23 +184,33 @@ class _RewardHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(LucideIcons.userPlus, color: context.palette.accent, size: 20),
+              Icon(
+                LucideIcons.userPlus,
+                color: context.palette.accent,
+                size: 20,
+              ),
               const SizedBox(width: 8),
               Text(
-                '초대 리워드',
-                style: theme.textTheme.titleSmall?.copyWith(color: context.palette.accent),
+                AppLocalizations.of(context).referralRewardTitle,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  color: context.palette.accent,
+                ),
               ),
             ],
           ),
           const SizedBox(height: 12),
           Text(
-            '친구도 나도 ${_amountFormat.format(summary.reward)}P'.keepWord,
+            AppLocalizations.of(
+              context,
+            ).referralRewardBoth(_amountFormat.format(summary.reward)).keepWord,
             style: theme.textTheme.headlineSmall,
           ),
           const SizedBox(height: 8),
           Text(
-            '친구가 가입 후 내 초대 코드를 입력하면 두 사람 모두 포인트를 받습니다.'.keepWord,
-            style: theme.textTheme.bodyMedium?.copyWith(color: context.palette.muted),
+            AppLocalizations.of(context).referralRewardHow.keepWord,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: context.palette.muted,
+            ),
           ),
         ],
       ),
@@ -221,7 +242,10 @@ class _MyCodeCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('나의 초대 코드', style: theme.textTheme.titleSmall),
+          Text(
+            AppLocalizations.of(context).referralMyCode,
+            style: theme.textTheme.titleSmall,
+          ),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -236,7 +260,7 @@ class _MyCodeCard extends StatelessWidget {
               ),
               IconButton(
                 onPressed: onCopyCode,
-                tooltip: '코드 복사',
+                tooltip: AppLocalizations.of(context).referralCopyCode,
                 icon: const Icon(LucideIcons.copy, size: 20),
               ),
             ],
@@ -245,7 +269,7 @@ class _MyCodeCard extends StatelessWidget {
           OutlinedButton.icon(
             onPressed: onCopyMessage,
             icon: const Icon(LucideIcons.share2, size: 18),
-            label: const Text('초대 문구 복사'),
+            label: Text(AppLocalizations.of(context).referralCopyMessage),
           ),
         ],
       ),
@@ -264,22 +288,26 @@ class _InviteStats extends StatelessWidget {
       children: [
         Expanded(
           child: _StatTile(
-            label: '초대한 친구',
-            value: '${summary.invitedCount}명',
+            label: AppLocalizations.of(context).referralInvitedCount,
+            value: AppLocalizations.of(
+              context,
+            ).referralPeopleCount(summary.invitedCount),
           ),
         ),
         const SizedBox(width: 10),
         Expanded(
           child: _StatTile(
-            label: '받은 보상',
+            label: AppLocalizations.of(context).referralRewardEarned,
             value: '${_amountFormat.format(summary.earnedPoints)}P',
           ),
         ),
         const SizedBox(width: 10),
         Expanded(
           child: _StatTile(
-            label: '남은 초대',
-            value: '${summary.remainingInvites}명',
+            label: AppLocalizations.of(context).referralRemaining,
+            value: AppLocalizations.of(
+              context,
+            ).referralPeopleCount(summary.remainingInvites),
           ),
         ),
       ],
@@ -307,7 +335,9 @@ class _StatTile extends StatelessWidget {
         children: [
           Text(
             value,
-            style: theme.textTheme.titleMedium?.copyWith(color: context.palette.accent),
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: context.palette.accent,
+            ),
           ),
           const SizedBox(height: 6),
           Text(label, style: theme.textTheme.bodySmall),
@@ -341,15 +371,18 @@ class _RedeemForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('받은 초대 코드 입력', style: theme.textTheme.titleSmall),
+          Text(
+            AppLocalizations.of(context).referralEnterCode,
+            style: theme.textTheme.titleSmall,
+          ),
           const SizedBox(height: 12),
           TextField(
             controller: controller,
             enabled: !submitting,
             textCapitalization: TextCapitalization.characters,
             maxLength: referralCodeLength,
-            decoration: const InputDecoration(
-              hintText: '예: A2K9PX',
+            decoration: InputDecoration(
+              hintText: AppLocalizations.of(context).referralCodeHint,
               counterText: '',
             ),
             style: theme.textTheme.titleMedium?.copyWith(letterSpacing: 4),
@@ -357,7 +390,11 @@ class _RedeemForm extends StatelessWidget {
           const SizedBox(height: 12),
           FilledButton(
             onPressed: submitting ? null : onSubmit,
-            child: Text(submitting ? '확인 중...' : '포인트 받기'),
+            child: Text(
+              submitting
+                  ? AppLocalizations.of(context).referralChecking
+                  : AppLocalizations.of(context).referralClaim,
+            ),
           ),
         ],
       ),
@@ -382,19 +419,29 @@ class _RedeemedCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(LucideIcons.circleCheck, color: context.palette.accent, size: 20),
+          Icon(
+            LucideIcons.circleCheck,
+            color: context.palette.accent,
+            size: 20,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('초대 코드 입력 완료', style: theme.textTheme.titleSmall),
+                Text(
+                  AppLocalizations.of(context).referralAlreadyRedeemed,
+                  style: theme.textTheme.titleSmall,
+                ),
                 const SizedBox(height: 4),
                 Text(
-                  '${summary.redeemedCode} 코드로 '
-                  '${_amountFormat.format(summary.reward)}P를 받았습니다.',
-                  style:
-                      theme.textTheme.bodyMedium?.copyWith(color: context.palette.muted),
+                  AppLocalizations.of(context).referralRedeemedDetail(
+                    summary.redeemedCode ?? '',
+                    _amountFormat.format(summary.reward),
+                  ),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: context.palette.muted,
+                  ),
                 ),
               ],
             ),
@@ -414,16 +461,19 @@ class _ReferralNotice extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final notices = [
-      '초대 코드는 계정당 한 번만 입력할 수 있습니다.',
-      '본인의 초대 코드는 사용할 수 없습니다.',
-      '초대 보상은 최대 ${summary.inviteLimit}명까지 받을 수 있습니다.',
-      '보상 포인트는 입력 즉시 적립되며 포인트 화면에서 확인할 수 있습니다.',
+      AppLocalizations.of(context).referralRuleOnce,
+      AppLocalizations.of(context).referralRuleNotSelf,
+      AppLocalizations.of(context).referralRuleLimit(summary.inviteLimit),
+      AppLocalizations.of(context).referralRuleImmediate,
     ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('안내', style: theme.textTheme.titleSmall),
+        Text(
+          AppLocalizations.of(context).referralNoticeTitle,
+          style: theme.textTheme.titleSmall,
+        ),
         const SizedBox(height: 8),
         for (final notice in notices)
           Padding(
@@ -433,8 +483,10 @@ class _ReferralNotice extends StatelessWidget {
               children: [
                 Text('· ', style: theme.textTheme.bodySmall),
                 Expanded(
-                  child: Text(notice.keepWord,
-                      style: theme.textTheme.bodySmall),
+                  child: Text(
+                    notice.keepWord,
+                    style: theme.textTheme.bodySmall,
+                  ),
                 ),
               ],
             ),

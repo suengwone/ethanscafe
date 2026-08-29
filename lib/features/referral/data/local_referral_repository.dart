@@ -13,8 +13,8 @@ class LocalReferralRepository implements ReferralRepository {
   LocalReferralRepository({
     LocalPointsRepository? pointsRepository,
     Random? random,
-  })  : _pointsRepository = pointsRepository ?? LocalPointsRepository(),
-        _random = random ?? Random();
+  }) : _pointsRepository = pointsRepository ?? LocalPointsRepository(),
+       _random = random ?? Random();
 
   static const _storageKey = 'referral_summary';
   static const redeemDescription = '초대 코드 입력 보상';
@@ -27,9 +27,7 @@ class LocalReferralRepository implements ReferralRepository {
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString(_storageKey);
     if (raw != null) {
-      return ReferralSummary.fromJson(
-        jsonDecode(raw) as Map<String, dynamic>,
-      );
+      return ReferralSummary.fromJson(jsonDecode(raw) as Map<String, dynamic>);
     }
 
     final summary = ReferralSummary(code: newReferralCode(_random));

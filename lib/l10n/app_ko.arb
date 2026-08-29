@@ -955,5 +955,250 @@
   "giftFieldMessageHint": "마음을 전하는 메시지를 남겨보세요.",
   "giftTotalPrice": "선물 금액",
   "giftSending": "보내는 중...",
-  "giftSend": "선물 보내기"
+  "giftSend": "선물 보내기",
+  "navHome": "홈",
+  "navOrder": "주문",
+  "navPay": "페이",
+  "navProfile": "마이",
+  "badgeSoldOut": "품절",
+  "updateRequiredTitle": "업데이트가 필요합니다",
+  "updateRequiredDetail": "더 안전하고 편리한 이용을 위해\n최신 버전으로 업데이트해 주세요.",
+  "updateGo": "업데이트하러 가기",
+  "offlineBanner": "인터넷에 연결되어 있지 않습니다",
+  "commonDelete": "삭제",
+  "orderCancelRestoreCoupon": "쿠폰({title}) 복구",
+  "@orderCancelRestoreCoupon": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "orderCancelRefundPoints": "사용 포인트 {amount}P 환급",
+  "@orderCancelRefundPoints": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "orderCancelTakeBackPoints": "적립 포인트 {amount}P 회수",
+  "@orderCancelTakeBackPoints": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "orderCancelIrreversible": "취소 후에는 되돌릴 수 없어요.",
+  "orderCancelWithSummary": "취소 후에는 되돌릴 수 없어요.\n{summary} 처리가 함께 진행돼요.",
+  "@orderCancelWithSummary": {
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "orderCancelGoBack": "돌아가기",
+  "notificationChannelName": "중요 알림",
+  "notificationChannelDescription": "주문 상태, 이벤트 등 앱 푸시 알림",
+  "referralInvitation": "폭스트롯에서 커피 한 잔 어때요? 가입하고 초대 코드 {code}를 입력하면 {reward}P를 드려요.",
+  "@referralInvitation": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "reward": {
+        "type": "String"
+      }
+    }
+  },
+  "referralCodeInvalid": "초대 코드 6자리를 다시 확인해주세요.",
+  "referralRedeemed": "{reward}P가 적립됐어요. 친구도 같은 포인트를 받았습니다.",
+  "@referralRedeemed": {
+    "placeholders": {
+      "reward": {
+        "type": "String"
+      }
+    }
+  },
+  "referralRedeemFailed": "초대 코드를 확인하지 못했습니다. 잠시 후 다시 시도해주세요.",
+  "referralTitle": "친구 초대",
+  "referralLoadFailed": "초대 코드를 불러오지 못했습니다.",
+  "referralCodeCopied": "초대 코드를 복사했어요.",
+  "referralMessageCopied": "초대 문구를 복사했어요.",
+  "referralRewardTitle": "초대 리워드",
+  "referralRewardBoth": "친구도 나도 {reward}P",
+  "@referralRewardBoth": {
+    "placeholders": {
+      "reward": {
+        "type": "String"
+      }
+    }
+  },
+  "referralRewardHow": "친구가 가입 후 내 초대 코드를 입력하면 두 사람 모두 포인트를 받습니다.",
+  "referralMyCode": "나의 초대 코드",
+  "referralCopyCode": "코드 복사",
+  "referralCopyMessage": "초대 문구 복사",
+  "referralInvitedCount": "초대한 친구",
+  "referralPeopleCount": "{count}명",
+  "@referralPeopleCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "referralRewardEarned": "받은 보상",
+  "referralRemaining": "남은 초대",
+  "referralEnterCode": "받은 초대 코드 입력",
+  "referralCodeHint": "예: A2K9PX",
+  "referralChecking": "확인 중...",
+  "referralClaim": "포인트 받기",
+  "referralAlreadyRedeemed": "초대 코드 입력 완료",
+  "referralRedeemedDetail": "{code} 코드로 {reward}P를 받았습니다.",
+  "@referralRedeemedDetail": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "reward": {
+        "type": "String"
+      }
+    }
+  },
+  "referralRuleOnce": "초대 코드는 계정당 한 번만 입력할 수 있습니다.",
+  "referralRuleNotSelf": "본인의 초대 코드는 사용할 수 없습니다.",
+  "referralRuleLimit": "초대 보상은 최대 {limit}명까지 받을 수 있습니다.",
+  "@referralRuleLimit": {
+    "placeholders": {
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "referralRuleImmediate": "보상 포인트는 입력 즉시 적립되며 포인트 화면에서 확인할 수 있습니다.",
+  "referralNoticeTitle": "안내",
+  "wholesaleMemberFallback": "사업자 회원",
+  "wholesaleQuoteSubmitted": "견적 요청이 접수되었습니다. 담당자가 곧 연락드릴게요.",
+  "wholesaleQuoteFailed": "견적 요청에 실패했습니다: {error}",
+  "@wholesaleQuoteFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "wholesaleQuoteTitle": "도매 견적 요청",
+  "wholesaleBeansLoadFailed": "도매 원두를 불러오지 못했습니다.",
+  "wholesaleSectionBeans": "원두 선택",
+  "wholesaleSectionNotes": "요청 사항",
+  "wholesaleNotesHint": "납품 주기, 희망 일정, 분쇄도 등 요청 사항을 적어주세요",
+  "wholesaleBusinessNumber": "사업자등록번호 {number}",
+  "@wholesaleBusinessNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "wholesalePricePerKg": "kg당 {price}원~ · 최소 {minKg}kg",
+  "@wholesalePricePerKg": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "minKg": {
+        "type": "int"
+      }
+    }
+  },
+  "wholesaleAppliedPrice": "적용 단가 kg당 {price}원 · 합계 {total}원",
+  "@wholesaleAppliedPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "wholesaleTotalKg": "총 {kg}kg",
+  "@wholesaleTotalKg": {
+    "placeholders": {
+      "kg": {
+        "type": "int"
+      }
+    }
+  },
+  "wholesaleEstimate": "예상 {amount}원",
+  "@wholesaleEstimate": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "wholesaleSubmit": "견적 요청하기",
+  "wholesaleHistoryTitle": "견적 요청 내역",
+  "wholesaleHistoryLoadFailed": "견적 내역을 불러오지 못했습니다.",
+  "wholesaleHistoryEmptyTitle": "아직 견적 요청이 없어요",
+  "wholesaleHistoryEmptyDetail": "도매 원두 리스트에서 원하는 원두로 견적을 요청해 보세요.",
+  "wholesaleCompanyAndKg": "{company} · 총 {kg}kg",
+  "@wholesaleCompanyAndKg": {
+    "placeholders": {
+      "company": {
+        "type": "String"
+      },
+      "kg": {
+        "type": "int"
+      }
+    }
+  },
+  "wholesaleBeanList": "도매 원두 리스트",
+  "wholesaleRequestQuote": "견적 요청",
+  "wholesaleGreeting": "{company}님,\n좋은 거래 되세요!",
+  "@wholesaleGreeting": {
+    "placeholders": {
+      "company": {
+        "type": "String"
+      }
+    }
+  },
+  "wholesaleGreetingSubtitle": "주문 후 로스팅한 신선한 원두를 도매가로 공급해 드려요",
+  "wholesalePerkMinimum": "최소 주문 5kg부터, 구간별 도매 단가 적용",
+  "wholesalePerkRoast": "주문 확인 후 당일 로스팅 · 전국 2~3일 배송",
+  "wholesalePerkInvoice": "세금계산서 발행 · 정기 납품 계약 지원",
+  "wholesaleGuideTitle": "원두 도매 공급 안내",
+  "wholesaleQuoteHistory": "견적 내역",
+  "wholesaleSupport": "고객센터",
+  "wholesaleTierPrice": "{minKg}kg~ {price}원",
+  "@wholesaleTierPrice": {
+    "placeholders": {
+      "minKg": {
+        "type": "int"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "wholesaleFromPricePerKg": "kg당 {price}원~",
+  "@wholesaleFromPricePerKg": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "wholesaleMinOrder": "최소 주문 {minKg}kg",
+  "@wholesaleMinOrder": {
+    "placeholders": {
+      "minKg": {
+        "type": "int"
+      }
+    }
+  },
+  "wholesaleAddToQuote": "견적 담기"
 }

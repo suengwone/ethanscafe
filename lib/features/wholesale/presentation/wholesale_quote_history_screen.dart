@@ -22,19 +22,21 @@ class WholesaleQuoteHistoryScreen extends ConsumerWidget {
     final quotesState = ref.watch(wholesaleQuotesControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('견적 요청 내역')),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).wholesaleHistoryTitle),
+      ),
       body: quotesState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('견적 내역을 불러오지 못했습니다.'),
+              Text(AppLocalizations.of(context).wholesaleHistoryLoadFailed),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () =>
                     ref.invalidate(wholesaleQuotesControllerProvider),
-                child: const Text('다시 시도'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -66,12 +68,12 @@ class _EmptyQuotes extends StatelessWidget {
           Icon(LucideIcons.fileText, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text(
-            '아직 견적 요청이 없어요',
+            AppLocalizations.of(context).wholesaleHistoryEmptyTitle,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           Text(
-            '도매 원두 리스트에서 원하는 원두로 견적을 요청해 보세요.',
+            AppLocalizations.of(context).wholesaleHistoryEmptyDetail,
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
@@ -118,7 +120,15 @@ class _QuoteCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(AppLocalizations.of(context).itemsSummary(quote.firstItemName, quote.items.length).keepWord, style: textTheme.labelLarge),
+                      Text(
+                        AppLocalizations.of(context)
+                            .itemsSummary(
+                              quote.firstItemName,
+                              quote.items.length,
+                            )
+                            .keepWord,
+                        style: textTheme.labelLarge,
+                      ),
                       const SizedBox(height: 4),
                       Text(
                         _dateFormat.format(quote.createdAt),
@@ -151,15 +161,19 @@ class _QuoteCard extends StatelessWidget {
                           Expanded(
                             child: Text(
                               '${item.beanName} · ${item.kg}kg'.keepWord,
-                              style: textTheme.bodySmall
-                                  ?.copyWith(color: context.palette.ink),
+                              style: textTheme.bodySmall?.copyWith(
+                                color: context.palette.ink,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 10),
                           Text(
-                            '${_priceFormat.format(item.totalPrice)}원',
-                            style: textTheme.bodySmall
-                                ?.copyWith(color: context.palette.ink),
+                            AppLocalizations.of(
+                              context,
+                            ).priceWon(_priceFormat.format(item.totalPrice)),
+                            style: textTheme.bodySmall?.copyWith(
+                              color: context.palette.ink,
+                            ),
                           ),
                         ],
                       ),
@@ -173,14 +187,20 @@ class _QuoteCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    '${quote.companyName} · 총 ${quote.totalKg}kg'.keepWord,
+                    AppLocalizations.of(context)
+                        .wholesaleCompanyAndKg(quote.companyName, quote.totalKg)
+                        .keepWord,
                     style: textTheme.bodySmall,
                   ),
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  '예상 ${_priceFormat.format(quote.totalAmount)}원',
-                  style: textTheme.labelLarge?.copyWith(color: context.palette.accent),
+                  AppLocalizations.of(
+                    context,
+                  ).wholesaleEstimate(_priceFormat.format(quote.totalAmount)),
+                  style: textTheme.labelLarge?.copyWith(
+                    color: context.palette.accent,
+                  ),
                 ),
               ],
             ),
@@ -196,7 +216,9 @@ class _QuoteCard extends StatelessWidget {
                 ),
                 child: Text(
                   '“${quote.memo}”'.keepWord,
-                  style: textTheme.bodySmall?.copyWith(color: context.palette.ink),
+                  style: textTheme.bodySmall?.copyWith(
+                    color: context.palette.ink,
+                  ),
                 ),
               ),
             ],
@@ -223,10 +245,10 @@ class _QuoteStatusChip extends StatelessWidget {
       ),
       child: Text(
         AppLocalizations.of(context).wholesaleStatusLabel(status),
-        style: Theme.of(context)
-            .textTheme
-            .bodySmall
-            ?.copyWith(color: context.palette.accentSoft, fontWeight: FontWeight.w600),
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: context.palette.accentSoft,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

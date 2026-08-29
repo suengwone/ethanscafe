@@ -10,7 +10,7 @@ DateTime firestoreDateTime(Object? value) {
   if (value is DateTime) {
     return value;
   }
-  throw FormatException('지원하지 않는 날짜 형식입니다: $value');
+  throw FormatException('Unsupported date format: $value');
 }
 
 Map<String, dynamic> deepStringKeyedMap(Object? value) {

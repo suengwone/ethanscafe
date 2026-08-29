@@ -6,6 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/account_providers.dart';
 import '../../auth/presentation/auth_providers.dart';
 import '../domain/wholesale_models.dart';
@@ -88,15 +89,18 @@ class _WholesaleQuoteScreenState extends ConsumerState<WholesaleQuoteScreen> {
     if (items.isEmpty || _submitting) {
       return;
     }
-    final business =
-        ref.read(accountProfileControllerProvider).value?.business;
+    final business = ref.read(accountProfileControllerProvider).value?.business;
     final user = ref.read(authStateProvider).value;
     final companyName =
-        business?.companyName ?? user?.displayLabel ?? '사업자 회원';
+        business?.companyName ??
+        user?.displayLabel ??
+        AppLocalizations.of(context).wholesaleMemberFallback;
 
     setState(() => _submitting = true);
     try {
-      await ref.read(wholesaleQuotesControllerProvider.notifier).submitQuote(
+      await ref
+          .read(wholesaleQuotesControllerProvider.notifier)
+          .submitQuote(
             companyName: companyName,
             items: items,
             memo: _memoController.text,
@@ -105,7 +109,9 @@ class _WholesaleQuoteScreenState extends ConsumerState<WholesaleQuoteScreen> {
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('견적 요청이 접수되었습니다. 담당자가 곧 연락드릴게요.')),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).wholesaleQuoteSubmitted),
+        ),
       );
       context.pushReplacement('/wholesale/quotes');
     } catch (error) {
@@ -113,7 +119,11 @@ class _WholesaleQuoteScreenState extends ConsumerState<WholesaleQuoteScreen> {
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('견적 요청에 실패했습니다: $error')),
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context).wholesaleQuoteFailed('$error'),
+          ),
+        ),
       );
     } finally {
       if (mounted) {
@@ -125,21 +135,28 @@ class _WholesaleQuoteScreenState extends ConsumerState<WholesaleQuoteScreen> {
   @override
   Widget build(BuildContext context) {
     final beansState = ref.watch(wholesaleBeansProvider);
-    final business =
-        ref.watch(accountProfileControllerProvider).value?.business;
+    final business = ref
+        .watch(accountProfileControllerProvider)
+        .value
+        ?.business;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('도매 견적 요청')),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).wholesaleQuoteTitle),
+      ),
       body: beansState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) =>
-            const Center(child: Text('도매 원두를 불러오지 못했습니다.')),
+        error: (error, _) => Center(
+          child: Text(AppLocalizations.of(context).wholesaleBeansLoadFailed),
+        ),
         data: (beans) {
           _applyInitialBean(beans);
           final items = _buildItems(beans);
           final totalKg = items.fold(0, (sum, item) => sum + item.kg);
-          final totalAmount =
-              items.fold(0, (sum, item) => sum + item.totalPrice);
+          final totalAmount = items.fold(
+            0,
+            (sum, item) => sum + item.totalPrice,
+          );
 
           return Column(
             children: [
@@ -155,7 +172,7 @@ class _WholesaleQuoteScreenState extends ConsumerState<WholesaleQuoteScreen> {
                       const SizedBox(height: 16),
                     ],
                     Text(
-                      '원두 선택',
+                      AppLocalizations.of(context).wholesaleSectionBeans,
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                     const SizedBox(height: 8),
@@ -168,15 +185,17 @@ class _WholesaleQuoteScreenState extends ConsumerState<WholesaleQuoteScreen> {
                       ),
                     const SizedBox(height: 16),
                     Text(
-                      '요청 사항',
+                      AppLocalizations.of(context).wholesaleSectionNotes,
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                     const SizedBox(height: 8),
                     TextField(
                       controller: _memoController,
                       maxLines: 3,
-                      decoration: const InputDecoration(
-                        hintText: '납품 주기, 희망 일정, 분쇄도 등 요청 사항을 적어주세요',
+                      decoration: InputDecoration(
+                        hintText: AppLocalizations.of(
+                          context,
+                        ).wholesaleNotesHint,
                       ),
                     ),
                   ],
@@ -197,10 +216,7 @@ class _WholesaleQuoteScreenState extends ConsumerState<WholesaleQuoteScreen> {
 }
 
 class _CompanyCard extends StatelessWidget {
-  const _CompanyCard({
-    required this.companyName,
-    required this.businessNumber,
-  });
+  const _CompanyCard({required this.companyName, required this.businessNumber});
 
   final String companyName;
   final String businessNumber;
@@ -215,7 +231,11 @@ class _CompanyCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            Icon(LucideIcons.building2, color: context.palette.accent, size: 22),
+            Icon(
+              LucideIcons.building2,
+              color: context.palette.accent,
+              size: 22,
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -224,7 +244,9 @@ class _CompanyCard extends StatelessWidget {
                   Text(companyName, style: textTheme.labelLarge),
                   const SizedBox(height: 2),
                   Text(
-                    '사업자등록번호 $businessNumber',
+                    AppLocalizations.of(
+                      context,
+                    ).wholesaleBusinessNumber(businessNumber),
                     style: textTheme.bodySmall,
                   ),
                 ],
@@ -271,7 +293,10 @@ class _QuoteBeanTile extends StatelessWidget {
                       Text(bean.name.keepWord, style: textTheme.labelLarge),
                       const SizedBox(height: 2),
                       Text(
-                        'kg당 ${_priceFormat.format(bean.basePricePerKg)}원~ · 최소 ${bean.minOrderKg}kg',
+                        AppLocalizations.of(context).wholesalePricePerKg(
+                          _priceFormat.format(bean.basePricePerKg),
+                          bean.minOrderKg,
+                        ),
                         style: textTheme.bodySmall,
                       ),
                     ],
@@ -288,31 +313,36 @@ class _QuoteBeanTile extends StatelessWidget {
                     '${kg}kg',
                     textAlign: TextAlign.center,
                     style: textTheme.labelLarge?.copyWith(
-                      color: selected ? context.palette.accent : context.palette.muted,
+                      color: selected
+                          ? context.palette.accent
+                          : context.palette.muted,
                     ),
                   ),
                 ),
-                _StepperButton(
-                  icon: LucideIcons.plus,
-                  onPressed: onIncrease,
-                ),
+                _StepperButton(icon: LucideIcons.plus, onPressed: onIncrease),
               ],
             ),
             if (selected) ...[
               const SizedBox(height: 10),
               Container(
                 width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: context.palette.surface,
                   borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
                   border: Border.all(color: context.palette.border),
                 ),
                 child: Text(
-                  '적용 단가 kg당 ${_priceFormat.format(bean.unitPriceFor(kg))}원 · '
-                  '합계 ${_priceFormat.format(bean.totalPriceFor(kg))}원',
-                  style: textTheme.bodySmall?.copyWith(color: context.palette.ink),
+                  AppLocalizations.of(context).wholesaleAppliedPrice(
+                    _priceFormat.format(bean.unitPriceFor(kg)),
+                    _priceFormat.format(bean.totalPriceFor(kg)),
+                  ),
+                  style: textTheme.bodySmall?.copyWith(
+                    color: context.palette.ink,
+                  ),
                 ),
               ),
             ],
@@ -374,19 +404,25 @@ class _QuoteBottomBar extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('총 ${totalKg}kg', style: textTheme.bodySmall),
+                    Text(
+                      AppLocalizations.of(context).wholesaleTotalKg(totalKg),
+                      style: textTheme.bodySmall,
+                    ),
                     const SizedBox(height: 2),
                     Text(
-                      '예상 ${_priceFormat.format(totalAmount)}원',
-                      style:
-                          textTheme.titleMedium?.copyWith(color: context.palette.accent),
+                      AppLocalizations.of(
+                        context,
+                      ).wholesaleEstimate(_priceFormat.format(totalAmount)),
+                      style: textTheme.titleMedium?.copyWith(
+                        color: context.palette.accent,
+                      ),
                     ),
                   ],
                 ),
               ),
               FilledButton(
                 onPressed: enabled ? onSubmit : null,
-                child: const Text('견적 요청하기'),
+                child: Text(AppLocalizations.of(context).wholesaleSubmit),
               ),
             ],
           ),
