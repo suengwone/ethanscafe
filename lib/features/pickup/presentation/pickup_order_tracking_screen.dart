@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../../core/l10n/summary_labels.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/order_cancel_dialog.dart';
@@ -137,7 +138,12 @@ class _OrderSummaryCard extends StatelessWidget {
               style: textTheme.headlineMedium,
             ),
             const SizedBox(height: 8),
-            Text(order.summary.keepWord, style: textTheme.labelLarge),
+            Text(
+              AppLocalizations.of(context)
+                  .itemsSummary(order.firstItemName, order.items.length)
+                  .keepWord,
+              style: textTheme.labelLarge,
+            ),
             const SizedBox(height: 4),
             Text(
               AppLocalizations.of(

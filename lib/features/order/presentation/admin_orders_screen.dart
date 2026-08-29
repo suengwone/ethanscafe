@@ -8,6 +8,7 @@ import '../../../features/order/presentation/order_labels.dart';
 import '../../../features/pickup/presentation/pickup_labels.dart';
 import '../../../l10n/app_localizations.dart';
 import '../domain/admin_order_models.dart';
+import '../domain/order_models.dart';
 import '../domain/refund_failure_models.dart';
 import 'admin_orders_providers.dart';
 
@@ -140,7 +141,11 @@ class _BeanOrdersTab extends ConsumerWidget {
                 context,
               ).fulfillmentLabel(entry.fulfillmentMethod),
               summary: entry.summary,
-              subtitle: entry.destinationLabel,
+              subtitle:
+                  entry.destination ??
+                  (entry.fulfillmentMethod == BeanFulfillmentMethod.delivery
+                      ? AppLocalizations.of(context).orderDestinationNoRecipient
+                      : AppLocalizations.of(context).orderDestinationNoStore),
               statusLabel: AppLocalizations.of(
                 context,
               ).beanOrderStatusLabel(entry.status),

@@ -4,12 +4,8 @@ part 'account_models.freezed.dart';
 part 'account_models.g.dart';
 
 enum AccountType {
-  customer('일반 고객'),
-  business('사업자');
-
-  const AccountType(this.label);
-
-  final String label;
+  customer,
+  business;
 }
 
 @freezed

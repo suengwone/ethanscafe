@@ -5,14 +5,8 @@ import '../../beans/domain/bean_models.dart';
 part 'gift_models.freezed.dart';
 part 'gift_models.g.dart';
 
-enum BeanGiftStatus {
-  sent('선물 전송'),
-  redeemed('수령 완료');
-
-  const BeanGiftStatus(this.label);
-
-  final String label;
-}
+/// 이름은 `gift_labels.dart`의 확장이 l10n에서 꺼내 온다.
+enum BeanGiftStatus { sent, redeemed }
 
 @freezed
 abstract class BeanGift with _$BeanGift {
@@ -38,5 +32,5 @@ abstract class BeanGift with _$BeanGift {
 
   int get totalPrice => unitPrice * quantity;
 
-  String get summary => quantity == 1 ? beanName : '$beanName $quantity개';
+
 }

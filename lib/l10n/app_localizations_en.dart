@@ -1382,4 +1382,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pickupPaidAmount => 'Paid';
+
+  @override
+  String get giftStatusSent => 'Sent';
+
+  @override
+  String get giftStatusRedeemed => 'Received';
+
+  @override
+  String get orderDestinationNoRecipient => 'No recipient';
+
+  @override
+  String get orderDestinationNoStore => 'No store';
+
+  @override
+  String get accountDisplayFallback => 'Member';
+
+  @override
+  String get qrMalformed => 'That is not a valid membership QR code.';
+
+  @override
+  String get qrExpired =>
+      'That membership QR code has expired. Ask for a fresh one and scan again.';
 }

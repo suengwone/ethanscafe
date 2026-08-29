@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'membership_qr_failure.dart';
+
 const Duration membershipQrValidity = Duration(minutes: 3);
 const Duration membershipQrRefreshInterval = Duration(minutes: 1);
 
@@ -38,23 +40,23 @@ String encodeMembershipQrToken(
 String decodeMembershipQrToken(String code, {DateTime? now}) {
   final parts = code.trim().split('.');
   if (parts.length != 5 || parts[0] != _tokenPrefix) {
-    throw const FormatException('회원 QR 코드가 올바르지 않습니다.');
+    throw const MembershipQrException(MembershipQrFailure.malformed);
   }
 
   final payload = '${parts[1]}.${parts[2]}.${parts[3]}';
   final expiresAt = int.tryParse(parts[2]);
   if (expiresAt == null || parts[4] != _signature(payload)) {
-    throw const FormatException('회원 QR 코드가 올바르지 않습니다.');
+    throw const MembershipQrException(MembershipQrFailure.malformed);
   }
 
   final current = now ?? DateTime.now();
   if (current.millisecondsSinceEpoch > expiresAt) {
-    throw const FormatException('만료된 회원 QR 코드입니다. 갱신된 QR을 다시 스캔해주세요.');
+    throw const MembershipQrException(MembershipQrFailure.expired);
   }
 
   try {
     return utf8.decode(base64Url.decode(parts[1]));
   } on FormatException {
-    throw const FormatException('회원 QR 코드가 올바르지 않습니다.');
+    throw const MembershipQrException(MembershipQrFailure.malformed);
   }
 }

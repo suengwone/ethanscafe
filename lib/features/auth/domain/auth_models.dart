@@ -16,5 +16,6 @@ abstract class AppUser with _$AppUser {
     String? providerId,
   }) = _AppUser;
 
-  String get displayLabel => displayName ?? email ?? '회원';
+  /// 이름도 이메일도 없을 때 쓸 문구는 화면이 고른다.
+  String? get displayLabel => displayName ?? email;
 }

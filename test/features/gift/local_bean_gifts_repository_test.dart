@@ -49,7 +49,8 @@ void main() {
     expect(gift.status, BeanGiftStatus.sent);
     expect(gift.weight, BeanWeight.g200);
     expect(gift.grind, GrindOption.wholeBean);
-    expect(gift.summary, '에티오피아 예가체프 아리차 에이미 G1 2개');
+    expect(gift.beanName, '에티오피아 예가체프 아리차 에이미 G1');
+    expect(gift.quantity, 2);
   });
 
   test('받는 분 이름이 없으면 선물할 수 없다', () async {

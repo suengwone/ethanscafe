@@ -18,5 +18,4 @@ class RefundFailure {
   final int amount;
   final DateTime failedAt;
 
-  String get orderTypeLabel => orderType == 'pickup' ? '픽업' : '원두';
 }

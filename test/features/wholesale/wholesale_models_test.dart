@@ -66,12 +66,11 @@ void main() {
       expect(quote.totalAmount, 430000 + 185000);
     });
 
-    test('요약은 첫 원두와 나머지 건수를 보여준다', () {
-      expect(quote.summary, '페루 엘 바바코 버번 외 1건');
-      expect(
-        quote.copyWith(items: [quote.items.first]).summary,
-        '페루 엘 바바코 버번',
-      );
+    test('요약은 첫 원두와 전체 건수를 들고 있다', () {
+      // 문구("외 1건")는 언어를 타므로 화면이 붙인다.
+      expect(quote.firstItemName, '페루 엘 바바코 버번');
+      expect(quote.items, hasLength(2));
+      expect(quote.copyWith(items: [quote.items.first]).items, hasLength(1));
     });
 
     test('json 직렬화 왕복이 가능하다', () {

@@ -53,15 +53,15 @@ int validateCoupons({
   }
   final ids = coupons.map((coupon) => coupon.id).toSet();
   if (ids.length != coupons.length) {
-    throw StateError('같은 쿠폰은 한 번만 적용할 수 있습니다.');
+    throw StateError('A coupon can only be applied once.');
   }
   final regularCount = coupons.where((coupon) => !coupon.isStackable).length;
   if (regularCount > 1) {
-    throw StateError('중복 사용이 불가능한 쿠폰은 1장만 적용할 수 있습니다.');
+    throw StateError('Only one non-stacking coupon can be applied.');
   }
   for (final coupon in coupons) {
     if (!coupon.canApplyTo(orderAmount: orderAmount, now: now)) {
-      throw StateError('적용할 수 없는 쿠폰입니다.');
+      throw StateError('That coupon does not apply here.');
     }
   }
   return totalCouponDiscount(coupons, orderAmount);

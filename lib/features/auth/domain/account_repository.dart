@@ -45,21 +45,21 @@ void validateBusinessProfile(BusinessProfile business) {
     throw ArgumentError.value(
       business.companyName,
       'companyName',
-      '상호명이 비어 있습니다.',
+      'The company name is empty.',
     );
   }
   if (business.businessNumber.trim().isEmpty) {
     throw ArgumentError.value(
       business.businessNumber,
       'businessNumber',
-      '사업자등록번호가 비어 있습니다.',
+      'The business number is empty.',
     );
   }
   if (!isValidBusinessNumber(business.businessNumber)) {
     throw ArgumentError.value(
       business.businessNumber,
       'businessNumber',
-      '유효하지 않은 사업자등록번호입니다.',
+      'The business number is not valid.',
     );
   }
 }

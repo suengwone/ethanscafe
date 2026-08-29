@@ -111,10 +111,11 @@ void main() {
     });
   });
 
+  // 비어 있을 때 쓸 문구("수령인 미지정")는 언어를 타므로 화면이 고른다.
   group('원두 주문 수령지 표기', () {
     test('배송 주문은 수령인을 보여준다', () {
-      expect(_bean(recipient: '이단').destinationLabel, '이단');
-      expect(_bean().destinationLabel, '수령인 미지정');
+      expect(_bean(recipient: '이단').destination, '이단');
+      expect(_bean().destination, isNull);
     });
 
     test('픽업 주문은 매장을 보여준다', () {
@@ -122,13 +123,10 @@ void main() {
         _bean(
           method: BeanFulfillmentMethod.pickup,
           storeName: '폭스트롯 마천점',
-        ).destinationLabel,
+        ).destination,
         '폭스트롯 마천점',
       );
-      expect(
-        _bean(method: BeanFulfillmentMethod.pickup).destinationLabel,
-        '매장 미지정',
-      );
+      expect(_bean(method: BeanFulfillmentMethod.pickup).destination, isNull);
     });
   });
 }

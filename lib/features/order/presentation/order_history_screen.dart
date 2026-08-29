@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../../core/l10n/summary_labels.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/order_cancel_dialog.dart';
@@ -204,7 +205,15 @@ class _BeanOrderCard extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(order.summary.keepWord, style: textTheme.labelLarge),
+                      Text(
+                        AppLocalizations.of(context)
+                            .itemsSummary(
+                              order.firstItemName,
+                              order.items.length,
+                            )
+                            .keepWord,
+                        style: textTheme.labelLarge,
+                      ),
                       const SizedBox(height: 4),
                       Text(
                         _dateFormat.format(order.createdAt),
@@ -432,7 +441,12 @@ class _PickupOrderCard extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          order.summary.keepWord,
+                          AppLocalizations.of(context)
+                              .itemsSummary(
+                                order.firstItemName,
+                                order.items.length,
+                              )
+                              .keepWord,
                           style: textTheme.labelLarge,
                         ),
                         const SizedBox(height: 4),

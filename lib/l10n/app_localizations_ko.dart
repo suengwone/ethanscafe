@@ -1355,4 +1355,25 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get pickupPaidAmount => '결제 금액';
+
+  @override
+  String get giftStatusSent => '선물 전송';
+
+  @override
+  String get giftStatusRedeemed => '수령 완료';
+
+  @override
+  String get orderDestinationNoRecipient => '수령인 미지정';
+
+  @override
+  String get orderDestinationNoStore => '매장 미지정';
+
+  @override
+  String get accountDisplayFallback => '회원';
+
+  @override
+  String get qrMalformed => '회원 QR 코드가 올바르지 않습니다.';
+
+  @override
+  String get qrExpired => '만료된 회원 QR 코드입니다. 갱신된 QR을 다시 스캔해주세요.';
 }

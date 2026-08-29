@@ -6,6 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../features/beans/presentation/bean_labels.dart';
+import '../../../features/gift/presentation/gift_labels.dart';
 import '../../../l10n/app_localizations.dart';
 import '../domain/gift_models.dart';
 import 'gift_providers.dart';
@@ -116,7 +117,12 @@ class _GiftCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(gift.summary.keepWord, style: textTheme.labelLarge),
+                      Text(
+                        AppLocalizations.of(context)
+                            .beanQuantity(gift.beanName, gift.quantity)
+                            .keepWord,
+                        style: textTheme.labelLarge,
+                      ),
                       const SizedBox(height: 4),
                       Text(
                         _dateFormat.format(gift.createdAt),
@@ -186,7 +192,7 @@ class _GiftStatusChip extends StatelessWidget {
         border: Border.all(color: context.palette.border),
       ),
       child: Text(
-        status.label,
+        AppLocalizations.of(context).giftStatusLabel(status),
         style: Theme.of(context)
             .textTheme
             .bodySmall

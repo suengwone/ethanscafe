@@ -53,7 +53,8 @@ void main() {
     expect(order.pickupNumber, 1);
     expect(order.status, PickupOrderStatus.received);
     expect(order.itemCount, 3);
-    expect(order.summary, '바닐라 라떼 외 1건');
+    expect(order.firstItemName, '바닐라 라떼');
+    expect(order.items, hasLength(2));
     expect(order.items.first.nameWithOption, '바닐라 라떼 (ICED)');
     expect(order.items.last.nameWithOption, '크루아상');
 

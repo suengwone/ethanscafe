@@ -2527,6 +2527,48 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'결제 금액'**
   String get pickupPaidAmount;
+
+  /// No description provided for @giftStatusSent.
+  ///
+  /// In ko, this message translates to:
+  /// **'선물 전송'**
+  String get giftStatusSent;
+
+  /// No description provided for @giftStatusRedeemed.
+  ///
+  /// In ko, this message translates to:
+  /// **'수령 완료'**
+  String get giftStatusRedeemed;
+
+  /// No description provided for @orderDestinationNoRecipient.
+  ///
+  /// In ko, this message translates to:
+  /// **'수령인 미지정'**
+  String get orderDestinationNoRecipient;
+
+  /// No description provided for @orderDestinationNoStore.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 미지정'**
+  String get orderDestinationNoStore;
+
+  /// No description provided for @accountDisplayFallback.
+  ///
+  /// In ko, this message translates to:
+  /// **'회원'**
+  String get accountDisplayFallback;
+
+  /// No description provided for @qrMalformed.
+  ///
+  /// In ko, this message translates to:
+  /// **'회원 QR 코드가 올바르지 않습니다.'**
+  String get qrMalformed;
+
+  /// No description provided for @qrExpired.
+  ///
+  /// In ko, this message translates to:
+  /// **'만료된 회원 QR 코드입니다. 갱신된 QR을 다시 스캔해주세요.'**
+  String get qrExpired;
 }
 
 class _AppLocalizationsDelegate

@@ -144,7 +144,8 @@ void main() {
   test('주문 요약과 옵션 라벨을 제공한다', () async {
     final order = await repository.placeOrder(items: _items);
 
-    expect(order.summary, '에티오피아 예가체프 아리차 에이미 G1 외 1건');
+    expect(order.firstItemName, '에티오피아 예가체프 아리차 에이미 G1');
+    expect(order.items, hasLength(2));
     expect(order.items.first.weight, BeanWeight.g200);
     expect(order.items.first.grind, GrindOption.handDrip);
   });

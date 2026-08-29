@@ -47,11 +47,12 @@ class ActiveBeanOrder {
   final String? recipient;
   final String? storeName;
 
-  /// 배송이면 수령인을, 픽업이면 매장을 보여준다.
-  String get destinationLabel =>
+  /// 배송이면 수령인을, 픽업이면 매장을 보여준다. 둘 다 비어 있을 때 쓸 문구는
+  /// 언어를 타므로 화면이 고른다.
+  String? get destination =>
       fulfillmentMethod == BeanFulfillmentMethod.delivery
-          ? (recipient ?? '수령인 미지정')
-          : (storeName ?? '매장 미지정');
+      ? recipient
+      : storeName;
 }
 
 /// 상태 전환 흐름. 서버(`functions/order_transitions.js`)와 같은 순서를 쓴다.

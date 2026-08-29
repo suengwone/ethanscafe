@@ -877,5 +877,12 @@
       }
     }
   },
-  "pickupPaidAmount": "결제 금액"
+  "pickupPaidAmount": "결제 금액",
+  "giftStatusSent": "선물 전송",
+  "giftStatusRedeemed": "수령 완료",
+  "orderDestinationNoRecipient": "수령인 미지정",
+  "orderDestinationNoStore": "매장 미지정",
+  "accountDisplayFallback": "회원",
+  "qrMalformed": "회원 QR 코드가 올바르지 않습니다.",
+  "qrExpired": "만료된 회원 QR 코드입니다. 갱신된 QR을 다시 스캔해주세요."
 }

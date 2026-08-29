@@ -87,7 +87,7 @@ abstract class WholesaleQuote with _$WholesaleQuote {
 
   int get totalAmount => items.fold(0, (sum, item) => sum + item.totalPrice);
 
-  String get summary => items.length == 1
-      ? items.first.beanName
-      : '${items.first.beanName} 외 ${items.length - 1}건';
+  /// 목록에 보이는 대표 상품. 나머지 개수는 화면이 언어에 맞게 붙인다.
+  String get firstItemName =>
+      items.isEmpty ? '' : items.first.beanName;
 }

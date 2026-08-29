@@ -8,6 +8,8 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/qr_scanner_builder.dart';
+import '../../../l10n/app_localizations.dart';
+import '../domain/membership_qr_failure.dart';
 import '../domain/membership_qr_token.dart';
 import '../domain/points_models.dart';
 import 'points_providers.dart';
@@ -109,6 +111,14 @@ class _AdminPointsScanScreenState extends ConsumerState<AdminPointsScanScreen> {
   }
 
   String _errorMessage(Object error) {
+    if (error is MembershipQrException) {
+      return switch (error.reason) {
+        MembershipQrFailure.malformed => AppLocalizations.of(
+          context,
+        ).qrMalformed,
+        MembershipQrFailure.expired => AppLocalizations.of(context).qrExpired,
+      };
+    }
     if (error is FormatException) {
       return error.message;
     }

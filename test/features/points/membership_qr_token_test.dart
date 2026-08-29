@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:cafe_app/features/points/domain/membership_qr_token.dart';
+import 'package:cafe_app/features/points/domain/membership_qr_failure.dart';
 
 void main() {
   final issuedAt = DateTime(2026, 8, 16, 10, 0);
@@ -40,10 +41,10 @@ void main() {
         now: issuedAt.add(const Duration(minutes: 3, seconds: 1)),
       ),
       throwsA(
-        isA<FormatException>().having(
-          (error) => error.message,
-          'message',
-          contains('만료'),
+        isA<MembershipQrException>().having(
+          (error) => error.reason,
+          'reason',
+          MembershipQrFailure.expired,
         ),
       ),
     );
@@ -56,18 +57,24 @@ void main() {
 
     expect(
       () => decodeMembershipQrToken(parts.join('.'), now: issuedAt),
-      throwsFormatException,
+      throwsA(_malformed),
     );
   });
 
   test('형식이 다른 코드는 예외를 던진다', () {
     expect(
       () => decodeMembershipQrToken(membershipId, now: issuedAt),
-      throwsFormatException,
+      throwsA(_malformed),
     );
     expect(
       () => decodeMembershipQrToken('', now: issuedAt),
-      throwsFormatException,
+      throwsA(_malformed),
     );
   });
 }
+
+final _malformed = isA<MembershipQrException>().having(
+  (error) => error.reason,
+  'reason',
+  MembershipQrFailure.malformed,
+);
