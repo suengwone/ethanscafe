@@ -8,6 +8,7 @@ on:
       - firestore.rules
       - storage.rules
       - firestore.indexes.json
+      - remoteconfig.template.json
       - firebase.json
       - functions/**
       - .github/workflows/deploy.yml
@@ -107,6 +108,15 @@ jobs:
         run: >
           npx --yes "firebase-tools@^14" deploy
           --only firestore:indexes
+          --project foxtrot-3bdba
+          --non-interactive
+
+      # 원격 설정도 소스가 정답이다. 콘솔에서 고친 값은 다음 배포에 덮이므로
+      # 공지 문구든 최소 지원 버전이든 remoteconfig.template.json에서 고친다.
+      - name: Deploy remote config
+        run: >
+          npx --yes "firebase-tools@^14" deploy
+          --only remoteconfig
           --project foxtrot-3bdba
           --non-interactive
 

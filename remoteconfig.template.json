@@ -1,0 +1,37 @@
+{
+  "conditions": [],
+  "parameters": {
+    "min_supported_version": {
+      "defaultValue": {
+        "value": ""
+      },
+      "description": "이 버전보다 낮은 앱은 실행 시 업데이트 안내에 막힌다. 비워 두면 아무도 막지 않는다. 형식은 pubspec의 version과 같다 (1.2.3 또는 1.2.3+4).",
+      "valueType": "STRING"
+    },
+    "store_url": {
+      "defaultValue": {
+        "value": ""
+      },
+      "description": "업데이트 안내의 스토어 이동 버튼이 여는 주소. 비어 있으면 버튼을 감춘다. 플랫폼마다 다르므로 스토어에 앱을 올린 뒤 android/ios 조건을 붙여 채운다.",
+      "valueType": "STRING"
+    },
+    "notice_enabled": {
+      "defaultValue": {
+        "value": "false"
+      },
+      "description": "앱 상단 운영 공지 배너를 켠다. notice_message가 비어 있으면 켜도 보이지 않는다.",
+      "valueType": "BOOLEAN"
+    },
+    "notice_message": {
+      "defaultValue": {
+        "value": ""
+      },
+      "description": "운영 공지 배너에 띄울 한 줄. 서버 점검처럼 앱을 새로 올리지 않고 알려야 할 때 쓴다.",
+      "valueType": "STRING"
+    }
+  },
+  "parameterGroups": {},
+  "version": {
+    "description": "앱이 읽는 원격 설정 키 4종"
+  }
+}

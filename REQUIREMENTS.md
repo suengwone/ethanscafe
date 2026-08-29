@@ -367,7 +367,9 @@
   - ⚠️ `NAVER_CLIENT_SECRET`은 **웹 빌드에 주입 금지** (번들에 포함될 수 있음. 네이버 SDK 초기화는 `!kIsWeb` 가드)
   - iOS 스킴은 `ios/Flutter/SocialLogin.xcconfig`에서 관리
 - 토스페이먼츠: `TOSS_CLIENT_KEY` (dart-define), `TOSS_SECRET_KEY` (Functions 시크릿)
-- Remote Config 키 (Firebase 콘솔에서 설정 필요): `min_supported_version`, `store_url`, `notice_enabled`, `notice_message` — 미설정 시 기본값이 비어 있어 아무것도 차단하지 않음
+- Remote Config 키 4종은 `remoteconfig.template.json`에 **소스로 둔다**: `min_supported_version`, `store_url`, `notice_enabled`, `notice_message`
+  - 값도 소스에서 고친다. **콘솔에서 고친 값은 다음 배포에 덮인다** — 공지 문구를 급히 띄우더라도 커밋을 지나가게 해서 무엇이 왜 켜졌는지 남긴다
+  - 기본값은 모두 비어 있거나 꺼짐이라, 채우기 전에는 아무것도 차단하지 않고 아무 배너도 뜨지 않는다
 - Android: minSdk 23, compileSdk 37, AGP 9.0.1
 - 자산: `assets/images/menu/`, Pretendard 폰트
 
@@ -461,9 +463,8 @@
 1. ⬜ 이용약관·개인정보처리방침의 영문본 — 법률 검토를 거친 번역문이 있어야 넣을 수 있다 (§4.16 참고)
 2. ⬜ 저장소 시크릿 `FIREBASE_SERVICE_ACCOUNT` 등록 (미등록 시 `deploy.yml`이 첫 단계에서 멈춘다)
 3. ⬜ 토스페이먼츠 운영 키 발급 및 등록 (미설정 시 테스트 키·모의 결제로 동작)
-4. ⬜ Remote Config 키 4종 콘솔 등록 (`min_supported_version`, `store_url`, `notice_enabled`, `notice_message`)
-5. ⬜ 생체 인증(`local_auth`) 적용 여부 결정 — 적용 시 결제/포인트 사용 중 어디에 걸지 정해야 함
-6. ⬜ 매장 지도 SDK 도입 검토 (네이버/카카오 지도 — API 키 및 네이티브 설정 필요)
+4. ⬜ 매장 지도 SDK 도입 검토 (네이버/카카오 지도 — API 키 및 네이티브 설정 필요)
+5. ⬜ `store_url` 채우기 — 스토어에 앱을 올린 뒤 android/ios 조건을 붙인다. 지금은 비어 있어 업데이트 안내의 이동 버튼이 숨는다
 
 ## 8. 이번 정리에서 반영한 문서-코드 차이
 
@@ -529,3 +530,4 @@
 | 2026-08-17 | 주문·포인트·쿠폰 쓰기를 Cloud Functions 콜러블로 이관. 보안 규칙 강화 — 서버 가격 검증, 쿠폰 복원 서버 전용화, 판매량 서버 집계. 앱 운영 기능 추가(오프라인 배너·원격 강제 업데이트·리뷰 요청·성능 모니터링). **본 문서를 코드 기준으로 전면 재작성** |
 | 2026-08-30 | 알림함 — 보낸 푸시가 기기에서 사라지면 끝이던 것을 `notifications/{uid}` 문서에 최근 50건까지 남기고 `/notifications`에서 다시 보게 했다. 홈 종 아이콘에 안 읽은 수 뱃지를 얹고, 읽음·삭제는 본인이, 새 알림은 주문 상태 트리거가 쓴다. 알림함 적재는 푸시 설정과 분리해 푸시를 꺼 둔 사람도 주문 진행을 볼 수 있다. 두 홈이 따로 갖고 있던 원형 아이콘 버튼은 `CircleIconButton` 하나로 합쳤다 |
 | 2026-08-30 | 알림함을 채우는 곳을 늘렸다 — 포인트 트리거(`sendPointsChangePush`)가 적립·사용·충전·초대 보상을 알린다. 한 결제에서 생긴 사용·적립은 알림 하나로 묶고, 취소 환급은 취소 알림이 이미 말하므로 건너뛴다. 저장만 되고 아무도 읽지 않던 알림 설정의 항목별 토글을 서버가 보게 했고(주문 상태는 따로 끄지 못한다), 픽업 알림은 주문 내역이 아니라 추적 화면으로 보낸다. 만들어 주는 곳이 없던 분류 둘(선물·이벤트)은 걷어냈다 |
+| 2026-08-30 | 원격 설정을 소스로 — 콘솔에만 있어야 했던 Remote Config 키 4종을 `remoteconfig.template.json`에 적고 배포 파이프라인에 얹었다. 키가 없어 앱이 늘 기본값으로만 돌던 것을 끝내고, 최소 지원 버전·운영 공지를 누가 언제 왜 바꿨는지 커밋에 남긴다 |
