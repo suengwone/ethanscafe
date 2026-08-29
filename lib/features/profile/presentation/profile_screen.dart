@@ -200,6 +200,11 @@ class ProfileScreen extends ConsumerWidget {
                 onTap: () => context.push('/profile/notifications'),
               ),
               _buildListTile(
+                icon: LucideIcons.shieldCheck,
+                title: AppLocalizations.of(context).securitySettingsTitle,
+                onTap: () => context.push('/profile/security'),
+              ),
+              _buildListTile(
                 icon: LucideIcons.sunMoon,
                 title: AppLocalizations.of(context).settingsAppearanceTitle,
                 trailing: Text(

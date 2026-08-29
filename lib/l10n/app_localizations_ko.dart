@@ -2729,4 +2729,31 @@ class AppLocalizationsKo extends AppLocalizations {
 
     return '$dateString';
   }
+
+  @override
+  String get securitySettingsTitle => '보안';
+
+  @override
+  String get securityPointsLockTitle => '포인트 사용 잠금';
+
+  @override
+  String get securityPointsLockDetail =>
+      '포인트로 결제할 때 기기 잠금(생체 인증이나 PIN)을 확인합니다.';
+
+  @override
+  String get securityPointsLockWhy =>
+      '포인트는 충전해 둔 잔액이라 폰을 잃어버리면 그 자리에서 쓰일 수 있어요. 카드 결제는 결제창이 따로 본인을 확인합니다.';
+
+  @override
+  String get securityNoDeviceLock => '이 기기에는 화면 잠금이 없어 확인을 건너뜁니다.';
+
+  @override
+  String get pointsLockReason => '포인트를 사용하려면 본인 확인이 필요해요';
+
+  @override
+  String get pointsLockRefused => '본인 확인이 끝나지 않아 주문을 멈췄어요.';
+
+  @override
+  String get pointsLockLockedOut =>
+      '확인이 여러 번 막혀 기기가 잠갔어요. 기기 잠금을 푼 뒤 다시 시도해 주세요.';
 }

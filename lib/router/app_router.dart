@@ -30,6 +30,7 @@ import '../features/profile/presentation/notification_settings_screen.dart';
 import '../features/profile/presentation/payment_methods_screen.dart';
 import '../features/profile/presentation/policy_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
+import '../features/profile/presentation/security_settings_screen.dart';
 import '../features/profile/presentation/support_screen.dart';
 import '../features/referral/presentation/referral_screen.dart';
 import '../features/store/presentation/store_detail_screen.dart';
@@ -195,6 +196,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                     path: 'notifications',
                     builder: (context, state) =>
                         const NotificationSettingsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'security',
+                    builder: (context, state) => const SecuritySettingsScreen(),
                   ),
                   GoRoute(
                     path: 'appearance',

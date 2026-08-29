@@ -4981,6 +4981,54 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'{date}'**
   String notificationTimeOn(DateTime date);
+
+  /// No description provided for @securitySettingsTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'보안'**
+  String get securitySettingsTitle;
+
+  /// No description provided for @securityPointsLockTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 사용 잠금'**
+  String get securityPointsLockTitle;
+
+  /// No description provided for @securityPointsLockDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트로 결제할 때 기기 잠금(생체 인증이나 PIN)을 확인합니다.'**
+  String get securityPointsLockDetail;
+
+  /// No description provided for @securityPointsLockWhy.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트는 충전해 둔 잔액이라 폰을 잃어버리면 그 자리에서 쓰일 수 있어요. 카드 결제는 결제창이 따로 본인을 확인합니다.'**
+  String get securityPointsLockWhy;
+
+  /// No description provided for @securityNoDeviceLock.
+  ///
+  /// In ko, this message translates to:
+  /// **'이 기기에는 화면 잠금이 없어 확인을 건너뜁니다.'**
+  String get securityNoDeviceLock;
+
+  /// No description provided for @pointsLockReason.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트를 사용하려면 본인 확인이 필요해요'**
+  String get pointsLockReason;
+
+  /// No description provided for @pointsLockRefused.
+  ///
+  /// In ko, this message translates to:
+  /// **'본인 확인이 끝나지 않아 주문을 멈췄어요.'**
+  String get pointsLockRefused;
+
+  /// No description provided for @pointsLockLockedOut.
+  ///
+  /// In ko, this message translates to:
+  /// **'확인이 여러 번 막혀 기기가 잠갔어요. 기기 잠금을 푼 뒤 다시 시도해 주세요.'**
+  String get pointsLockLockedOut;
 }
 
 class _AppLocalizationsDelegate

@@ -2792,4 +2792,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
     return '$dateString';
   }
+
+  @override
+  String get securitySettingsTitle => 'Security';
+
+  @override
+  String get securityPointsLockTitle => 'Lock points spending';
+
+  @override
+  String get securityPointsLockDetail =>
+      'Check the device lock (biometrics or PIN) before points are spent.';
+
+  @override
+  String get securityPointsLockWhy =>
+      'Points are a balance you topped up, so a lost phone can spend them on the spot. Card payments are verified by the payment window itself.';
+
+  @override
+  String get securityNoDeviceLock =>
+      'This device has no screen lock, so the check is skipped.';
+
+  @override
+  String get pointsLockReason => 'Confirm it is you to spend points';
+
+  @override
+  String get pointsLockRefused =>
+      'The order stopped because the check did not finish.';
+
+  @override
+  String get pointsLockLockedOut =>
+      'Too many failed checks locked the device. Unlock it and try again.';
 }
