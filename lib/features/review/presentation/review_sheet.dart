@@ -4,6 +4,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../features/review/presentation/review_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/review_models.dart';
 import 'review_providers.dart';
 
@@ -69,14 +71,16 @@ class _ReviewSheetState extends ConsumerState<ReviewSheet> {
       if (mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('소중한 후기가 등록되었습니다.')),
+          SnackBar(content: Text(AppLocalizations.of(context).reviewSubmitted)),
         );
       }
     } catch (_) {
       if (mounted) {
         setState(() => _submitting = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('후기 등록에 실패했습니다. 다시 시도해주세요.')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).reviewSubmitFailed),
+          ),
         );
       }
     }
@@ -84,6 +88,7 @@ class _ReviewSheetState extends ConsumerState<ReviewSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
 
     return Padding(
@@ -97,7 +102,10 @@ class _ReviewSheetState extends ConsumerState<ReviewSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('${widget.productType.label} 후기 남기기', style: textTheme.titleMedium),
+          Text(
+            l10n.reviewSheetTitle(l10n.reviewProductTypeLabel(widget.productType)),
+            style: textTheme.titleMedium,
+          ),
           const SizedBox(height: 4),
           Text(widget.productName.keepWord, style: textTheme.bodySmall),
           const SizedBox(height: 16),
@@ -122,9 +130,7 @@ class _ReviewSheetState extends ConsumerState<ReviewSheet> {
             controller: _commentController,
             maxLines: 3,
             maxLength: 200,
-            decoration: const InputDecoration(
-              hintText: '맛과 향은 어떠셨나요? 후기를 남겨주세요.',
-            ),
+            decoration: InputDecoration(hintText: l10n.reviewSheetHint),
           ),
           const SizedBox(height: 12),
           SizedBox(
@@ -132,7 +138,9 @@ class _ReviewSheetState extends ConsumerState<ReviewSheet> {
             child: FilledButton.icon(
               onPressed: _submitting ? null : _submit,
               icon: const Icon(LucideIcons.messageSquareHeart, size: 18),
-              label: Text(_submitting ? '등록 중...' : '후기 등록'),
+              label: Text(
+                _submitting ? l10n.reviewSubmitting : l10n.reviewSubmit,
+              ),
             ),
           ),
         ],

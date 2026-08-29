@@ -565,6 +565,426 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'일반 고객 계정으로 전환'**
   String get businessSwitchBackAction;
+
+  /// No description provided for @priceWon.
+  ///
+  /// In ko, this message translates to:
+  /// **'{amount}원'**
+  String priceWon(String amount);
+
+  /// No description provided for @priceWonFrom.
+  ///
+  /// In ko, this message translates to:
+  /// **'{amount}원~'**
+  String priceWonFrom(String amount);
+
+  /// No description provided for @retry.
+  ///
+  /// In ko, this message translates to:
+  /// **'다시 시도'**
+  String get retry;
+
+  /// No description provided for @menuCategoryDrip.
+  ///
+  /// In ko, this message translates to:
+  /// **'드립 커피'**
+  String get menuCategoryDrip;
+
+  /// No description provided for @menuCategoryDripNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'싱글 오리진 원두 9종 · 매주 변경되는 시즌 컬렉션'**
+  String get menuCategoryDripNote;
+
+  /// No description provided for @menuCategoryEspresso.
+  ///
+  /// In ko, this message translates to:
+  /// **'에스프레소'**
+  String get menuCategoryEspresso;
+
+  /// No description provided for @menuCategoryEspressoNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'우유 변경 오트·아몬드·소이 +0.5 · 락토프리·저지방 +0.3\n시럽 추가 바닐라·카라멜·헤이즐넛·라벤더 +0.3'**
+  String get menuCategoryEspressoNote;
+
+  /// No description provided for @menuCategoryBeverage.
+  ///
+  /// In ko, this message translates to:
+  /// **'음료'**
+  String get menuCategoryBeverage;
+
+  /// No description provided for @menuCategoryBeverageNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'샷 추가 딸기라떼·발로나초코라떼·말차라떼·복숭아아이스티 +0.5'**
+  String get menuCategoryBeverageNote;
+
+  /// No description provided for @menuCategoryTea.
+  ///
+  /// In ko, this message translates to:
+  /// **'티'**
+  String get menuCategoryTea;
+
+  /// No description provided for @menuCategoryTeaNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'타바론(Tavalon) 프리미엄 티 컬렉션'**
+  String get menuCategoryTeaNote;
+
+  /// No description provided for @menuCategoryDessert.
+  ///
+  /// In ko, this message translates to:
+  /// **'디저트'**
+  String get menuCategoryDessert;
+
+  /// No description provided for @menuCategoryBeans.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두'**
+  String get menuCategoryBeans;
+
+  /// No description provided for @menuTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴'**
+  String get menuTitle;
+
+  /// No description provided for @menuLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴 정보를 불러오지 못했습니다.'**
+  String get menuLoadFailed;
+
+  /// No description provided for @menuDetailTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴 상세'**
+  String get menuDetailTitle;
+
+  /// No description provided for @menuOrderRequiresSignIn.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴 주문은 로그인 후 이용할 수 있어요.'**
+  String get menuOrderRequiresSignIn;
+
+  /// No description provided for @menuAddedToCart.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}을(를) 장바구니에 담았습니다.'**
+  String menuAddedToCart(String name);
+
+  /// No description provided for @menuViewCart.
+  ///
+  /// In ko, this message translates to:
+  /// **'보기'**
+  String get menuViewCart;
+
+  /// No description provided for @menuSoldOutNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'오늘은 준비된 재료가 떨어졌어요'**
+  String get menuSoldOutNotice;
+
+  /// No description provided for @menuPickupOrder.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 픽업 주문'**
+  String get menuPickupOrder;
+
+  /// No description provided for @menuSoldOut.
+  ///
+  /// In ko, this message translates to:
+  /// **'품절'**
+  String get menuSoldOut;
+
+  /// No description provided for @menuOrder.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문하기'**
+  String get menuOrder;
+
+  /// No description provided for @menuFavoriteAdd.
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기 등록'**
+  String get menuFavoriteAdd;
+
+  /// No description provided for @menuFavoriteRemove.
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기 해제'**
+  String get menuFavoriteRemove;
+
+  /// No description provided for @menuFavoriteAdded.
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기에 추가되었습니다.'**
+  String get menuFavoriteAdded;
+
+  /// No description provided for @menuFavoriteRemoved.
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기에서 삭제되었습니다.'**
+  String get menuFavoriteRemoved;
+
+  /// No description provided for @menuSectionAbout.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴 소개'**
+  String get menuSectionAbout;
+
+  /// No description provided for @menuSectionOptions.
+  ///
+  /// In ko, this message translates to:
+  /// **'옵션 안내'**
+  String get menuSectionOptions;
+
+  /// No description provided for @menuSectionDetails.
+  ///
+  /// In ko, this message translates to:
+  /// **'상세 정보'**
+  String get menuSectionDetails;
+
+  /// No description provided for @menuFieldCategory.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리'**
+  String get menuFieldCategory;
+
+  /// No description provided for @menuFieldPrice.
+  ///
+  /// In ko, this message translates to:
+  /// **'가격'**
+  String get menuFieldPrice;
+
+  /// No description provided for @menuFieldServingOptions.
+  ///
+  /// In ko, this message translates to:
+  /// **'제공 옵션'**
+  String get menuFieldServingOptions;
+
+  /// No description provided for @menuNotFound.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴를 찾을 수 없습니다: {menuId}'**
+  String menuNotFound(String menuId);
+
+  /// No description provided for @favoriteMenuTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기 메뉴'**
+  String get favoriteMenuTitle;
+
+  /// No description provided for @favoriteMenuLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'즐겨찾기 메뉴를 불러오지 못했습니다.'**
+  String get favoriteMenuLoadFailed;
+
+  /// No description provided for @favoriteMenuEmptyTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 즐겨찾기한 메뉴가 없어요'**
+  String get favoriteMenuEmptyTitle;
+
+  /// No description provided for @favoriteMenuEmptyDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴 상세에서 하트를 눌러 자주 마시는 메뉴를 등록해보세요.'**
+  String get favoriteMenuEmptyDetail;
+
+  /// No description provided for @favoriteMenuBrowse.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴 보러가기'**
+  String get favoriteMenuBrowse;
+
+  /// No description provided for @noticeCategoryEvent.
+  ///
+  /// In ko, this message translates to:
+  /// **'이벤트'**
+  String get noticeCategoryEvent;
+
+  /// No description provided for @noticeCategoryNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지'**
+  String get noticeCategoryNotice;
+
+  /// No description provided for @noticeCategoryBenefit.
+  ///
+  /// In ko, this message translates to:
+  /// **'혜택'**
+  String get noticeCategoryBenefit;
+
+  /// No description provided for @noticeListTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림'**
+  String get noticeListTitle;
+
+  /// No description provided for @noticeLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'알림을 불러오지 못했습니다.'**
+  String get noticeLoadFailed;
+
+  /// No description provided for @noticeEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'새로운 알림이 없어요'**
+  String get noticeEmpty;
+
+  /// No description provided for @noticeImportant.
+  ///
+  /// In ko, this message translates to:
+  /// **'중요'**
+  String get noticeImportant;
+
+  /// No description provided for @reviewProductTypeMenu.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴'**
+  String get reviewProductTypeMenu;
+
+  /// No description provided for @reviewProductTypeBean.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두'**
+  String get reviewProductTypeBean;
+
+  /// No description provided for @reviewSheetTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'{product} 후기 남기기'**
+  String reviewSheetTitle(String product);
+
+  /// No description provided for @reviewSheetHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'맛과 향은 어떠셨나요? 후기를 남겨주세요.'**
+  String get reviewSheetHint;
+
+  /// No description provided for @reviewSubmitting.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록 중...'**
+  String get reviewSubmitting;
+
+  /// No description provided for @reviewSubmit.
+  ///
+  /// In ko, this message translates to:
+  /// **'후기 등록'**
+  String get reviewSubmit;
+
+  /// No description provided for @reviewSubmitted.
+  ///
+  /// In ko, this message translates to:
+  /// **'소중한 후기가 등록되었습니다.'**
+  String get reviewSubmitted;
+
+  /// No description provided for @reviewSubmitFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'후기 등록에 실패했습니다. 다시 시도해주세요.'**
+  String get reviewSubmitFailed;
+
+  /// No description provided for @reviewSectionTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'리뷰'**
+  String get reviewSectionTitle;
+
+  /// No description provided for @reviewLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'리뷰를 불러오지 못했습니다.'**
+  String get reviewLoadFailed;
+
+  /// No description provided for @reviewMoreCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'외 {count}개의 리뷰가 있어요.'**
+  String reviewMoreCount(int count);
+
+  /// No description provided for @reviewEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'아직 리뷰가 없어요. 주문 내역에서 첫 리뷰를 남겨보세요.'**
+  String get reviewEmpty;
+
+  /// No description provided for @reviewRatingOutOfRange.
+  ///
+  /// In ko, this message translates to:
+  /// **'별점은 {min}~{max}점 사이여야 합니다.'**
+  String reviewRatingOutOfRange(int min, int max);
+
+  /// No description provided for @congestionUnknown.
+  ///
+  /// In ko, this message translates to:
+  /// **'정보 없음'**
+  String get congestionUnknown;
+
+  /// No description provided for @congestionRelaxed.
+  ///
+  /// In ko, this message translates to:
+  /// **'여유'**
+  String get congestionRelaxed;
+
+  /// No description provided for @congestionNormal.
+  ///
+  /// In ko, this message translates to:
+  /// **'보통'**
+  String get congestionNormal;
+
+  /// No description provided for @congestionBusy.
+  ///
+  /// In ko, this message translates to:
+  /// **'혼잡'**
+  String get congestionBusy;
+
+  /// No description provided for @paymentTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제하기'**
+  String get paymentTitle;
+
+  /// No description provided for @paymentApproving.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 승인 중...'**
+  String get paymentApproving;
+
+  /// No description provided for @paymentCheckFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 정보 확인에 실패했습니다. 다시 시도해 주세요.'**
+  String get paymentCheckFailed;
+
+  /// No description provided for @paymentApproveFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 승인에 실패했습니다. 다시 시도해 주세요.'**
+  String get paymentApproveFailed;
+
+  /// No description provided for @paymentFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제에 실패했습니다. 다시 시도해 주세요.'**
+  String get paymentFailed;
+
+  /// No description provided for @paymentProviderNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'토스페이먼츠 안전결제'**
+  String get paymentProviderNotice;
+
+  /// No description provided for @storeCongestionNow.
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 {congestion}'**
+  String storeCongestionNow(String congestion);
 }
 
 class _AppLocalizationsDelegate

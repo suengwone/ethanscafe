@@ -3,14 +3,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'review_models.freezed.dart';
 part 'review_models.g.dart';
 
-enum ReviewProductType {
-  menu('메뉴'),
-  bean('원두');
-
-  const ReviewProductType(this.label);
-
-  final String label;
-}
+/// 이름은 `review_labels.dart`의 확장이 l10n에서 꺼내 온다.
+enum ReviewProductType { menu, bean }
 
 enum ProductBadge { hit, best }
 
@@ -60,7 +54,7 @@ void validateReviewRating(int rating) {
     throw ArgumentError.value(
       rating,
       'rating',
-      '별점은 $minReviewRating~$maxReviewRating점 사이여야 합니다.',
+      'The rating must be between $minReviewRating and $maxReviewRating.',
     );
   }
 }

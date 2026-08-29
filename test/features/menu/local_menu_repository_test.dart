@@ -13,7 +13,7 @@ void main() {
       expect(
         items.where((item) => item.category == category),
         isNotEmpty,
-        reason: '${category.label} 카테고리가 비어있습니다.',
+        reason: '${category.name} 카테고리가 비어있습니다.',
       );
     }
   });
@@ -32,7 +32,9 @@ void main() {
     final affogato =
         items.firstWhere((item) => item.id == 'espresso-haagen-dazs-affogato');
 
-    expect(americano.priceLabel, '5,000원');
-    expect(affogato.priceLabel, '6,800원~');
+    // 통화 표기는 화면이 붙인다. 모델은 숫자 서식까지만 책임진다.
+    expect(americano.formattedPrice, '5,000');
+    expect(affogato.formattedPrice, '6,800');
+    expect(affogato.priceFrom, isTrue);
   });
 }

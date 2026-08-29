@@ -6,11 +6,13 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
+import '../../../features/menu/presentation/menu_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/login_required.dart';
 import '../../pickup/presentation/pickup_cart_providers.dart';
-import '../../review/presentation/product_review_section.dart';
 import '../../pickup/presentation/pickup_cart_screen.dart';
 import '../../pickup/presentation/pickup_option_sheet.dart';
+import '../../review/presentation/product_review_section.dart';
 import '../domain/menu_models.dart';
 import 'menu_providers.dart';
 
@@ -26,7 +28,7 @@ class MenuDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('메뉴 상세'),
+        title: Text(AppLocalizations.of(context).menuDetailTitle),
         actions: [
           _FavoriteButton(menuId: menuId),
           const PickupCartButton(),
@@ -39,11 +41,11 @@ class MenuDetailScreen extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('메뉴 정보를 불러오지 못했습니다.'),
+              Text(AppLocalizations.of(context).menuLoadFailed),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.invalidate(menuItemProvider(menuId)),
-                child: const Text('다시 시도'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -61,7 +63,8 @@ class _PickupOrderBar extends ConsumerWidget {
   final MenuItem item;
 
   Future<void> _order(BuildContext context, WidgetRef ref) async {
-    if (!requireLogin(context, ref, message: '메뉴 주문은 로그인 후 이용할 수 있어요.')) {
+    final l10n = AppLocalizations.of(context);
+    if (!requireLogin(context, ref, message: l10n.menuOrderRequiresSignIn)) {
       return;
     }
 
@@ -75,9 +78,9 @@ class _PickupOrderBar extends ConsumerWidget {
         );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${item.name}을(를) 장바구니에 담았습니다.'),
+        content: Text(l10n.menuAddedToCart(item.name)),
         action: SnackBarAction(
-          label: '보기',
+          label: l10n.menuViewCart,
           onPressed: () => context.push('/menu/cart'),
         ),
       ),
@@ -102,11 +105,13 @@ class _PickupOrderBar extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      item.soldOut ? '오늘은 준비된 재료가 떨어졌어요' : '매장 픽업 주문',
+                      item.soldOut
+                          ? AppLocalizations.of(context).menuSoldOutNotice
+                          : AppLocalizations.of(context).menuPickupOrder,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     Text(
-                      item.priceLabel,
+                      AppLocalizations.of(context).menuPriceLabel(item),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -119,7 +124,11 @@ class _PickupOrderBar extends ConsumerWidget {
               FilledButton.icon(
                 onPressed: item.soldOut ? null : () => _order(context, ref),
                 icon: const Icon(LucideIcons.coffee, size: 18),
-                label: Text(item.soldOut ? '품절' : '주문하기'),
+                label: Text(
+                  item.soldOut
+                      ? AppLocalizations.of(context).menuSoldOut
+                      : AppLocalizations.of(context).menuOrder,
+                ),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 28,
@@ -150,7 +159,9 @@ class _FavoriteButton extends ConsumerWidget {
         isFavorite ? LucideIcons.heart600 : LucideIcons.heart,
         color: isFavorite ? context.palette.accent : null,
       ),
-      tooltip: isFavorite ? '즐겨찾기 해제' : '즐겨찾기 등록',
+      tooltip: isFavorite
+          ? AppLocalizations.of(context).menuFavoriteRemove
+          : AppLocalizations.of(context).menuFavoriteAdd,
       onPressed: () async {
         await ref.read(favoritesProvider.notifier).toggle(menuId);
         if (!context.mounted) return;
@@ -159,7 +170,9 @@ class _FavoriteButton extends ConsumerWidget {
           ..showSnackBar(
             SnackBar(
               content: Text(
-                isFavorite ? '즐겨찾기에서 삭제되었습니다.' : '즐겨찾기에 추가되었습니다.',
+                isFavorite
+                    ? AppLocalizations.of(context).menuFavoriteRemoved
+                    : AppLocalizations.of(context).menuFavoriteAdded,
               ),
               duration: const Duration(seconds: 1),
             ),
@@ -190,7 +203,7 @@ class _MenuDetailBody extends StatelessWidget {
           const SizedBox(height: 16),
           if (item.detail != null) ...[
             _SectionCard(
-              title: '메뉴 소개',
+              title: AppLocalizations.of(context).menuSectionAbout,
               child: Text(
                 item.detail!.keepWord,
                 style: Theme.of(context)
@@ -202,12 +215,13 @@ class _MenuDetailBody extends StatelessWidget {
             const SizedBox(height: 16),
           ],
           _InfoSection(item: item),
-          if (item.category.note != null) ...[
+          if (AppLocalizations.of(context).menuCategoryNote(item.category)
+              case final note?) ...[
             const SizedBox(height: 16),
             _SectionCard(
-              title: '옵션 안내',
+              title: AppLocalizations.of(context).menuSectionOptions,
               child: Text(
-                item.category.note!.keepWord,
+                note.keepWord,
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall
@@ -285,7 +299,7 @@ class _HeaderSection extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             Text(
-              item.priceLabel,
+              AppLocalizations.of(context).menuPriceLabel(item),
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -337,14 +351,21 @@ class _InfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return _SectionCard(
-      title: '상세 정보',
+      title: l10n.menuSectionDetails,
       child: Column(
         children: [
-          _InfoRow(label: '카테고리', value: item.category.label),
-          _InfoRow(label: '가격', value: item.priceLabel),
+          _InfoRow(
+            label: l10n.menuFieldCategory,
+            value: l10n.menuCategoryLabel(item.category),
+          ),
+          _InfoRow(label: l10n.menuFieldPrice, value: l10n.menuPriceLabel(item)),
           if (item.servingOptions.isNotEmpty)
-            _InfoRow(label: '제공 옵션', value: item.servingOptions.join(' · ')),
+            _InfoRow(
+              label: l10n.menuFieldServingOptions,
+              value: item.servingOptions.join(' · '),
+            ),
         ],
       ),
     );

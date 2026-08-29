@@ -257,4 +257,231 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get businessSwitchBackAction => '일반 고객 계정으로 전환';
+
+  @override
+  String priceWon(String amount) {
+    return '$amount원';
+  }
+
+  @override
+  String priceWonFrom(String amount) {
+    return '$amount원~';
+  }
+
+  @override
+  String get retry => '다시 시도';
+
+  @override
+  String get menuCategoryDrip => '드립 커피';
+
+  @override
+  String get menuCategoryDripNote => '싱글 오리진 원두 9종 · 매주 변경되는 시즌 컬렉션';
+
+  @override
+  String get menuCategoryEspresso => '에스프레소';
+
+  @override
+  String get menuCategoryEspressoNote =>
+      '우유 변경 오트·아몬드·소이 +0.5 · 락토프리·저지방 +0.3\n시럽 추가 바닐라·카라멜·헤이즐넛·라벤더 +0.3';
+
+  @override
+  String get menuCategoryBeverage => '음료';
+
+  @override
+  String get menuCategoryBeverageNote => '샷 추가 딸기라떼·발로나초코라떼·말차라떼·복숭아아이스티 +0.5';
+
+  @override
+  String get menuCategoryTea => '티';
+
+  @override
+  String get menuCategoryTeaNote => '타바론(Tavalon) 프리미엄 티 컬렉션';
+
+  @override
+  String get menuCategoryDessert => '디저트';
+
+  @override
+  String get menuCategoryBeans => '원두';
+
+  @override
+  String get menuTitle => '메뉴';
+
+  @override
+  String get menuLoadFailed => '메뉴 정보를 불러오지 못했습니다.';
+
+  @override
+  String get menuDetailTitle => '메뉴 상세';
+
+  @override
+  String get menuOrderRequiresSignIn => '메뉴 주문은 로그인 후 이용할 수 있어요.';
+
+  @override
+  String menuAddedToCart(String name) {
+    return '$name을(를) 장바구니에 담았습니다.';
+  }
+
+  @override
+  String get menuViewCart => '보기';
+
+  @override
+  String get menuSoldOutNotice => '오늘은 준비된 재료가 떨어졌어요';
+
+  @override
+  String get menuPickupOrder => '매장 픽업 주문';
+
+  @override
+  String get menuSoldOut => '품절';
+
+  @override
+  String get menuOrder => '주문하기';
+
+  @override
+  String get menuFavoriteAdd => '즐겨찾기 등록';
+
+  @override
+  String get menuFavoriteRemove => '즐겨찾기 해제';
+
+  @override
+  String get menuFavoriteAdded => '즐겨찾기에 추가되었습니다.';
+
+  @override
+  String get menuFavoriteRemoved => '즐겨찾기에서 삭제되었습니다.';
+
+  @override
+  String get menuSectionAbout => '메뉴 소개';
+
+  @override
+  String get menuSectionOptions => '옵션 안내';
+
+  @override
+  String get menuSectionDetails => '상세 정보';
+
+  @override
+  String get menuFieldCategory => '카테고리';
+
+  @override
+  String get menuFieldPrice => '가격';
+
+  @override
+  String get menuFieldServingOptions => '제공 옵션';
+
+  @override
+  String menuNotFound(String menuId) {
+    return '메뉴를 찾을 수 없습니다: $menuId';
+  }
+
+  @override
+  String get favoriteMenuTitle => '즐겨찾기 메뉴';
+
+  @override
+  String get favoriteMenuLoadFailed => '즐겨찾기 메뉴를 불러오지 못했습니다.';
+
+  @override
+  String get favoriteMenuEmptyTitle => '아직 즐겨찾기한 메뉴가 없어요';
+
+  @override
+  String get favoriteMenuEmptyDetail => '메뉴 상세에서 하트를 눌러 자주 마시는 메뉴를 등록해보세요.';
+
+  @override
+  String get favoriteMenuBrowse => '메뉴 보러가기';
+
+  @override
+  String get noticeCategoryEvent => '이벤트';
+
+  @override
+  String get noticeCategoryNotice => '공지';
+
+  @override
+  String get noticeCategoryBenefit => '혜택';
+
+  @override
+  String get noticeListTitle => '알림';
+
+  @override
+  String get noticeLoadFailed => '알림을 불러오지 못했습니다.';
+
+  @override
+  String get noticeEmpty => '새로운 알림이 없어요';
+
+  @override
+  String get noticeImportant => '중요';
+
+  @override
+  String get reviewProductTypeMenu => '메뉴';
+
+  @override
+  String get reviewProductTypeBean => '원두';
+
+  @override
+  String reviewSheetTitle(String product) {
+    return '$product 후기 남기기';
+  }
+
+  @override
+  String get reviewSheetHint => '맛과 향은 어떠셨나요? 후기를 남겨주세요.';
+
+  @override
+  String get reviewSubmitting => '등록 중...';
+
+  @override
+  String get reviewSubmit => '후기 등록';
+
+  @override
+  String get reviewSubmitted => '소중한 후기가 등록되었습니다.';
+
+  @override
+  String get reviewSubmitFailed => '후기 등록에 실패했습니다. 다시 시도해주세요.';
+
+  @override
+  String get reviewSectionTitle => '리뷰';
+
+  @override
+  String get reviewLoadFailed => '리뷰를 불러오지 못했습니다.';
+
+  @override
+  String reviewMoreCount(int count) {
+    return '외 $count개의 리뷰가 있어요.';
+  }
+
+  @override
+  String get reviewEmpty => '아직 리뷰가 없어요. 주문 내역에서 첫 리뷰를 남겨보세요.';
+
+  @override
+  String reviewRatingOutOfRange(int min, int max) {
+    return '별점은 $min~$max점 사이여야 합니다.';
+  }
+
+  @override
+  String get congestionUnknown => '정보 없음';
+
+  @override
+  String get congestionRelaxed => '여유';
+
+  @override
+  String get congestionNormal => '보통';
+
+  @override
+  String get congestionBusy => '혼잡';
+
+  @override
+  String get paymentTitle => '결제하기';
+
+  @override
+  String get paymentApproving => '결제 승인 중...';
+
+  @override
+  String get paymentCheckFailed => '결제 정보 확인에 실패했습니다. 다시 시도해 주세요.';
+
+  @override
+  String get paymentApproveFailed => '결제 승인에 실패했습니다. 다시 시도해 주세요.';
+
+  @override
+  String get paymentFailed => '결제에 실패했습니다. 다시 시도해 주세요.';
+
+  @override
+  String get paymentProviderNotice => '토스페이먼츠 안전결제';
+
+  @override
+  String storeCongestionNow(String congestion) {
+    return '현재 $congestion';
+  }
 }

@@ -6,6 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/text_utils.dart';
 import '../../../../core/widgets/new_badge.dart';
+import '../../../../features/menu/presentation/menu_labels.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../menu/domain/menu_models.dart';
 import '../../../menu/presentation/menu_detail_screen.dart';
@@ -134,7 +135,7 @@ class _RecommendedCard extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            item.priceLabel,
+            AppLocalizations.of(context).menuPriceLabel(item),
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],

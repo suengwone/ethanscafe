@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../features/notice/presentation/notice_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../notice/domain/notice_models.dart';
 import 'catalog_admin_providers.dart';
 
@@ -180,7 +182,9 @@ class _NoticeEditScreenState extends ConsumerState<NoticeEditScreen> {
                 for (final category in NoticeCategory.values)
                   DropdownMenuItem(
                     value: category,
-                    child: Text(category.label),
+                    child: Text(
+                      AppLocalizations.of(context).noticeCategoryLabel(category),
+                    ),
                   ),
               ],
               onChanged: (value) =>

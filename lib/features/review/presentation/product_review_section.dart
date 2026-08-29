@@ -5,6 +5,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/review_models.dart';
 import 'review_providers.dart';
 import 'review_sheet.dart';
@@ -23,6 +24,7 @@ class ProductReviewSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
     final reviewsState = ref.watch(productReviewsProvider(productId));
     final stats =
@@ -36,7 +38,7 @@ class ProductReviewSection extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Text('리뷰', style: textTheme.titleMedium),
+                Text(l10n.reviewSectionTitle, style: textTheme.titleMedium),
                 if (stats != null && stats.hasRating) ...[
                   const SizedBox(width: 8),
                   Icon(
@@ -65,7 +67,7 @@ class ProductReviewSection extends ConsumerWidget {
                 ),
               ),
               error: (error, _) => Text(
-                '리뷰를 불러오지 못했습니다.',
+                l10n.reviewLoadFailed,
                 style: textTheme.bodySmall,
               ),
               data: (reviews) {
@@ -87,7 +89,7 @@ class ProductReviewSection extends ConsumerWidget {
                     if (reviews.length > maxVisible) ...[
                       const SizedBox(height: 12),
                       Text(
-                        '외 ${reviews.length - maxVisible}개의 리뷰가 있어요.',
+                        l10n.reviewMoreCount(reviews.length - maxVisible),
                         style: textTheme.bodySmall,
                       ),
                     ],
@@ -107,6 +109,7 @@ class _EmptyReviews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
     return Row(
       children: [
@@ -118,7 +121,7 @@ class _EmptyReviews extends StatelessWidget {
         const SizedBox(width: 8),
         Expanded(
           child: Text(
-            '아직 리뷰가 없어요. 주문 내역에서 첫 리뷰를 남겨보세요.'.keepWord,
+            l10n.reviewEmpty.keepWord,
             style: textTheme.bodySmall,
           ),
         ),

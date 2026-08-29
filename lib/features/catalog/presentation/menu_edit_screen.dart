@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../features/menu/presentation/menu_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../menu/domain/menu_models.dart';
 import 'catalog_admin_providers.dart';
 
@@ -174,7 +176,9 @@ class _MenuEditScreenState extends ConsumerState<MenuEditScreen> {
                 for (final category in MenuCategory.values)
                   DropdownMenuItem(
                     value: category,
-                    child: Text(category.label),
+                    child: Text(
+                      AppLocalizations.of(context).menuCategoryLabel(category),
+                    ),
                   ),
               ],
               onChanged: (value) => setState(

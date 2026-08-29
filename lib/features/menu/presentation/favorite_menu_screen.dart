@@ -5,6 +5,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../features/menu/presentation/menu_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/menu_models.dart';
 import 'menu_detail_screen.dart';
 import 'menu_providers.dart';
@@ -14,21 +16,22 @@ class FavoriteMenuScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final favoritesState = ref.watch(favoriteMenuItemsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('즐겨찾기 메뉴')),
+      appBar: AppBar(title: Text(l10n.favoriteMenuTitle)),
       body: favoritesState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('즐겨찾기 메뉴를 불러오지 못했습니다.'),
+              Text(l10n.favoriteMenuLoadFailed),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.invalidate(favoriteMenuItemsProvider),
-                child: const Text('다시 시도'),
+                child: Text(l10n.retry),
               ),
             ],
           ),
@@ -54,6 +57,7 @@ class _EmptyFavorites extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -61,19 +65,19 @@ class _EmptyFavorites extends StatelessWidget {
           Icon(LucideIcons.heart, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text(
-            '아직 즐겨찾기한 메뉴가 없어요',
+            l10n.favoriteMenuEmptyTitle,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           Text(
-            '메뉴 상세에서 하트를 눌러 자주 마시는 메뉴를 등록해보세요.'.keepWord,
+            l10n.favoriteMenuEmptyDetail.keepWord,
             style: Theme.of(context).textTheme.bodySmall,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
           FilledButton(
             onPressed: () => context.go('/menu'),
-            child: const Text('메뉴 보러가기'),
+            child: Text(l10n.favoriteMenuBrowse),
           ),
         ],
       ),
@@ -88,6 +92,7 @@ class _FavoriteTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
@@ -97,12 +102,14 @@ class _FavoriteTile extends ConsumerWidget {
           style: Theme.of(context).textTheme.labelLarge,
         ),
         subtitle: Text(
-          '${item.category.label} · ${item.priceLabel}'.keepWord,
+          '${l10n.menuCategoryLabel(item.category)} · '
+                  '${l10n.menuPriceLabel(item)}'
+              .keepWord,
           style: Theme.of(context).textTheme.bodySmall,
         ),
         trailing: IconButton(
           icon: Icon(LucideIcons.heart600, color: context.palette.accent),
-          tooltip: '즐겨찾기 해제',
+          tooltip: l10n.menuFavoriteRemove,
           onPressed: () =>
               ref.read(favoritesProvider.notifier).toggle(item.id),
         ),

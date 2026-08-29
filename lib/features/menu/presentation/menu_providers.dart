@@ -34,7 +34,7 @@ final menuItemProvider =
   final items = await ref.watch(menuItemsProvider.future);
   return items.firstWhere(
     (item) => item.id == menuId,
-    orElse: () => throw StateError('메뉴를 찾을 수 없습니다: $menuId'),
+    orElse: () => throw StateError('Menu item not found: $menuId'),
   );
 });
 

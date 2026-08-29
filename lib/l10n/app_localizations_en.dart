@@ -264,4 +264,236 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get businessSwitchBackAction => 'Switch back to a personal account';
+
+  @override
+  String priceWon(String amount) {
+    return '₩$amount';
+  }
+
+  @override
+  String priceWonFrom(String amount) {
+    return 'From ₩$amount';
+  }
+
+  @override
+  String get retry => 'Try again';
+
+  @override
+  String get menuCategoryDrip => 'Drip coffee';
+
+  @override
+  String get menuCategoryDripNote =>
+      'Nine single origins · a seasonal collection that changes weekly';
+
+  @override
+  String get menuCategoryEspresso => 'Espresso';
+
+  @override
+  String get menuCategoryEspressoNote =>
+      'Milk swap oat, almond, soy +0.5 · lactose-free, low-fat +0.3\nSyrup vanilla, caramel, hazelnut, lavender +0.3';
+
+  @override
+  String get menuCategoryBeverage => 'Drinks';
+
+  @override
+  String get menuCategoryBeverageNote =>
+      'Extra shot strawberry latte, Valrhona chocolate latte, matcha latte, peach iced tea +0.5';
+
+  @override
+  String get menuCategoryTea => 'Tea';
+
+  @override
+  String get menuCategoryTeaNote => 'The Tavalon premium tea collection';
+
+  @override
+  String get menuCategoryDessert => 'Desserts';
+
+  @override
+  String get menuCategoryBeans => 'Beans';
+
+  @override
+  String get menuTitle => 'Menu';
+
+  @override
+  String get menuLoadFailed => 'Could not load the menu.';
+
+  @override
+  String get menuDetailTitle => 'Menu item';
+
+  @override
+  String get menuOrderRequiresSignIn => 'Sign in to order from the menu.';
+
+  @override
+  String menuAddedToCart(String name) {
+    return '$name is in your cart.';
+  }
+
+  @override
+  String get menuViewCart => 'View';
+
+  @override
+  String get menuSoldOutNotice => 'We ran out of what this needs today';
+
+  @override
+  String get menuPickupOrder => 'Pick up in store';
+
+  @override
+  String get menuSoldOut => 'Sold out';
+
+  @override
+  String get menuOrder => 'Order';
+
+  @override
+  String get menuFavoriteAdd => 'Add to favorites';
+
+  @override
+  String get menuFavoriteRemove => 'Remove from favorites';
+
+  @override
+  String get menuFavoriteAdded => 'Added to your favorites.';
+
+  @override
+  String get menuFavoriteRemoved => 'Removed from your favorites.';
+
+  @override
+  String get menuSectionAbout => 'About this item';
+
+  @override
+  String get menuSectionOptions => 'Options';
+
+  @override
+  String get menuSectionDetails => 'Details';
+
+  @override
+  String get menuFieldCategory => 'Category';
+
+  @override
+  String get menuFieldPrice => 'Price';
+
+  @override
+  String get menuFieldServingOptions => 'Served as';
+
+  @override
+  String menuNotFound(String menuId) {
+    return 'Menu item not found: $menuId';
+  }
+
+  @override
+  String get favoriteMenuTitle => 'Favorite items';
+
+  @override
+  String get favoriteMenuLoadFailed => 'Could not load your favorites.';
+
+  @override
+  String get favoriteMenuEmptyTitle => 'No favorites yet';
+
+  @override
+  String get favoriteMenuEmptyDetail =>
+      'Tap the heart on a menu item to keep the ones you drink often.';
+
+  @override
+  String get favoriteMenuBrowse => 'Browse the menu';
+
+  @override
+  String get noticeCategoryEvent => 'Event';
+
+  @override
+  String get noticeCategoryNotice => 'Notice';
+
+  @override
+  String get noticeCategoryBenefit => 'Perk';
+
+  @override
+  String get noticeListTitle => 'Notifications';
+
+  @override
+  String get noticeLoadFailed => 'Could not load your notifications.';
+
+  @override
+  String get noticeEmpty => 'Nothing new';
+
+  @override
+  String get noticeImportant => 'Important';
+
+  @override
+  String get reviewProductTypeMenu => 'Menu item';
+
+  @override
+  String get reviewProductTypeBean => 'Beans';
+
+  @override
+  String reviewSheetTitle(String product) {
+    return 'Review this $product';
+  }
+
+  @override
+  String get reviewSheetHint => 'How did it taste and smell? Tell us about it.';
+
+  @override
+  String get reviewSubmitting => 'Posting…';
+
+  @override
+  String get reviewSubmit => 'Post review';
+
+  @override
+  String get reviewSubmitted => 'Thanks — your review is posted.';
+
+  @override
+  String get reviewSubmitFailed => 'Could not post your review. Try again.';
+
+  @override
+  String get reviewSectionTitle => 'Reviews';
+
+  @override
+  String get reviewLoadFailed => 'Could not load the reviews.';
+
+  @override
+  String reviewMoreCount(int count) {
+    return 'and $count more reviews.';
+  }
+
+  @override
+  String get reviewEmpty =>
+      'No reviews yet. Leave the first one from your order history.';
+
+  @override
+  String reviewRatingOutOfRange(int min, int max) {
+    return 'The rating must be between $min and $max.';
+  }
+
+  @override
+  String get congestionUnknown => 'No data';
+
+  @override
+  String get congestionRelaxed => 'Quiet';
+
+  @override
+  String get congestionNormal => 'Steady';
+
+  @override
+  String get congestionBusy => 'Busy';
+
+  @override
+  String get paymentTitle => 'Payment';
+
+  @override
+  String get paymentApproving => 'Approving payment…';
+
+  @override
+  String get paymentCheckFailed =>
+      'Could not confirm the payment details. Try again.';
+
+  @override
+  String get paymentApproveFailed => 'The payment was not approved. Try again.';
+
+  @override
+  String get paymentFailed => 'The payment failed. Try again.';
+
+  @override
+  String get paymentProviderNotice => 'Secured by Toss Payments';
+
+  @override
+  String storeCongestionNow(String congestion) {
+    return '$congestion right now';
+  }
 }

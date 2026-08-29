@@ -5,21 +5,14 @@ part 'menu_models.freezed.dart';
 
 final _menuPriceFormat = NumberFormat('#,###');
 
+/// 이름과 설명은 읽는 사람의 언어를 타므로 여기 두지 않는다. `menu_labels.dart`
+/// 의 확장이 l10n에서 꺼내 온다.
 enum MenuCategory {
-  drip('드립 커피', '싱글 오리진 원두 9종 · 매주 변경되는 시즌 컬렉션'),
-  espresso(
-    '에스프레소',
-    '우유 변경 오트·아몬드·소이 +0.5 · 락토프리·저지방 +0.3\n'
-        '시럽 추가 바닐라·카라멜·헤이즐넛·라벤더 +0.3',
-  ),
-  beverage('음료', '샷 추가 딸기라떼·발로나초코라떼·말차라떼·복숭아아이스티 +0.5'),
-  tea('티', '타바론(Tavalon) 프리미엄 티 컬렉션'),
-  dessert('디저트', null);
-
-  const MenuCategory(this.label, this.note);
-
-  final String label;
-  final String? note;
+  drip,
+  espresso,
+  beverage,
+  tea,
+  dessert;
 
   String get imageAsset => 'assets/images/menu/$name.png';
 }
@@ -45,8 +38,8 @@ abstract class MenuItem with _$MenuItem {
     @Default(0) int sortOrder,
   }) = _MenuItem;
 
-  String get priceLabel =>
-      '${_menuPriceFormat.format(price)}원${priceFrom ? '~' : ''}';
+  /// 통화 표기가 언어를 타므로 화면은 `menu_labels.dart`의 확장을 쓴다.
+  String get formattedPrice => _menuPriceFormat.format(price);
 
   String get imageAsset => category.imageAsset;
 }

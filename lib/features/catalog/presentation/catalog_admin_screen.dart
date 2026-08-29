@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../features/menu/presentation/menu_labels.dart';
+import '../../../features/notice/presentation/notice_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../beans/domain/bean_models.dart';
 import '../../beans/presentation/beans_providers.dart';
 import '../../home/domain/banner_models.dart';
@@ -93,13 +96,16 @@ class _MenuTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     return _CatalogList<MenuItem>(
       state: ref.watch(menuItemsProvider),
       errorMessage: '메뉴를 불러오지 못했습니다.',
       emptyMessage: '등록된 메뉴가 없습니다.',
       onRetry: () => ref.invalidate(menuItemsProvider),
       nameOf: (item) => item.name,
-      subtitleOf: (item) => '${item.category.label} · ${item.priceLabel}',
+      subtitleOf: (item) =>
+          '${l10n.menuCategoryLabel(item.category)} · '
+          '${l10n.menuPriceLabel(item)}',
       soldOutOf: (item) => item.soldOut,
       onSoldOutChanged: (item, soldOut) => ref
           .read(catalogAdminControllerProvider)
@@ -185,6 +191,7 @@ class _NoticeTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     return _CatalogList<Notice>(
       state: ref.watch(noticesProvider),
       errorMessage: '공지를 불러오지 못했습니다.',
@@ -192,7 +199,8 @@ class _NoticeTab extends ConsumerWidget {
       onRetry: () => ref.invalidate(noticesProvider),
       nameOf: (notice) => notice.title,
       subtitleOf: (notice) =>
-          '${notice.category.label} · ${_noticeDateFormat.format(notice.createdAt)}',
+          '${l10n.noticeCategoryLabel(notice.category)} · '
+          '${_noticeDateFormat.format(notice.createdAt)}',
       onTap: (context, notice) => Navigator.of(context).push(
         MaterialPageRoute<void>(
           builder: (context) => NoticeEditScreen(notice: notice),

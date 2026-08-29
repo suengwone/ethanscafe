@@ -5,14 +5,10 @@ part 'store_models.freezed.dart';
 /// 매장 혼잡도. 직원이 카탈로그 관리에서 눌러 올리거나,
 /// 없으면 진행 중인 픽업 주문 수로 서버가 자동으로 잰다.
 enum StoreCongestion {
-  unknown('정보 없음'),
-  relaxed('여유'),
-  normal('보통'),
-  busy('혼잡');
-
-  const StoreCongestion(this.label);
-
-  final String label;
+  unknown,
+  relaxed,
+  normal,
+  busy;
 }
 
 /// `09:00 - 21:00` 형태의 영업시간 문자열.

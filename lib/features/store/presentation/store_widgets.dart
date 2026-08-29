@@ -4,6 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../features/store/presentation/store_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/store_models.dart';
 
 /// 매장 목록과 매장 상세가 함께 쓰는 조각들.
@@ -109,7 +111,11 @@ class StoreCongestionBadge extends StatelessWidget {
     if (color == null) {
       return const SizedBox.shrink();
     }
-    return StoreBadge(label: '현재 ${view.congestion.label}', color: color);
+    final l10n = AppLocalizations.of(context);
+    return StoreBadge(
+      label: l10n.storeCongestionNow(l10n.congestionLabel(view.congestion)),
+      color: color,
+    );
   }
 }
 

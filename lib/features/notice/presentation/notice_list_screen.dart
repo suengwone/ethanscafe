@@ -5,6 +5,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../features/notice/presentation/notice_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/notice_models.dart';
 import 'notices_providers.dart';
 
@@ -18,18 +20,18 @@ class NoticeListScreen extends ConsumerWidget {
     final noticesState = ref.watch(noticesProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('알림')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).noticeListTitle)),
       body: noticesState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('알림을 불러오지 못했습니다.'),
+              Text(AppLocalizations.of(context).noticeLoadFailed),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.invalidate(noticesProvider),
-                child: const Text('다시 시도'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -62,7 +64,7 @@ class _EmptyNotices extends StatelessWidget {
           Icon(LucideIcons.bellOff, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text(
-            '새로운 알림이 없어요',
+            AppLocalizations.of(context).noticeEmpty,
             style: Theme.of(context).textTheme.titleMedium,
           ),
         ],
@@ -142,7 +144,7 @@ class _CategoryBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
       ),
       child: Text(
-        category.label,
+        AppLocalizations.of(context).noticeCategoryLabel(category),
         style: TextStyle(fontSize: 11, color: context.palette.accentSoft),
       ),
     );
@@ -161,7 +163,7 @@ class _ImportantBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
       ),
       child: Text(
-        '중요',
+        AppLocalizations.of(context).noticeImportant,
         style: TextStyle(
           fontSize: 11,
           color: context.palette.onAccent,

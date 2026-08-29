@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../features/store/presentation/store_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../store/domain/store_models.dart';
 import '../../store/presentation/stores_providers.dart';
 import '../domain/comma_list.dart';
@@ -254,7 +256,11 @@ class _StoreEditScreenState extends ConsumerState<StoreEditScreen> {
               children: StoreCongestion.values
                   .map(
                     (congestion) => ChoiceChip(
-                      label: Text(congestion.label),
+                      label: Text(
+                        AppLocalizations.of(
+                          context,
+                        ).congestionLabel(congestion),
+                      ),
                       selected: _congestion == congestion,
                       // 같은 값을 다시 눌러도 시각만 새로 찍는다.
                       onSelected: (_) => setState(() {

@@ -99,7 +99,7 @@ void main() {
 
     await tester.tap(find.byType(DropdownButtonFormField<NoticeCategory>));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(NoticeCategory.event.label).last);
+    await tester.tap(find.text('이벤트').last);
     await tester.pumpAndSettle();
     await tester.tap(find.byType(SwitchListTile));
     await tester.pumpAndSettle();

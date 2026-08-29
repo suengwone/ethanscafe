@@ -6,6 +6,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../features/menu/presentation/menu_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/login_required.dart';
 import '../../coupon/domain/coupon_models.dart';
 import '../../coupon/presentation/coupon_select_sheet.dart';
@@ -370,7 +372,10 @@ class _CartItemCard extends ConsumerWidget {
                       ),
                       const SizedBox(height: 3),
                       Text(
-                        item.optionLabel ?? item.menuItem.category.label,
+                        item.optionLabel ??
+                            AppLocalizations.of(
+                              context,
+                            ).menuCategoryLabel(item.menuItem.category),
                         style: textTheme.bodySmall,
                       ),
                     ],

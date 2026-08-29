@@ -1,16 +1,16 @@
+
+import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/text_utils.dart';
+import '../../../l10n/app_localizations.dart';
+import '../domain/payment_models.dart';
+import '../domain/payments_repository.dart';
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
-import '../../../core/theme/app_theme.dart';
-import '../../../core/utils/text_utils.dart';
-import '../domain/payment_models.dart';
-import '../domain/payments_repository.dart';
 
 const tossClientKey = String.fromEnvironment(
   'TOSS_CLIENT_KEY',
@@ -113,7 +113,7 @@ class _TossPaymentScreenState extends State<TossPaymentScreen> {
     if (paymentKey == null ||
         orderId != widget.request.orderId ||
         amount != widget.request.amount) {
-      _finishWithError('결제 정보 확인에 실패했습니다. 다시 시도해 주세요.');
+      _finishWithError(AppLocalizations.of(context).paymentCheckFailed);
       return;
     }
 
@@ -129,7 +129,7 @@ class _TossPaymentScreenState extends State<TossPaymentScreen> {
       }
       Navigator.pop(context, approval);
     } catch (_) {
-      _finishWithError('결제 승인에 실패했습니다. 다시 시도해 주세요.');
+      _finishWithError(AppLocalizations.of(context).paymentApproveFailed);
     }
   }
 
@@ -139,7 +139,8 @@ class _TossPaymentScreenState extends State<TossPaymentScreen> {
       return;
     }
     _finishWithError(
-      uri.queryParameters['message'] ?? '결제에 실패했습니다. 다시 시도해 주세요.',
+      uri.queryParameters['message'] ??
+          AppLocalizations.of(context).paymentFailed,
     );
   }
 
@@ -158,7 +159,7 @@ class _TossPaymentScreenState extends State<TossPaymentScreen> {
     final controller = _controller;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('결제하기')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).paymentTitle)),
       body: Column(
         children: [
           _PaymentSummary(request: widget.request),
@@ -180,7 +181,7 @@ class _TossPaymentScreenState extends State<TossPaymentScreen> {
                           const CircularProgressIndicator(),
                           const SizedBox(height: 16),
                           Text(
-                            '결제 승인 중...',
+                            AppLocalizations.of(context).paymentApproving,
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],
@@ -244,13 +245,18 @@ class _PaymentSummary extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 3),
-                Text('토스페이먼츠 안전결제', style: textTheme.bodySmall),
+                Text(
+                  AppLocalizations.of(context).paymentProviderNotice,
+                  style: textTheme.bodySmall,
+                ),
               ],
             ),
           ),
           const SizedBox(width: 10),
           Text(
-            '${_amountFormat.format(request.amount)}원',
+            AppLocalizations.of(
+              context,
+            ).priceWon(_amountFormat.format(request.amount)),
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,

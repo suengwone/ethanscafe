@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
+import '../../../features/menu/presentation/menu_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../beans/presentation/beans_list_view.dart';
 import '../../pickup/presentation/pickup_cart_screen.dart';
 import '../../review/domain/review_models.dart';
@@ -18,22 +20,20 @@ class MenuScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     return DefaultTabController(
       length: 6,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('메뉴'),
+          title: Text(l10n.menuTitle),
           actions: const [PickupCartButton(), SizedBox(width: 4)],
-          bottom: const TabBar(
+          bottom: TabBar(
             isScrollable: true,
             tabAlignment: TabAlignment.center,
             tabs: [
-              Tab(text: '드립 커피'),
-              Tab(text: '에스프레소'),
-              Tab(text: '음료'),
-              Tab(text: '티'),
-              Tab(text: '디저트'),
-              Tab(text: '원두'),
+              for (final category in MenuCategory.values)
+                Tab(text: l10n.menuCategoryLabel(category)),
+              Tab(text: l10n.menuCategoryBeans),
             ],
           ),
         ),
@@ -67,18 +67,18 @@ class _MenuList extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('메뉴 정보를 불러오지 못했습니다.'),
+            Text(AppLocalizations.of(context).menuLoadFailed),
             const SizedBox(height: 8),
             TextButton(
               onPressed: () =>
                   ref.invalidate(menuItemsByCategoryProvider(category)),
-              child: const Text('다시 시도'),
+              child: Text(AppLocalizations.of(context).retry),
             ),
           ],
         ),
       ),
       data: (menuItems) {
-        final note = category.note;
+        final note = AppLocalizations.of(context).menuCategoryNote(category);
         return ListView.builder(
           padding: foxtrotListPadding,
           itemCount: menuItems.length + (note == null ? 0 : 1),
@@ -133,7 +133,7 @@ class _MenuTile extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              item.priceLabel,
+              AppLocalizations.of(context).menuPriceLabel(item),
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,

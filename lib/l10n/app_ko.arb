@@ -115,5 +115,134 @@
   "businessLabelPhone": "연락처",
   "businessActiveTitle": "사업자 계정 사용 중",
   "businessActiveDescription": "홈 화면에서 도매 원두 시세를 확인하고 견적을 요청할 수 있어요.",
-  "businessSwitchBackAction": "일반 고객 계정으로 전환"
+  "businessSwitchBackAction": "일반 고객 계정으로 전환",
+  "priceWon": "{amount}원",
+  "@priceWon": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "priceWonFrom": "{amount}원~",
+  "@priceWonFrom": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "retry": "다시 시도",
+  "menuCategoryDrip": "드립 커피",
+  "menuCategoryDripNote": "싱글 오리진 원두 9종 · 매주 변경되는 시즌 컬렉션",
+  "menuCategoryEspresso": "에스프레소",
+  "menuCategoryEspressoNote": "우유 변경 오트·아몬드·소이 +0.5 · 락토프리·저지방 +0.3\n시럽 추가 바닐라·카라멜·헤이즐넛·라벤더 +0.3",
+  "menuCategoryBeverage": "음료",
+  "menuCategoryBeverageNote": "샷 추가 딸기라떼·발로나초코라떼·말차라떼·복숭아아이스티 +0.5",
+  "menuCategoryTea": "티",
+  "menuCategoryTeaNote": "타바론(Tavalon) 프리미엄 티 컬렉션",
+  "menuCategoryDessert": "디저트",
+  "menuCategoryBeans": "원두",
+  "menuTitle": "메뉴",
+  "menuLoadFailed": "메뉴 정보를 불러오지 못했습니다.",
+  "menuDetailTitle": "메뉴 상세",
+  "menuOrderRequiresSignIn": "메뉴 주문은 로그인 후 이용할 수 있어요.",
+  "menuAddedToCart": "{name}을(를) 장바구니에 담았습니다.",
+  "@menuAddedToCart": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "menuViewCart": "보기",
+  "menuSoldOutNotice": "오늘은 준비된 재료가 떨어졌어요",
+  "menuPickupOrder": "매장 픽업 주문",
+  "menuSoldOut": "품절",
+  "menuOrder": "주문하기",
+  "menuFavoriteAdd": "즐겨찾기 등록",
+  "menuFavoriteRemove": "즐겨찾기 해제",
+  "menuFavoriteAdded": "즐겨찾기에 추가되었습니다.",
+  "menuFavoriteRemoved": "즐겨찾기에서 삭제되었습니다.",
+  "menuSectionAbout": "메뉴 소개",
+  "menuSectionOptions": "옵션 안내",
+  "menuSectionDetails": "상세 정보",
+  "menuFieldCategory": "카테고리",
+  "menuFieldPrice": "가격",
+  "menuFieldServingOptions": "제공 옵션",
+  "menuNotFound": "메뉴를 찾을 수 없습니다: {menuId}",
+  "@menuNotFound": {
+    "placeholders": {
+      "menuId": {
+        "type": "String"
+      }
+    }
+  },
+  "favoriteMenuTitle": "즐겨찾기 메뉴",
+  "favoriteMenuLoadFailed": "즐겨찾기 메뉴를 불러오지 못했습니다.",
+  "favoriteMenuEmptyTitle": "아직 즐겨찾기한 메뉴가 없어요",
+  "favoriteMenuEmptyDetail": "메뉴 상세에서 하트를 눌러 자주 마시는 메뉴를 등록해보세요.",
+  "favoriteMenuBrowse": "메뉴 보러가기",
+  "noticeCategoryEvent": "이벤트",
+  "noticeCategoryNotice": "공지",
+  "noticeCategoryBenefit": "혜택",
+  "noticeListTitle": "알림",
+  "noticeLoadFailed": "알림을 불러오지 못했습니다.",
+  "noticeEmpty": "새로운 알림이 없어요",
+  "noticeImportant": "중요",
+  "reviewProductTypeMenu": "메뉴",
+  "reviewProductTypeBean": "원두",
+  "reviewSheetTitle": "{product} 후기 남기기",
+  "@reviewSheetTitle": {
+    "placeholders": {
+      "product": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewSheetHint": "맛과 향은 어떠셨나요? 후기를 남겨주세요.",
+  "reviewSubmitting": "등록 중...",
+  "reviewSubmit": "후기 등록",
+  "reviewSubmitted": "소중한 후기가 등록되었습니다.",
+  "reviewSubmitFailed": "후기 등록에 실패했습니다. 다시 시도해주세요.",
+  "reviewSectionTitle": "리뷰",
+  "reviewLoadFailed": "리뷰를 불러오지 못했습니다.",
+  "reviewMoreCount": "외 {count}개의 리뷰가 있어요.",
+  "@reviewMoreCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewEmpty": "아직 리뷰가 없어요. 주문 내역에서 첫 리뷰를 남겨보세요.",
+  "reviewRatingOutOfRange": "별점은 {min}~{max}점 사이여야 합니다.",
+  "@reviewRatingOutOfRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "congestionUnknown": "정보 없음",
+  "congestionRelaxed": "여유",
+  "congestionNormal": "보통",
+  "congestionBusy": "혼잡",
+  "paymentTitle": "결제하기",
+  "paymentApproving": "결제 승인 중...",
+  "paymentCheckFailed": "결제 정보 확인에 실패했습니다. 다시 시도해 주세요.",
+  "paymentApproveFailed": "결제 승인에 실패했습니다. 다시 시도해 주세요.",
+  "paymentFailed": "결제에 실패했습니다. 다시 시도해 주세요.",
+  "paymentProviderNotice": "토스페이먼츠 안전결제",
+  "storeCongestionNow": "현재 {congestion}",
+  "@storeCongestionNow": {
+    "placeholders": {
+      "congestion": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -2,15 +2,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'notice_models.freezed.dart';
 
-enum NoticeCategory {
-  event('이벤트'),
-  notice('공지'),
-  benefit('혜택');
-
-  const NoticeCategory(this.label);
-
-  final String label;
-}
+/// 이름은 `notice_labels.dart`의 확장이 l10n에서 꺼내 온다.
+enum NoticeCategory { event, notice, benefit }
 
 @freezed
 abstract class Notice with _$Notice {
