@@ -12,8 +12,10 @@ import '../../profile/domain/delivery_address.dart';
 import '../../review/presentation/review_providers.dart';
 import '../../store/domain/store_models.dart';
 import '../data/cloud_functions_bean_checkout_repository.dart';
+import '../data/local_bean_checkout.dart';
 import '../data/firestore_bean_orders_repository.dart';
 import '../data/local_bean_orders_repository.dart';
+import '../domain/bean_checkout.dart';
 import '../domain/bean_orders_repository.dart';
 import '../domain/order_models.dart';
 
@@ -29,15 +31,22 @@ final beanOrdersRepositoryProvider = Provider<BeanOrdersRepository>((ref) {
   return LocalBeanOrdersRepository();
 });
 
-final beanCloudCheckoutProvider =
-    Provider<CloudFunctionsBeanCheckoutRepository?>((ref) {
+final beanCheckoutProvider = Provider<BeanCheckout>((ref) {
   try {
     if (Firebase.apps.isNotEmpty &&
         ref.watch(authStateProvider).value != null) {
       return CloudFunctionsBeanCheckoutRepository();
     }
   } catch (_) {}
-  return null;
+  // 로컬 저장소는 SharedPreferences만 붙들고 있어 인스턴스를 새로 만들어도
+  // beanOrdersRepositoryProvider가 읽는 것과 같은 주문을 본다.
+  return LocalBeanCheckout(
+    orders: LocalBeanOrdersRepository(),
+    coupons: ref.watch(couponsRepositoryProvider),
+    points: ref.watch(pointsRepositoryProvider),
+    reviews: ref.watch(reviewsRepositoryProvider),
+    isMember: ref.watch(authStateProvider).value != null,
+  );
 });
 
 final beanOrdersControllerProvider =
@@ -102,77 +111,12 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
       throw StateError('결제 승인 금액이 주문 금액과 일치하지 않습니다.');
     }
 
-    final cloudCheckout = ref.read(beanCloudCheckoutProvider);
-    if (cloudCheckout != null) {
-      final order = await cloudCheckout.placeOrder(
-        items: items,
-        usedPoints: usedPoints,
-        couponIds: [for (final coupon in coupons) coupon.id],
-        payment: payment,
-        fulfillmentMethod: fulfillmentMethod,
-        storeId: fulfillmentMethod == BeanFulfillmentMethod.pickup
-            ? pickupStore?.id
-            : null,
-        storeName: fulfillmentMethod == BeanFulfillmentMethod.pickup
-            ? pickupStore?.name
-            : null,
-        recipient: fulfillmentMethod == BeanFulfillmentMethod.delivery
-            ? deliveryAddress?.recipient
-            : null,
-        recipientPhone: fulfillmentMethod == BeanFulfillmentMethod.delivery
-            ? deliveryAddress?.phone
-            : null,
-        shippingAddress: fulfillmentMethod == BeanFulfillmentMethod.delivery
-            ? _fullAddress(deliveryAddress)
-            : null,
-      );
-      if (coupons.isNotEmpty) {
-        ref.invalidate(couponsControllerProvider);
-      }
-      ref.invalidate(pointsControllerProvider);
-      state = AsyncValue.data([order, ...state.value ?? const []]);
-      await _afterOrderPlaced(items, recordSales: false);
-      return order;
-    }
-
-    if (coupons.isNotEmpty) {
-      final couponsRepository = ref.read(couponsRepositoryProvider);
-      for (final coupon in coupons) {
-        await couponsRepository.markUsed(coupon.id);
-      }
-      ref.invalidate(couponsControllerProvider);
-    }
-
-    final pointsRepository = ref.read(pointsRepositoryProvider);
-    if (usedPoints > 0) {
-      await pointsRepository.usePoints(
-        amount: usedPoints,
-        description: beanOrderPointsUseDescription,
-      );
-    }
-
-    final isMember = ref.read(authStateProvider).value != null;
-    var earnedPoints = 0;
-    if (paidAmount > 0 && isMember) {
-      final pointsData = await pointsRepository.recordPayment(
-        paymentAmount: paidAmount,
-        description: beanOrderPaymentDescription,
-      );
-      final entry =
-          pointsData.history.isEmpty ? null : pointsData.history.first;
-      earnedPoints = entry != null && entry.isEarn ? entry.amount : 0;
-    }
-    ref.invalidate(pointsControllerProvider);
-
-    final order = await ref.read(beanOrdersRepositoryProvider).placeOrder(
+    final order = await ref.read(beanCheckoutProvider).placeOrder(
           items: items,
-          usedPoints: usedPoints,
-          earnedPoints: earnedPoints,
-          couponId: couponIdsLabel(coupons),
-          couponTitle: couponTitlesLabel(coupons),
+          coupons: coupons,
           couponDiscount: couponDiscount,
-          paymentKey: payment?.paymentKey,
-          paymentMethod: payment?.method,
+          usedPoints: usedPoints,
+          payment: payment,
           fulfillmentMethod: fulfillmentMethod,
           storeId: fulfillmentMethod == BeanFulfillmentMethod.pickup
               ? pickupStore?.id
@@ -190,67 +134,21 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
               ? _fullAddress(deliveryAddress)
               : null,
         );
+
+    if (coupons.isNotEmpty) {
+      ref.invalidate(couponsControllerProvider);
+    }
+    ref.invalidate(pointsControllerProvider);
+    ref.invalidate(productStatsProvider);
     state = AsyncValue.data([order, ...state.value ?? const []]);
-    await _afterOrderPlaced(items, recordSales: true);
+    await ref.read(appReviewServiceProvider).onOrderPlaced();
     return order;
   }
 
-  Future<void> _afterOrderPlaced(
-    List<BeanOrderItem> items, {
-    required bool recordSales,
-  }) async {
-    // 서버 주문은 판매량을 주문 트랜잭션에서 집계하므로 클라이언트는 건너뛴다.
-    if (recordSales) {
-      await _recordSales(items);
-    } else {
-      ref.invalidate(productStatsProvider);
-    }
-    await ref.read(appReviewServiceProvider).onOrderPlaced();
-  }
-
-  Future<void> _recordSales(List<BeanOrderItem> items) async {
-    final salesByBean = <String, int>{};
-    for (final item in items) {
-      salesByBean[item.beanId] = (salesByBean[item.beanId] ?? 0) + item.quantity;
-    }
-    await ref.read(reviewsRepositoryProvider).recordSales(salesByBean);
-    ref.invalidate(productStatsProvider);
-  }
-
   Future<BeanOrder> cancelOrder(String orderId) async {
-    final cloudCheckout = ref.read(beanCloudCheckoutProvider);
-    if (cloudCheckout != null) {
-      final cancelled = await cloudCheckout.cancelOrder(orderId);
-      ref.invalidate(couponsControllerProvider);
-      ref.invalidate(pointsControllerProvider);
-      state = AsyncValue.data([
-        for (final order in state.value ?? const <BeanOrder>[])
-          if (order.id == orderId) cancelled else order,
-      ]);
-      return cancelled;
-    }
-
-    final cancelled =
-        await ref.read(beanOrdersRepositoryProvider).cancelOrder(orderId);
-
-    final couponId = cancelled.couponId;
-    if (couponId != null && couponId.isNotEmpty) {
-      final couponsRepository = ref.read(couponsRepositoryProvider);
-      for (final id in couponId.split(',')) {
-        await couponsRepository.markUnused(id);
-      }
-      ref.invalidate(couponsControllerProvider);
-    }
-
-    if (cancelled.usedPoints > 0 || cancelled.earnedPoints > 0) {
-      await ref.read(pointsRepositoryProvider).refundOrderPoints(
-        usedPoints: cancelled.usedPoints,
-        earnedPoints: cancelled.earnedPoints,
-        description: beanOrderCancelDescription,
-      );
-      ref.invalidate(pointsControllerProvider);
-    }
-
+    final cancelled = await ref.read(beanCheckoutProvider).cancelOrder(orderId);
+    ref.invalidate(couponsControllerProvider);
+    ref.invalidate(pointsControllerProvider);
     state = AsyncValue.data([
       for (final order in state.value ?? const <BeanOrder>[])
         if (order.id == orderId) cancelled else order,

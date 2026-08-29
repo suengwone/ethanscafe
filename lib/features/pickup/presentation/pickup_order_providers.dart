@@ -10,9 +10,11 @@ import '../../points/presentation/points_providers.dart';
 import '../../review/presentation/review_providers.dart';
 import '../../store/domain/store_models.dart';
 import '../data/cloud_functions_pickup_checkout_repository.dart';
+import '../data/local_pickup_checkout.dart';
 import '../data/firestore_pickup_orders_repository.dart';
 import '../data/local_pickup_orders_repository.dart';
 import '../domain/pickup_cart_models.dart';
+import '../domain/pickup_checkout.dart';
 import '../domain/pickup_order_models.dart';
 import '../domain/pickup_orders_repository.dart';
 
@@ -28,15 +30,22 @@ final pickupOrdersRepositoryProvider = Provider<PickupOrdersRepository>((ref) {
   return LocalPickupOrdersRepository();
 });
 
-final pickupCloudCheckoutProvider =
-    Provider<CloudFunctionsPickupCheckoutRepository?>((ref) {
+final pickupCheckoutProvider = Provider<PickupCheckout>((ref) {
   try {
     if (Firebase.apps.isNotEmpty &&
         ref.watch(authStateProvider).value != null) {
       return CloudFunctionsPickupCheckoutRepository();
     }
   } catch (_) {}
-  return null;
+  // 로컬 저장소는 SharedPreferences만 붙들고 있어 인스턴스를 새로 만들어도
+  // pickupOrdersRepositoryProvider가 읽는 것과 같은 주문을 본다.
+  return LocalPickupCheckout(
+    orders: LocalPickupOrdersRepository(),
+    coupons: ref.watch(couponsRepositoryProvider),
+    points: ref.watch(pointsRepositoryProvider),
+    reviews: ref.watch(reviewsRepositoryProvider),
+    isMember: ref.watch(authStateProvider).value != null,
+  );
 });
 
 final pickupOrderTrackingProvider = StreamProvider.autoDispose
@@ -108,131 +117,31 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
       throw StateError('결제 승인 금액이 주문 금액과 일치하지 않습니다.');
     }
 
-    final cloudCheckout = ref.read(pickupCloudCheckoutProvider);
-    if (cloudCheckout != null) {
-      final order = await cloudCheckout.placeOrder(
-        items: items,
-        storeId: store.id,
-        storeName: store.name,
-        usedPoints: usedPoints,
-        couponIds: [for (final coupon in coupons) coupon.id],
-        payment: payment,
-      );
-      if (coupons.isNotEmpty) {
-        ref.invalidate(couponsControllerProvider);
-      }
-      ref.invalidate(pointsControllerProvider);
-      state = AsyncValue.data([order, ...state.value ?? const []]);
-      await _afterOrderPlaced(items, recordSales: false);
-      return order;
-    }
-
-    if (coupons.isNotEmpty) {
-      final couponsRepository = ref.read(couponsRepositoryProvider);
-      for (final coupon in coupons) {
-        await couponsRepository.markUsed(coupon.id);
-      }
-      ref.invalidate(couponsControllerProvider);
-    }
-
-    final pointsRepository = ref.read(pointsRepositoryProvider);
-    if (usedPoints > 0) {
-      await pointsRepository.usePoints(
-        amount: usedPoints,
-        description: pickupOrderPointsUseDescription,
-      );
-    }
-
-    final isMember = ref.read(authStateProvider).value != null;
-    var earnedPoints = 0;
-    if (paidAmount > 0 && isMember) {
-      final pointsData = await pointsRepository.recordPayment(
-        paymentAmount: paidAmount,
-        description: pickupOrderPaymentDescription,
-      );
-      final entry =
-          pointsData.history.isEmpty ? null : pointsData.history.first;
-      earnedPoints = entry != null && entry.isEarn ? entry.amount : 0;
-    }
-    ref.invalidate(pointsControllerProvider);
-
-    final order = await ref
-        .read(pickupOrdersRepositoryProvider)
-        .placeOrder(
+    final order = await ref.read(pickupCheckoutProvider).placeOrder(
           items: items,
           storeId: store.id,
           storeName: store.name,
-          usedPoints: usedPoints,
-          earnedPoints: earnedPoints,
-          couponId: couponIdsLabel(coupons),
-          couponTitle: couponTitlesLabel(coupons),
+          coupons: coupons,
           couponDiscount: couponDiscount,
-          paymentKey: payment?.paymentKey,
-          paymentMethod: payment?.method,
+          usedPoints: usedPoints,
+          payment: payment,
         );
+
+    if (coupons.isNotEmpty) {
+      ref.invalidate(couponsControllerProvider);
+    }
+    ref.invalidate(pointsControllerProvider);
+    ref.invalidate(productStatsProvider);
     state = AsyncValue.data([order, ...state.value ?? const []]);
-    await _afterOrderPlaced(items, recordSales: true);
+    await ref.read(appReviewServiceProvider).onOrderPlaced();
     return order;
   }
 
-  Future<void> _afterOrderPlaced(
-    List<PickupOrderItem> items, {
-    required bool recordSales,
-  }) async {
-    // 서버 주문은 판매량을 주문 트랜잭션에서 집계하므로 클라이언트는 건너뛴다.
-    if (recordSales) {
-      await _recordSales(items);
-    } else {
-      ref.invalidate(productStatsProvider);
-    }
-    await ref.read(appReviewServiceProvider).onOrderPlaced();
-  }
-
-  Future<void> _recordSales(List<PickupOrderItem> items) async {
-    final salesByMenu = <String, int>{};
-    for (final item in items) {
-      salesByMenu[item.menuId] =
-          (salesByMenu[item.menuId] ?? 0) + item.quantity;
-    }
-    await ref.read(reviewsRepositoryProvider).recordSales(salesByMenu);
-    ref.invalidate(productStatsProvider);
-  }
-
   Future<PickupOrder> cancelOrder(String orderId) async {
-    final cloudCheckout = ref.read(pickupCloudCheckoutProvider);
-    if (cloudCheckout != null) {
-      final cancelled = await cloudCheckout.cancelOrder(orderId);
-      ref.invalidate(couponsControllerProvider);
-      ref.invalidate(pointsControllerProvider);
-      state = AsyncValue.data([
-        for (final order in state.value ?? const <PickupOrder>[])
-          if (order.id == orderId) cancelled else order,
-      ]);
-      return cancelled;
-    }
-
-    final cancelled = await ref
-        .read(pickupOrdersRepositoryProvider)
-        .cancelOrder(orderId);
-
-    final couponId = cancelled.couponId;
-    if (couponId != null && couponId.isNotEmpty) {
-      final couponsRepository = ref.read(couponsRepositoryProvider);
-      for (final id in couponId.split(',')) {
-        await couponsRepository.markUnused(id);
-      }
-      ref.invalidate(couponsControllerProvider);
-    }
-
-    if (cancelled.usedPoints > 0 || cancelled.earnedPoints > 0) {
-      await ref.read(pointsRepositoryProvider).refundOrderPoints(
-        usedPoints: cancelled.usedPoints,
-        earnedPoints: cancelled.earnedPoints,
-        description: pickupOrderCancelDescription,
-      );
-      ref.invalidate(pointsControllerProvider);
-    }
-
+    final cancelled =
+        await ref.read(pickupCheckoutProvider).cancelOrder(orderId);
+    ref.invalidate(couponsControllerProvider);
+    ref.invalidate(pointsControllerProvider);
     state = AsyncValue.data([
       for (final order in state.value ?? const <PickupOrder>[])
         if (order.id == orderId) cancelled else order,
