@@ -9,6 +9,7 @@ import '../data/firestore_points_repository.dart';
 import '../data/local_points_admin_repository.dart';
 import '../data/local_points_charge_repository.dart';
 import '../data/local_points_repository.dart';
+import '../domain/charge_plans.dart';
 import '../domain/points_admin_repository.dart';
 import '../domain/points_models.dart';
 import '../domain/points_repository.dart';
@@ -49,8 +50,9 @@ final pointsChargeGatewayProvider = Provider<PaymentGateway>((ref) {
   final pointsRepository = ref.watch(pointsRepositoryProvider);
   return LocalPaymentGateway(
     repository: LocalPointsChargeRepository(
-      pointsRepository:
-          pointsRepository is LocalPointsRepository ? pointsRepository : null,
+      pointsRepository: pointsRepository is LocalPointsRepository
+          ? pointsRepository
+          : null,
     ),
   );
 });
@@ -66,7 +68,7 @@ class PointsController extends AsyncNotifier<PointsData> {
 
   Future<void> usePoints({
     required int amount,
-    String description = '포인트 결제',
+    String description = pointsPaymentDescription,
   }) async {
     final repository = ref.read(pointsRepositoryProvider);
     final updated = await repository.usePoints(
@@ -80,11 +82,12 @@ class PointsController extends AsyncNotifier<PointsData> {
     required String membershipId,
     required int paymentAmount,
   }) async {
-    final result =
-        await ref.read(pointsAdminRepositoryProvider).earnByMembershipId(
-              membershipId: membershipId,
-              paymentAmount: paymentAmount,
-            );
+    final result = await ref
+        .read(pointsAdminRepositoryProvider)
+        .earnByMembershipId(
+          membershipId: membershipId,
+          paymentAmount: paymentAmount,
+        );
     ref.invalidateSelf();
     return result;
   }

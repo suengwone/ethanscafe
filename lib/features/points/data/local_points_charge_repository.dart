@@ -5,7 +5,7 @@ import 'local_points_repository.dart';
 
 class LocalPointsChargeRepository implements PaymentsRepository {
   LocalPointsChargeRepository({LocalPointsRepository? pointsRepository})
-      : _pointsRepository = pointsRepository ?? LocalPointsRepository();
+    : _pointsRepository = pointsRepository ?? LocalPointsRepository();
 
   static const simulatedMethod = '카드';
 

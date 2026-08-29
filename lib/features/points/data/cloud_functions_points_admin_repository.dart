@@ -5,8 +5,7 @@ import '../domain/points_models.dart';
 
 class CloudFunctionsPointsAdminRepository implements PointsAdminRepository {
   CloudFunctionsPointsAdminRepository({FirebaseFunctions? functions})
-      : _functions =
-            functions ?? FirebaseFunctions.instanceFor(region: _region);
+    : _functions = functions ?? FirebaseFunctions.instanceFor(region: _region);
 
   static const _region = 'asia-northeast3';
   static const earnCallableName = 'earnPointsByMembership';

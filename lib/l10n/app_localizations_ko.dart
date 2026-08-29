@@ -1788,4 +1788,176 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get wholesaleAddToQuote => '견적 담기';
+
+  @override
+  String get pointsEarnDone => '포인트 적립 완료';
+
+  @override
+  String pointsPaidAmount(String amount) {
+    return '결제 $amount원';
+  }
+
+  @override
+  String pointsBalanceNow(String amount) {
+    return '잔액 ${amount}P';
+  }
+
+  @override
+  String get commonConfirm => '확인';
+
+  @override
+  String get pointsEarnFailed => '적립에 실패했습니다. 다시 시도해주세요.';
+
+  @override
+  String get pointsScanTitle => '회원 포인트 적립';
+
+  @override
+  String get pointsScanIntro =>
+      '고객의 멤버십 QR 코드를 스캔한 뒤\n결제 금액을 입력하면 결제 금액의 10%가 적립됩니다.';
+
+  @override
+  String get pointsEarnDialogTitle => '포인트 적립';
+
+  @override
+  String get pointsPaidAmountField => '결제 금액 (원)';
+
+  @override
+  String get pointsAmountInvalid => '1 이상의 숫자를 입력해주세요.';
+
+  @override
+  String get pointsEarnAction => '적립';
+
+  @override
+  String get pointsChargeTitle => '포인트 충전';
+
+  @override
+  String get pointsChargeChoose => '충전 상품 선택';
+
+  @override
+  String get pointsChargePaying => '결제 진행 중...';
+
+  @override
+  String pointsChargePay(String amount) {
+    return '$amount원 결제하기';
+  }
+
+  @override
+  String get pointsChargeRefundNotice => '충전 금액의 환불은 고객센터를 통해 처리됩니다.';
+
+  @override
+  String pointsChargeOrderName(String description, String amount) {
+    return '$description $amount원';
+  }
+
+  @override
+  String pointsChargedWithBonus(String total, String bonus) {
+    return '${total}P가 충전됐어요. (보너스 +${bonus}P 포함)';
+  }
+
+  @override
+  String pointsCharged(String total) {
+    return '${total}P가 충전됐어요.';
+  }
+
+  @override
+  String get pointsCurrentBalance => '현재 보유 포인트';
+
+  @override
+  String pointsChargePlan(String amount) {
+    return '선불권 $amount원';
+  }
+
+  @override
+  String pointsChargeBonus(String bonus) {
+    return '보너스 +${bonus}P 지급';
+  }
+
+  @override
+  String get pointsChargeNoBonus => '보너스 없음';
+
+  @override
+  String get pointsChargeAmount => '결제 금액';
+
+  @override
+  String get pointsChargePoints => '충전 포인트';
+
+  @override
+  String get pointsChargeBonusLabel => '보너스 포인트';
+
+  @override
+  String get pointsChargeExpected => '충전 후 예상 잔액';
+
+  @override
+  String get pointsTitle => '포인트';
+
+  @override
+  String get pointsLoadFailed => '포인트 정보를 불러오지 못했습니다.';
+
+  @override
+  String get pointsSectionBarcode => '멤버십 바코드';
+
+  @override
+  String get pointsSectionHistory => '포인트 히스토리';
+
+  @override
+  String get pointsMine => '나의 포인트';
+
+  @override
+  String pointsEarnNotice(int rate) {
+    return '매장 결제 후 아래 멤버십 QR을 직원에게 보여주시면 결제 금액의 $rate%가 자동 적립됩니다.\n앱에서 주문하면 별도 절차 없이 자동으로 적립돼요.';
+  }
+
+  @override
+  String get pointsChargeAction => '충전하기';
+
+  @override
+  String get pointsUseAction => '포인트 사용';
+
+  @override
+  String pointsUseHelper(String balance) {
+    return '사용 가능 포인트: ${balance}P';
+  }
+
+  @override
+  String get pointsUseField => '사용할 포인트 (P)';
+
+  @override
+  String get pointsUseConfirm => '사용';
+
+  @override
+  String get pointsUseFailed => '포인트 사용에 실패했어요. 다시 시도해주세요.';
+
+  @override
+  String pointsUsed(String amount, String balance) {
+    return '${amount}P를 사용했어요. 남은 포인트 ${balance}P';
+  }
+
+  @override
+  String get pointsInsufficient => '포인트 잔액이 부족합니다.';
+
+  @override
+  String get pointsStaffMode => '직원 모드';
+
+  @override
+  String get pointsStaffIntro => '고객 멤버십 QR을 스캔해 결제 금액 포인트 적립을 진행해주세요.';
+
+  @override
+  String get pointsStaffScan => '회원 QR 스캔 포인트 적립';
+
+  @override
+  String get pointsStaffOrders => '주문 관리';
+
+  @override
+  String get pointsStaffCatalog => '카탈로그 관리';
+
+  @override
+  String get pointsQrRefreshNotice => '보안을 위해 QR 코드는 1분마다 자동으로 갱신됩니다.';
+
+  @override
+  String get pointsHistoryEmpty => '적립/사용 내역이 없습니다.';
+
+  @override
+  String pointsPaidWithBonus(String amount, String bonus) {
+    return '결제 $amount원 · 보너스 +${bonus}P';
+  }
 }

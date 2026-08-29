@@ -196,14 +196,14 @@ class _CircleIconButton extends StatelessWidget {
 class _WholesaleInfoCard extends StatelessWidget {
   const _WholesaleInfoCard();
 
-  static const _entries = [
-    (LucideIcons.packageCheck, '최소 주문 5kg부터, 구간별 도매 단가 적용'),
-    (LucideIcons.flame, '주문 확인 후 당일 로스팅 · 전국 2~3일 배송'),
-    (LucideIcons.receiptText, '세금계산서 발행 · 정기 납품 계약 지원'),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final entries = [
+      (LucideIcons.packageCheck, l10n.wholesalePerkMinimum),
+      (LucideIcons.flame, l10n.wholesalePerkRoast),
+      (LucideIcons.receiptText, l10n.wholesalePerkInvoice),
+    ];
     final textTheme = Theme.of(context).textTheme;
 
     return Card(
@@ -218,7 +218,7 @@ class _WholesaleInfoCard extends StatelessWidget {
               style: textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
-            for (final (icon, label) in _entries)
+            for (final (icon, label) in entries)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: Row(

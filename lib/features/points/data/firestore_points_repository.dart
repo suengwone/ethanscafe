@@ -12,9 +12,8 @@ class FirestorePointsRepository implements PointsRepository {
     required this.uid,
     FirebaseFirestore? firestore,
     FirebaseFunctions? functions,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _functions =
-            functions ?? FirebaseFunctions.instanceFor(region: _region);
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _functions = functions ?? FirebaseFunctions.instanceFor(region: _region);
 
   final String uid;
   final FirebaseFirestore _firestore;
@@ -79,8 +78,10 @@ PointsData pointsDataFromFirestore(Map<String, dynamic> data) {
     membershipId: data['membershipId'] as String? ?? '',
     balance: (data['balance'] as num? ?? 0).toInt(),
     history: (data['history'] as List<dynamic>? ?? const [])
-        .map((entry) =>
-            pointHistoryEntryFromFirestore(entry as Map<String, dynamic>))
+        .map(
+          (entry) =>
+              pointHistoryEntryFromFirestore(entry as Map<String, dynamic>),
+        )
         .toList(),
   );
 }
@@ -88,7 +89,8 @@ PointsData pointsDataFromFirestore(Map<String, dynamic> data) {
 PointHistoryEntry pointHistoryEntryFromFirestore(Map<String, dynamic> data) {
   return PointHistoryEntry(
     id: data['id'] as String? ?? '',
-    type: PointHistoryType.values.asNameMap()[data['type']] ??
+    type:
+        PointHistoryType.values.asNameMap()[data['type']] ??
         PointHistoryType.earn,
     description: data['description'] as String? ?? '',
     amount: (data['amount'] as num? ?? 0).toInt(),

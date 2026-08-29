@@ -1200,5 +1200,150 @@
       }
     }
   },
-  "wholesaleAddToQuote": "견적 담기"
+  "wholesaleAddToQuote": "견적 담기",
+  "pointsEarnDone": "포인트 적립 완료",
+  "pointsPaidAmount": "결제 {amount}원",
+  "@pointsPaidAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsBalanceNow": "잔액 {amount}P",
+  "@pointsBalanceNow": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "commonConfirm": "확인",
+  "pointsEarnFailed": "적립에 실패했습니다. 다시 시도해주세요.",
+  "pointsScanTitle": "회원 포인트 적립",
+  "pointsScanIntro": "고객의 멤버십 QR 코드를 스캔한 뒤\n결제 금액을 입력하면 결제 금액의 10%가 적립됩니다.",
+  "pointsEarnDialogTitle": "포인트 적립",
+  "pointsPaidAmountField": "결제 금액 (원)",
+  "pointsAmountInvalid": "1 이상의 숫자를 입력해주세요.",
+  "pointsEarnAction": "적립",
+  "pointsChargeTitle": "포인트 충전",
+  "pointsChargeChoose": "충전 상품 선택",
+  "pointsChargePaying": "결제 진행 중...",
+  "pointsChargePay": "{amount}원 결제하기",
+  "@pointsChargePay": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsChargeRefundNotice": "충전 금액의 환불은 고객센터를 통해 처리됩니다.",
+  "pointsChargeOrderName": "{description} {amount}원",
+  "@pointsChargeOrderName": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsChargedWithBonus": "{total}P가 충전됐어요. (보너스 +{bonus}P 포함)",
+  "@pointsChargedWithBonus": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      },
+      "bonus": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsCharged": "{total}P가 충전됐어요.",
+  "@pointsCharged": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsCurrentBalance": "현재 보유 포인트",
+  "pointsChargePlan": "선불권 {amount}원",
+  "@pointsChargePlan": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsChargeBonus": "보너스 +{bonus}P 지급",
+  "@pointsChargeBonus": {
+    "placeholders": {
+      "bonus": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsChargeNoBonus": "보너스 없음",
+  "pointsChargeAmount": "결제 금액",
+  "pointsChargePoints": "충전 포인트",
+  "pointsChargeBonusLabel": "보너스 포인트",
+  "pointsChargeExpected": "충전 후 예상 잔액",
+  "pointsTitle": "포인트",
+  "pointsLoadFailed": "포인트 정보를 불러오지 못했습니다.",
+  "pointsSectionBarcode": "멤버십 바코드",
+  "pointsSectionHistory": "포인트 히스토리",
+  "pointsMine": "나의 포인트",
+  "pointsEarnNotice": "매장 결제 후 아래 멤버십 QR을 직원에게 보여주시면 결제 금액의 {rate}%가 자동 적립됩니다.\n앱에서 주문하면 별도 절차 없이 자동으로 적립돼요.",
+  "@pointsEarnNotice": {
+    "placeholders": {
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsChargeAction": "충전하기",
+  "pointsUseAction": "포인트 사용",
+  "pointsUseHelper": "사용 가능 포인트: {balance}P",
+  "@pointsUseHelper": {
+    "placeholders": {
+      "balance": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsUseField": "사용할 포인트 (P)",
+  "pointsUseConfirm": "사용",
+  "pointsUseFailed": "포인트 사용에 실패했어요. 다시 시도해주세요.",
+  "pointsUsed": "{amount}P를 사용했어요. 남은 포인트 {balance}P",
+  "@pointsUsed": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "balance": {
+        "type": "String"
+      }
+    }
+  },
+  "pointsInsufficient": "포인트 잔액이 부족합니다.",
+  "pointsStaffMode": "직원 모드",
+  "pointsStaffIntro": "고객 멤버십 QR을 스캔해 결제 금액 포인트 적립을 진행해주세요.",
+  "pointsStaffScan": "회원 QR 스캔 포인트 적립",
+  "pointsStaffOrders": "주문 관리",
+  "pointsStaffCatalog": "카탈로그 관리",
+  "pointsQrRefreshNotice": "보안을 위해 QR 코드는 1분마다 자동으로 갱신됩니다.",
+  "pointsHistoryEmpty": "적립/사용 내역이 없습니다.",
+  "pointsPaidWithBonus": "결제 {amount}원 · 보너스 +{bonus}P",
+  "@pointsPaidWithBonus": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "bonus": {
+        "type": "String"
+      }
+    }
+  }
 }

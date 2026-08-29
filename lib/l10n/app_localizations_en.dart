@@ -1830,4 +1830,179 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wholesaleAddToQuote => 'Add to quote';
+
+  @override
+  String get pointsEarnDone => 'Points added';
+
+  @override
+  String pointsPaidAmount(String amount) {
+    return 'Paid ₩$amount';
+  }
+
+  @override
+  String pointsBalanceNow(String amount) {
+    return 'Balance ${amount}P';
+  }
+
+  @override
+  String get commonConfirm => 'OK';
+
+  @override
+  String get pointsEarnFailed => 'Could not add the points. Try again.';
+
+  @override
+  String get pointsScanTitle => 'Add member points';
+
+  @override
+  String get pointsScanIntro =>
+      'Scan the customer\'s membership QR, then enter what they paid. They earn 10% of it.';
+
+  @override
+  String get pointsEarnDialogTitle => 'Add points';
+
+  @override
+  String get pointsPaidAmountField => 'Amount paid (₩)';
+
+  @override
+  String get pointsAmountInvalid => 'Enter a number of 1 or more.';
+
+  @override
+  String get pointsEarnAction => 'Add';
+
+  @override
+  String get pointsChargeTitle => 'Top up points';
+
+  @override
+  String get pointsChargeChoose => 'Choose an amount';
+
+  @override
+  String get pointsChargePaying => 'Taking payment…';
+
+  @override
+  String pointsChargePay(String amount) {
+    return 'Pay ₩$amount';
+  }
+
+  @override
+  String get pointsChargeRefundNotice =>
+      'Refunds on a top-up go through support.';
+
+  @override
+  String pointsChargeOrderName(String description, String amount) {
+    return '$description ₩$amount';
+  }
+
+  @override
+  String pointsChargedWithBonus(String total, String bonus) {
+    return '${total}P added, including a ${bonus}P bonus.';
+  }
+
+  @override
+  String pointsCharged(String total) {
+    return '${total}P added.';
+  }
+
+  @override
+  String get pointsCurrentBalance => 'Points you have';
+
+  @override
+  String pointsChargePlan(String amount) {
+    return '₩$amount top-up';
+  }
+
+  @override
+  String pointsChargeBonus(String bonus) {
+    return 'Bonus +${bonus}P';
+  }
+
+  @override
+  String get pointsChargeNoBonus => 'No bonus';
+
+  @override
+  String get pointsChargeAmount => 'You pay';
+
+  @override
+  String get pointsChargePoints => 'Points added';
+
+  @override
+  String get pointsChargeBonusLabel => 'Bonus points';
+
+  @override
+  String get pointsChargeExpected => 'Balance afterwards';
+
+  @override
+  String get pointsTitle => 'Points';
+
+  @override
+  String get pointsLoadFailed => 'Could not load your points.';
+
+  @override
+  String get pointsSectionBarcode => 'Membership code';
+
+  @override
+  String get pointsSectionHistory => 'Points history';
+
+  @override
+  String get pointsMine => 'Your points';
+
+  @override
+  String pointsEarnNotice(int rate) {
+    return 'Pay in store, show the QR below, and $rate% of what you paid lands automatically. Ordering in the app earns it without any of that.';
+  }
+
+  @override
+  String get pointsChargeAction => 'Top up';
+
+  @override
+  String get pointsUseAction => 'Use points';
+
+  @override
+  String pointsUseHelper(String balance) {
+    return '${balance}P available';
+  }
+
+  @override
+  String get pointsUseField => 'Points to use (P)';
+
+  @override
+  String get pointsUseConfirm => 'Use';
+
+  @override
+  String get pointsUseFailed => 'Could not use the points. Try again.';
+
+  @override
+  String pointsUsed(String amount, String balance) {
+    return 'Used ${amount}P. ${balance}P left.';
+  }
+
+  @override
+  String get pointsInsufficient => 'Not enough points.';
+
+  @override
+  String get pointsStaffMode => 'Staff tools';
+
+  @override
+  String get pointsStaffIntro =>
+      'Scan a customer\'s membership QR to add the points they earned.';
+
+  @override
+  String get pointsStaffScan => 'Scan a member QR';
+
+  @override
+  String get pointsStaffOrders => 'Orders';
+
+  @override
+  String get pointsStaffCatalog => 'Catalogue';
+
+  @override
+  String get pointsQrRefreshNotice =>
+      'For safety the QR code refreshes every minute.';
+
+  @override
+  String get pointsHistoryEmpty => 'Nothing earned or spent yet.';
+
+  @override
+  String pointsPaidWithBonus(String amount, String bonus) {
+    return 'Paid ₩$amount · bonus +${bonus}P';
+  }
 }

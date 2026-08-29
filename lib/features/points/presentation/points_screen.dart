@@ -1,5 +1,9 @@
+import '../../../core/theme/app_theme.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../auth/presentation/auth_providers.dart';
+import '../domain/membership_qr_token.dart';
+import '../domain/points_models.dart';
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,11 +11,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-
-import '../../../core/theme/app_theme.dart';
-import '../../auth/presentation/auth_providers.dart';
-import '../domain/membership_qr_token.dart';
-import '../domain/points_models.dart';
 import 'points_providers.dart';
 
 final _pointFormat = NumberFormat('#,###');
@@ -24,20 +23,18 @@ class PointsScreen extends ConsumerWidget {
     final pointsState = ref.watch(pointsControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('포인트'),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).pointsTitle)),
       body: pointsState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('포인트 정보를 불러오지 못했습니다.'),
+              Text(AppLocalizations.of(context).pointsLoadFailed),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.invalidate(pointsControllerProvider),
-                child: const Text('다시 시도'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -50,10 +47,14 @@ class PointsScreen extends ConsumerWidget {
               _BalanceSection(data: data),
               const _StaffSection(),
               const SizedBox(height: 24),
-              const _SectionHeader(title: '멤버십 바코드'),
+              _SectionHeader(
+                title: AppLocalizations.of(context).pointsSectionBarcode,
+              ),
               _MembershipQrSection(membershipId: data.membershipId),
               const SizedBox(height: 24),
-              const _SectionHeader(title: '포인트 히스토리'),
+              _SectionHeader(
+                title: AppLocalizations.of(context).pointsSectionHistory,
+              ),
               _HistorySection(history: data.history),
             ],
           ),
@@ -77,20 +78,21 @@ class _BalanceSection extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '나의 포인트',
+              AppLocalizations.of(context).pointsMine,
               style: Theme.of(context).textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
             Text(
               '${_pointFormat.format(data.balance)}P',
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineMedium
-                  ?.copyWith(fontSize: 36),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium?.copyWith(fontSize: 36),
             ),
             const SizedBox(height: 8),
             Text(
-              '매장 결제 후 아래 멤버십 QR을 직원에게 보여주시면 결제 금액의 $pointsEarnRatePercent%가 자동 적립됩니다.\n앱에서 주문하면 별도 절차 없이 자동으로 적립돼요.',
+              AppLocalizations.of(
+                context,
+              ).pointsEarnNotice(pointsEarnRatePercent),
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 16),
@@ -100,7 +102,9 @@ class _BalanceSection extends ConsumerWidget {
                   child: FilledButton.icon(
                     onPressed: () => context.push('/points/charge'),
                     icon: const Icon(LucideIcons.batteryCharging, size: 20),
-                    label: const Text('충전하기'),
+                    label: Text(
+                      AppLocalizations.of(context).pointsChargeAction,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -110,7 +114,7 @@ class _BalanceSection extends ConsumerWidget {
                         ? () => _showUsePointsDialog(context, ref, data.balance)
                         : null,
                     icon: const Icon(LucideIcons.handCoins, size: 20),
-                    label: const Text('포인트 사용'),
+                    label: Text(AppLocalizations.of(context).pointsUseAction),
                   ),
                 ),
               ],
@@ -129,10 +133,12 @@ class _BalanceSection extends ConsumerWidget {
     final amount = await showDialog<int>(
       context: context,
       builder: (context) => _AmountInputDialog(
-        title: '포인트 사용',
-        helperText: '사용 가능 포인트: ${_pointFormat.format(balance)}P',
-        labelText: '사용할 포인트 (P)',
-        confirmText: '사용',
+        title: AppLocalizations.of(context).pointsUseAction,
+        helperText: AppLocalizations.of(
+          context,
+        ).pointsUseHelper(_pointFormat.format(balance)),
+        labelText: AppLocalizations.of(context).pointsUseField,
+        confirmText: AppLocalizations.of(context).pointsUseConfirm,
         maxAmount: balance,
       ),
     );
@@ -149,7 +155,9 @@ class _BalanceSection extends ConsumerWidget {
         ..showSnackBar(
           SnackBar(
             content: Text(
-              error is StateError ? error.message : '포인트 사용에 실패했어요. 다시 시도해주세요.',
+              error is StateError
+                  ? error.message
+                  : AppLocalizations.of(context).pointsUseFailed,
             ),
           ),
         );
@@ -163,8 +171,10 @@ class _BalanceSection extends ConsumerWidget {
       ..showSnackBar(
         SnackBar(
           content: Text(
-            '${_pointFormat.format(amount)}P를 사용했어요. '
-            '남은 포인트 ${_pointFormat.format(after.balance)}P',
+            AppLocalizations.of(context).pointsUsed(
+              _pointFormat.format(amount),
+              _pointFormat.format(after.balance),
+            ),
           ),
         ),
       );
@@ -218,11 +228,11 @@ class _AmountInputDialogState extends State<_AmountInputDialog> {
           validator: (value) {
             final amount = int.tryParse(value ?? '');
             if (amount == null || amount <= 0) {
-              return '1 이상의 숫자를 입력해주세요.';
+              return AppLocalizations.of(context).pointsAmountInvalid;
             }
             final maxAmount = widget.maxAmount;
             if (maxAmount != null && amount > maxAmount) {
-              return '포인트 잔액이 부족합니다.';
+              return AppLocalizations.of(context).pointsInsufficient;
             }
             return null;
           },
@@ -231,7 +241,7 @@ class _AmountInputDialogState extends State<_AmountInputDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('취소'),
+          child: Text(AppLocalizations.of(context).commonCancel),
         ),
         FilledButton(
           onPressed: () {
@@ -264,29 +274,32 @@ class _StaffSection extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('직원 모드', style: Theme.of(context).textTheme.titleSmall),
+              Text(
+                AppLocalizations.of(context).pointsStaffMode,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
               const SizedBox(height: 8),
               Text(
-                '고객 멤버십 QR을 스캔해 결제 금액 포인트 적립을 진행해주세요.',
+                AppLocalizations.of(context).pointsStaffIntro,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
               const SizedBox(height: 16),
               FilledButton.tonalIcon(
                 onPressed: () => context.push('/points/earn-scan'),
                 icon: const Icon(LucideIcons.scanLine, size: 18),
-                label: const Text('회원 QR 스캔 포인트 적립'),
+                label: Text(AppLocalizations.of(context).pointsStaffScan),
               ),
               const SizedBox(height: 8),
               FilledButton.tonalIcon(
                 onPressed: () => context.push('/points/orders'),
                 icon: const Icon(LucideIcons.clipboardList, size: 18),
-                label: const Text('주문 관리'),
+                label: Text(AppLocalizations.of(context).pointsStaffOrders),
               ),
               const SizedBox(height: 8),
               FilledButton.tonalIcon(
                 onPressed: () => context.push('/points/catalog'),
                 icon: const Icon(LucideIcons.package, size: 18),
-                label: const Text('카탈로그 관리'),
+                label: Text(AppLocalizations.of(context).pointsStaffCatalog),
               ),
             ],
           ),
@@ -327,8 +340,10 @@ class _MembershipQrSectionState extends State<_MembershipQrSection> {
   void initState() {
     super.initState();
     _token = encodeMembershipQrToken(widget.membershipId);
-    _timer =
-        Timer.periodic(membershipQrRefreshInterval, (_) => _refreshToken());
+    _timer = Timer.periodic(
+      membershipQrRefreshInterval,
+      (_) => _refreshToken(),
+    );
   }
 
   @override
@@ -377,7 +392,7 @@ class _MembershipQrSectionState extends State<_MembershipQrSection> {
             ),
             const SizedBox(height: 4),
             Text(
-              '보안을 위해 QR 코드는 1분마다 자동으로 갱신됩니다.',
+              AppLocalizations.of(context).pointsQrRefreshNotice,
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -402,11 +417,10 @@ class _HistorySection extends StatelessWidget {
           children: [
             if (history.isEmpty)
               Text(
-                '적립/사용 내역이 없습니다.',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(fontSize: 14),
+                AppLocalizations.of(context).pointsHistoryEmpty,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(fontSize: 14),
               )
             else
               ...history.map((entry) => _HistoryItem(entry: entry)),
@@ -443,9 +457,13 @@ class _HistoryItem extends StatelessWidget {
                 if (paymentAmount != null)
                   Text(
                     bonusAmount != null
-                        ? '결제 ${_pointFormat.format(paymentAmount)}원 · '
-                            '보너스 +${_pointFormat.format(bonusAmount)}P'
-                        : '결제 ${_pointFormat.format(paymentAmount)}원',
+                        ? AppLocalizations.of(context).pointsPaidWithBonus(
+                            _pointFormat.format(paymentAmount),
+                            _pointFormat.format(bonusAmount),
+                          )
+                        : AppLocalizations.of(context).pointsPaidAmount(
+                            _pointFormat.format(paymentAmount),
+                          ),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
               ],

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../payment/domain/payment_models.dart';
 import '../domain/charge_plans.dart';
 import 'points_providers.dart';
@@ -14,8 +15,7 @@ class PointsChargeScreen extends ConsumerStatefulWidget {
   const PointsChargeScreen({super.key});
 
   @override
-  ConsumerState<PointsChargeScreen> createState() =>
-      _PointsChargeScreenState();
+  ConsumerState<PointsChargeScreen> createState() => _PointsChargeScreenState();
 }
 
 class _PointsChargeScreenState extends ConsumerState<PointsChargeScreen> {
@@ -28,7 +28,9 @@ class _PointsChargeScreenState extends ConsumerState<PointsChargeScreen> {
     final balance = pointsState.value?.balance ?? 0;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('포인트 충전')),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).pointsChargeTitle),
+      ),
       body: SingleChildScrollView(
         padding: foxtrotListPadding,
         child: Column(
@@ -39,7 +41,7 @@ class _PointsChargeScreenState extends ConsumerState<PointsChargeScreen> {
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Text(
-                '충전 상품 선택',
+                AppLocalizations.of(context).pointsChargeChoose,
                 style: Theme.of(context).textTheme.titleSmall,
               ),
             ),
@@ -59,13 +61,15 @@ class _PointsChargeScreenState extends ConsumerState<PointsChargeScreen> {
               icon: const Icon(LucideIcons.creditCard, size: 18),
               label: Text(
                 _submitting
-                    ? '결제 진행 중...'
-                    : '${_amountFormat.format(_selected.amount)}원 결제하기',
+                    ? AppLocalizations.of(context).pointsChargePaying
+                    : AppLocalizations.of(
+                        context,
+                      ).pointsChargePay(_amountFormat.format(_selected.amount)),
               ),
             ),
             const SizedBox(height: 12),
             Text(
-              '충전 금액의 환불은 고객센터를 통해 처리됩니다.',
+              AppLocalizations.of(context).pointsChargeRefundNotice,
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -78,11 +82,16 @@ class _PointsChargeScreenState extends ConsumerState<PointsChargeScreen> {
     final plan = _selected;
     setState(() => _submitting = true);
     try {
-      final payment = await ref.read(pointsChargeGatewayProvider).pay(
+      final payment = await ref
+          .read(pointsChargeGatewayProvider)
+          .pay(
             context,
             PaymentRequest(
               orderId: generateChargeOrderId(),
-              orderName: '$chargeDescription ${_amountFormat.format(plan.amount)}원',
+              orderName: AppLocalizations.of(context).pointsChargeOrderName(
+                chargeDescription,
+                _amountFormat.format(plan.amount),
+              ),
               amount: plan.amount,
             ),
           );
@@ -91,7 +100,11 @@ class _PointsChargeScreenState extends ConsumerState<PointsChargeScreen> {
       }
       if (payment == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('결제가 완료되지 않았습니다.')),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context).beanCartPaymentIncomplete,
+            ),
+          ),
         );
         return;
       }
@@ -103,9 +116,13 @@ class _PointsChargeScreenState extends ConsumerState<PointsChargeScreen> {
           SnackBar(
             content: Text(
               plan.bonus > 0
-                  ? '${_amountFormat.format(plan.totalPoints)}P가 충전됐어요. '
-                      '(보너스 +${_amountFormat.format(plan.bonus)}P 포함)'
-                  : '${_amountFormat.format(plan.totalPoints)}P가 충전됐어요.',
+                  ? AppLocalizations.of(context).pointsChargedWithBonus(
+                      _amountFormat.format(plan.totalPoints),
+                      _amountFormat.format(plan.bonus),
+                    )
+                  : AppLocalizations.of(
+                      context,
+                    ).pointsCharged(_amountFormat.format(plan.totalPoints)),
             ),
           ),
         );
@@ -132,7 +149,10 @@ class _CurrentBalanceCard extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: Text('현재 보유 포인트', style: textTheme.titleSmall),
+              child: Text(
+                AppLocalizations.of(context).pointsCurrentBalance,
+                style: textTheme.titleSmall,
+              ),
             ),
             Text(
               '${_amountFormat.format(balance)}P',
@@ -165,7 +185,9 @@ class _ChargePlanCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: selected ? context.palette.accent.withValues(alpha: 0.12) : context.palette.card,
+          color: selected
+              ? context.palette.accent.withValues(alpha: 0.12)
+              : context.palette.card,
           borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
           border: Border.all(
             color: selected ? context.palette.accent : context.palette.border,
@@ -185,14 +207,18 @@ class _ChargePlanCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '선불권 ${_amountFormat.format(plan.amount)}원',
+                    AppLocalizations.of(
+                      context,
+                    ).pointsChargePlan(_amountFormat.format(plan.amount)),
                     style: textTheme.labelLarge,
                   ),
                   const SizedBox(height: 3),
                   Text(
                     plan.bonus > 0
-                        ? '보너스 +${_amountFormat.format(plan.bonus)}P 지급'
-                        : '보너스 없음',
+                        ? AppLocalizations.of(
+                            context,
+                          ).pointsChargeBonus(_amountFormat.format(plan.bonus))
+                        : AppLocalizations.of(context).pointsChargeNoBonus,
                     style: textTheme.bodySmall?.copyWith(
                       color: plan.bonus > 0 ? context.palette.accentSoft : null,
                     ),
@@ -233,18 +259,20 @@ class _ChargeSummaryCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _SummaryRow(
-              label: '결제 금액',
-              value: '${_amountFormat.format(plan.amount)}원',
+              label: AppLocalizations.of(context).pointsChargeAmount,
+              value: AppLocalizations.of(
+                context,
+              ).priceWon(_amountFormat.format(plan.amount)),
             ),
             const SizedBox(height: 8),
             _SummaryRow(
-              label: '충전 포인트',
+              label: AppLocalizations.of(context).pointsChargePoints,
               value: '${_amountFormat.format(plan.amount)}P',
             ),
             if (plan.bonus > 0) ...[
               const SizedBox(height: 8),
               _SummaryRow(
-                label: '보너스 포인트',
+                label: AppLocalizations.of(context).pointsChargeBonusLabel,
                 value: '+${_amountFormat.format(plan.bonus)}P',
                 highlight: true,
               ),
@@ -256,7 +284,10 @@ class _ChargeSummaryCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text('충전 후 예상 잔액', style: textTheme.labelLarge),
+                  child: Text(
+                    AppLocalizations.of(context).pointsChargeExpected,
+                    style: textTheme.labelLarge,
+                  ),
                 ),
                 Text(
                   '${_amountFormat.format(balance + plan.totalPoints)}P',

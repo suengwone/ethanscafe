@@ -5,8 +5,7 @@ import '../../payment/domain/payments_repository.dart';
 
 class CloudFunctionsPointsChargeRepository implements PaymentsRepository {
   CloudFunctionsPointsChargeRepository({FirebaseFunctions? functions})
-      : _functions =
-            functions ?? FirebaseFunctions.instanceFor(region: _region);
+    : _functions = functions ?? FirebaseFunctions.instanceFor(region: _region);
 
   static const _region = 'asia-northeast3';
   static const chargeCallableName = 'chargePoints';

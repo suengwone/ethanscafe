@@ -3289,6 +3289,300 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'견적 담기'**
   String get wholesaleAddToQuote;
+
+  /// No description provided for @pointsEarnDone.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 적립 완료'**
+  String get pointsEarnDone;
+
+  /// No description provided for @pointsPaidAmount.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 {amount}원'**
+  String pointsPaidAmount(String amount);
+
+  /// No description provided for @pointsBalanceNow.
+  ///
+  /// In ko, this message translates to:
+  /// **'잔액 {amount}P'**
+  String pointsBalanceNow(String amount);
+
+  /// No description provided for @commonConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'확인'**
+  String get commonConfirm;
+
+  /// No description provided for @pointsEarnFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'적립에 실패했습니다. 다시 시도해주세요.'**
+  String get pointsEarnFailed;
+
+  /// No description provided for @pointsScanTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'회원 포인트 적립'**
+  String get pointsScanTitle;
+
+  /// No description provided for @pointsScanIntro.
+  ///
+  /// In ko, this message translates to:
+  /// **'고객의 멤버십 QR 코드를 스캔한 뒤\n결제 금액을 입력하면 결제 금액의 10%가 적립됩니다.'**
+  String get pointsScanIntro;
+
+  /// No description provided for @pointsEarnDialogTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 적립'**
+  String get pointsEarnDialogTitle;
+
+  /// No description provided for @pointsPaidAmountField.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 금액 (원)'**
+  String get pointsPaidAmountField;
+
+  /// No description provided for @pointsAmountInvalid.
+  ///
+  /// In ko, this message translates to:
+  /// **'1 이상의 숫자를 입력해주세요.'**
+  String get pointsAmountInvalid;
+
+  /// No description provided for @pointsEarnAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'적립'**
+  String get pointsEarnAction;
+
+  /// No description provided for @pointsChargeTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 충전'**
+  String get pointsChargeTitle;
+
+  /// No description provided for @pointsChargeChoose.
+  ///
+  /// In ko, this message translates to:
+  /// **'충전 상품 선택'**
+  String get pointsChargeChoose;
+
+  /// No description provided for @pointsChargePaying.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 진행 중...'**
+  String get pointsChargePaying;
+
+  /// No description provided for @pointsChargePay.
+  ///
+  /// In ko, this message translates to:
+  /// **'{amount}원 결제하기'**
+  String pointsChargePay(String amount);
+
+  /// No description provided for @pointsChargeRefundNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'충전 금액의 환불은 고객센터를 통해 처리됩니다.'**
+  String get pointsChargeRefundNotice;
+
+  /// No description provided for @pointsChargeOrderName.
+  ///
+  /// In ko, this message translates to:
+  /// **'{description} {amount}원'**
+  String pointsChargeOrderName(String description, String amount);
+
+  /// No description provided for @pointsChargedWithBonus.
+  ///
+  /// In ko, this message translates to:
+  /// **'{total}P가 충전됐어요. (보너스 +{bonus}P 포함)'**
+  String pointsChargedWithBonus(String total, String bonus);
+
+  /// No description provided for @pointsCharged.
+  ///
+  /// In ko, this message translates to:
+  /// **'{total}P가 충전됐어요.'**
+  String pointsCharged(String total);
+
+  /// No description provided for @pointsCurrentBalance.
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 보유 포인트'**
+  String get pointsCurrentBalance;
+
+  /// No description provided for @pointsChargePlan.
+  ///
+  /// In ko, this message translates to:
+  /// **'선불권 {amount}원'**
+  String pointsChargePlan(String amount);
+
+  /// No description provided for @pointsChargeBonus.
+  ///
+  /// In ko, this message translates to:
+  /// **'보너스 +{bonus}P 지급'**
+  String pointsChargeBonus(String bonus);
+
+  /// No description provided for @pointsChargeNoBonus.
+  ///
+  /// In ko, this message translates to:
+  /// **'보너스 없음'**
+  String get pointsChargeNoBonus;
+
+  /// No description provided for @pointsChargeAmount.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 금액'**
+  String get pointsChargeAmount;
+
+  /// No description provided for @pointsChargePoints.
+  ///
+  /// In ko, this message translates to:
+  /// **'충전 포인트'**
+  String get pointsChargePoints;
+
+  /// No description provided for @pointsChargeBonusLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'보너스 포인트'**
+  String get pointsChargeBonusLabel;
+
+  /// No description provided for @pointsChargeExpected.
+  ///
+  /// In ko, this message translates to:
+  /// **'충전 후 예상 잔액'**
+  String get pointsChargeExpected;
+
+  /// No description provided for @pointsTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트'**
+  String get pointsTitle;
+
+  /// No description provided for @pointsLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 정보를 불러오지 못했습니다.'**
+  String get pointsLoadFailed;
+
+  /// No description provided for @pointsSectionBarcode.
+  ///
+  /// In ko, this message translates to:
+  /// **'멤버십 바코드'**
+  String get pointsSectionBarcode;
+
+  /// No description provided for @pointsSectionHistory.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 히스토리'**
+  String get pointsSectionHistory;
+
+  /// No description provided for @pointsMine.
+  ///
+  /// In ko, this message translates to:
+  /// **'나의 포인트'**
+  String get pointsMine;
+
+  /// No description provided for @pointsEarnNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 결제 후 아래 멤버십 QR을 직원에게 보여주시면 결제 금액의 {rate}%가 자동 적립됩니다.\n앱에서 주문하면 별도 절차 없이 자동으로 적립돼요.'**
+  String pointsEarnNotice(int rate);
+
+  /// No description provided for @pointsChargeAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'충전하기'**
+  String get pointsChargeAction;
+
+  /// No description provided for @pointsUseAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 사용'**
+  String get pointsUseAction;
+
+  /// No description provided for @pointsUseHelper.
+  ///
+  /// In ko, this message translates to:
+  /// **'사용 가능 포인트: {balance}P'**
+  String pointsUseHelper(String balance);
+
+  /// No description provided for @pointsUseField.
+  ///
+  /// In ko, this message translates to:
+  /// **'사용할 포인트 (P)'**
+  String get pointsUseField;
+
+  /// No description provided for @pointsUseConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'사용'**
+  String get pointsUseConfirm;
+
+  /// No description provided for @pointsUseFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 사용에 실패했어요. 다시 시도해주세요.'**
+  String get pointsUseFailed;
+
+  /// No description provided for @pointsUsed.
+  ///
+  /// In ko, this message translates to:
+  /// **'{amount}P를 사용했어요. 남은 포인트 {balance}P'**
+  String pointsUsed(String amount, String balance);
+
+  /// No description provided for @pointsInsufficient.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 잔액이 부족합니다.'**
+  String get pointsInsufficient;
+
+  /// No description provided for @pointsStaffMode.
+  ///
+  /// In ko, this message translates to:
+  /// **'직원 모드'**
+  String get pointsStaffMode;
+
+  /// No description provided for @pointsStaffIntro.
+  ///
+  /// In ko, this message translates to:
+  /// **'고객 멤버십 QR을 스캔해 결제 금액 포인트 적립을 진행해주세요.'**
+  String get pointsStaffIntro;
+
+  /// No description provided for @pointsStaffScan.
+  ///
+  /// In ko, this message translates to:
+  /// **'회원 QR 스캔 포인트 적립'**
+  String get pointsStaffScan;
+
+  /// No description provided for @pointsStaffOrders.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 관리'**
+  String get pointsStaffOrders;
+
+  /// No description provided for @pointsStaffCatalog.
+  ///
+  /// In ko, this message translates to:
+  /// **'카탈로그 관리'**
+  String get pointsStaffCatalog;
+
+  /// No description provided for @pointsQrRefreshNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'보안을 위해 QR 코드는 1분마다 자동으로 갱신됩니다.'**
+  String get pointsQrRefreshNotice;
+
+  /// No description provided for @pointsHistoryEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'적립/사용 내역이 없습니다.'**
+  String get pointsHistoryEmpty;
+
+  /// No description provided for @pointsPaidWithBonus.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 {amount}원 · 보너스 +{bonus}P'**
+  String pointsPaidWithBonus(String amount, String bonus);
 }
 
 class _AppLocalizationsDelegate

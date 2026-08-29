@@ -29,7 +29,11 @@ class LocalPointsRepository implements PointsRepository {
     String description = '매장 결제',
   }) async {
     if (paymentAmount <= 0) {
-      throw ArgumentError.value(paymentAmount, 'paymentAmount', '결제 금액은 0보다 커야 합니다.');
+      throw ArgumentError.value(
+        paymentAmount,
+        'paymentAmount',
+        '결제 금액은 0보다 커야 합니다.',
+      );
     }
 
     final prefs = await SharedPreferences.getInstance();

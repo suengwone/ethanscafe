@@ -18,7 +18,10 @@ class LocalPointsAdminRepository implements PointsAdminRepository {
     }
     if (paymentAmount <= 0) {
       throw ArgumentError.value(
-          paymentAmount, 'paymentAmount', '결제 금액은 0보다 커야 합니다.');
+        paymentAmount,
+        'paymentAmount',
+        '결제 금액은 0보다 커야 합니다.',
+      );
     }
 
     final before = await _points.load();

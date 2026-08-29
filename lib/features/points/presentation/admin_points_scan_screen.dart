@@ -51,9 +51,9 @@ class _AdminPointsScanScreenState extends ConsumerState<AdminPointsScanScreen> {
       await _showResultDialog(result);
     } catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_errorMessage(error))),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_errorMessage(error))));
       await Future<void>.delayed(const Duration(seconds: 2));
     } finally {
       if (mounted) {
@@ -74,28 +74,33 @@ class _AdminPointsScanScreenState extends ConsumerState<AdminPointsScanScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        icon: Icon(LucideIcons.circleCheck, color: context.palette.accent, size: 40),
-        title: const Text('포인트 적립 완료'),
+        icon: Icon(
+          LucideIcons.circleCheck,
+          color: context.palette.accent,
+          size: 40,
+        ),
+        title: Text(AppLocalizations.of(context).pointsEarnDone),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               '${result.membershipId}\n'
-              '결제 ${_pointFormat.format(result.paymentAmount)}원',
+              '${AppLocalizations.of(context).pointsPaidAmount(_pointFormat.format(result.paymentAmount))}',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 8),
             Text(
               '+${_pointFormat.format(result.earned)}P',
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineMedium
-                  ?.copyWith(color: context.palette.accent),
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                color: context.palette.accent,
+              ),
             ),
             const SizedBox(height: 4),
             Text(
-              '잔액 ${_pointFormat.format(result.balance)}P',
+              AppLocalizations.of(
+                context,
+              ).pointsBalanceNow(_pointFormat.format(result.balance)),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -103,7 +108,7 @@ class _AdminPointsScanScreenState extends ConsumerState<AdminPointsScanScreen> {
         actions: [
           FilledButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('확인'),
+            child: Text(AppLocalizations.of(context).commonConfirm),
           ),
         ],
       ),
@@ -126,12 +131,13 @@ class _AdminPointsScanScreenState extends ConsumerState<AdminPointsScanScreen> {
       return error.message;
     }
     if (error is ArgumentError) {
-      return error.message?.toString() ?? '적립에 실패했습니다. 다시 시도해주세요.';
+      return error.message?.toString() ??
+          AppLocalizations.of(context).pointsEarnFailed;
     }
     if (error is FirebaseException) {
-      return error.message ?? '적립에 실패했습니다. 다시 시도해주세요.';
+      return error.message ?? AppLocalizations.of(context).pointsEarnFailed;
     }
-    return '적립에 실패했습니다. 다시 시도해주세요.';
+    return AppLocalizations.of(context).pointsEarnFailed;
   }
 
   void _onDetect(BarcodeCapture capture) {
@@ -146,13 +152,14 @@ class _AdminPointsScanScreenState extends ConsumerState<AdminPointsScanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final scanner = widget.scannerBuilder?.call(context, _handleCode) ??
+    final scanner =
+        widget.scannerBuilder?.call(context, _handleCode) ??
         MobileScanner(onDetect: _onDetect);
 
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('회원 포인트 적립'),
+        title: Text(AppLocalizations.of(context).pointsScanTitle),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
       ),
@@ -173,19 +180,16 @@ class _AdminPointsScanScreenState extends ConsumerState<AdminPointsScanScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                const Text(
-                  '고객의 멤버십 QR 코드를 스캔한 뒤\n결제 금액을 입력하면 결제 금액의 10%가 적립됩니다.',
+                Text(
+                  AppLocalizations.of(context).pointsScanIntro,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white, fontSize: 14),
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ],
             ),
           ),
           if (_processing)
-            const ColoredBox(
-              color: Colors.black54,
-              child: SizedBox.expand(),
-            ),
+            const ColoredBox(color: Colors.black54, child: SizedBox.expand()),
         ],
       ),
     );
@@ -214,7 +218,7 @@ class _AmountInputDialogState extends State<_AmountInputDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('포인트 적립'),
+      title: Text(AppLocalizations.of(context).pointsEarnDialogTitle),
       content: Form(
         key: _formKey,
         child: TextFormField(
@@ -223,13 +227,13 @@ class _AmountInputDialogState extends State<_AmountInputDialog> {
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           decoration: InputDecoration(
-            labelText: '결제 금액 (원)',
+            labelText: AppLocalizations.of(context).pointsPaidAmountField,
             helperText: widget.membershipId,
           ),
           validator: (value) {
             final amount = int.tryParse(value ?? '');
             if (amount == null || amount <= 0) {
-              return '1 이상의 숫자를 입력해주세요.';
+              return AppLocalizations.of(context).pointsAmountInvalid;
             }
             return null;
           },
@@ -238,7 +242,7 @@ class _AmountInputDialogState extends State<_AmountInputDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('취소'),
+          child: Text(AppLocalizations.of(context).commonCancel),
         ),
         FilledButton(
           onPressed: () {
@@ -246,7 +250,7 @@ class _AmountInputDialogState extends State<_AmountInputDialog> {
               Navigator.of(context).pop(int.parse(_controller.text));
             }
           },
-          child: const Text('적립'),
+          child: Text(AppLocalizations.of(context).pointsEarnAction),
         ),
       ],
     );

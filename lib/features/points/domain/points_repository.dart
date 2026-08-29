@@ -8,10 +8,7 @@ abstract class PointsRepository {
     String description,
   });
 
-  Future<PointsData> usePoints({
-    required int amount,
-    String description,
-  });
+  Future<PointsData> usePoints({required int amount, String description});
 
   Future<PointsData> refundOrderPoints({
     int usedPoints,
