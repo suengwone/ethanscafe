@@ -25,14 +25,8 @@ void main() {
     });
 
     test('환불이 남아 있으면 진행 상태를 대신 보여준다', () {
-      expect(
-        refundLabelFor('주문 취소', RefundStatus.pending, _label),
-        '환불 처리 중',
-      );
-      expect(
-        refundLabelFor('주문 취소', RefundStatus.failed, _label),
-        '환불 확인 중',
-      );
+      expect(refundLabelFor('주문 취소', RefundStatus.pending, _label), '환불 처리 중');
+      expect(refundLabelFor('주문 취소', RefundStatus.failed, _label), '환불 확인 중');
     });
   });
 }

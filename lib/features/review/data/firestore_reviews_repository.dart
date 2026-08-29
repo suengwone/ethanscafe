@@ -7,10 +7,8 @@ import '../domain/review_models.dart';
 import '../domain/reviews_repository.dart';
 
 class FirestoreReviewsRepository implements ReviewsRepository {
-  FirestoreReviewsRepository({
-    required this.uid,
-    FirebaseFirestore? firestore,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance;
+  FirestoreReviewsRepository({required this.uid, FirebaseFirestore? firestore})
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final String uid;
   final FirebaseFirestore _firestore;
@@ -36,8 +34,9 @@ class FirestoreReviewsRepository implements ReviewsRepository {
     final snapshot = await _firestore.collection(reviewsCollectionPath).get();
     return [
       for (final doc in snapshot.docs)
-        ...productReviewsFromFirestore(doc.data())
-            .where((review) => review.productId == productId),
+        ...productReviewsFromFirestore(
+          doc.data(),
+        ).where((review) => review.productId == productId),
     ]..sort((a, b) => b.createdAt.compareTo(a.createdAt));
   }
 
@@ -82,13 +81,10 @@ class FirestoreReviewsRepository implements ReviewsRepository {
       );
     });
 
-    await _firestore.collection(statsCollectionPath).doc(productId).set(
-      {
-        'ratingSum': FieldValue.increment(rating),
-        'ratingCount': FieldValue.increment(1),
-      },
-      SetOptions(merge: true),
-    );
+    await _firestore.collection(statsCollectionPath).doc(productId).set({
+      'ratingSum': FieldValue.increment(rating),
+      'ratingCount': FieldValue.increment(1),
+    }, SetOptions(merge: true));
     return review;
   }
 
@@ -133,7 +129,8 @@ ProductReview productReviewFromFirestore(Map<String, dynamic> data) {
   return ProductReview(
     id: data['id'] as String? ?? '',
     productId: data['productId'] as String? ?? '',
-    productType: ReviewProductType.values.asNameMap()[data['productType']] ??
+    productType:
+        ReviewProductType.values.asNameMap()[data['productType']] ??
         ReviewProductType.menu,
     productName: data['productName'] as String? ?? '',
     orderId: data['orderId'] as String? ?? '',

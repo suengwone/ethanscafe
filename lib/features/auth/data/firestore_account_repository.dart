@@ -10,9 +10,8 @@ class FirestoreAccountRepository implements AccountRepository {
     required this.uid,
     FirebaseFirestore? firestore,
     FirebaseFunctions? functions,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _functions =
-            functions ?? FirebaseFunctions.instanceFor(region: _region);
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _functions = functions ?? FirebaseFunctions.instanceFor(region: _region);
 
   final String uid;
   final FirebaseFirestore _firestore;
@@ -55,10 +54,9 @@ class FirestoreAccountRepository implements AccountRepository {
   @override
   Future<AccountProfile> switchToCustomer() async {
     final current = await load();
-    await _doc.set(
-      {'accountType': AccountType.customer.name},
-      SetOptions(merge: true),
-    );
+    await _doc.set({
+      'accountType': AccountType.customer.name,
+    }, SetOptions(merge: true));
     return current.copyWith(type: AccountType.customer);
   }
 
@@ -68,10 +66,9 @@ class FirestoreAccountRepository implements AccountRepository {
     if (current.business == null) {
       throw StateError('저장된 사업자 정보가 없습니다.');
     }
-    await _doc.set(
-      {'accountType': AccountType.business.name},
-      SetOptions(merge: true),
-    );
+    await _doc.set({
+      'accountType': AccountType.business.name,
+    }, SetOptions(merge: true));
     return current.copyWith(type: AccountType.business);
   }
 
@@ -79,10 +76,9 @@ class FirestoreAccountRepository implements AccountRepository {
   Future<AccountProfile> saveBirthDate(DateTime birthDate) async {
     final normalized = normalizeBirthDate(birthDate);
     final current = await load();
-    await _doc.set(
-      {'birthDate': Timestamp.fromDate(normalized)},
-      SetOptions(merge: true),
-    );
+    await _doc.set({
+      'birthDate': Timestamp.fromDate(normalized),
+    }, SetOptions(merge: true));
     return current.copyWith(birthDate: normalized);
   }
 }
@@ -91,7 +87,8 @@ AccountProfile accountProfileFromFirestore(Map<String, dynamic> data) {
   final business = data['business'];
   final birthDate = data['birthDate'];
   return AccountProfile(
-    type: AccountType.values.asNameMap()[data['accountType']] ??
+    type:
+        AccountType.values.asNameMap()[data['accountType']] ??
         AccountType.customer,
     birthDate: birthDate == null ? null : firestoreDateTime(birthDate),
     business: business is Map

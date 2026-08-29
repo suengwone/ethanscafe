@@ -9,13 +9,7 @@ const pickupOrderPaymentDescription = '픽업 주문';
 const pickupOrderPointsUseDescription = '픽업 주문 포인트 사용';
 const pickupOrderCancelDescription = '픽업 주문 취소';
 
-enum PickupOrderStatus {
-  received,
-  preparing,
-  ready,
-  pickedUp,
-  cancelled;
-}
+enum PickupOrderStatus { received, preparing, ready, pickedUp, cancelled }
 
 const pickupOrderProgressSteps = [
   PickupOrderStatus.received,
@@ -80,8 +74,7 @@ abstract class PickupOrder with _$PickupOrder {
   bool get isCancelled => status == PickupOrderStatus.cancelled;
 
   /// 목록에 보이는 대표 상품. 나머지 개수는 화면이 언어에 맞게 붙인다.
-  String get firstItemName =>
-      items.isEmpty ? '' : items.first.menuName;
+  String get firstItemName => items.isEmpty ? '' : items.first.menuName;
 }
 
 int nextPickupNumber(List<PickupOrder> orders, DateTime now) {

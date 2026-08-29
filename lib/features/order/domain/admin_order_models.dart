@@ -49,8 +49,7 @@ class ActiveBeanOrder {
 
   /// 배송이면 수령인을, 픽업이면 매장을 보여준다. 둘 다 비어 있을 때 쓸 문구는
   /// 언어를 타므로 화면이 고른다.
-  String? get destination =>
-      fulfillmentMethod == BeanFulfillmentMethod.delivery
+  String? get destination => fulfillmentMethod == BeanFulfillmentMethod.delivery
       ? recipient
       : storeName;
 }

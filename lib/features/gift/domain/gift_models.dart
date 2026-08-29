@@ -31,6 +31,4 @@ abstract class BeanGift with _$BeanGift {
       _$BeanGiftFromJson(json);
 
   int get totalPrice => unitPrice * quantity;
-
-
 }

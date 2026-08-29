@@ -41,9 +41,7 @@ void main() {
     });
 
     test('business 필드가 없으면 null을 유지한다', () {
-      final profile = accountProfileFromFirestore({
-        'accountType': 'customer',
-      });
+      final profile = accountProfileFromFirestore({'accountType': 'customer'});
 
       expect(profile.business, isNull);
     });

@@ -6,8 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../domain/pickup_order_models.dart';
 import '../domain/pickup_orders_repository.dart';
 
-class LocalPickupOrdersRepository
-    implements WritablePickupOrdersRepository {
+class LocalPickupOrdersRepository implements WritablePickupOrdersRepository {
   static const _storageKey = 'pickup_orders';
 
   @override
@@ -92,9 +91,7 @@ class LocalPickupOrdersRepository
     final updated = [...orders]..[index] = cancelled;
     await prefs.setString(
       _storageKey,
-      jsonEncode({
-        'orders': updated.map((order) => order.toJson()).toList(),
-      }),
+      jsonEncode({'orders': updated.map((order) => order.toJson()).toList()}),
     );
     return cancelled;
   }

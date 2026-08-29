@@ -12,8 +12,9 @@ import '../../../menu/domain/menu_models.dart';
 import '../../../menu/presentation/menu_detail_screen.dart';
 import '../../../menu/presentation/menu_providers.dart';
 
-final recommendedMenuItemsProvider =
-    FutureProvider<List<MenuItem>>((ref) async {
+final recommendedMenuItemsProvider = FutureProvider<List<MenuItem>>((
+  ref,
+) async {
   final items = await ref.watch(menuItemsProvider.future);
   return items.where((item) => item.isRecommended).toList();
 });
@@ -43,7 +44,9 @@ class RecommendedMenuSection extends ConsumerWidget {
               const Spacer(),
               TextButton(
                 onPressed: () => context.go('/menu'),
-                style: TextButton.styleFrom(foregroundColor: context.palette.muted),
+                style: TextButton.styleFrom(
+                  foregroundColor: context.palette.muted,
+                ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -87,7 +90,9 @@ class _RecommendedCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.palette.card,
         borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-        border: Border.all(color: context.palette.border.withValues(alpha: 0.7)),
+        border: Border.all(
+          color: context.palette.border.withValues(alpha: 0.7),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,17 +118,9 @@ class _RecommendedCard extends StatelessWidget {
                 ),
               ),
               if (item.badge == MenuBadge.isNew)
-                const Positioned(
-                  right: 0,
-                  top: 0,
-                  child: NewBadge(),
-                ),
+                const Positioned(right: 0, top: 0, child: NewBadge()),
               if (item.badge == MenuBadge.hit)
-                const Positioned(
-                  right: 0,
-                  top: 0,
-                  child: HitBadge(),
-                ),
+                const Positioned(right: 0, top: 0, child: HitBadge()),
             ],
           ),
           const Spacer(),

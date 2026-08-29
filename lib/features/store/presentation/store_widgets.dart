@@ -23,7 +23,9 @@ Future<void> callStore(BuildContext context, CafeStore store) async {
   if (!launched && context.mounted) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(AppLocalizations.of(context).storeCallFailed(store.phone)),
+        content: Text(
+          AppLocalizations.of(context).storeCallFailed(store.phone),
+        ),
       ),
     );
   }
@@ -55,10 +57,7 @@ class StoreBadge extends StatelessWidget {
         color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
       ),
-      child: Text(
-        label,
-        style: TextStyle(fontSize: 12, color: color),
-      ),
+      child: Text(label, style: TextStyle(fontSize: 12, color: color)),
     );
   }
 }

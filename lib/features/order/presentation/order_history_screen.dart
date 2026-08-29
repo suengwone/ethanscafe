@@ -88,7 +88,9 @@ class OrderHistoryScreen extends ConsumerWidget {
     final ordersState = ref.watch(orderHistoryProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context).orderHistoryTitle)),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).orderHistoryTitle),
+      ),
       body: ordersState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
@@ -169,11 +171,17 @@ class _BeanOrderCard extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final pointsSummary = [
       if (order.couponDiscount > 0)
-        AppLocalizations.of(context).orderCouponDiscount(_amountFormat.format(order.couponDiscount)),
+        AppLocalizations.of(
+          context,
+        ).orderCouponDiscount(_amountFormat.format(order.couponDiscount)),
       if (order.usedPoints > 0)
-        AppLocalizations.of(context).orderPointsUsed(_amountFormat.format(order.usedPoints)),
+        AppLocalizations.of(
+          context,
+        ).orderPointsUsed(_amountFormat.format(order.usedPoints)),
       if (order.earnedPoints > 0)
-        AppLocalizations.of(context).orderPointsEarned(_amountFormat.format(order.earnedPoints)),
+        AppLocalizations.of(
+          context,
+        ).orderPointsEarned(_amountFormat.format(order.earnedPoints)),
     ].join(' · ');
 
     return Card(
@@ -242,7 +250,9 @@ class _BeanOrderCard extends ConsumerWidget {
                               context,
                             ).fulfillmentLabel(order.fulfillmentMethod),
                       if (order.paymentMethod != null) order.paymentMethod!,
-                      AppLocalizations.of(context).orderItemCount(order.itemCount),
+                      AppLocalizations.of(
+                        context,
+                      ).orderItemCount(order.itemCount),
                     ].join(' · ').keepWord,
                     style: textTheme.bodySmall,
                   ),
@@ -252,7 +262,9 @@ class _BeanOrderCard extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      AppLocalizations.of(context).priceWon(_amountFormat.format(order.paidAmount)),
+                      AppLocalizations.of(
+                        context,
+                      ).priceWon(_amountFormat.format(order.paidAmount)),
                       style: textTheme.labelLarge,
                     ),
                     if (pointsSummary.isNotEmpty) ...[
@@ -332,7 +344,11 @@ class _BeanOrderCard extends ConsumerWidget {
     final result = buildBeanReorder(order: order, beans: beans);
     if (!result.hasItems) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).orderReorderUnavailableBeans)),
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context).orderReorderUnavailableBeans,
+          ),
+        ),
       );
       return;
     }
@@ -349,7 +365,9 @@ class _BeanOrderCard extends ConsumerWidget {
       SnackBar(
         content: Text(
           result.hasMissing
-              ? AppLocalizations.of(context).orderReorderPartialBeans(result.missingNames.join(', '))
+              ? AppLocalizations.of(
+                  context,
+                ).orderReorderPartialBeans(result.missingNames.join(', '))
               : AppLocalizations.of(context).orderReorderDone,
         ),
       ),
@@ -377,7 +395,9 @@ class _BeanOrderCard extends ConsumerWidget {
           .cancelOrder(order.id);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context).orderCancelledNotice)),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).orderCancelledNotice),
+          ),
         );
       }
     } on StateError catch (error) {
@@ -402,11 +422,17 @@ class _PickupOrderCard extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final pointsSummary = [
       if (order.couponDiscount > 0)
-        AppLocalizations.of(context).orderCouponDiscount(_amountFormat.format(order.couponDiscount)),
+        AppLocalizations.of(
+          context,
+        ).orderCouponDiscount(_amountFormat.format(order.couponDiscount)),
       if (order.usedPoints > 0)
-        AppLocalizations.of(context).orderPointsUsed(_amountFormat.format(order.usedPoints)),
+        AppLocalizations.of(
+          context,
+        ).orderPointsUsed(_amountFormat.format(order.usedPoints)),
       if (order.earnedPoints > 0)
-        AppLocalizations.of(context).orderPointsEarned(_amountFormat.format(order.earnedPoints)),
+        AppLocalizations.of(
+          context,
+        ).orderPointsEarned(_amountFormat.format(order.earnedPoints)),
     ].join(' · ');
 
     return Card(
@@ -471,7 +497,8 @@ class _PickupOrderCard extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      AppLocalizations.of(context).orderPickupSummary(
+                      AppLocalizations.of(context)
+                          .orderPickupSummary(
                             order.storeName,
                             order.pickupNumber,
                             order.itemCount,
@@ -485,7 +512,9 @@ class _PickupOrderCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        AppLocalizations.of(context).priceWon(_amountFormat.format(order.paidAmount)),
+                        AppLocalizations.of(
+                          context,
+                        ).priceWon(_amountFormat.format(order.paidAmount)),
                         style: textTheme.labelLarge,
                       ),
                       if (pointsSummary.isNotEmpty) ...[
@@ -568,7 +597,11 @@ class _PickupOrderCard extends ConsumerWidget {
     final result = buildPickupReorder(order: order, menuItems: menuItems);
     if (!result.hasItems) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).orderReorderUnavailableMenu)),
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context).orderReorderUnavailableMenu,
+          ),
+        ),
       );
       return;
     }
@@ -584,7 +617,9 @@ class _PickupOrderCard extends ConsumerWidget {
       SnackBar(
         content: Text(
           result.hasMissing
-              ? AppLocalizations.of(context).orderReorderPartialMenu(result.missingNames.join(', '))
+              ? AppLocalizations.of(
+                  context,
+                ).orderReorderPartialMenu(result.missingNames.join(', '))
               : AppLocalizations.of(context).orderReorderDone,
         ),
       ),
@@ -788,12 +823,16 @@ class _OrderCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  AppLocalizations.of(context).priceWon(_amountFormat.format(paymentAmount)),
+                  AppLocalizations.of(
+                    context,
+                  ).priceWon(_amountFormat.format(paymentAmount)),
                   style: textTheme.labelLarge,
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  AppLocalizations.of(context).orderPointsEarned(_amountFormat.format(entry.amount)),
+                  AppLocalizations.of(
+                    context,
+                  ).orderPointsEarned(_amountFormat.format(entry.amount)),
                   style: textTheme.bodySmall?.copyWith(
                     color: context.palette.accent,
                   ),

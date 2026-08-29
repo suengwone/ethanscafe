@@ -40,16 +40,17 @@ void main() {
     final container = createContainer();
     await container.read(beanGiftsControllerProvider.future);
 
-    final gift =
-        await container.read(beanGiftsControllerProvider.notifier).sendGift(
-              bean: _bean,
-              weight: BeanWeight.g200,
-              grind: GrindOption.espresso,
-              quantity: 1,
-              recipientName: '김선물',
-              recipientPhone: '010-1234-5678',
-              message: '맛있게 드세요',
-            );
+    final gift = await container
+        .read(beanGiftsControllerProvider.notifier)
+        .sendGift(
+          bean: _bean,
+          weight: BeanWeight.g200,
+          grind: GrindOption.espresso,
+          quantity: 1,
+          recipientName: '김선물',
+          recipientPhone: '010-1234-5678',
+          message: '맛있게 드세요',
+        );
 
     final gifts = container.read(beanGiftsControllerProvider).value!;
     expect(gifts.single.id, gift.id);

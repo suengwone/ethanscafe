@@ -31,7 +31,9 @@ class GuestRewardsCard extends StatelessWidget {
               colors: [context.palette.card, context.palette.surface],
             ),
             borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-            border: Border.all(color: context.palette.accent.withValues(alpha: 0.45)),
+            border: Border.all(
+              color: context.palette.accent.withValues(alpha: 0.45),
+            ),
             boxShadow: context.palette.cardShadow,
           ),
           child: InkWell(
@@ -123,7 +125,9 @@ class RewardsCard extends ConsumerWidget {
               colors: [context.palette.card, context.palette.surface],
             ),
             borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-            border: Border.all(color: context.palette.accent.withValues(alpha: 0.45)),
+            border: Border.all(
+              color: context.palette.accent.withValues(alpha: 0.45),
+            ),
             boxShadow: context.palette.cardShadow,
           ),
           child: InkWell(
@@ -170,8 +174,9 @@ class RewardsCard extends ConsumerWidget {
                       value: progress,
                       minHeight: 8,
                       backgroundColor: context.palette.border,
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(context.palette.accent),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        context.palette.accent,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 8),

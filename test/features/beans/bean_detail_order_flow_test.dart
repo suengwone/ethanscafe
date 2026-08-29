@@ -45,7 +45,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          authRepositoryProvider.overrideWithValue(FakeAuthRepository(user: user)),
+          authRepositoryProvider.overrideWithValue(
+            FakeAuthRepository(user: user),
+          ),
         ],
         child: MaterialApp.router(
           locale: testLocale,

@@ -75,8 +75,9 @@ class FirestoreBeanGiftsRepository implements BeanGiftsRepository {
     await _firestore.runTransaction((transaction) async {
       final snapshot = await transaction.get(_doc);
       final data = snapshot.data();
-      final gifts =
-          data != null ? beanGiftsFromFirestore(data) : const <BeanGift>[];
+      final gifts = data != null
+          ? beanGiftsFromFirestore(data)
+          : const <BeanGift>[];
       transaction.set(_doc, beanGiftsToFirestore([gift, ...gifts]));
     });
     return gift;
@@ -105,7 +106,8 @@ BeanGift beanGiftFromFirestore(Map<String, dynamic> data) {
     recipientName: data['recipientName'] as String? ?? '',
     recipientPhone: data['recipientPhone'] as String? ?? '',
     message: data['message'] as String? ?? '',
-    status: BeanGiftStatus.values.asNameMap()[data['status']] ??
+    status:
+        BeanGiftStatus.values.asNameMap()[data['status']] ??
         BeanGiftStatus.sent,
     createdAt: firestoreDateTime(data['createdAt']),
   );

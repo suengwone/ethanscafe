@@ -176,14 +176,16 @@ final _previewNow = DateTime(2026, 8, 19, 15); // 수요일 15시
 final _previewStoreOverrides = [
   storeClockProvider.overrideWithValue(() => _previewNow),
   // 자동 집계 혼잡도도 잰 시각에 따라 달라지므로 함께 고정한다.
-  storeActivityProvider.overrideWith((ref) async => {
-        'macheon': StoreActivity(
-          storeId: 'macheon',
-          activeOrders: 8,
-          congestion: StoreCongestion.busy,
-          updatedAt: _previewNow.subtract(const Duration(minutes: 2)),
-        ),
-      }),
+  storeActivityProvider.overrideWith(
+    (ref) async => {
+      'macheon': StoreActivity(
+        storeId: 'macheon',
+        activeOrders: 8,
+        congestion: StoreCongestion.busy,
+        updatedAt: _previewNow.subtract(const Duration(minutes: 2)),
+      ),
+    },
+  ),
 ];
 
 const _previewUser = AppUser(
@@ -926,21 +928,23 @@ void main() {
       const StoreDetailScreen(storeId: 'macheon'),
       overrides: [
         ..._previewStoreOverrides,
-        storesProvider.overrideWith((ref) async => [
-          CafeStore(
-            id: 'macheon',
-            name: '폭스트롯 마천점',
-            address: '서울 송파구 성내천로 189 1층 (마천동)',
-            phone: '010-7730-2388',
-            latitude: 37.501458,
-            longitude: 127.149322,
-            weekdayHours: '09:00 - 21:00',
-            weekendHours: '10:00 - 19:00',
-            services: const ['핸드드립 바', '카카오페이', '제로페이', '테라스'],
-            notice: '8월 24일(월)은 매장 정기 소독으로 14시에 문을 닫습니다.',
-            // 직원이 올린 값을 비워 두어 자동 집계가 뜨는 모습을 담는다.
-          ),
-        ]),
+        storesProvider.overrideWith(
+          (ref) async => [
+            CafeStore(
+              id: 'macheon',
+              name: '폭스트롯 마천점',
+              address: '서울 송파구 성내천로 189 1층 (마천동)',
+              phone: '010-7730-2388',
+              latitude: 37.501458,
+              longitude: 127.149322,
+              weekdayHours: '09:00 - 21:00',
+              weekendHours: '10:00 - 19:00',
+              services: const ['핸드드립 바', '카카오페이', '제로페이', '테라스'],
+              notice: '8월 24일(월)은 매장 정기 소독으로 14시에 문을 닫습니다.',
+              // 직원이 올린 값을 비워 두어 자동 집계가 뜨는 모습을 담는다.
+            ),
+          ],
+        ),
       ],
     );
 
@@ -1307,9 +1311,7 @@ void main() {
       const AppearanceSettingsScreen(),
       user: _previewUser,
       brightness: Brightness.light,
-      overrides: [
-        storedThemeModeProvider.overrideWithValue(ThemeMode.light),
-      ],
+      overrides: [storedThemeModeProvider.overrideWithValue(ThemeMode.light)],
     );
 
     await expectGolden(
@@ -1320,22 +1322,14 @@ void main() {
 
   testWidgets('홈 화면(라이트) 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
-    await pumpApp(
-      tester,
-      user: _previewUser,
-      brightness: Brightness.light,
-    );
+    await pumpApp(tester, user: _previewUser, brightness: Brightness.light);
 
     await expectGolden(find.byType(AppShell), 'home_screen_light');
   });
 
   testWidgets('메뉴 화면(라이트) 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
-    await pumpScreen(
-      tester,
-      const MenuScreen(),
-      brightness: Brightness.light,
-    );
+    await pumpScreen(tester, const MenuScreen(), brightness: Brightness.light);
 
     await expectGolden(find.byType(MenuScreen), 'menu_screen_light');
   });

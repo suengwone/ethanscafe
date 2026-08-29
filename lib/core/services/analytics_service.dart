@@ -70,10 +70,8 @@ class FirebaseAnalyticsService implements AnalyticsService {
       _log('add_to_cart', {'item_id': itemId, 'value': amount});
 
   @override
-  Future<void> beginCheckout({
-    required int amount,
-    required int itemCount,
-  }) => _log('begin_checkout', {'value': amount, 'item_count': itemCount});
+  Future<void> beginCheckout({required int amount, required int itemCount}) =>
+      _log('begin_checkout', {'value': amount, 'item_count': itemCount});
 
   @override
   Future<void> purchase({

@@ -23,6 +23,5 @@ abstract class BeanCartItem with _$BeanCartItem {
     required Bean bean,
     required BeanWeight weight,
     required GrindOption grind,
-  }) =>
-      this.bean.id == bean.id && this.weight == weight && this.grind == grind;
+  }) => this.bean.id == bean.id && this.weight == weight && this.grind == grind;
 }

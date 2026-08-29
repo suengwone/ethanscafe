@@ -8,7 +8,7 @@ bool isOnlineFromResults(List<ConnectivityResult> results) {
 
 class ConnectivityService {
   ConnectivityService({Connectivity? connectivity})
-      : _connectivity = connectivity ?? Connectivity();
+    : _connectivity = connectivity ?? Connectivity();
 
   final Connectivity _connectivity;
 

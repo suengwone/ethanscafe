@@ -103,10 +103,7 @@ void main() {
 
     expect(find.text('300P'), findsOneWidget);
     expect(find.text('-700P'), findsOneWidget);
-    expect(
-      find.text('700P를 사용했어요. 남은 포인트 300P'),
-      findsOneWidget,
-    );
+    expect(find.text('700P를 사용했어요. 남은 포인트 300P'), findsOneWidget);
   });
 
   testWidgets('잔액보다 많은 포인트는 사용할 수 없다', (WidgetTester tester) async {

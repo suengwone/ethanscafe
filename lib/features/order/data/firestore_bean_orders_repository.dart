@@ -53,13 +53,14 @@ BeanOrder beanOrderFromFirestore(Map<String, dynamic> data) {
     paymentMethod: data['paymentMethod'] as String?,
     fulfillmentMethod:
         BeanFulfillmentMethod.values.asNameMap()[data['fulfillmentMethod']] ??
-            BeanFulfillmentMethod.delivery,
+        BeanFulfillmentMethod.delivery,
     storeId: data['storeId'] as String?,
     storeName: data['storeName'] as String?,
     recipient: data['recipient'] as String?,
     recipientPhone: data['recipientPhone'] as String?,
     shippingAddress: data['shippingAddress'] as String?,
-    status: BeanOrderStatus.values.asNameMap()[data['status']] ??
+    status:
+        BeanOrderStatus.values.asNameMap()[data['status']] ??
         BeanOrderStatus.received,
     refundStatus: RefundStatus.parse(data['refundStatus']),
     createdAt: firestoreDateTime(data['createdAt']),

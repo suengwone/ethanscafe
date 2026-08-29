@@ -9,13 +9,13 @@ class LocalStoresRepository implements StoresRepository {
   /// 알 수 있게 표본을 하나 둔다.
   @override
   Future<Map<String, StoreActivity>> loadActivity() async => {
-        'macheon': StoreActivity(
-          storeId: 'macheon',
-          activeOrders: 4,
-          congestion: StoreCongestion.normal,
-          updatedAt: DateTime.now(),
-        ),
-      };
+    'macheon': StoreActivity(
+      storeId: 'macheon',
+      activeOrders: 4,
+      congestion: StoreCongestion.normal,
+      updatedAt: DateTime.now(),
+    ),
+  };
 
   static const _stores = <CafeStore>[
     CafeStore(

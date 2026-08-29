@@ -70,7 +70,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '930389726649',
     projectId: 'foxtrot-3bdba',
     storageBucket: 'foxtrot-3bdba.firebasestorage.app',
-    iosClientId: '930389726649-t2c3uhi40kafbkbsh2228bcqo9s8hkue.apps.googleusercontent.com',
+    iosClientId:
+        '930389726649-t2c3uhi40kafbkbsh2228bcqo9s8hkue.apps.googleusercontent.com',
     iosBundleId: 'com.ethanscafe.cafeApp',
   );
 }

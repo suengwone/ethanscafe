@@ -25,11 +25,9 @@ void main() {
     final latte = menuItems.firstWhere(
       (item) => item.id == 'espresso-vanilla-latte',
     );
-    container.read(pickupCartProvider.notifier).add(
-          menuItem: latte,
-          option: 'ICED',
-          quantity: 2,
-        );
+    container
+        .read(pickupCartProvider.notifier)
+        .add(menuItem: latte, option: 'ICED', quantity: 2);
 
     await tester.pumpWidget(
       UncontrolledProviderScope(

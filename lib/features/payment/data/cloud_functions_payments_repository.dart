@@ -5,8 +5,7 @@ import '../domain/payments_repository.dart';
 
 class CloudFunctionsPaymentsRepository implements PaymentsRepository {
   CloudFunctionsPaymentsRepository({FirebaseFunctions? functions})
-      : _functions =
-            functions ?? FirebaseFunctions.instanceFor(region: _region);
+    : _functions = functions ?? FirebaseFunctions.instanceFor(region: _region);
 
   static const _region = 'asia-northeast3';
   static const confirmCallableName = 'confirmTossPayment';

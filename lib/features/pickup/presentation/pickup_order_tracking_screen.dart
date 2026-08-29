@@ -139,9 +139,9 @@ class _OrderSummaryCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              AppLocalizations.of(context)
-                  .itemsSummary(order.firstItemName, order.items.length)
-                  .keepWord,
+              AppLocalizations.of(
+                context,
+              ).itemsSummary(order.firstItemName, order.items.length).keepWord,
               style: textTheme.labelLarge,
             ),
             const SizedBox(height: 4),

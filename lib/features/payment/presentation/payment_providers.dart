@@ -23,10 +23,8 @@ class TossPaymentGateway implements PaymentGateway {
     return Navigator.of(context, rootNavigator: true).push<PaymentApproval>(
       MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (_) => TossPaymentScreen(
-          request: request,
-          repository: repository,
-        ),
+        builder: (_) =>
+            TossPaymentScreen(request: request, repository: repository),
       ),
     );
   }
@@ -34,7 +32,7 @@ class TossPaymentGateway implements PaymentGateway {
 
 class LocalPaymentGateway implements PaymentGateway {
   LocalPaymentGateway({PaymentsRepository? repository})
-      : repository = repository ?? LocalPaymentsRepository();
+    : repository = repository ?? LocalPaymentsRepository();
 
   final PaymentsRepository repository;
 

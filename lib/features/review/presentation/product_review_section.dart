@@ -27,8 +27,7 @@ class ProductReviewSection extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
     final reviewsState = ref.watch(productReviewsProvider(productId));
-    final stats =
-        ref.watch(productStatsProvider).asData?.value[productId];
+    final stats = ref.watch(productStatsProvider).asData?.value[productId];
 
     return Card(
       child: Padding(
@@ -66,10 +65,8 @@ class ProductReviewSection extends ConsumerWidget {
                   child: CircularProgressIndicator(),
                 ),
               ),
-              error: (error, _) => Text(
-                l10n.reviewLoadFailed,
-                style: textTheme.bodySmall,
-              ),
+              error: (error, _) =>
+                  Text(l10n.reviewLoadFailed, style: textTheme.bodySmall),
               data: (reviews) {
                 if (reviews.isEmpty) {
                   return const _EmptyReviews();
@@ -120,10 +117,7 @@ class _EmptyReviews extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Expanded(
-          child: Text(
-            l10n.reviewEmpty.keepWord,
-            style: textTheme.bodySmall,
-          ),
+          child: Text(l10n.reviewEmpty.keepWord, style: textTheme.bodySmall),
         ),
       ],
     );

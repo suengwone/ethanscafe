@@ -17,5 +17,4 @@ class RefundFailure {
   final String summary;
   final int amount;
   final DateTime failedAt;
-
 }

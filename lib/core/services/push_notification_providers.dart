@@ -18,18 +18,18 @@ bool get _isPushSupported {
   }
 }
 
-final pushNotificationServiceProvider = Provider<PushNotificationService?>(
-  (ref) {
-    if (!_isPushSupported) {
-      return null;
-    }
-    final service = PushNotificationService(
-      onNavigate: (route) => ref.read(routerProvider).go(route),
-    );
-    ref.onDispose(service.dispose);
-    return service;
-  },
-);
+final pushNotificationServiceProvider = Provider<PushNotificationService?>((
+  ref,
+) {
+  if (!_isPushSupported) {
+    return null;
+  }
+  final service = PushNotificationService(
+    onNavigate: (route) => ref.read(routerProvider).go(route),
+  );
+  ref.onDispose(service.dispose);
+  return service;
+});
 
 final fcmTokenRepositoryProvider = Provider<FcmTokenRepository?>((ref) {
   if (!_isPushSupported) {

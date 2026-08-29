@@ -26,10 +26,7 @@ void main() {
     final repository = LocalNotificationSettingsRepository();
 
     await repository.save(
-      const NotificationSettings(
-        pushEnabled: false,
-        marketingEnabled: true,
-      ),
+      const NotificationSettings(pushEnabled: false, marketingEnabled: true),
     );
 
     final settings = await repository.load();

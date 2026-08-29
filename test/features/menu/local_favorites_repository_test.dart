@@ -41,9 +41,9 @@ void main() {
     await repository.toggleFavorite('espresso-americano');
     await repository.toggleFavorite('tea-chamomile');
 
-    expect(
-      await repository.loadFavorites(),
-      {'espresso-americano', 'tea-chamomile'},
-    );
+    expect(await repository.loadFavorites(), {
+      'espresso-americano',
+      'tea-chamomile',
+    });
   });
 }

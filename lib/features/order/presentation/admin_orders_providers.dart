@@ -17,24 +17,25 @@ final adminOrdersRepositoryProvider = Provider<AdminOrdersRepository?>((ref) {
 
 final activePickupOrdersProvider =
     FutureProvider.autoDispose<List<ActivePickupOrder>>((ref) async {
-  final repository = ref.watch(adminOrdersRepositoryProvider);
-  if (repository == null) {
-    return const [];
-  }
-  return repository.loadActivePickupOrders();
-});
+      final repository = ref.watch(adminOrdersRepositoryProvider);
+      if (repository == null) {
+        return const [];
+      }
+      return repository.loadActivePickupOrders();
+    });
 
 final activeBeanOrdersProvider =
     FutureProvider.autoDispose<List<ActiveBeanOrder>>((ref) async {
-  final repository = ref.watch(adminOrdersRepositoryProvider);
-  if (repository == null) {
-    return const [];
-  }
-  return repository.loadActiveBeanOrders();
-});
+      final repository = ref.watch(adminOrdersRepositoryProvider);
+      if (repository == null) {
+        return const [];
+      }
+      return repository.loadActiveBeanOrders();
+    });
 
-final refundFailuresProvider =
-    FutureProvider.autoDispose<List<RefundFailure>>((ref) async {
+final refundFailuresProvider = FutureProvider.autoDispose<List<RefundFailure>>((
+  ref,
+) async {
   final repository = ref.watch(adminOrdersRepositoryProvider);
   if (repository == null) {
     return const [];
@@ -66,8 +67,7 @@ class AdminOrdersController {
   }
 
   Future<void> advanceBean(ActiveBeanOrder entry) async {
-    final next =
-        nextBeanStatus(entry.status, entry.fulfillmentMethod);
+    final next = nextBeanStatus(entry.status, entry.fulfillmentMethod);
     if (next == null) {
       throw StateError('There is no next step.');
     }

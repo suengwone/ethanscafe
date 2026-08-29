@@ -5,7 +5,7 @@ import '../domain/beans_repository.dart';
 
 class FirestoreBeansRepository implements BeansRepository {
   FirestoreBeansRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
 
@@ -30,8 +30,8 @@ Bean beanFromFirestore(String id, Map<String, dynamic> data) {
     origin: data['origin'] as String? ?? '',
     description: data['description'] as String? ?? '',
     story: data['story'] as String? ?? '',
-    roastLevel: RoastLevel.values.asNameMap()[data['roastLevel']] ??
-        RoastLevel.medium,
+    roastLevel:
+        RoastLevel.values.asNameMap()[data['roastLevel']] ?? RoastLevel.medium,
     process: data['process'] as String? ?? '',
     tastingNotes: _stringList(data['tastingNotes']),
     acidity: (data['acidity'] as num? ?? 0).toInt(),

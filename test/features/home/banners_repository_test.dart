@@ -10,8 +10,11 @@ void main() {
 
       expect(banners, hasLength(3));
       expect(banners.first.title, '여름 시즌 신메뉴 출시');
-      expect(banners.map((banner) => banner.icon),
-          ['snowflake', 'bean', 'gift']);
+      expect(banners.map((banner) => banner.icon), [
+        'snowflake',
+        'bean',
+        'gift',
+      ]);
     });
   });
 

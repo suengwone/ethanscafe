@@ -42,7 +42,9 @@ class _EventBannerCarouselState extends ConsumerState<EventBannerCarousel> {
             for (var i = 0; i < banners.length; i++)
               _BannerCard(
                 banner: banners[i],
-                colors: context.palette.bannerGradients[i % context.palette.bannerGradients.length],
+                colors:
+                    context.palette.bannerGradients[i %
+                        context.palette.bannerGradients.length],
               ),
           ],
         ),
@@ -87,7 +89,9 @@ class _BannerCard extends StatelessWidget {
           colors: colors,
         ),
         borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-        border: Border.all(color: context.palette.accent.withValues(alpha: 0.35)),
+        border: Border.all(
+          color: context.palette.accent.withValues(alpha: 0.35),
+        ),
       ),
       padding: const EdgeInsets.all(20),
       child: Row(
@@ -99,17 +103,16 @@ class _BannerCard extends StatelessWidget {
               children: [
                 Text(
                   banner.title.keepWord,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(color: context.palette.accentSoft),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: context.palette.accentSoft,
+                  ),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   banner.subtitle.keepWord,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: context.palette.ink.withValues(alpha: 0.85),
-                      ),
+                    color: context.palette.ink.withValues(alpha: 0.85),
+                  ),
                 ),
               ],
             ),

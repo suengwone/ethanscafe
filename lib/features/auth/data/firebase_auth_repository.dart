@@ -10,9 +10,11 @@ import 'package:naver_login_sdk/naver_login_sdk.dart';
 import '../domain/auth_models.dart';
 import '../domain/auth_repository.dart';
 import 'kakao_web_authorize_stub.dart'
-    if (dart.library.html) 'kakao_web_authorize_web.dart' as kakao_web;
+    if (dart.library.html) 'kakao_web_authorize_web.dart'
+    as kakao_web;
 import 'naver_web_authorize_stub.dart'
-    if (dart.library.html) 'naver_web_authorize_web.dart' as naver_web;
+    if (dart.library.html) 'naver_web_authorize_web.dart'
+    as naver_web;
 
 const _kakaoJsAppKey = String.fromEnvironment('KAKAO_JS_APP_KEY');
 const _naverClientId = String.fromEnvironment('NAVER_CLIENT_ID');

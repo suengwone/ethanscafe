@@ -6,7 +6,7 @@ import '../domain/coupons_repository.dart';
 
 class FirestoreCouponsRepository implements CouponsRepository {
   FirestoreCouponsRepository({required this.uid, FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final String uid;
   final FirebaseFirestore _firestore;
@@ -40,18 +40,16 @@ class FirestoreCouponsRepository implements CouponsRepository {
 
   @override
   Future<void> markUsed(String couponId) {
-    return _firestore
-        .collection(collectionPath)
-        .doc(couponId)
-        .update({'isUsed': true});
+    return _firestore.collection(collectionPath).doc(couponId).update({
+      'isUsed': true,
+    });
   }
 
   @override
   Future<void> markUnused(String couponId) {
-    return _firestore
-        .collection(collectionPath)
-        .doc(couponId)
-        .update({'isUsed': false});
+    return _firestore.collection(collectionPath).doc(couponId).update({
+      'isUsed': false,
+    });
   }
 }
 

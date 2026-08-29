@@ -13,7 +13,8 @@ bool requireLogin(
   required String message,
 }) {
   // 스트림이 아직 첫 값을 흘리기 전이면 회원도 비회원으로 보이므로 저장소를 함께 확인한다.
-  final user = ref.read(authStateProvider).value ??
+  final user =
+      ref.read(authStateProvider).value ??
       ref.read(authRepositoryProvider).currentUser;
   if (user != null) {
     return true;

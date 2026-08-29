@@ -42,7 +42,9 @@ Future<void> showBeanSubscribeSheet(
     return;
   }
 
-  await ref.read(beanSubscriptionsControllerProvider.notifier).subscribe(
+  await ref
+      .read(beanSubscriptionsControllerProvider.notifier)
+      .subscribe(
         bean: bean,
         weight: selection.weight,
         grind: selection.grind,
@@ -117,22 +119,35 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
           children: [
             Row(
               children: [
-                Icon(LucideIcons.repeat, size: 18, color: context.palette.accent),
+                Icon(
+                  LucideIcons.repeat,
+                  size: 18,
+                  color: context.palette.accent,
+                ),
                 const SizedBox(width: 8),
-                Text(AppLocalizations.of(context).subscriptionTitle, style: textTheme.titleLarge),
+                Text(
+                  AppLocalizations.of(context).subscriptionTitle,
+                  style: textTheme.titleLarge,
+                ),
               ],
             ),
             const SizedBox(height: 4),
             Text(
-              AppLocalizations.of(context).beansRoastOf(
+              AppLocalizations.of(context)
+                  .beansRoastOf(
                     widget.bean.name,
-                    AppLocalizations.of(context).roastLevelLabel(widget.bean.roastLevel),
+                    AppLocalizations.of(
+                      context,
+                    ).roastLevelLabel(widget.bean.roastLevel),
                   )
                   .keepWord,
               style: textTheme.bodySmall,
             ),
             const SizedBox(height: 20),
-            Text(AppLocalizations.of(context).subscriptionFieldCycle, style: textTheme.titleSmall),
+            Text(
+              AppLocalizations.of(context).subscriptionFieldCycle,
+              style: textTheme.titleSmall,
+            ),
             const SizedBox(height: 8),
             Row(
               children: SubscriptionCycle.values
@@ -140,8 +155,7 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
                     (cycle) => Expanded(
                       child: Padding(
                         padding: EdgeInsets.only(
-                          right:
-                              cycle == SubscriptionCycle.values.last ? 0 : 8,
+                          right: cycle == SubscriptionCycle.values.last ? 0 : 8,
                         ),
                         child: _CycleOption(
                           cycle: cycle,
@@ -154,7 +168,10 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
                   .toList(),
             ),
             const SizedBox(height: 20),
-            Text(AppLocalizations.of(context).beanFieldWeight, style: textTheme.titleSmall),
+            Text(
+              AppLocalizations.of(context).beanFieldWeight,
+              style: textTheme.titleSmall,
+            ),
             const SizedBox(height: 8),
             Row(
               children: BeanWeight.values
@@ -176,7 +193,10 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
                   .toList(),
             ),
             const SizedBox(height: 20),
-            Text(AppLocalizations.of(context).beanFieldGrind, style: textTheme.titleSmall),
+            Text(
+              AppLocalizations.of(context).beanFieldGrind,
+              style: textTheme.titleSmall,
+            ),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -184,10 +204,14 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
               children: GrindOption.values
                   .map(
                     (grind) => ChoiceChip(
-                      label: Text(AppLocalizations.of(context).grindLabel(grind)),
+                      label: Text(
+                        AppLocalizations.of(context).grindLabel(grind),
+                      ),
                       selected: _grind == grind,
                       onSelected: (_) => setState(() => _grind = grind),
-                      selectedColor: context.palette.accent.withValues(alpha: 0.25),
+                      selectedColor: context.palette.accent.withValues(
+                        alpha: 0.25,
+                      ),
                       labelStyle: TextStyle(
                         fontSize: 13,
                         color: _grind == grind
@@ -195,7 +219,9 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
                             : context.palette.ink,
                       ),
                       side: BorderSide(
-                        color: _grind == grind ? context.palette.accent : context.palette.border,
+                        color: _grind == grind
+                            ? context.palette.accent
+                            : context.palette.border,
                       ),
                       backgroundColor: context.palette.surface,
                       showCheckmark: false,
@@ -206,7 +232,10 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
             const SizedBox(height: 20),
             Row(
               children: [
-                Text(AppLocalizations.of(context).subscriptionFieldQuantity, style: textTheme.titleSmall),
+                Text(
+                  AppLocalizations.of(context).subscriptionFieldQuantity,
+                  style: textTheme.titleSmall,
+                ),
                 const Spacer(),
                 _QuantityButton(
                   icon: LucideIcons.minus,
@@ -233,10 +262,15 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
             const SizedBox(height: 12),
             Row(
               children: [
-                Text(AppLocalizations.of(context).subscriptionFieldPrice, style: textTheme.bodyMedium),
+                Text(
+                  AppLocalizations.of(context).subscriptionFieldPrice,
+                  style: textTheme.bodyMedium,
+                ),
                 const Spacer(),
                 Text(
-                  AppLocalizations.of(context).priceWon(_priceFormat.format(_pricePerDelivery)),
+                  AppLocalizations.of(
+                    context,
+                  ).priceWon(_priceFormat.format(_pricePerDelivery)),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -248,7 +282,9 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
             const SizedBox(height: 6),
             Text(
               AppLocalizations.of(context)
-                  .subscriptionNotice(AppLocalizations.of(context).subscriptionCycleLabel(_cycle))
+                  .subscriptionNotice(
+                    AppLocalizations.of(context).subscriptionCycleLabel(_cycle),
+                  )
                   .keepWord,
               style: textTheme.bodySmall,
             ),
@@ -266,7 +302,9 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
                 ),
                 icon: const Icon(LucideIcons.repeat, size: 18),
                 label: Text(
-                  AppLocalizations.of(context).subscriptionStart(AppLocalizations.of(context).subscriptionCycleLabel(_cycle)),
+                  AppLocalizations.of(context).subscriptionStart(
+                    AppLocalizations.of(context).subscriptionCycleLabel(_cycle),
+                  ),
                 ),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
@@ -314,7 +352,9 @@ class _CycleOption extends StatelessWidget {
               AppLocalizations.of(context).subscriptionCycleLabel(cycle),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: selected ? context.palette.accentSoft : context.palette.ink,
+                color: selected
+                    ? context.palette.accentSoft
+                    : context.palette.ink,
               ),
             ),
             const SizedBox(height: 4),
@@ -365,7 +405,9 @@ class _WeightOption extends StatelessWidget {
               weight.label,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: selected ? context.palette.accentSoft : context.palette.ink,
+                color: selected
+                    ? context.palette.accentSoft
+                    : context.palette.ink,
               ),
             ),
             const SizedBox(height: 4),

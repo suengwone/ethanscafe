@@ -30,8 +30,9 @@ void main() {
     });
 
     test('round trip 시 데이터가 보존된다', () {
-      final restored =
-          productReviewFromFirestore(productReviewToFirestore(review));
+      final restored = productReviewFromFirestore(
+        productReviewToFirestore(review),
+      );
 
       expect(restored, review);
     });

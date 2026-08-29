@@ -21,10 +21,7 @@ class PickupCartNotifier extends Notifier<List<PickupCartItem>> {
     );
     if (index >= 0) {
       final item = state[index];
-      final merged = (item.quantity + quantity).clamp(
-        1,
-        pickupCartMaxQuantity,
-      );
+      final merged = (item.quantity + quantity).clamp(1, pickupCartMaxQuantity);
       state = [...state]..[index] = item.copyWith(quantity: merged);
       return;
     }

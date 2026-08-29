@@ -46,13 +46,12 @@ void main() {
     });
   });
 
-  Future<GoRouter> pumpApp(
-    WidgetTester tester, {
-    AppUser? user,
-  }) async {
+  Future<GoRouter> pumpApp(WidgetTester tester, {AppUser? user}) async {
     final container = ProviderContainer(
       overrides: [
-        authRepositoryProvider.overrideWithValue(FakeAuthRepository(user: user)),
+        authRepositoryProvider.overrideWithValue(
+          FakeAuthRepository(user: user),
+        ),
       ],
     );
     addTearDown(container.dispose);
@@ -163,10 +162,7 @@ void main() {
 
     expect(find.byType(BeanDetailScreen), findsOneWidget);
     expect(find.byType(LoginScreen), findsNothing);
-    expect(
-      find.text('에티오피아 예가체프 아리차 에이미 G1'.keepWord),
-      findsOneWidget,
-    );
+    expect(find.text('에티오피아 예가체프 아리차 에이미 G1'.keepWord), findsOneWidget);
   });
 
   testWidgets('비로그인 시 메뉴 상세 화면은 볼 수 있다', (tester) async {

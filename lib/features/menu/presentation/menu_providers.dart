@@ -25,12 +25,14 @@ final menuItemsProvider = FutureProvider<List<MenuItem>>((ref) {
 
 final menuItemsByCategoryProvider =
     FutureProvider.family<List<MenuItem>, MenuCategory>((ref, category) async {
-  final items = await ref.watch(menuItemsProvider.future);
-  return items.where((item) => item.category == category).toList();
-});
+      final items = await ref.watch(menuItemsProvider.future);
+      return items.where((item) => item.category == category).toList();
+    });
 
-final menuItemProvider =
-    FutureProvider.family<MenuItem, String>((ref, menuId) async {
+final menuItemProvider = FutureProvider.family<MenuItem, String>((
+  ref,
+  menuId,
+) async {
   final items = await ref.watch(menuItemsProvider.future);
   return items.firstWhere(
     (item) => item.id == menuId,
@@ -52,7 +54,8 @@ final favoritesRepositoryProvider = Provider<FavoritesRepository>((ref) {
 
 final favoritesProvider =
     AsyncNotifierProvider<FavoritesController, Set<String>>(
-        FavoritesController.new);
+      FavoritesController.new,
+    );
 
 class FavoritesController extends AsyncNotifier<Set<String>> {
   @override

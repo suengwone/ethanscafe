@@ -28,7 +28,9 @@ Future<bool> confirmDelete(
             backgroundColor: context.palette.danger,
             foregroundColor: context.palette.onAccent,
           ),
-          child: Text(confirmLabel ?? AppLocalizations.of(context).commonDelete),
+          child: Text(
+            confirmLabel ?? AppLocalizations.of(context).commonDelete,
+          ),
         ),
       ],
     ),

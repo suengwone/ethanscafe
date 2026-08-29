@@ -108,7 +108,8 @@ class _MenuTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final statsBadges = ref.watch(productBadgesProvider).value ??
+    final statsBadges =
+        ref.watch(productBadgesProvider).value ??
         const <String, Set<ProductBadge>>{};
     final badges = statsBadges[item.id] ?? const <ProductBadge>{};
     final showNew = item.badge == MenuBadge.isNew;
@@ -134,10 +135,7 @@ class _MenuTile extends ConsumerWidget {
           children: [
             Text(
               AppLocalizations.of(context).menuPriceLabel(item),
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             if (item.soldOut || showNew || showHit || showBest)
               Row(
@@ -146,15 +144,15 @@ class _MenuTile extends ConsumerWidget {
                   // 품절이면 판매 배지는 의미가 없어 대신 품절만 보여준다.
                   if (item.soldOut) const SoldOutBadge(),
                   if (!item.soldOut) ...[
-                  if (showBest) const BestBadge(),
-                  if (showHit) ...[
-                    if (showBest) const SizedBox(width: 4),
-                    const HitBadge(),
-                  ],
-                  if (showNew) ...[
-                    if (showBest || showHit) const SizedBox(width: 4),
-                    const NewBadge(),
-                  ],
+                    if (showBest) const BestBadge(),
+                    if (showHit) ...[
+                      if (showBest) const SizedBox(width: 4),
+                      const HitBadge(),
+                    ],
+                    if (showNew) ...[
+                      if (showBest || showHit) const SizedBox(width: 4),
+                      const NewBadge(),
+                    ],
                   ],
                 ],
               ),

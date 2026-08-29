@@ -18,7 +18,8 @@ class LocalMenuRepository implements MenuRepository {
       price: 6800,
       servingOptions: _hotIced,
       isRecommended: true,
-      detail: '핀카 리브레 농장의 게이샤 품종을 정성껏 핸드드립으로 내려드립니다. '
+      detail:
+          '핀카 리브레 농장의 게이샤 품종을 정성껏 핸드드립으로 내려드립니다. '
           '화사한 자스민 향과 복숭아의 산뜻한 단맛이 어우러집니다.',
     ),
     MenuItem(
@@ -28,7 +29,8 @@ class LocalMenuRepository implements MenuRepository {
       category: MenuCategory.drip,
       price: 6300,
       servingOptions: _hotIced,
-      detail: '케냐 무랑가 지역의 AA TOP 등급 워시드 커피입니다. '
+      detail:
+          '케냐 무랑가 지역의 AA TOP 등급 워시드 커피입니다. '
           '묵직한 바디감 위로 오렌지와 베리의 juicy한 산미가 살아있습니다.',
     ),
     MenuItem(
@@ -38,7 +40,8 @@ class LocalMenuRepository implements MenuRepository {
       category: MenuCategory.drip,
       price: 6300,
       servingOptions: _hotIced,
-      detail: '페루 엘 바바코 농장의 버번 품종입니다. '
+      detail:
+          '페루 엘 바바코 농장의 버번 품종입니다. '
           '토피의 고소한 단맛과 감귤류의 부드러운 산미가 균형을 이룹니다.',
     ),
     MenuItem(
@@ -48,7 +51,8 @@ class LocalMenuRepository implements MenuRepository {
       category: MenuCategory.drip,
       price: 5800,
       servingOptions: _hotIced,
-      detail: '수마트라 만델링의 깊고 진한 풍미를 담았습니다. '
+      detail:
+          '수마트라 만델링의 깊고 진한 풍미를 담았습니다. '
           '브랜디와 건포도를 연상시키는 무게감 있는 한 잔입니다.',
     ),
     MenuItem(
@@ -58,7 +62,8 @@ class LocalMenuRepository implements MenuRepository {
       category: MenuCategory.drip,
       price: 6800,
       servingOptions: _hotIced,
-      detail: '레드베리즈 프로세싱으로 가공된 특별한 콜롬비아 커피입니다. '
+      detail:
+          '레드베리즈 프로세싱으로 가공된 특별한 콜롬비아 커피입니다. '
           '체리 콜라 같은 유니크한 향미가 인기 비결입니다.',
     ),
     MenuItem(
@@ -68,7 +73,8 @@ class LocalMenuRepository implements MenuRepository {
       category: MenuCategory.drip,
       price: 5300,
       servingOptions: _hotIced,
-      detail: '고소한 아몬드와 카라멜의 단맛이 편안하게 이어지는 '
+      detail:
+          '고소한 아몬드와 카라멜의 단맛이 편안하게 이어지는 '
           '데일리 드립 커피의 스테디셀러입니다.',
     ),
     MenuItem(
@@ -78,7 +84,8 @@ class LocalMenuRepository implements MenuRepository {
       category: MenuCategory.drip,
       price: 5300,
       servingOptions: _hotIced,
-      detail: '안티구아 화산 지대에서 자란 SHB 등급 커피입니다. '
+      detail:
+          '안티구아 화산 지대에서 자란 SHB 등급 커피입니다. '
           '은은한 스모키함과 초콜릿의 여운이 매력적입니다.',
     ),
     MenuItem(
@@ -88,7 +95,8 @@ class LocalMenuRepository implements MenuRepository {
       category: MenuCategory.drip,
       price: 5300,
       servingOptions: _hotIced,
-      detail: '내추럴 프로세싱 특유의 화려한 과일 향미를 담은 '
+      detail:
+          '내추럴 프로세싱 특유의 화려한 과일 향미를 담은 '
           '예가체프 아리차 마을의 G1 등급 커피입니다.',
     ),
     MenuItem(
@@ -98,7 +106,8 @@ class LocalMenuRepository implements MenuRepository {
       category: MenuCategory.drip,
       price: 5800,
       servingOptions: _hotIced,
-      detail: '마운틴 워터 프로세스로 카페인을 제거해 늦은 오후에도 '
+      detail:
+          '마운틴 워터 프로세스로 카페인을 제거해 늦은 오후에도 '
           '부담 없이 즐길 수 있는 디카페인 커피입니다.',
     ),
     // 에스프레소
@@ -109,7 +118,8 @@ class LocalMenuRepository implements MenuRepository {
       category: MenuCategory.espresso,
       price: 5000,
       servingOptions: _hotIced,
-      detail: '직접 로스팅한 시그니처 블렌드 에스프레소에 물을 더해 '
+      detail:
+          '직접 로스팅한 시그니처 블렌드 에스프레소에 물을 더해 '
           '깔끔하고 균형 잡힌 맛을 즐길 수 있습니다.',
     ),
     MenuItem(
@@ -119,7 +129,8 @@ class LocalMenuRepository implements MenuRepository {
       category: MenuCategory.espresso,
       price: 5500,
       servingOptions: _hotIced,
-      detail: '진한 에스프레소와 부드러운 스팀 밀크의 조화. '
+      detail:
+          '진한 에스프레소와 부드러운 스팀 밀크의 조화. '
           '오트·아몬드·소이 밀크로 변경할 수 있습니다.',
     ),
     MenuItem(
@@ -130,7 +141,8 @@ class LocalMenuRepository implements MenuRepository {
       price: 5500,
       servingOptions: _hotIced,
       isRecommended: true,
-      detail: '리스트레토 샷에 벨벳 같은 마이크로폼을 더해 '
+      detail:
+          '리스트레토 샷에 벨벳 같은 마이크로폼을 더해 '
           '커피 본연의 맛을 진하게 느낄 수 있습니다.',
     ),
     MenuItem(
@@ -194,7 +206,8 @@ class LocalMenuRepository implements MenuRepository {
       category: MenuCategory.espresso,
       price: 6800,
       priceFrom: true,
-      detail: '하겐다즈 바닐라 아이스크림 위에 갓 내린 에스프레소를 부어드립니다. '
+      detail:
+          '하겐다즈 바닐라 아이스크림 위에 갓 내린 에스프레소를 부어드립니다. '
           '말차·발로나 초콜릿 토핑으로 업그레이드할 수 있습니다.',
     ),
     // 음료

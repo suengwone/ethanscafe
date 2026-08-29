@@ -38,7 +38,9 @@ class MyReviewsController extends AsyncNotifier<List<ProductReview>> {
     required int rating,
     String comment = '',
   }) async {
-    final review = await ref.read(reviewsRepositoryProvider).addReview(
+    final review = await ref
+        .read(reviewsRepositoryProvider)
+        .addReview(
           productId: productId,
           productType: productType,
           productName: productName,
@@ -65,18 +67,18 @@ class MyReviewsController extends AsyncNotifier<List<ProductReview>> {
   }
 }
 
-final productStatsProvider =
-    FutureProvider<Map<String, ProductStats>>((ref) {
+final productStatsProvider = FutureProvider<Map<String, ProductStats>>((ref) {
   return ref.watch(reviewsRepositoryProvider).loadStats();
 });
 
 final productReviewsProvider =
     FutureProvider.family<List<ProductReview>, String>((ref, productId) {
-  return ref.watch(reviewsRepositoryProvider).loadProductReviews(productId);
-});
+      return ref.watch(reviewsRepositoryProvider).loadProductReviews(productId);
+    });
 
-final productBadgesProvider =
-    FutureProvider<Map<String, Set<ProductBadge>>>((ref) async {
+final productBadgesProvider = FutureProvider<Map<String, Set<ProductBadge>>>((
+  ref,
+) async {
   final stats = await ref.watch(productStatsProvider.future);
   return computeStatsBadges(stats.values);
 });

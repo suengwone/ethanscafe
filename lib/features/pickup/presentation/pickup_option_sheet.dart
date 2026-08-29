@@ -77,7 +77,10 @@ class _PickupOptionSheetState extends State<PickupOptionSheet> {
             Text(item.description.keepWord, style: textTheme.bodySmall),
             if (item.servingOptions.isNotEmpty) ...[
               const SizedBox(height: 20),
-              Text(AppLocalizations.of(context).pickupOptionTitle, style: textTheme.titleSmall),
+              Text(
+                AppLocalizations.of(context).pickupOptionTitle,
+                style: textTheme.titleSmall,
+              ),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
@@ -88,7 +91,9 @@ class _PickupOptionSheetState extends State<PickupOptionSheet> {
                         label: Text(option),
                         selected: _option == option,
                         onSelected: (_) => setState(() => _option = option),
-                        selectedColor: context.palette.accent.withValues(alpha: 0.25),
+                        selectedColor: context.palette.accent.withValues(
+                          alpha: 0.25,
+                        ),
                         labelStyle: TextStyle(
                           fontSize: 13,
                           color: _option == option
@@ -96,8 +101,9 @@ class _PickupOptionSheetState extends State<PickupOptionSheet> {
                               : context.palette.ink,
                         ),
                         side: BorderSide(
-                          color:
-                              _option == option ? context.palette.accent : context.palette.border,
+                          color: _option == option
+                              ? context.palette.accent
+                              : context.palette.border,
                         ),
                         backgroundColor: context.palette.surface,
                         showCheckmark: false,
@@ -109,7 +115,10 @@ class _PickupOptionSheetState extends State<PickupOptionSheet> {
             const SizedBox(height: 20),
             Row(
               children: [
-                Text(AppLocalizations.of(context).beanFieldQuantity, style: textTheme.titleSmall),
+                Text(
+                  AppLocalizations.of(context).beanFieldQuantity,
+                  style: textTheme.titleSmall,
+                ),
                 const Spacer(),
                 _QuantityButton(
                   icon: LucideIcons.minus,
@@ -136,10 +145,15 @@ class _PickupOptionSheetState extends State<PickupOptionSheet> {
             const SizedBox(height: 12),
             Row(
               children: [
-                Text(AppLocalizations.of(context).pickupTotalPrice, style: textTheme.bodyMedium),
+                Text(
+                  AppLocalizations.of(context).pickupTotalPrice,
+                  style: textTheme.bodyMedium,
+                ),
                 const Spacer(),
                 Text(
-                  AppLocalizations.of(context).priceWon(_priceFormat.format(_totalPrice)),
+                  AppLocalizations.of(
+                    context,
+                  ).priceWon(_priceFormat.format(_totalPrice)),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

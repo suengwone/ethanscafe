@@ -39,8 +39,10 @@ void main() {
 
     expect(find.text('사용하기'), findsOneWidget);
     expect(find.byType(QrImageView), findsOneWidget);
-    expect(find.text('매장 직원에게 QR 코드를 보여주세요.\n직원 스캔·확인 후 사용하기 버튼을 눌러주세요.'),
-        findsOneWidget);
+    expect(
+      find.text('매장 직원에게 QR 코드를 보여주세요.\n직원 스캔·확인 후 사용하기 버튼을 눌러주세요.'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('직원 확인 다이얼로그에서 사용을 누르면 쿠폰이 사용 처리된다', (tester) async {

@@ -1,4 +1,3 @@
-
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../l10n/app_localizations.dart';
@@ -98,8 +97,10 @@ class _TossPaymentScreenState extends State<TossPaymentScreen> {
     final uri = Uri.tryParse(url);
     if (uri != null && !const {'http', 'https', 'about'}.contains(uri.scheme)) {
       unawaited(
-        launchUrl(uri, mode: LaunchMode.externalApplication)
-            .catchError((_) => false),
+        launchUrl(
+          uri,
+          mode: LaunchMode.externalApplication,
+        ).catchError((_) => false),
       );
       return NavigationDecision.prevent;
     }
@@ -148,9 +149,9 @@ class _TossPaymentScreenState extends State<TossPaymentScreen> {
     if (!mounted) {
       return;
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
     Navigator.pop(context);
   }
 

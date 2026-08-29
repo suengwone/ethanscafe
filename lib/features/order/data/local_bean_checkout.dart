@@ -58,8 +58,9 @@ class LocalBeanCheckout implements BeanCheckout {
         paymentAmount: paidAmount,
         description: beanOrderPaymentDescription,
       );
-      final entry =
-          pointsData.history.isEmpty ? null : pointsData.history.first;
+      final entry = pointsData.history.isEmpty
+          ? null
+          : pointsData.history.first;
       earnedPoints = entry != null && entry.isEarn ? entry.amount : 0;
     }
 
@@ -109,7 +110,8 @@ class LocalBeanCheckout implements BeanCheckout {
   Future<void> _recordSales(List<BeanOrderItem> items) async {
     final salesByBean = <String, int>{};
     for (final item in items) {
-      salesByBean[item.beanId] = (salesByBean[item.beanId] ?? 0) + item.quantity;
+      salesByBean[item.beanId] =
+          (salesByBean[item.beanId] ?? 0) + item.quantity;
     }
     await _reviews.recordSales(salesByBean);
   }

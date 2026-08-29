@@ -44,14 +44,17 @@ class _BusinessRegisterScreenState
     if (_companyNameController.text.trim().isEmpty ||
         _businessNumberController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).businessMissingFields)),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).businessMissingFields),
+        ),
       );
       return;
     }
     if (!isValidBusinessNumber(_businessNumberController.text)) {
       setState(
-        () => _businessNumberError =
-            AppLocalizations.of(context).businessNumberInvalid,
+        () => _businessNumberError = AppLocalizations.of(
+          context,
+        ).businessNumberInvalid,
       );
       return;
     }
@@ -149,7 +152,9 @@ class _BusinessRegisterScreenState
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).businessSwitchedBack)),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).businessSwitchedBack),
+        ),
       );
       context.go('/');
     } finally {
@@ -166,31 +171,33 @@ class _BusinessRegisterScreenState
     final savedBusiness = profile?.business;
 
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context).businessAccountTitle)),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).businessAccountTitle),
+      ),
       body: profile == null
           ? const Center(child: CircularProgressIndicator())
           : profile.isBusiness
-              ? _RegisteredView(
-                  business: profile.business!,
-                  submitting: _submitting,
-                  onSwitchToCustomer: _switchToCustomer,
-                )
-              : savedBusiness != null && !_editing
-                  ? _SavedBusinessView(
-                      business: savedBusiness,
-                      submitting: _submitting,
-                      onSwitchToBusiness: _switchToBusiness,
-                      onEdit: () => _startEditing(savedBusiness),
-                    )
-                  : _RegisterForm(
-                      companyNameController: _companyNameController,
-                      businessNumberController: _businessNumberController,
-                      managerNameController: _managerNameController,
-                      phoneController: _phoneController,
-                      businessNumberError: _businessNumberError,
-                      submitting: _submitting,
-                      onSubmit: _register,
-                    ),
+          ? _RegisteredView(
+              business: profile.business!,
+              submitting: _submitting,
+              onSwitchToCustomer: _switchToCustomer,
+            )
+          : savedBusiness != null && !_editing
+          ? _SavedBusinessView(
+              business: savedBusiness,
+              submitting: _submitting,
+              onSwitchToBusiness: _switchToBusiness,
+              onEdit: () => _startEditing(savedBusiness),
+            )
+          : _RegisterForm(
+              companyNameController: _companyNameController,
+              businessNumberController: _businessNumberController,
+              managerNameController: _managerNameController,
+              phoneController: _phoneController,
+              businessNumberError: _businessNumberError,
+              submitting: _submitting,
+              onSubmit: _register,
+            ),
     );
   }
 }
@@ -228,13 +235,15 @@ class _RegisterForm extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(LucideIcons.building2,
-                    color: context.palette.accent, size: 22),
+                Icon(
+                  LucideIcons.building2,
+                  color: context.palette.accent,
+                  size: 22,
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    AppLocalizations.of(context).businessIntro
-                        .keepWord,
+                    AppLocalizations.of(context).businessIntro.keepWord,
                     style: textTheme.bodySmall,
                   ),
                 ),
@@ -320,8 +329,11 @@ class _SavedBusinessView extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(LucideIcons.building2,
-                        color: context.palette.accent, size: 22),
+                    Icon(
+                      LucideIcons.building2,
+                      color: context.palette.accent,
+                      size: 22,
+                    ),
                     const SizedBox(width: 10),
                     Text(
                       AppLocalizations.of(context).businessSavedTitle,
@@ -331,8 +343,7 @@ class _SavedBusinessView extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  AppLocalizations.of(context).businessSavedIntro
-                      .keepWord,
+                  AppLocalizations.of(context).businessSavedIntro.keepWord,
                   style: textTheme.bodySmall,
                 ),
                 const SizedBox(height: 16),
@@ -385,9 +396,7 @@ class _BusinessInfoRows extends StatelessWidget {
                   width: 110,
                   child: Text(label, style: textTheme.bodySmall),
                 ),
-                Expanded(
-                  child: Text(value, style: textTheme.bodyMedium),
-                ),
+                Expanded(child: Text(value, style: textTheme.bodyMedium)),
               ],
             ),
           ),
@@ -423,8 +432,11 @@ class _RegisteredView extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(LucideIcons.badgeCheck,
-                        color: context.palette.accent, size: 22),
+                    Icon(
+                      LucideIcons.badgeCheck,
+                      color: context.palette.accent,
+                      size: 22,
+                    ),
                     const SizedBox(width: 10),
                     Text(
                       AppLocalizations.of(context).businessActiveTitle,

@@ -42,10 +42,7 @@ void main() {
     test('누락된 필드는 기본값으로 채운다', () {
       final quotes = wholesaleQuotesFromFirestore({
         'quotes': [
-          {
-            'id': 'quote-2',
-            'createdAt': '2026-08-01T09:00:00.000',
-          },
+          {'id': 'quote-2', 'createdAt': '2026-08-01T09:00:00.000'},
         ],
       });
 

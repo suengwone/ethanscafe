@@ -20,7 +20,9 @@ class StoreDetailScreen extends ConsumerWidget {
     final storesState = ref.watch(storesProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context).storeDetailTitle)),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).storeDetailTitle),
+      ),
       body: storesState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
@@ -127,7 +129,9 @@ class _StoreDetail extends StatelessWidget {
                   icon: LucideIcons.clock,
                   text: todayHours.isEmpty
                       ? AppLocalizations.of(context).storeHoursUnknown
-                      : AppLocalizations.of(context).storeHoursToday(todayHours),
+                      : AppLocalizations.of(
+                          context,
+                        ).storeHoursToday(todayHours),
                 ),
                 const SizedBox(height: 12),
                 StoreActionRow(store: store),
@@ -182,7 +186,9 @@ class _NoticeCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.palette.accent.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(foxtrotRadiusSmall),
-        border: Border.all(color: context.palette.accent.withValues(alpha: 0.4)),
+        border: Border.all(
+          color: context.palette.accent.withValues(alpha: 0.4),
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,7 +201,10 @@ class _NoticeCard extends StatelessWidget {
               children: [
                 Text(
                   AppLocalizations.of(context).storeNoticeTitle,
-                  style: TextStyle(fontSize: 12, color: context.palette.accentSoft),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: context.palette.accentSoft,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -222,10 +231,7 @@ class _HoursRow extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return Row(
       children: [
-        SizedBox(
-          width: 48,
-          child: Text(label, style: textTheme.bodySmall),
-        ),
+        SizedBox(width: 48, child: Text(label, style: textTheme.bodySmall)),
         Expanded(
           child: Text(
             hours.isEmpty ? AppLocalizations.of(context).storeNoInfo : hours,

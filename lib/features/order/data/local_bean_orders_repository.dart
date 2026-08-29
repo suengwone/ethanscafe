@@ -94,9 +94,7 @@ class LocalBeanOrdersRepository implements WritableBeanOrdersRepository {
     final updated = [...orders]..[index] = cancelled;
     await prefs.setString(
       _storageKey,
-      jsonEncode({
-        'orders': updated.map((order) => order.toJson()).toList(),
-      }),
+      jsonEncode({'orders': updated.map((order) => order.toJson()).toList()}),
     );
     return cancelled;
   }

@@ -17,13 +17,10 @@ enum BeanOrderStatus {
   delivered,
   ready,
   pickedUp,
-  cancelled;
+  cancelled,
 }
 
-enum BeanFulfillmentMethod {
-  delivery,
-  pickup;
-}
+enum BeanFulfillmentMethod { delivery, pickup }
 
 @freezed
 abstract class BeanOrderItem with _$BeanOrderItem {
@@ -83,6 +80,5 @@ abstract class BeanOrder with _$BeanOrder {
   bool get isCancelled => status == BeanOrderStatus.cancelled;
 
   /// 목록에 보이는 대표 상품. 나머지 개수는 화면이 언어에 맞게 붙인다.
-  String get firstItemName =>
-      items.isEmpty ? '' : items.first.beanName;
+  String get firstItemName => items.isEmpty ? '' : items.first.beanName;
 }

@@ -97,8 +97,8 @@ class FirestoreBeanSubscriptionsRepository
         status: status,
         nextDeliveryDate:
             status == SubscriptionStatus.active && !current.isActive
-                ? DateTime.now().add(Duration(days: current.cycle.days))
-                : current.nextDeliveryDate,
+            ? DateTime.now().add(Duration(days: current.cycle.days))
+            : current.nextDeliveryDate,
       );
       final next = [...subscriptions]..[index] = updated;
       transaction.set(_doc, beanSubscriptionsToFirestore(next));
@@ -130,10 +130,12 @@ BeanSubscription beanSubscriptionFromFirestore(Map<String, dynamic> data) {
     grind:
         GrindOption.values.asNameMap()[data['grind']] ?? GrindOption.wholeBean,
     quantity: (data['quantity'] as num? ?? 1).toInt(),
-    cycle: SubscriptionCycle.values.asNameMap()[data['cycle']] ??
+    cycle:
+        SubscriptionCycle.values.asNameMap()[data['cycle']] ??
         SubscriptionCycle.monthly,
     unitPrice: (data['unitPrice'] as num? ?? 0).toInt(),
-    status: SubscriptionStatus.values.asNameMap()[data['status']] ??
+    status:
+        SubscriptionStatus.values.asNameMap()[data['status']] ??
         SubscriptionStatus.active,
     nextDeliveryDate: firestoreDateTime(data['nextDeliveryDate']),
     createdAt: firestoreDateTime(data['createdAt']),
@@ -144,8 +146,7 @@ Map<String, dynamic> beanSubscriptionsToFirestore(
   List<BeanSubscription> subscriptions,
 ) {
   return {
-    'subscriptions':
-        subscriptions.map(beanSubscriptionToFirestore).toList(),
+    'subscriptions': subscriptions.map(beanSubscriptionToFirestore).toList(),
   };
 }
 

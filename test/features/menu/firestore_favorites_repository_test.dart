@@ -27,8 +27,7 @@ void main() {
     test('round trip 시 데이터가 보존된다', () {
       final original = {'americano', 'latte', 'mocha'};
 
-      final restored =
-          favoritesFromFirestore(favoritesToFirestore(original));
+      final restored = favoritesFromFirestore(favoritesToFirestore(original));
 
       expect(restored, original);
     });

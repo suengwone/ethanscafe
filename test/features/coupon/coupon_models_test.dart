@@ -47,13 +47,16 @@ void main() {
 
     test('사용됐거나 만료된 쿠폰은 적용할 수 없다', () {
       expect(
-        coupon(discountAmount: 3000, isUsed: true)
-            .canApplyTo(orderAmount: 30000, now: now),
+        coupon(
+          discountAmount: 3000,
+          isUsed: true,
+        ).canApplyTo(orderAmount: 30000, now: now),
         isFalse,
       );
       expect(
-        coupon(discountAmount: 3000)
-            .canApplyTo(orderAmount: 30000, now: DateTime(2027, 1, 1)),
+        coupon(
+          discountAmount: 3000,
+        ).canApplyTo(orderAmount: 30000, now: DateTime(2027, 1, 1)),
         isFalse,
       );
     });
@@ -146,13 +149,10 @@ void main() {
 
   group('totalCouponDiscount', () {
     test('할인 합산은 주문 금액을 초과하지 않는다', () {
-      final discount = totalCouponDiscount(
-        [
-          coupon(id: 'a', discountAmount: 3000),
-          coupon(id: 'b', discountAmount: 2000, isStackable: true),
-        ],
-        4000,
-      );
+      final discount = totalCouponDiscount([
+        coupon(id: 'a', discountAmount: 3000),
+        coupon(id: 'b', discountAmount: 2000, isStackable: true),
+      ], 4000);
 
       expect(discount, 4000);
     });

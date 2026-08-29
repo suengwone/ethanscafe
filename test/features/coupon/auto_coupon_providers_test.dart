@@ -60,8 +60,10 @@ void main() {
 
     await readAsync(container, autoCouponSetupProvider.future);
 
-    final coupons =
-        await readAsync(container, couponsControllerProvider.future);
+    final coupons = await readAsync(
+      container,
+      couponsControllerProvider.future,
+    );
     expect(coupons.any((c) => c.id.startsWith('welcome-fake')), isFalse);
   });
 
@@ -71,8 +73,10 @@ void main() {
 
     await readAsync(container, autoCouponSetupProvider.future);
 
-    final coupons =
-        await readAsync(container, couponsControllerProvider.future);
+    final coupons = await readAsync(
+      container,
+      couponsControllerProvider.future,
+    );
     expect(coupons.any((c) => c.id == 'welcome-fake-uid'), isTrue);
   });
 
@@ -85,8 +89,10 @@ void main() {
 
     await readAsync(container, autoCouponSetupProvider.future);
 
-    final coupons =
-        await readAsync(container, couponsControllerProvider.future);
+    final coupons = await readAsync(
+      container,
+      couponsControllerProvider.future,
+    );
     expect(coupons.any((c) => c.id == 'birthday-2026-fake-uid'), isTrue);
   });
 
@@ -99,8 +105,10 @@ void main() {
 
     await readAsync(container, autoCouponSetupProvider.future);
 
-    final coupons =
-        await readAsync(container, couponsControllerProvider.future);
+    final coupons = await readAsync(
+      container,
+      couponsControllerProvider.future,
+    );
     expect(coupons.any((c) => c.id == 'welcome-fake-uid'), isTrue);
     expect(coupons.any((c) => c.id.startsWith('birthday-')), isFalse);
   });
@@ -116,8 +124,10 @@ void main() {
     container.invalidate(autoCouponSetupProvider);
     await readAsync(container, autoCouponSetupProvider.future);
 
-    final coupons =
-        await readAsync(container, couponsControllerProvider.future);
+    final coupons = await readAsync(
+      container,
+      couponsControllerProvider.future,
+    );
     expect(coupons.where((c) => c.id == 'welcome-fake-uid').length, 1);
     expect(coupons.where((c) => c.id == 'birthday-2026-fake-uid').length, 1);
   });

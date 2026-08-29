@@ -29,9 +29,9 @@ MenuItem _menuItem(String id, {int price = 6000}) {
 }
 
 List<PickupCartItem> _cartItems() => [
-      PickupCartItem(menuItem: _menuItem('a'), option: 'ICED', quantity: 2),
-      PickupCartItem(menuItem: _menuItem('b', price: 8000), quantity: 1),
-    ];
+  PickupCartItem(menuItem: _menuItem('a'), option: 'ICED', quantity: 2),
+  PickupCartItem(menuItem: _menuItem('b', price: 8000), quantity: 1),
+];
 
 const _store = CafeStore(
   id: 'macheon',
@@ -58,8 +58,10 @@ void main() {
       ],
     );
     addTearDown(container.dispose);
-    final subscription =
-        container.listen(authStateProvider.future, (previous, next) {});
+    final subscription = container.listen(
+      authStateProvider.future,
+      (previous, next) {},
+    );
     await subscription.read();
     subscription.close();
     return container;
@@ -133,9 +135,10 @@ void main() {
     expect(points.balance, 1500);
     expect(
       points.history.map((entry) => entry.description),
-      containsAll(
-        [pickupOrderPaymentDescription, pickupOrderPointsUseDescription],
-      ),
+      containsAll([
+        pickupOrderPaymentDescription,
+        pickupOrderPointsUseDescription,
+      ]),
     );
     expect(
       points.history
@@ -229,10 +232,7 @@ void main() {
     expect(order.earnedPoints, 1800);
 
     final coupons = await container.read(couponsControllerProvider.future);
-    expect(
-      coupons.firstWhere((c) => c.id == 'bean-order-10p').isUsed,
-      isTrue,
-    );
+    expect(coupons.firstWhere((c) => c.id == 'bean-order-10p').isUsed, isTrue);
 
     final points = await container.read(pointsRepositoryProvider).load();
     expect(points.balance, 1800);
@@ -349,10 +349,7 @@ void main() {
     final orders = await container.read(pickupOrdersControllerProvider.future);
     expect(orders, isEmpty);
     final coupons = await container.read(couponsControllerProvider.future);
-    expect(
-      coupons.firstWhere((c) => c.id == 'bean-order-10p').isUsed,
-      isFalse,
-    );
+    expect(coupons.firstWhere((c) => c.id == 'bean-order-10p').isUsed, isFalse);
   });
 
   test('이미 사용된 쿠폰은 적용할 수 없다', () async {
@@ -389,10 +386,7 @@ void main() {
     expect(order.earnedPoints, 1700);
 
     final coupons = await container.read(couponsControllerProvider.future);
-    expect(
-      coupons.firstWhere((c) => c.id == 'bean-order-10p').isUsed,
-      isTrue,
-    );
+    expect(coupons.firstWhere((c) => c.id == 'bean-order-10p').isUsed, isTrue);
     expect(
       coupons.firstWhere((c) => c.id == 'stack-extra-1000').isUsed,
       isTrue,
@@ -444,10 +438,7 @@ void main() {
     expect(orders.single.isCancelled, isTrue);
 
     final coupons = await container.read(couponsControllerProvider.future);
-    expect(
-      coupons.firstWhere((c) => c.id == 'bean-order-10p').isUsed,
-      isFalse,
-    );
+    expect(coupons.firstWhere((c) => c.id == 'bean-order-10p').isUsed, isFalse);
 
     final points = await container.read(pointsRepositoryProvider).load();
     expect(points.balance, 5000);

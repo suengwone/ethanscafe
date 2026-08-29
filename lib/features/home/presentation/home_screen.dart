@@ -43,10 +43,7 @@ class HomeScreen extends ConsumerWidget {
 }
 
 class _GreetingHeader extends StatelessWidget {
-  const _GreetingHeader({
-    required this.displayName,
-    required this.isLoggedIn,
-  });
+  const _GreetingHeader({required this.displayName, required this.isLoggedIn});
 
   final String? displayName;
   final bool isLoggedIn;
@@ -125,7 +122,9 @@ class _CircleIconButton extends StatelessWidget {
       style: IconButton.styleFrom(
         backgroundColor: context.palette.card,
         shape: CircleBorder(
-          side: BorderSide(color: context.palette.border.withValues(alpha: 0.7)),
+          side: BorderSide(
+            color: context.palette.border.withValues(alpha: 0.7),
+          ),
         ),
         minimumSize: const Size(40, 40),
       ),
@@ -191,7 +190,9 @@ class _QuickActionItem extends StatelessWidget {
         color: context.palette.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(foxtrotRadiusLarge),
-          side: BorderSide(color: context.palette.border.withValues(alpha: 0.7)),
+          side: BorderSide(
+            color: context.palette.border.withValues(alpha: 0.7),
+          ),
         ),
         child: InkWell(
           onTap: () => context.go(location),
@@ -205,9 +206,9 @@ class _QuickActionItem extends StatelessWidget {
                 Text(
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: context.palette.ink,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: context.palette.ink,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),

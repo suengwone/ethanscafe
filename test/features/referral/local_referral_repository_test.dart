@@ -50,18 +50,17 @@ void main() {
     expect(result.balance, referralRewardPoints);
     expect(result.summary.redeemedCode, 'ABC234');
     expect(result.summary.earnedPoints, referralRewardPoints);
-    expect(pointsData.history.first.description,
-        LocalReferralRepository.redeemDescription);
+    expect(
+      pointsData.history.first.description,
+      LocalReferralRepository.redeemDescription,
+    );
     expect(pointsData.history.first.isEarn, isTrue);
   });
 
   test('형식이 맞지 않는 코드는 거부한다', () async {
     await repository.load();
 
-    expect(
-      () => repository.redeem('ABC12'),
-      throwsA(isA<ReferralException>()),
-    );
+    expect(() => repository.redeem('ABC12'), throwsA(isA<ReferralException>()));
   });
 
   test('본인 코드는 사용할 수 없다', () async {

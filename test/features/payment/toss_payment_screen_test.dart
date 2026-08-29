@@ -26,8 +26,7 @@ void main() {
         home: TossPaymentScreen(
           request: request,
           repository: LocalPaymentsRepository(),
-          webViewBuilder: (context) =>
-              const ColoredBox(color: foxtrotBlack),
+          webViewBuilder: (context) => const ColoredBox(color: foxtrotBlack),
         ),
       ),
     );

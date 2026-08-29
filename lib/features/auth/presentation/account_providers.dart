@@ -21,8 +21,8 @@ final accountRepositoryProvider = Provider<AccountRepository>((ref) {
 
 final accountProfileControllerProvider =
     AsyncNotifierProvider<AccountProfileController, AccountProfile>(
-  AccountProfileController.new,
-);
+      AccountProfileController.new,
+    );
 
 class AccountProfileController extends AsyncNotifier<AccountProfile> {
   @override
@@ -31,29 +31,33 @@ class AccountProfileController extends AsyncNotifier<AccountProfile> {
   }
 
   Future<AccountProfile> registerBusiness(BusinessProfile business) async {
-    final profile =
-        await ref.read(accountRepositoryProvider).registerBusiness(business);
+    final profile = await ref
+        .read(accountRepositoryProvider)
+        .registerBusiness(business);
     state = AsyncValue.data(profile);
     return profile;
   }
 
   Future<AccountProfile> switchToCustomer() async {
-    final profile =
-        await ref.read(accountRepositoryProvider).switchToCustomer();
+    final profile = await ref
+        .read(accountRepositoryProvider)
+        .switchToCustomer();
     state = AsyncValue.data(profile);
     return profile;
   }
 
   Future<AccountProfile> switchToBusiness() async {
-    final profile =
-        await ref.read(accountRepositoryProvider).switchToBusiness();
+    final profile = await ref
+        .read(accountRepositoryProvider)
+        .switchToBusiness();
     state = AsyncValue.data(profile);
     return profile;
   }
 
   Future<AccountProfile> saveBirthDate(DateTime birthDate) async {
-    final profile =
-        await ref.read(accountRepositoryProvider).saveBirthDate(birthDate);
+    final profile = await ref
+        .read(accountRepositoryProvider)
+        .saveBirthDate(birthDate);
     state = AsyncValue.data(profile);
     return profile;
   }

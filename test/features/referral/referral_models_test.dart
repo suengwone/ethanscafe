@@ -47,8 +47,7 @@ void main() {
       isFalse,
     );
     expect(
-      const ReferralSummary(code: 'FXP2K9', redeemedCode: 'ABC234')
-          .hasRedeemed,
+      const ReferralSummary(code: 'FXP2K9', redeemedCode: 'ABC234').hasRedeemed,
       isTrue,
     );
   });

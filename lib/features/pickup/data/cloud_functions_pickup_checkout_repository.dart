@@ -9,8 +9,7 @@ import 'firestore_pickup_orders_repository.dart';
 
 class CloudFunctionsPickupCheckoutRepository implements PickupCheckout {
   CloudFunctionsPickupCheckoutRepository({FirebaseFunctions? functions})
-      : _functions =
-            functions ?? FirebaseFunctions.instanceFor(region: _region);
+    : _functions = functions ?? FirebaseFunctions.instanceFor(region: _region);
 
   static const _region = 'asia-northeast3';
   static const placeOrderCallableName = 'placeOrder';
@@ -58,11 +57,9 @@ class CloudFunctionsPickupCheckoutRepository implements PickupCheckout {
 
   @override
   Future<PickupOrder> cancelOrder(String orderId) async {
-    final result =
-        await _functions.httpsCallable(cancelOrderCallableName).call({
-      'orderType': 'pickup',
-      'orderId': orderId,
-    });
+    final result = await _functions.httpsCallable(cancelOrderCallableName).call(
+      {'orderType': 'pickup', 'orderId': orderId},
+    );
     return _orderFromResult(result.data);
   }
 

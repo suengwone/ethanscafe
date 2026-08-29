@@ -24,9 +24,7 @@ class LoginScreen extends ConsumerWidget {
       return;
     }
     if (success) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context).authSignedIn)),
       );
       context.go('/');

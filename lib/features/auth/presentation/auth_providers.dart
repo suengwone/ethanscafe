@@ -27,8 +27,9 @@ final isAdminProvider = FutureProvider<bool>((ref) async {
   return ref.watch(authRepositoryProvider).isAdmin();
 });
 
-final authControllerProvider =
-    AsyncNotifierProvider<AuthController, void>(AuthController.new);
+final authControllerProvider = AsyncNotifierProvider<AuthController, void>(
+  AuthController.new,
+);
 
 class AuthController extends AsyncNotifier<void> {
   @override

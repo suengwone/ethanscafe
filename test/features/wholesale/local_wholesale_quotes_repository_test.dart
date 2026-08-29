@@ -75,8 +75,10 @@ void main() {
 
   test('견적이 로컬에 영속화되고 최신순으로 쌓인다', () async {
     await repository.submitQuote(companyName: '첫 번째 카페', items: items);
-    final second =
-        await repository.submitQuote(companyName: '두 번째 카페', items: items);
+    final second = await repository.submitQuote(
+      companyName: '두 번째 카페',
+      items: items,
+    );
 
     final reloaded = await LocalWholesaleQuotesRepository().load();
 

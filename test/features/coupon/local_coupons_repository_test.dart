@@ -48,19 +48,13 @@ void main() {
     final coupons = await repository.loadCoupons();
     final used = coupons.firstWhere((c) => c.id == 'welcome-americano');
     expect(used.isUsed, isTrue);
-    expect(
-      coupons.where((coupon) => coupon.isUsed).length,
-      2,
-    );
+    expect(coupons.where((coupon) => coupon.isUsed).length, 2);
   });
 
   test('이미 사용된 쿠폰을 다시 사용하면 실패한다', () async {
     final repository = LocalCouponsRepository();
 
-    await expectLater(
-      repository.markUsed('used-latte-free'),
-      throwsStateError,
-    );
+    await expectLater(repository.markUsed('used-latte-free'), throwsStateError);
   });
 
   test('존재하지 않는 쿠폰 사용 처리는 실패한다', () async {

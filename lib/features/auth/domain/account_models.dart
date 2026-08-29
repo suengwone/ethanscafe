@@ -3,10 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'account_models.freezed.dart';
 part 'account_models.g.dart';
 
-enum AccountType {
-  customer,
-  business;
-}
+enum AccountType { customer, business }
 
 @freezed
 abstract class BusinessProfile with _$BusinessProfile {

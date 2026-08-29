@@ -40,10 +40,12 @@ class BeansListView extends ConsumerWidget {
         ),
       ),
       data: (beans) {
-        final acidic =
-            beans.where((bean) => !bean.isDecaf && bean.isAcidic).toList();
-        final nutty =
-            beans.where((bean) => !bean.isDecaf && !bean.isAcidic).toList();
+        final acidic = beans
+            .where((bean) => !bean.isDecaf && bean.isAcidic)
+            .toList();
+        final nutty = beans
+            .where((bean) => !bean.isDecaf && !bean.isAcidic)
+            .toList();
         final decaf = beans.where((bean) => bean.isDecaf).toList();
         final cartCount = ref.watch(beanCartCountProvider);
 
@@ -59,7 +61,9 @@ class BeansListView extends ConsumerWidget {
                   _BeanSectionHeader(
                     icon: LucideIcons.citrus,
                     title: AppLocalizations.of(context).beansFilterAcidic,
-                    subtitle: AppLocalizations.of(context).beansFilterAcidicNote,
+                    subtitle: AppLocalizations.of(
+                      context,
+                    ).beansFilterAcidicNote,
                   ),
                   ...acidic.map((bean) => _BeanCard(bean: bean)),
                 ],
@@ -67,7 +71,9 @@ class BeansListView extends ConsumerWidget {
                   _BeanSectionHeader(
                     icon: LucideIcons.nut,
                     title: AppLocalizations.of(context).beansFilterMellow,
-                    subtitle: AppLocalizations.of(context).beansFilterMellowNote,
+                    subtitle: AppLocalizations.of(
+                      context,
+                    ).beansFilterMellowNote,
                   ),
                   ...nutty.map((bean) => _BeanCard(bean: bean)),
                 ],
@@ -128,7 +134,9 @@ class _CartSummaryBar extends ConsumerWidget {
               ),
               const Spacer(),
               Text(
-                AppLocalizations.of(context).priceWon(_priceFormat.format(total)),
+                AppLocalizations.of(
+                  context,
+                ).priceWon(_priceFormat.format(total)),
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: context.palette.onAccent,
@@ -211,7 +219,8 @@ class _BeanCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
-    final statsBadges = ref.watch(productBadgesProvider).value ??
+    final statsBadges =
+        ref.watch(productBadgesProvider).value ??
         const <String, Set<ProductBadge>>{};
     final badges = statsBadges[bean.id] ?? const <ProductBadge>{};
 
@@ -276,9 +285,12 @@ class _BeanCard extends ConsumerWidget {
                         ),
                         const SizedBox(height: 3),
                         Text(
-                          AppLocalizations.of(context).beansRoastOf(
+                          AppLocalizations.of(context)
+                              .beansRoastOf(
                                 bean.origin,
-                                AppLocalizations.of(context).roastLevelLabel(bean.roastLevel),
+                                AppLocalizations.of(
+                                  context,
+                                ).roastLevelLabel(bean.roastLevel),
                               )
                               .keepWord,
                           style: textTheme.bodySmall,
@@ -305,10 +317,15 @@ class _BeanCard extends ConsumerWidget {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  Text(AppLocalizations.of(context).beansPricePer200g, style: textTheme.bodySmall),
+                  Text(
+                    AppLocalizations.of(context).beansPricePer200g,
+                    style: textTheme.bodySmall,
+                  ),
                   const Spacer(),
                   Text(
-                    AppLocalizations.of(context).priceWon(_priceFormat.format(bean.price200)),
+                    AppLocalizations.of(
+                      context,
+                    ).priceWon(_priceFormat.format(bean.price200)),
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,

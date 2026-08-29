@@ -55,7 +55,6 @@ final beanOrdersControllerProvider =
     );
 
 class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
-
   @override
   Future<List<BeanOrder>> build() {
     return ref.watch(beanOrdersRepositoryProvider).load();
@@ -111,7 +110,9 @@ class BeanOrdersController extends AsyncNotifier<List<BeanOrder>> {
       throw StateError('The approved amount does not match the order total.');
     }
 
-    final order = await ref.read(beanCheckoutProvider).placeOrder(
+    final order = await ref
+        .read(beanCheckoutProvider)
+        .placeOrder(
           items: items,
           coupons: coupons,
           couponDiscount: couponDiscount,

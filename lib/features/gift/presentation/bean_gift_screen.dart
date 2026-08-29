@@ -82,7 +82,9 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
     }
     setState(() => _sending = true);
     try {
-      await ref.read(beanGiftsControllerProvider.notifier).sendGift(
+      await ref
+          .read(beanGiftsControllerProvider.notifier)
+          .sendGift(
             bean: widget.bean,
             weight: _weight,
             grind: _grind,
@@ -97,7 +99,9 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.of(context).giftSent(_nameController.text.trim(), widget.bean.name),
+            AppLocalizations.of(
+              context,
+            ).giftSent(_nameController.text.trim(), widget.bean.name),
           ),
           action: SnackBarAction(
             label: AppLocalizations.of(context).giftViewHistory,
@@ -168,12 +172,16 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
                           children: GrindOption.values
                               .map(
                                 (grind) => ChoiceChip(
-                                  label: Text(AppLocalizations.of(context).grindLabel(grind)),
+                                  label: Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    ).grindLabel(grind),
+                                  ),
                                   selected: _grind == grind,
                                   onSelected: (_) =>
                                       setState(() => _grind = grind),
-                                  selectedColor:
-                                      context.palette.accent.withValues(alpha: 0.25),
+                                  selectedColor: context.palette.accent
+                                      .withValues(alpha: 0.25),
                                   labelStyle: TextStyle(
                                     fontSize: 13,
                                     color: _grind == grind
@@ -231,13 +239,19 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
                           controller: _nameController,
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context).giftFieldName,
-                            hintText: AppLocalizations.of(context).giftFieldNameHint,
+                            labelText: AppLocalizations.of(
+                              context,
+                            ).giftFieldName,
+                            hintText: AppLocalizations.of(
+                              context,
+                            ).giftFieldNameHint,
                           ),
                           validator: (value) =>
                               (value == null || value.trim().isEmpty)
-                                  ? AppLocalizations.of(context).giftFieldNameRequired
-                                  : null,
+                              ? AppLocalizations.of(
+                                  context,
+                                ).giftFieldNameRequired
+                              : null,
                         ),
                         const SizedBox(height: 12),
                         TextFormField(
@@ -245,13 +259,17 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
                           keyboardType: TextInputType.phone,
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context).businessFieldPhone,
+                            labelText: AppLocalizations.of(
+                              context,
+                            ).businessFieldPhone,
                             hintText: '010-0000-0000',
                           ),
                           validator: (value) =>
                               (value == null || value.trim().isEmpty)
-                                  ? AppLocalizations.of(context).giftFieldPhoneRequired
-                                  : null,
+                              ? AppLocalizations.of(
+                                  context,
+                                ).giftFieldPhoneRequired
+                              : null,
                         ),
                         const SizedBox(height: 12),
                         TextFormField(
@@ -259,8 +277,12 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
                           maxLines: 3,
                           maxLength: 100,
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context).giftFieldMessage,
-                            hintText: AppLocalizations.of(context).giftFieldMessageHint,
+                            labelText: AppLocalizations.of(
+                              context,
+                            ).giftFieldMessage,
+                            hintText: AppLocalizations.of(
+                              context,
+                            ).giftFieldMessageHint,
                             alignLabelWithHint: true,
                           ),
                         ),
@@ -272,11 +294,7 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
             ),
           ),
         ),
-        _GiftBar(
-          totalPrice: _totalPrice,
-          sending: _sending,
-          onSend: _send,
-        ),
+        _GiftBar(totalPrice: _totalPrice, sending: _sending, onSend: _send),
       ],
     );
   }
@@ -321,7 +339,9 @@ class _BeanSummaryCard extends StatelessWidget {
                     AppLocalizations.of(context)
                         .beansRoastOf(
                           bean.origin,
-                          AppLocalizations.of(context).roastLevelLabel(bean.roastLevel),
+                          AppLocalizations.of(
+                            context,
+                          ).roastLevelLabel(bean.roastLevel),
                         )
                         .keepWord,
                     style: textTheme.bodySmall,
@@ -369,7 +389,9 @@ class _GiftBar extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     Text(
-                      AppLocalizations.of(context).priceWon(_priceFormat.format(totalPrice)),
+                      AppLocalizations.of(
+                        context,
+                      ).priceWon(_priceFormat.format(totalPrice)),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -382,7 +404,11 @@ class _GiftBar extends StatelessWidget {
               FilledButton.icon(
                 onPressed: sending ? null : onSend,
                 icon: const Icon(LucideIcons.gift, size: 18),
-                label: Text(sending ? AppLocalizations.of(context).giftSending : AppLocalizations.of(context).giftSend),
+                label: Text(
+                  sending
+                      ? AppLocalizations.of(context).giftSending
+                      : AppLocalizations.of(context).giftSend,
+                ),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 28,
@@ -458,7 +484,9 @@ class _WeightOption extends StatelessWidget {
               weight.label,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: selected ? context.palette.accentSoft : context.palette.ink,
+                color: selected
+                    ? context.palette.accentSoft
+                    : context.palette.ink,
               ),
             ),
             const SizedBox(height: 4),

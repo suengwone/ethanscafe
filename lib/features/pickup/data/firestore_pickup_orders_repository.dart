@@ -66,7 +66,8 @@ PickupOrder pickupOrderFromFirestore(Map<String, dynamic> data) {
     couponDiscount: (data['couponDiscount'] as num? ?? 0).toInt(),
     paymentKey: data['paymentKey'] as String?,
     paymentMethod: data['paymentMethod'] as String?,
-    status: PickupOrderStatus.values.asNameMap()[data['status']] ??
+    status:
+        PickupOrderStatus.values.asNameMap()[data['status']] ??
         PickupOrderStatus.received,
     refundStatus: RefundStatus.parse(data['refundStatus']),
     createdAt: firestoreDateTime(data['createdAt']),

@@ -20,10 +20,9 @@ const defaultBannerIcon = 'sparkles';
 IconData bannerIcon(String icon) =>
     bannerIconChoices[icon] ?? bannerIconChoices[defaultBannerIcon]!;
 
-String bannerIconLabel(AppLocalizations l10n, String icon) =>
-    switch (icon) {
-      'snowflake' => l10n.bannerIconSnowflake,
-      'bean' => l10n.bannerIconBean,
-      'gift' => l10n.bannerIconGift,
-      _ => l10n.bannerIconSparkles,
-    };
+String bannerIconLabel(AppLocalizations l10n, String icon) => switch (icon) {
+  'snowflake' => l10n.bannerIconSnowflake,
+  'bean' => l10n.bannerIconBean,
+  'gift' => l10n.bannerIconGift,
+  _ => l10n.bannerIconSparkles,
+};

@@ -79,8 +79,9 @@ class StoreListScreen extends ConsumerWidget {
           final sorted = [...stores];
           if (distances != null) {
             sorted.sort(
-              (a, b) => (distances[a.id] ?? double.infinity)
-                  .compareTo(distances[b.id] ?? double.infinity),
+              (a, b) => (distances[a.id] ?? double.infinity).compareTo(
+                distances[b.id] ?? double.infinity,
+              ),
             );
           }
           return ListView.builder(
@@ -174,19 +175,15 @@ class _StoreCard extends StatelessWidget {
               const SizedBox(height: 4),
               StoreInfoRow(
                 icon: LucideIcons.clock,
-                text: AppLocalizations.of(context).storeHoursSummary(
-                  store.weekdayHours,
-                  store.weekendHours,
-                ),
+                text: AppLocalizations.of(
+                  context,
+                ).storeHoursSummary(store.weekdayHours, store.weekendHours),
               ),
               const SizedBox(height: 4),
               StoreInfoRow(icon: LucideIcons.phone, text: store.phone),
               if (store.notice.isNotEmpty) ...[
                 const SizedBox(height: 4),
-                StoreInfoRow(
-                  icon: LucideIcons.megaphone,
-                  text: store.notice,
-                ),
+                StoreInfoRow(icon: LucideIcons.megaphone, text: store.notice),
               ],
               if (store.services.isNotEmpty) ...[
                 const SizedBox(height: 10),

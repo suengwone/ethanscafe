@@ -71,7 +71,7 @@ class RemoteAppConfig {
 
 class RemoteConfigService {
   RemoteConfigService({FirebaseRemoteConfig? remoteConfig})
-      : _remoteConfig = remoteConfig ?? FirebaseRemoteConfig.instance;
+    : _remoteConfig = remoteConfig ?? FirebaseRemoteConfig.instance;
 
   final FirebaseRemoteConfig _remoteConfig;
 

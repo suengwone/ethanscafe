@@ -43,7 +43,11 @@ class _OfflineBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(LucideIcons.wifiOff, size: 16, color: context.palette.onAccent),
+            Icon(
+              LucideIcons.wifiOff,
+              size: 16,
+              color: context.palette.onAccent,
+            ),
             const SizedBox(width: 8),
             Text(
               AppLocalizations.of(context).offlineBanner,

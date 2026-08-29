@@ -68,7 +68,6 @@ final pickupOrdersControllerProvider =
     );
 
 class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
-
   @override
   Future<List<PickupOrder>> build() {
     return ref.watch(pickupOrdersRepositoryProvider).load();
@@ -117,7 +116,9 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
       throw StateError('The approved amount does not match the order total.');
     }
 
-    final order = await ref.read(pickupCheckoutProvider).placeOrder(
+    final order = await ref
+        .read(pickupCheckoutProvider)
+        .placeOrder(
           items: items,
           storeId: store.id,
           storeName: store.name,
@@ -138,8 +139,9 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
   }
 
   Future<PickupOrder> cancelOrder(String orderId) async {
-    final cancelled =
-        await ref.read(pickupCheckoutProvider).cancelOrder(orderId);
+    final cancelled = await ref
+        .read(pickupCheckoutProvider)
+        .cancelOrder(orderId);
     ref.invalidate(couponsControllerProvider);
     ref.invalidate(pointsControllerProvider);
     state = AsyncValue.data([

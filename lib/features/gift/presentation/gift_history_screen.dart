@@ -22,7 +22,9 @@ class GiftHistoryScreen extends ConsumerWidget {
     final giftsState = ref.watch(beanGiftsControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context).giftHistoryTitle)),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).giftHistoryTitle),
+      ),
       body: giftsState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
@@ -118,9 +120,9 @@ class _GiftCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        AppLocalizations.of(context)
-                            .beanQuantity(gift.beanName, gift.quantity)
-                            .keepWord,
+                        AppLocalizations.of(
+                          context,
+                        ).beanQuantity(gift.beanName, gift.quantity).keepWord,
                         style: textTheme.labelLarge,
                       ),
                       const SizedBox(height: 4),
@@ -149,7 +151,9 @@ class _GiftCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  AppLocalizations.of(context).priceWon(_priceFormat.format(gift.totalPrice)),
+                  AppLocalizations.of(
+                    context,
+                  ).priceWon(_priceFormat.format(gift.totalPrice)),
                   style: textTheme.labelLarge,
                 ),
               ],
@@ -166,7 +170,9 @@ class _GiftCard extends StatelessWidget {
                 ),
                 child: Text(
                   '“${gift.message}”'.keepWord,
-                  style: textTheme.bodySmall?.copyWith(color: context.palette.ink),
+                  style: textTheme.bodySmall?.copyWith(
+                    color: context.palette.ink,
+                  ),
                 ),
               ),
             ],
@@ -193,10 +199,10 @@ class _GiftStatusChip extends StatelessWidget {
       ),
       child: Text(
         AppLocalizations.of(context).giftStatusLabel(status),
-        style: Theme.of(context)
-            .textTheme
-            .bodySmall
-            ?.copyWith(color: context.palette.accentSoft, fontWeight: FontWeight.w600),
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: context.palette.accentSoft,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

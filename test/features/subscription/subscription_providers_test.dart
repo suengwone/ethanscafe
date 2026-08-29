@@ -50,8 +50,9 @@ void main() {
           cycle: SubscriptionCycle.monthly,
         );
 
-    final subscriptions =
-        container.read(beanSubscriptionsControllerProvider).value!;
+    final subscriptions = container
+        .read(beanSubscriptionsControllerProvider)
+        .value!;
     expect(subscriptions.single.id, subscription.id);
     expect(subscriptions.single.unitPrice, 38000);
     expect(subscriptions.single.cycle, SubscriptionCycle.monthly);
@@ -61,8 +62,9 @@ void main() {
   test('일시정지·재개·해지가 상태에 반영된다', () async {
     final container = createContainer();
     await container.read(beanSubscriptionsControllerProvider.future);
-    final notifier =
-        container.read(beanSubscriptionsControllerProvider.notifier);
+    final notifier = container.read(
+      beanSubscriptionsControllerProvider.notifier,
+    );
     final subscription = await notifier.subscribe(
       bean: _bean,
       weight: BeanWeight.g200,
@@ -73,31 +75,19 @@ void main() {
 
     await notifier.pause(subscription.id);
     expect(
-      container
-          .read(beanSubscriptionsControllerProvider)
-          .value!
-          .single
-          .status,
+      container.read(beanSubscriptionsControllerProvider).value!.single.status,
       SubscriptionStatus.paused,
     );
 
     await notifier.resume(subscription.id);
     expect(
-      container
-          .read(beanSubscriptionsControllerProvider)
-          .value!
-          .single
-          .status,
+      container.read(beanSubscriptionsControllerProvider).value!.single.status,
       SubscriptionStatus.active,
     );
 
     await notifier.cancel(subscription.id);
     expect(
-      container
-          .read(beanSubscriptionsControllerProvider)
-          .value!
-          .single
-          .status,
+      container.read(beanSubscriptionsControllerProvider).value!.single.status,
       SubscriptionStatus.cancelled,
     );
     expect(container.read(activeSubscriptionCountProvider), 0);

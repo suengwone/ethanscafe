@@ -75,10 +75,9 @@ class LocalBeanSubscriptionsRepository implements BeanSubscriptionsRepository {
     final current = subscriptions[index];
     final updated = current.copyWith(
       status: status,
-      nextDeliveryDate:
-          status == SubscriptionStatus.active && !current.isActive
-              ? DateTime.now().add(Duration(days: current.cycle.days))
-              : current.nextDeliveryDate,
+      nextDeliveryDate: status == SubscriptionStatus.active && !current.isActive
+          ? DateTime.now().add(Duration(days: current.cycle.days))
+          : current.nextDeliveryDate,
     );
     final next = [...subscriptions]..[index] = updated;
     await _save(next);

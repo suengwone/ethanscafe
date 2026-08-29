@@ -31,15 +31,18 @@ abstract class Coupon with _$Coupon {
     if (!isOrderDiscount || orderAmount < minOrderAmount) {
       return 0;
     }
-    final discount =
-        discountAmount > 0 ? discountAmount : orderAmount * discountRate ~/ 100;
+    final discount = discountAmount > 0
+        ? discountAmount
+        : orderAmount * discountRate ~/ 100;
     return discount.clamp(0, orderAmount);
   }
 }
 
 int totalCouponDiscount(List<Coupon> coupons, int orderAmount) {
-  final discount =
-      coupons.fold(0, (sum, coupon) => sum + coupon.discountFor(orderAmount));
+  final discount = coupons.fold(
+    0,
+    (sum, coupon) => sum + coupon.discountFor(orderAmount),
+  );
   return discount.clamp(0, orderAmount);
 }
 

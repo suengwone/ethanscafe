@@ -5,7 +5,7 @@ import '../domain/banners_repository.dart';
 
 class FirestoreBannersRepository implements BannersRepository {
   FirestoreBannersRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
 

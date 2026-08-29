@@ -60,7 +60,9 @@ class _ReviewSheetState extends ConsumerState<ReviewSheet> {
   Future<void> _submit() async {
     setState(() => _submitting = true);
     try {
-      await ref.read(myReviewsControllerProvider.notifier).addReview(
+      await ref
+          .read(myReviewsControllerProvider.notifier)
+          .addReview(
             productId: widget.productId,
             productType: widget.productType,
             productName: widget.productName,
@@ -103,7 +105,9 @@ class _ReviewSheetState extends ConsumerState<ReviewSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l10n.reviewSheetTitle(l10n.reviewProductTypeLabel(widget.productType)),
+            l10n.reviewSheetTitle(
+              l10n.reviewProductTypeLabel(widget.productType),
+            ),
             style: textTheme.titleMedium,
           ),
           const SizedBox(height: 4),
@@ -119,7 +123,9 @@ class _ReviewSheetState extends ConsumerState<ReviewSheet> {
                     icon: Icon(
                       Icons.star_rounded,
                       size: 36,
-                      color: star <= _rating ? context.palette.accent : context.palette.border,
+                      color: star <= _rating
+                          ? context.palette.accent
+                          : context.palette.border,
                     ),
                   ),
               ],
@@ -164,7 +170,9 @@ class ReviewRatingStars extends StatelessWidget {
           Icon(
             Icons.star_rounded,
             size: size,
-            color: star <= rating ? context.palette.accent : context.palette.border,
+            color: star <= rating
+                ? context.palette.accent
+                : context.palette.border,
           ),
       ],
     );

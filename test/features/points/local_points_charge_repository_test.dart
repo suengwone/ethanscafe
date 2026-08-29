@@ -12,8 +12,9 @@ void main() {
 
   test('충전 결제 승인 시 보너스를 포함해 잔액을 늘린다', () async {
     final pointsRepository = LocalPointsRepository();
-    final repository =
-        LocalPointsChargeRepository(pointsRepository: pointsRepository);
+    final repository = LocalPointsChargeRepository(
+      pointsRepository: pointsRepository,
+    );
 
     final approval = await repository.confirmPayment(
       paymentKey: 'pk-charge',
@@ -38,8 +39,9 @@ void main() {
 
   test('보너스가 없는 충전은 bonusAmount를 기록하지 않는다', () async {
     final pointsRepository = LocalPointsRepository();
-    final repository =
-        LocalPointsChargeRepository(pointsRepository: pointsRepository);
+    final repository = LocalPointsChargeRepository(
+      pointsRepository: pointsRepository,
+    );
 
     await repository.confirmPayment(
       paymentKey: 'pk',
@@ -67,8 +69,9 @@ void main() {
 
   test('충전 포인트는 사용 차감에 그대로 쓸 수 있다', () async {
     final pointsRepository = LocalPointsRepository();
-    final repository =
-        LocalPointsChargeRepository(pointsRepository: pointsRepository);
+    final repository = LocalPointsChargeRepository(
+      pointsRepository: pointsRepository,
+    );
 
     await repository.confirmPayment(
       paymentKey: 'pk',

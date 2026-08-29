@@ -35,7 +35,9 @@ Future<bool?> showOrderCancelDialog(
       content: Text(
         refundSummary.isEmpty
             ? AppLocalizations.of(context).orderCancelIrreversible.keepWord
-            : AppLocalizations.of(context).orderCancelWithSummary(refundSummary).keepWord,
+            : AppLocalizations.of(
+                context,
+              ).orderCancelWithSummary(refundSummary).keepWord,
       ),
       actions: [
         TextButton(

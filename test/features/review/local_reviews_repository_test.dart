@@ -123,8 +123,7 @@ void main() {
       comment: '두 번째 리뷰',
     );
 
-    final reviews =
-        await repository.loadProductReviews('espresso-cafe-latte');
+    final reviews = await repository.loadProductReviews('espresso-cafe-latte');
     expect(reviews, hasLength(2));
     expect(reviews.first.comment, '두 번째 리뷰');
     expect(reviews.last.comment, '첫 번째 리뷰');

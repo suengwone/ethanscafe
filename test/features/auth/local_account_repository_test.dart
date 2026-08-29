@@ -74,10 +74,7 @@ void main() {
 
   test('일반 고객으로 전환해도 사업자 정보는 보존된다', () async {
     await repository.registerBusiness(
-      const BusinessProfile(
-        companyName: '카페',
-        businessNumber: '220-81-62517',
-      ),
+      const BusinessProfile(companyName: '카페', businessNumber: '220-81-62517'),
     );
 
     final profile = await repository.switchToCustomer();
@@ -92,10 +89,7 @@ void main() {
 
   test('저장된 사업자 정보로 재입력 없이 다시 전환할 수 있다', () async {
     await repository.registerBusiness(
-      const BusinessProfile(
-        companyName: '카페',
-        businessNumber: '220-81-62517',
-      ),
+      const BusinessProfile(companyName: '카페', businessNumber: '220-81-62517'),
     );
     await repository.switchToCustomer();
 
@@ -113,8 +107,9 @@ void main() {
   });
 
   test('생일을 저장하면 시간이 제거된 날짜로 영속화된다', () async {
-    final profile =
-        await repository.saveBirthDate(DateTime(1994, 8, 14, 10, 30));
+    final profile = await repository.saveBirthDate(
+      DateTime(1994, 8, 14, 10, 30),
+    );
 
     expect(profile.birthDate, DateTime(1994, 8, 14));
 
@@ -126,10 +121,7 @@ void main() {
     await repository.saveBirthDate(DateTime(1994, 8, 14));
 
     final registered = await repository.registerBusiness(
-      const BusinessProfile(
-        companyName: '카페',
-        businessNumber: '220-81-62517',
-      ),
+      const BusinessProfile(companyName: '카페', businessNumber: '220-81-62517'),
     );
     expect(registered.birthDate, DateTime(1994, 8, 14));
 

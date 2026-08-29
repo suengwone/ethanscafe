@@ -71,7 +71,9 @@ class _PickupOrderBar extends ConsumerWidget {
     final selection = await showPickupOptionSheet(context, item);
     if (selection == null || !context.mounted) return;
 
-    ref.read(pickupCartProvider.notifier).add(
+    ref
+        .read(pickupCartProvider.notifier)
+        .add(
           menuItem: item,
           option: selection.option,
           quantity: selection.quantity,
@@ -206,10 +208,9 @@ class _MenuDetailBody extends StatelessWidget {
               title: AppLocalizations.of(context).menuSectionAbout,
               child: Text(
                 item.detail!.keepWord,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(height: 1.6),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(height: 1.6),
               ),
             ),
             const SizedBox(height: 16),
@@ -222,10 +223,9 @@ class _MenuDetailBody extends StatelessWidget {
               title: AppLocalizations.of(context).menuSectionOptions,
               child: Text(
                 note.keepWord,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(height: 1.6),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(height: 1.6),
               ),
             ),
           ],
@@ -360,7 +360,10 @@ class _InfoSection extends StatelessWidget {
             label: l10n.menuFieldCategory,
             value: l10n.menuCategoryLabel(item.category),
           ),
-          _InfoRow(label: l10n.menuFieldPrice, value: l10n.menuPriceLabel(item)),
+          _InfoRow(
+            label: l10n.menuFieldPrice,
+            value: l10n.menuPriceLabel(item),
+          ),
           if (item.servingOptions.isNotEmpty)
             _InfoRow(
               label: l10n.menuFieldServingOptions,
@@ -386,10 +389,7 @@ class _InfoRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 72,
-            child: Text(label, style: textTheme.bodySmall),
-          ),
+          SizedBox(width: 72, child: Text(label, style: textTheme.bodySmall)),
           Expanded(child: Text(value.keepWord, style: textTheme.bodyMedium)),
         ],
       ),

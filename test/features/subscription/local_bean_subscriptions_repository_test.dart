@@ -85,7 +85,9 @@ void main() {
     );
     expect(resumed.status, SubscriptionStatus.active);
     expect(
-      resumed.nextDeliveryDate.isAtSameMomentAs(subscription.nextDeliveryDate) ||
+      resumed.nextDeliveryDate.isAtSameMomentAs(
+            subscription.nextDeliveryDate,
+          ) ||
           resumed.nextDeliveryDate.isAfter(subscription.nextDeliveryDate),
       isTrue,
     );

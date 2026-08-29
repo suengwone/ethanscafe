@@ -82,7 +82,10 @@ class _CouponSelectSheetState extends State<CouponSelectSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(AppLocalizations.of(context).couponSelectTitle, style: textTheme.titleMedium),
+            Text(
+              AppLocalizations.of(context).couponSelectTitle,
+              style: textTheme.titleMedium,
+            ),
             const SizedBox(height: 4),
             Text(
               AppLocalizations.of(context).couponSelectNotice,
@@ -99,9 +102,8 @@ class _CouponSelectSheetState extends State<CouponSelectSheet> {
                 title: coupon.title,
                 description: coupon.description,
                 stackable: coupon.isStackable,
-                trailing: '-${_priceFormat.format(
-                  coupon.discountFor(widget.orderAmount),
-                )}원',
+                trailing:
+                    '-${_priceFormat.format(coupon.discountFor(widget.orderAmount))}원',
                 highlighted: _isSelected(coupon),
                 onTap: () => _toggle(coupon),
               ),
@@ -111,7 +113,9 @@ class _CouponSelectSheetState extends State<CouponSelectSheet> {
               onPressed: () => Navigator.pop(context, List.of(_selected)),
               child: Text(
                 discount > 0
-                    ? AppLocalizations.of(context).couponSelectApplyWithDiscount(
+                    ? AppLocalizations.of(
+                        context,
+                      ).couponSelectApplyWithDiscount(
                         _priceFormat.format(discount),
                       )
                     : AppLocalizations.of(context).couponSelectApply,
@@ -174,7 +178,9 @@ class _CouponOptionCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
-        side: BorderSide(color: highlighted ? context.palette.accent : context.palette.border),
+        side: BorderSide(
+          color: highlighted ? context.palette.accent : context.palette.border,
+        ),
       ),
       child: InkWell(
         onTap: onTap,
@@ -185,7 +191,9 @@ class _CouponOptionCard extends StatelessWidget {
               Icon(
                 highlighted ? LucideIcons.circleCheck : LucideIcons.ticket,
                 size: 20,
-                color: highlighted ? context.palette.accent : context.palette.muted,
+                color: highlighted
+                    ? context.palette.accent
+                    : context.palette.muted,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -217,7 +225,9 @@ class _CouponOptionCard extends StatelessWidget {
                 const SizedBox(width: 10),
                 Text(
                   trailing!,
-                  style: textTheme.labelLarge?.copyWith(color: context.palette.accent),
+                  style: textTheme.labelLarge?.copyWith(
+                    color: context.palette.accent,
+                  ),
                 ),
               ],
             ],

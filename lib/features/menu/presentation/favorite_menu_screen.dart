@@ -43,8 +43,7 @@ class FavoriteMenuScreen extends ConsumerWidget {
           return ListView.builder(
             padding: foxtrotListPadding,
             itemCount: items.length,
-            itemBuilder: (context, index) =>
-                _FavoriteTile(item: items[index]),
+            itemBuilder: (context, index) => _FavoriteTile(item: items[index]),
           );
         },
       ),
@@ -110,8 +109,7 @@ class _FavoriteTile extends ConsumerWidget {
         trailing: IconButton(
           icon: Icon(LucideIcons.heart600, color: context.palette.accent),
           tooltip: l10n.menuFavoriteRemove,
-          onPressed: () =>
-              ref.read(favoritesProvider.notifier).toggle(item.id),
+          onPressed: () => ref.read(favoritesProvider.notifier).toggle(item.id),
         ),
         onTap: () => context.push('/menu/item/${item.id}'),
       ),

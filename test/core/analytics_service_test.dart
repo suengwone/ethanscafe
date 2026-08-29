@@ -12,8 +12,13 @@ void main() {
     test('결제 뒤 서버가 거절한 까닭을 세어 볼 수 있게 줄인다', () {
       // 문구가 바뀌어도 같은 지표로 남게, 사람이 읽는 문장 대신 값으로 묶는다.
       expect(
-        analyticsReason(error('aborted', '주문에 실패해 결제를 자동 취소(환불)했습니다. '
-            '(품절된 상품이 포함되어 있습니다.)')),
+        analyticsReason(
+          error(
+            'aborted',
+            '주문에 실패해 결제를 자동 취소(환불)했습니다. '
+                '(품절된 상품이 포함되어 있습니다.)',
+          ),
+        ),
         'sold_out',
       );
       expect(
@@ -28,8 +33,10 @@ void main() {
     });
 
     test('분류에 없으면 오류 코드로 남긴다', () {
-      expect(analyticsReason(error('unavailable', '서버에 닿지 못했습니다.')),
-          'unavailable');
+      expect(
+        analyticsReason(error('unavailable', '서버에 닿지 못했습니다.')),
+        'unavailable',
+      );
       expect(analyticsReason(StateError('소켓 끊김')), 'unknown');
     });
   });

@@ -23,8 +23,7 @@ final storesProvider = FutureProvider<List<CafeStore>>((ref) {
 
 /// 서버가 진행 중인 주문으로 잰 매장별 혼잡도. 직원이 올린 값이 없을 때 쓴다.
 /// 집계를 못 읽어도 매장 정보는 그대로 떠야 하므로 화면은 실패를 무시한다.
-final storeActivityProvider =
-    FutureProvider<Map<String, StoreActivity>>((ref) {
+final storeActivityProvider = FutureProvider<Map<String, StoreActivity>>((ref) {
   return ref.watch(storesRepositoryProvider).loadActivity();
 });
 
@@ -35,7 +34,8 @@ final storeClockProvider = Provider<DateTime Function()>((ref) => DateTime.now);
 
 final storeDistancesProvider =
     AsyncNotifierProvider<StoreDistancesController, Map<String, double>?>(
-        StoreDistancesController.new);
+      StoreDistancesController.new,
+    );
 
 class StoreDistancesController extends AsyncNotifier<Map<String, double>?> {
   @override

@@ -5,7 +5,7 @@ import '../domain/menu_repository.dart';
 
 class FirestoreMenuRepository implements MenuRepository {
   FirestoreMenuRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
 
@@ -28,13 +28,14 @@ MenuItem menuItemFromFirestore(String id, Map<String, dynamic> data) {
     id: id,
     name: data['name'] as String? ?? '',
     description: data['description'] as String? ?? '',
-    category: MenuCategory.values.asNameMap()[data['category']] ??
+    category:
+        MenuCategory.values.asNameMap()[data['category']] ??
         MenuCategory.beverage,
     price: (data['price'] as num? ?? 0).toInt(),
     priceFrom: data['priceFrom'] as bool? ?? false,
     badge: MenuBadge.values.asNameMap()[data['badge']] ?? MenuBadge.none,
-    servingOptions:
-        (data['servingOptions'] as List<dynamic>? ?? const []).cast<String>(),
+    servingOptions: (data['servingOptions'] as List<dynamic>? ?? const [])
+        .cast<String>(),
     detail: data['detail'] as String?,
     isRecommended: data['isRecommended'] as bool? ?? false,
     soldOut: data['soldOut'] as bool? ?? false,

@@ -38,19 +38,19 @@ Bean _bean(String id, {int price200 = 15000, int price500 = 32000}) {
 }
 
 List<BeanCartItem> _cartItems() => [
-      BeanCartItem(
-        bean: _bean('a'),
-        weight: BeanWeight.g200,
-        grind: GrindOption.handDrip,
-        quantity: 2,
-      ),
-      BeanCartItem(
-        bean: _bean('b'),
-        weight: BeanWeight.g500,
-        grind: GrindOption.wholeBean,
-        quantity: 1,
-      ),
-    ];
+  BeanCartItem(
+    bean: _bean('a'),
+    weight: BeanWeight.g200,
+    grind: GrindOption.handDrip,
+    quantity: 2,
+  ),
+  BeanCartItem(
+    bean: _bean('b'),
+    weight: BeanWeight.g500,
+    grind: GrindOption.wholeBean,
+    quantity: 1,
+  ),
+];
 
 const _address = DeliveryAddress(
   id: 'seed-home',
@@ -87,8 +87,10 @@ void main() {
       ],
     );
     addTearDown(container.dispose);
-    final subscription =
-        container.listen(authStateProvider.future, (previous, next) {});
+    final subscription = container.listen(
+      authStateProvider.future,
+      (previous, next) {},
+    );
     await subscription.read();
     subscription.close();
     return container;
@@ -288,10 +290,7 @@ void main() {
     expect(order.earnedPoints, 5900);
 
     final coupons = await container.read(couponsControllerProvider.future);
-    expect(
-      coupons.firstWhere((c) => c.id == 'bean-order-3000').isUsed,
-      isTrue,
-    );
+    expect(coupons.firstWhere((c) => c.id == 'bean-order-3000').isUsed, isTrue);
 
     final points = await container.read(pointsRepositoryProvider).load();
     expect(points.balance, 5900);
@@ -458,10 +457,7 @@ void main() {
     expect(order.earnedPoints, 5800);
 
     final coupons = await container.read(couponsControllerProvider.future);
-    expect(
-      coupons.firstWhere((c) => c.id == 'bean-order-3000').isUsed,
-      isTrue,
-    );
+    expect(coupons.firstWhere((c) => c.id == 'bean-order-3000').isUsed, isTrue);
     expect(
       coupons.firstWhere((c) => c.id == 'stack-extra-1000').isUsed,
       isTrue,

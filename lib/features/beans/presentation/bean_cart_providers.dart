@@ -8,10 +8,9 @@ import '../domain/bean_models.dart';
 
 const beanCartMaxQuantity = 9;
 
-final beanCartProvider =
-    NotifierProvider<BeanCartNotifier, List<BeanCartItem>>(
-      BeanCartNotifier.new,
-    );
+final beanCartProvider = NotifierProvider<BeanCartNotifier, List<BeanCartItem>>(
+  BeanCartNotifier.new,
+);
 
 class BeanCartNotifier extends Notifier<List<BeanCartItem>> {
   @override

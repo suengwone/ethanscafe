@@ -6,7 +6,7 @@ import '../domain/stores_repository.dart';
 
 class FirestoreStoresRepository implements StoresRepository {
   FirestoreStoresRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _firestore;
 

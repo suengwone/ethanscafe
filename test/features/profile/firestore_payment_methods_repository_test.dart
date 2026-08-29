@@ -7,12 +7,7 @@ void main() {
     test('cards 배열을 PaymentMethod 목록으로 변환한다', () {
       final cards = paymentMethodsFromFirestore({
         'cards': [
-          {
-            'id': 'card-1',
-            'brand': '신한카드',
-            'last4': '1234',
-            'isDefault': true,
-          },
+          {'id': 'card-1', 'brand': '신한카드', 'last4': '1234', 'isDefault': true},
         ],
       });
 

@@ -85,7 +85,10 @@ void main() {
       quantity: 5,
     );
 
-    expect(container.read(beanCartProvider).first.quantity, beanCartMaxQuantity);
+    expect(
+      container.read(beanCartProvider).first.quantity,
+      beanCartMaxQuantity,
+    );
   });
 
   test('같은 원두라도 옵션이 다르면 따로 담긴다', () {

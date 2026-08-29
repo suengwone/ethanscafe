@@ -11,9 +11,7 @@ import 'fake_auth_repository.dart';
 void main() {
   ProviderContainer createContainer(AuthRepository repository) {
     final container = ProviderContainer(
-      overrides: [
-        authRepositoryProvider.overrideWithValue(repository),
-      ],
+      overrides: [authRepositoryProvider.overrideWithValue(repository)],
     );
     addTearDown(container.dispose);
     return container;
@@ -47,8 +45,9 @@ void main() {
   });
 
   test('로그인 실패 시 false를 반환하고 에러 상태가 된다', () async {
-    final repository =
-        FakeAuthRepository(failure: const AuthException('로그인 실패'));
+    final repository = FakeAuthRepository(
+      failure: const AuthException('로그인 실패'),
+    );
     final container = createContainer(repository);
 
     final success = await container
@@ -79,8 +78,9 @@ void main() {
     );
     final container = createContainer(repository);
 
-    final success =
-        await container.read(authControllerProvider.notifier).deleteAccount();
+    final success = await container
+        .read(authControllerProvider.notifier)
+        .deleteAccount();
 
     expect(success, isTrue);
     expect(repository.user, isNull);
@@ -94,8 +94,9 @@ void main() {
     );
     final container = createContainer(repository);
 
-    final success =
-        await container.read(authControllerProvider.notifier).deleteAccount();
+    final success = await container
+        .read(authControllerProvider.notifier)
+        .deleteAccount();
 
     expect(success, isFalse);
     final state = container.read(authControllerProvider);
@@ -109,8 +110,10 @@ void main() {
     );
     final container = createContainer(repository);
 
-    final subscription =
-        container.listen(authStateProvider.future, (previous, next) {});
+    final subscription = container.listen(
+      authStateProvider.future,
+      (previous, next) {},
+    );
     final user = await subscription.read();
 
     expect(user, isNotNull);
@@ -126,9 +129,6 @@ void main() {
         .signInWith(AuthProviderType.google);
 
     expect(success, isFalse);
-    expect(
-      container.read(authControllerProvider).error,
-      isA<AuthException>(),
-    );
+    expect(container.read(authControllerProvider).error, isA<AuthException>());
   });
 }

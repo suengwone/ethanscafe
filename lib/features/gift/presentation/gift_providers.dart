@@ -22,8 +22,8 @@ final beanGiftsRepositoryProvider = Provider<BeanGiftsRepository>((ref) {
 
 final beanGiftsControllerProvider =
     AsyncNotifierProvider<BeanGiftsController, List<BeanGift>>(
-  BeanGiftsController.new,
-);
+      BeanGiftsController.new,
+    );
 
 class BeanGiftsController extends AsyncNotifier<List<BeanGift>> {
   @override
@@ -40,7 +40,9 @@ class BeanGiftsController extends AsyncNotifier<List<BeanGift>> {
     required String recipientPhone,
     String message = '',
   }) async {
-    final gift = await ref.read(beanGiftsRepositoryProvider).sendGift(
+    final gift = await ref
+        .read(beanGiftsRepositoryProvider)
+        .sendGift(
           beanId: bean.id,
           beanName: bean.name,
           weight: weight,

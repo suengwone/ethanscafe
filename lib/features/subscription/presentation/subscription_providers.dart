@@ -10,21 +10,21 @@ import '../domain/subscription_models.dart';
 
 final beanSubscriptionsRepositoryProvider =
     Provider<BeanSubscriptionsRepository>((ref) {
-  try {
-    if (Firebase.apps.isNotEmpty) {
-      final user = ref.watch(authStateProvider).value;
-      if (user != null) {
-        return FirestoreBeanSubscriptionsRepository(uid: user.uid);
-      }
-    }
-  } catch (_) {}
-  return LocalBeanSubscriptionsRepository();
-});
+      try {
+        if (Firebase.apps.isNotEmpty) {
+          final user = ref.watch(authStateProvider).value;
+          if (user != null) {
+            return FirestoreBeanSubscriptionsRepository(uid: user.uid);
+          }
+        }
+      } catch (_) {}
+      return LocalBeanSubscriptionsRepository();
+    });
 
-final beanSubscriptionsControllerProvider = AsyncNotifierProvider<
-    BeanSubscriptionsController, List<BeanSubscription>>(
-  BeanSubscriptionsController.new,
-);
+final beanSubscriptionsControllerProvider =
+    AsyncNotifierProvider<BeanSubscriptionsController, List<BeanSubscription>>(
+      BeanSubscriptionsController.new,
+    );
 
 final activeSubscriptionCountProvider = Provider<int>((ref) {
   final subscriptions =
@@ -48,22 +48,22 @@ class BeanSubscriptionsController
     required int quantity,
     required SubscriptionCycle cycle,
   }) async {
-    final subscription =
-        await ref.read(beanSubscriptionsRepositoryProvider).subscribe(
-              beanId: bean.id,
-              beanName: bean.name,
-              weight: weight,
-              grind: grind,
-              quantity: quantity,
-              cycle: cycle,
-              unitPrice: bean.priceOf(weight),
-            );
+    final subscription = await ref
+        .read(beanSubscriptionsRepositoryProvider)
+        .subscribe(
+          beanId: bean.id,
+          beanName: bean.name,
+          weight: weight,
+          grind: grind,
+          quantity: quantity,
+          cycle: cycle,
+          unitPrice: bean.priceOf(weight),
+        );
     state = AsyncValue.data([subscription, ...state.value ?? const []]);
     return subscription;
   }
 
-  Future<void> pause(String id) =>
-      _updateStatus(id, SubscriptionStatus.paused);
+  Future<void> pause(String id) => _updateStatus(id, SubscriptionStatus.paused);
 
   Future<void> resume(String id) =>
       _updateStatus(id, SubscriptionStatus.active);

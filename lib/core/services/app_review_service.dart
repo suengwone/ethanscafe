@@ -18,7 +18,7 @@ bool shouldRequestReview({
 
 class AppReviewService {
   AppReviewService({InAppReview? inAppReview})
-      : _inAppReview = inAppReview ?? InAppReview.instance;
+    : _inAppReview = inAppReview ?? InAppReview.instance;
 
   final InAppReview _inAppReview;
 

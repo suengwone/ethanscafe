@@ -24,10 +24,7 @@ void main() {
       expect(data['discountRate'], 0);
       expect(data['isStackable'], isFalse);
 
-      final restored = couponFromFirestore(
-        'welcome-user-1',
-        data,
-      );
+      final restored = couponFromFirestore('welcome-user-1', data);
       expect(restored.expiresAt, expiresAt);
       expect(restored.discountAmount, 3000);
     });

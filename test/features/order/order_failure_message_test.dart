@@ -5,7 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:cafe_app/features/order/presentation/order_failure_message.dart';
 import 'package:cafe_app/l10n/app_localizations.dart';
 
-Future<AppLocalizations> _l10n(Locale locale) => AppLocalizations.delegate.load(locale);
+Future<AppLocalizations> _l10n(Locale locale) =>
+    AppLocalizations.delegate.load(locale);
 
 FirebaseFunctionsException _error(String code, String message) =>
     FirebaseFunctionsException(code: code, message: message);
@@ -44,7 +45,10 @@ void main() {
     final l10n = await _l10n(const Locale('ko'));
 
     expect(
-      orderFailureMessage(l10n, _error('failed-precondition', '장바구니가 비어 있습니다.')),
+      orderFailureMessage(
+        l10n,
+        _error('failed-precondition', '장바구니가 비어 있습니다.'),
+      ),
       '장바구니가 비어 있습니다.',
     );
   });
@@ -52,7 +56,13 @@ void main() {
   test('콜러블이 아닌 오류는 일반 문구로 덮는다', () async {
     final l10n = await _l10n(const Locale('ko'));
 
-    expect(orderFailureMessage(l10n, StateError('소켓 끊김')), l10n.orderFailedGeneric);
-    expect(orderFailureMessage(l10n, _error('aborted', '')), l10n.orderFailedGeneric);
+    expect(
+      orderFailureMessage(l10n, StateError('소켓 끊김')),
+      l10n.orderFailedGeneric,
+    );
+    expect(
+      orderFailureMessage(l10n, _error('aborted', '')),
+      l10n.orderFailedGeneric,
+    );
   });
 }

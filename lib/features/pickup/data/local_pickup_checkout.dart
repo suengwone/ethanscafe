@@ -53,8 +53,9 @@ class LocalPickupCheckout implements PickupCheckout {
         paymentAmount: paidAmount,
         description: pickupOrderPaymentDescription,
       );
-      final entry =
-          pointsData.history.isEmpty ? null : pointsData.history.first;
+      final entry = pointsData.history.isEmpty
+          ? null
+          : pointsData.history.first;
       earnedPoints = entry != null && entry.isEarn ? entry.amount : 0;
     }
 

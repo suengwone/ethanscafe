@@ -32,9 +32,7 @@ void main() {
     });
 
     test('누락된 필드는 기본값으로 채운다', () {
-      final data = pointsDataFromFirestore({
-        'membershipId': 'MEMBER-00000000',
-      });
+      final data = pointsDataFromFirestore({'membershipId': 'MEMBER-00000000'});
 
       expect(data.balance, 0);
       expect(data.history, isEmpty);
@@ -134,8 +132,7 @@ void main() {
         ],
       );
 
-      final restored =
-          pointsDataFromFirestore(pointsDataToFirestore(original));
+      final restored = pointsDataFromFirestore(pointsDataToFirestore(original));
 
       expect(restored, original);
     });

@@ -30,8 +30,12 @@ const double foxtrotRadiusMedium = 14;
 const double foxtrotRadiusSmall = 8;
 
 const double foxtrotScreenHPadding = 20;
-const EdgeInsets foxtrotListPadding =
-    EdgeInsets.fromLTRB(foxtrotScreenHPadding, 8, foxtrotScreenHPadding, 24);
+const EdgeInsets foxtrotListPadding = EdgeInsets.fromLTRB(
+  foxtrotScreenHPadding,
+  8,
+  foxtrotScreenHPadding,
+  24,
+);
 
 /// 화면이 참조하는 색 팔레트. 밝기에 따라 값이 달라지므로 위젯은 색 상수를
 /// 직접 쓰지 않고 [BuildContextPalette.palette]로 읽는다.
@@ -100,11 +104,7 @@ class FoxtrotPalette extends ThemeExtension<FoxtrotPalette> {
     muted: foxtrotMuted,
     danger: foxtrotDanger,
     cardShadow: [
-      BoxShadow(
-        color: Color(0x59000000),
-        blurRadius: 24,
-        offset: Offset(0, 8),
-      ),
+      BoxShadow(color: Color(0x59000000), blurRadius: 24, offset: Offset(0, 8)),
     ],
     bannerGradients: [
       [Color(0xFF8A6D2F), Color(0xFF4A3A17)],
@@ -125,11 +125,7 @@ class FoxtrotPalette extends ThemeExtension<FoxtrotPalette> {
     muted: _lightMuted,
     danger: _lightDanger,
     cardShadow: [
-      BoxShadow(
-        color: Color(0x1A6B5A2E),
-        blurRadius: 24,
-        offset: Offset(0, 8),
-      ),
+      BoxShadow(color: Color(0x1A6B5A2E), blurRadius: 24, offset: Offset(0, 8)),
     ],
     bannerGradients: [
       [Color(0xFFF3E4BE), Color(0xFFE4CD8F)],
@@ -391,10 +387,7 @@ ThemeData buildAppTheme({Brightness brightness = Brightness.dark}) {
     ),
     snackBarTheme: SnackBarThemeData(
       backgroundColor: palette.card,
-      contentTextStyle: TextStyle(
-        fontFamily: 'Pretendard',
-        color: palette.ink,
-      ),
+      contentTextStyle: TextStyle(fontFamily: 'Pretendard', color: palette.ink),
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
@@ -437,8 +430,6 @@ ThemeData buildAppTheme({Brightness brightness = Brightness.dark}) {
         borderRadius: BorderRadius.circular(foxtrotRadiusXLarge - 4),
       ),
     ),
-    progressIndicatorTheme: ProgressIndicatorThemeData(
-      color: palette.accent,
-    ),
+    progressIndicatorTheme: ProgressIndicatorThemeData(color: palette.accent),
   );
 }

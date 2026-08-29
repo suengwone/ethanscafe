@@ -69,10 +69,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const LoginScreen(),
-      ),
+      GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
             AppShell(navigationShell: navigationShell),
@@ -164,8 +161,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                   ),
                   GoRoute(
                     path: 'earn-scan',
-                    builder: (context, state) =>
-                        const AdminPointsScanScreen(),
+                    builder: (context, state) => const AdminPointsScanScreen(),
                   ),
                   GoRoute(
                     path: 'orders',
@@ -221,8 +217,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                   ),
                   GoRoute(
                     path: 'subscriptions',
-                    builder: (context, state) =>
-                        const SubscriptionListScreen(),
+                    builder: (context, state) => const SubscriptionListScreen(),
                   ),
                   GoRoute(
                     path: 'gifts',
@@ -242,8 +237,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                   ),
                   GoRoute(
                     path: 'business',
-                    builder: (context, state) =>
-                        const BusinessRegisterScreen(),
+                    builder: (context, state) => const BusinessRegisterScreen(),
                   ),
                   GoRoute(
                     path: 'support',

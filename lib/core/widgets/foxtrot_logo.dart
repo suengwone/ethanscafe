@@ -47,9 +47,7 @@ class _FoxtrotLogoPainter extends CustomPainter {
           palette.accent.withValues(alpha: 0.16),
           palette.accent.withValues(alpha: 0.0),
         ],
-      ).createShader(
-        Rect.fromCircle(center: center, radius: radius * 0.85),
-      );
+      ).createShader(Rect.fromCircle(center: center, radius: radius * 0.85));
     canvas.drawCircle(center, radius * 0.85, glowPaint);
 
     final outerRingPaint = Paint()

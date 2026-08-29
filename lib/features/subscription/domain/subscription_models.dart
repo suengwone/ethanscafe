@@ -15,11 +15,7 @@ enum SubscriptionCycle {
   final int days;
 }
 
-enum SubscriptionStatus {
-  active,
-  paused,
-  cancelled;
-}
+enum SubscriptionStatus { active, paused, cancelled }
 
 @freezed
 abstract class BeanSubscription with _$BeanSubscription {

@@ -9,8 +9,7 @@ import 'firestore_bean_orders_repository.dart';
 
 class CloudFunctionsBeanCheckoutRepository implements BeanCheckout {
   CloudFunctionsBeanCheckoutRepository({FirebaseFunctions? functions})
-      : _functions =
-            functions ?? FirebaseFunctions.instanceFor(region: _region);
+    : _functions = functions ?? FirebaseFunctions.instanceFor(region: _region);
 
   static const _region = 'asia-northeast3';
   static const placeOrderCallableName = 'placeOrder';
@@ -67,11 +66,9 @@ class CloudFunctionsBeanCheckoutRepository implements BeanCheckout {
 
   @override
   Future<BeanOrder> cancelOrder(String orderId) async {
-    final result =
-        await _functions.httpsCallable(cancelOrderCallableName).call({
-      'orderType': 'bean',
-      'orderId': orderId,
-    });
+    final result = await _functions.httpsCallable(cancelOrderCallableName).call(
+      {'orderType': 'bean', 'orderId': orderId},
+    );
     return _orderFromResult(result.data);
   }
 

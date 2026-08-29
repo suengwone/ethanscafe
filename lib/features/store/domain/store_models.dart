@@ -4,12 +4,7 @@ part 'store_models.freezed.dart';
 
 /// 매장 혼잡도. 직원이 카탈로그 관리에서 눌러 올리거나,
 /// 없으면 진행 중인 픽업 주문 수로 서버가 자동으로 잰다.
-enum StoreCongestion {
-  unknown,
-  relaxed,
-  normal,
-  busy;
-}
+enum StoreCongestion { unknown, relaxed, normal, busy }
 
 /// `09:00 - 21:00` 형태의 영업시간 문자열.
 class StoreHours {
@@ -19,7 +14,9 @@ class StoreHours {
   final int openMinutes;
   final int closeMinutes;
 
-  static final _pattern = RegExp(r'^(\d{1,2}):(\d{2})\s*[-~]\s*(\d{1,2}):(\d{2})$');
+  static final _pattern = RegExp(
+    r'^(\d{1,2}):(\d{2})\s*[-~]\s*(\d{1,2}):(\d{2})$',
+  );
 
   /// 해석할 수 없는 문자열(휴무, 빈 값, 자유 서술)이면 null.
   static StoreHours? parse(String text) {
@@ -31,7 +28,10 @@ class StoreHours {
     final openMinute = int.parse(match[2]!);
     final closeHour = int.parse(match[3]!);
     final closeMinute = int.parse(match[4]!);
-    if (openHour > 24 || closeHour > 24 || openMinute > 59 || closeMinute > 59) {
+    if (openHour > 24 ||
+        closeHour > 24 ||
+        openMinute > 59 ||
+        closeMinute > 59) {
       return null;
     }
     return StoreHours(
@@ -77,8 +77,8 @@ abstract class CafeStore with _$CafeStore {
 
   /// 토·일은 주말 영업시간을 쓴다.
   String hoursOn(DateTime day) {
-    final isWeekend = day.weekday == DateTime.saturday ||
-        day.weekday == DateTime.sunday;
+    final isWeekend =
+        day.weekday == DateTime.saturday || day.weekday == DateTime.sunday;
     return isWeekend ? weekendHours : weekdayHours;
   }
 
@@ -100,7 +100,10 @@ abstract class CafeStore with _$CafeStore {
 
   /// 고객 화면에 실제로 띄울 혼잡도. 직원이 올린 값이 먼저고,
   /// 없거나 낡았으면 진행 중인 주문으로 잰 자동 집계로 메운다.
-  StoreCongestionView congestionViewAt(DateTime now, {StoreActivity? activity}) {
+  StoreCongestionView congestionViewAt(
+    DateTime now, {
+    StoreActivity? activity,
+  }) {
     final staff = congestionAt(now);
     if (staff != StoreCongestion.unknown) {
       return StoreCongestionView(staff);
@@ -119,6 +122,7 @@ abstract class CafeStore with _$CafeStore {
 abstract class StoreActivity with _$StoreActivity {
   const factory StoreActivity({
     required String storeId,
+
     /// 아직 음료가 나오지 않은 픽업 주문 수.
     @Default(0) int activeOrders,
     @Default(StoreCongestion.unknown) StoreCongestion congestion,

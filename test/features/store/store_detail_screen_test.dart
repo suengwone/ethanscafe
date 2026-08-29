@@ -64,11 +64,7 @@ void main() {
 
   testWidgets('주말에는 주말 영업시간으로 판단한다', (tester) async {
     // 토요일 19시 — 주말은 18시에 닫는다.
-    await pumpScreen(
-      tester,
-      store: store,
-      clock: DateTime(2026, 8, 22, 19),
-    );
+    await pumpScreen(tester, store: store, clock: DateTime(2026, 8, 22, 19));
 
     expect(find.text('영업 종료'), findsOneWidget);
     expect(find.text('오늘 10:00 - 18:00'.keepWord), findsOneWidget);
@@ -116,10 +112,7 @@ void main() {
     );
 
     expect(find.text('현재 보통'), findsOneWidget);
-    expect(
-      find.text('진행 중인 주문 4건으로 자동 집계했어요.'.keepWord),
-      findsOneWidget,
-    );
+    expect(find.text('진행 중인 주문 4건으로 자동 집계했어요.'.keepWord), findsOneWidget);
   });
 
   testWidgets('직원이 올린 값이 있으면 자동 집계 안내를 붙이지 않는다', (tester) async {

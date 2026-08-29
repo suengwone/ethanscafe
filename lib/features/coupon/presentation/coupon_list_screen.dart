@@ -39,10 +39,12 @@ class CouponListScreen extends ConsumerWidget {
           ),
         ),
         data: (coupons) {
-          final usable =
-              coupons.where((coupon) => coupon.isUsable(now)).toList();
-          final unusable =
-              coupons.where((coupon) => !coupon.isUsable(now)).toList();
+          final usable = coupons
+              .where((coupon) => coupon.isUsable(now))
+              .toList();
+          final unusable = coupons
+              .where((coupon) => !coupon.isUsable(now))
+              .toList();
 
           if (coupons.isEmpty) {
             return const _EmptyCoupons();
@@ -52,7 +54,9 @@ class CouponListScreen extends ConsumerWidget {
             padding: foxtrotListPadding,
             children: [
               _SectionLabel(
-                label: AppLocalizations.of(context).couponSectionUsable(usable.length),
+                label: AppLocalizations.of(
+                  context,
+                ).couponSectionUsable(usable.length),
               ),
               ...usable.map(
                 (coupon) => _CouponCard(
@@ -63,7 +67,9 @@ class CouponListScreen extends ConsumerWidget {
               ),
               if (unusable.isNotEmpty) ...[
                 const SizedBox(height: 16),
-                _SectionLabel(label: AppLocalizations.of(context).couponSectionSpent),
+                _SectionLabel(
+                  label: AppLocalizations.of(context).couponSectionSpent,
+                ),
                 ...unusable.map(
                   (coupon) => _CouponCard(coupon: coupon, now: now),
                 ),
@@ -171,12 +177,16 @@ class _CouponCard extends StatelessWidget {
                     color: context.palette.surface,
                     borderRadius: BorderRadius.circular(foxtrotRadiusMedium),
                     border: Border.all(
-                      color: usable ? context.palette.accent : context.palette.border,
+                      color: usable
+                          ? context.palette.accent
+                          : context.palette.border,
                     ),
                   ),
                   child: Icon(
                     LucideIcons.ticket,
-                    color: usable ? context.palette.accent : context.palette.muted,
+                    color: usable
+                        ? context.palette.accent
+                        : context.palette.muted,
                     size: 24,
                   ),
                 ),
@@ -257,7 +267,9 @@ class _StatusChip extends StatelessWidget {
         label,
         style: TextStyle(
           fontSize: 11,
-          color: highlighted ? context.palette.accentSoft : context.palette.muted,
+          color: highlighted
+              ? context.palette.accentSoft
+              : context.palette.muted,
         ),
       ),
     );
@@ -342,7 +354,9 @@ class _CouponUseSheet extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              AppLocalizations.of(context).couponValidUntil(_dateFormat.format(coupon.expiresAt)),
+              AppLocalizations.of(
+                context,
+              ).couponValidUntil(_dateFormat.format(coupon.expiresAt)),
               style: textTheme.bodySmall,
               textAlign: TextAlign.center,
             ),
@@ -356,7 +370,11 @@ class _CouponUseSheet extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(LucideIcons.info, color: context.palette.accent, size: 18),
+                  Icon(
+                    LucideIcons.info,
+                    color: context.palette.accent,
+                    size: 18,
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(

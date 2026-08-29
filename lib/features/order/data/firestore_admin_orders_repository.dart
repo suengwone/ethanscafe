@@ -13,9 +13,8 @@ class FirestoreAdminOrdersRepository implements AdminOrdersRepository {
   FirestoreAdminOrdersRepository({
     FirebaseFirestore? firestore,
     FirebaseFunctions? functions,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _functions =
-            functions ?? FirebaseFunctions.instanceFor(region: _region);
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _functions = functions ?? FirebaseFunctions.instanceFor(region: _region);
 
   final FirebaseFirestore _firestore;
   final FirebaseFunctions _functions;
@@ -35,7 +34,8 @@ class FirestoreAdminOrdersRepository implements AdminOrdersRepository {
         uid: data['uid'] as String? ?? '',
         orderId: data['orderId'] as String? ?? '',
         summary: data['summary'] as String? ?? '주문',
-        status: PickupOrderStatus.values.asNameMap()[data['status']] ??
+        status:
+            PickupOrderStatus.values.asNameMap()[data['status']] ??
             PickupOrderStatus.received,
         pickupNumber: (data['pickupNumber'] as num?)?.toInt() ?? 0,
         storeName: data['storeName'] as String? ?? '',
@@ -52,11 +52,13 @@ class FirestoreAdminOrdersRepository implements AdminOrdersRepository {
         uid: data['uid'] as String? ?? '',
         orderId: data['orderId'] as String? ?? '',
         summary: data['summary'] as String? ?? '주문',
-        status: BeanOrderStatus.values.asNameMap()[data['status']] ??
+        status:
+            BeanOrderStatus.values.asNameMap()[data['status']] ??
             BeanOrderStatus.received,
         fulfillmentMethod:
-            BeanFulfillmentMethod.values.asNameMap()[data['fulfillmentMethod']] ??
-                BeanFulfillmentMethod.delivery,
+            BeanFulfillmentMethod.values
+                .asNameMap()[data['fulfillmentMethod']] ??
+            BeanFulfillmentMethod.delivery,
         recipient: data['recipient'] as String?,
         storeName: data['storeName'] as String?,
         createdAt: _createdAt(data),
