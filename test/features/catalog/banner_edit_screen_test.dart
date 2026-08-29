@@ -10,6 +10,8 @@ import 'package:cafe_app/features/home/presentation/banner_icons.dart';
 
 import 'fake_catalog_admin_repository.dart';
 
+import '../../support/localized_app.dart';
+
 void main() {
   late FakeCatalogAdminRepository repository;
 
@@ -22,6 +24,9 @@ void main() {
           catalogAdminRepositoryProvider.overrideWithValue(repository),
         ],
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           theme: buildAppTheme(),
           home: BannerEditScreen(banner: banner),
         ),

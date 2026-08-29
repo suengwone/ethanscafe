@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:cafe_app/core/theme/app_theme.dart';
 
+import '../support/localized_app.dart';
+
 void main() {
   test('밝기에 맞는 팔레트를 테마에 싣는다', () {
     final dark = buildAppTheme();
@@ -35,6 +37,9 @@ void main() {
     late FoxtrotPalette seen;
     await tester.pumpWidget(
       MaterialApp(
+        locale: testLocale,
+        localizationsDelegates: testLocalizationsDelegates,
+        supportedLocales: testSupportedLocales,
         theme: buildAppTheme(brightness: Brightness.light),
         home: Builder(
           builder: (context) {
@@ -52,6 +57,9 @@ void main() {
     late FoxtrotPalette seen;
     await tester.pumpWidget(
       MaterialApp(
+        locale: testLocale,
+        localizationsDelegates: testLocalizationsDelegates,
+        supportedLocales: testSupportedLocales,
         home: Builder(
           builder: (context) {
             seen = context.palette;

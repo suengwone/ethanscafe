@@ -11,6 +11,8 @@ import 'package:cafe_app/features/points/presentation/points_screen.dart';
 
 import 'features/auth/fake_auth_repository.dart';
 
+import 'support/localized_app.dart';
+
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
@@ -49,7 +51,12 @@ void main() {
             ),
           ),
         ],
-        child: const MaterialApp(home: PointsScreen()),
+        child: const MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
+          home: PointsScreen(),
+        ),
       ),
     );
     await tester.pumpAndSettle();

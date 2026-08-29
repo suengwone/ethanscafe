@@ -4,11 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../support/localized_app.dart';
+
 Future<void> _pump(WidgetTester tester, {required Stream<bool> online}) async {
   await tester.pumpWidget(
     ProviderScope(
       overrides: [isOnlineProvider.overrideWith((ref) => online)],
       child: const MaterialApp(
+        locale: testLocale,
+        localizationsDelegates: testLocalizationsDelegates,
+        supportedLocales: testSupportedLocales,
         home: OfflineBanner(child: Scaffold(body: Text('본문'))),
       ),
     ),

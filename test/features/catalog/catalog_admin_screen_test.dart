@@ -14,6 +14,8 @@ import 'package:cafe_app/features/notice/presentation/notices_providers.dart';
 import 'package:cafe_app/features/store/domain/store_models.dart';
 import 'package:cafe_app/features/store/presentation/stores_providers.dart';
 
+import '../../support/localized_app.dart';
+
 void main() {
   const banner = EventBanner(
     id: 'banner-1',
@@ -52,6 +54,9 @@ void main() {
           noticesProvider.overrideWith((ref) async => [notice]),
         ],
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           theme: buildAppTheme(),
           home: const CatalogAdminScreen(),
         ),
@@ -136,7 +141,7 @@ void main() {
       isNull,
     );
 
-    await tester.pageBack();
+    await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
     await openTab(tester, '매장');
 
@@ -146,7 +151,7 @@ void main() {
 
     expect(find.byType(StoreEditScreen), findsOneWidget);
 
-    await tester.pageBack();
+    await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
     await openTab(tester, '공지');
 

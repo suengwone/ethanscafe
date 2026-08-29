@@ -7,6 +7,8 @@ import 'package:cafe_app/core/theme/app_theme.dart';
 import 'package:cafe_app/core/theme/theme_mode_providers.dart';
 import 'package:cafe_app/features/profile/presentation/appearance_settings_screen.dart';
 
+import '../../support/localized_app.dart';
+
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
@@ -23,6 +25,9 @@ void main() {
         container: container,
         child: Consumer(
           builder: (context, ref, _) => MaterialApp(
+            locale: testLocale,
+            localizationsDelegates: testLocalizationsDelegates,
+            supportedLocales: testSupportedLocales,
             theme: buildAppTheme(brightness: Brightness.light),
             darkTheme: buildAppTheme(),
             themeMode: ref.watch(themeModeProvider),

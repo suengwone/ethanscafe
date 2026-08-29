@@ -33,6 +33,8 @@ import 'package:cafe_app/router/app_router.dart';
 
 import '../features/auth/fake_auth_repository.dart';
 
+import '../support/localized_app.dart';
+
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({
@@ -61,7 +63,12 @@ void main() {
         child: Consumer(
           builder: (context, ref, _) {
             final router = ref.watch(routerProvider);
-            return MaterialApp.router(routerConfig: router);
+            return MaterialApp.router(
+              locale: testLocale,
+              localizationsDelegates: testLocalizationsDelegates,
+              supportedLocales: testSupportedLocales,
+              routerConfig: router,
+            );
           },
         ),
       ),

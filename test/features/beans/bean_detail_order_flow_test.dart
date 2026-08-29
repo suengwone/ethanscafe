@@ -12,6 +12,8 @@ import 'package:cafe_app/features/beans/presentation/bean_detail_screen.dart';
 
 import '../auth/fake_auth_repository.dart';
 
+import '../../support/localized_app.dart';
+
 const _member = AppUser(
   uid: 'test-uid',
   displayName: '테스트 사용자',
@@ -46,6 +48,9 @@ void main() {
           authRepositoryProvider.overrideWithValue(FakeAuthRepository(user: user)),
         ],
         child: MaterialApp.router(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           theme: buildAppTheme(),
           routerConfig: router,
         ),

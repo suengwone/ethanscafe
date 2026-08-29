@@ -8,6 +8,8 @@ import 'package:cafe_app/core/theme/app_theme.dart';
 import 'package:cafe_app/core/utils/text_utils.dart';
 import 'package:cafe_app/features/profile/presentation/delivery_address_screen.dart';
 
+import '../../support/localized_app.dart';
+
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
@@ -17,6 +19,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           theme: buildAppTheme(),
           home: const DeliveryAddressScreen(),
         ),

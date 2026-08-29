@@ -10,6 +10,8 @@ import 'package:cafe_app/features/menu/data/local_menu_repository.dart';
 import 'package:cafe_app/features/pickup/presentation/pickup_cart_providers.dart';
 import 'package:cafe_app/features/pickup/presentation/pickup_cart_screen.dart';
 
+import '../../support/localized_app.dart';
+
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
@@ -33,6 +35,9 @@ void main() {
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           theme: buildAppTheme(),
           home: const PickupCartScreen(),
         ),

@@ -9,6 +9,8 @@ import 'package:cafe_app/features/coupon/data/local_coupons_repository.dart';
 import 'package:cafe_app/features/coupon/presentation/coupon_list_screen.dart';
 import 'package:cafe_app/features/coupon/presentation/coupons_providers.dart';
 
+import '../../support/localized_app.dart';
+
 void main() {
   Future<void> pumpCouponScreen(WidgetTester tester) async {
     await tester.pumpWidget(
@@ -18,6 +20,9 @@ void main() {
           couponNowProvider.overrideWithValue(DateTime(2026, 8, 3)),
         ],
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           theme: buildAppTheme(),
           home: const CouponListScreen(),
         ),

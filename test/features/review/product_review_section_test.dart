@@ -10,6 +10,8 @@ import 'package:cafe_app/core/utils/text_utils.dart';
 import 'package:cafe_app/features/menu/presentation/menu_detail_screen.dart';
 import 'package:cafe_app/features/review/presentation/product_review_section.dart';
 
+import '../../support/localized_app.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -17,6 +19,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           theme: buildAppTheme(),
           home: const MenuDetailScreen(menuId: 'espresso-americano'),
         ),

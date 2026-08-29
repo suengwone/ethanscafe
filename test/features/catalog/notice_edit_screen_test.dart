@@ -9,6 +9,8 @@ import 'package:cafe_app/features/notice/domain/notice_models.dart';
 
 import 'fake_catalog_admin_repository.dart';
 
+import '../../support/localized_app.dart';
+
 void main() {
   late FakeCatalogAdminRepository repository;
 
@@ -34,6 +36,9 @@ void main() {
           catalogAdminRepositoryProvider.overrideWithValue(repository),
         ],
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           theme: buildAppTheme(),
           home: NoticeEditScreen(notice: notice),
         ),
@@ -112,7 +117,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('5'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('OK'));
+    await tester.tap(find.text('확인'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('저장'));
     await tester.pumpAndSettle();

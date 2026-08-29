@@ -11,6 +11,8 @@ import 'package:cafe_app/features/points/data/local_points_repository.dart';
 import 'package:cafe_app/features/referral/domain/referral_models.dart';
 import 'package:cafe_app/features/referral/presentation/referral_screen.dart';
 
+import '../../support/localized_app.dart';
+
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({
@@ -37,6 +39,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           theme: buildAppTheme(),
           home: const ReferralScreen(),
         ),

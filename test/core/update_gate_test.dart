@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../support/localized_app.dart';
+
 Future<void> _pump(
   WidgetTester tester, {
   required bool updateRequired,
@@ -17,6 +19,9 @@ Future<void> _pump(
         remoteAppConfigProvider.overrideWith((ref) => config),
       ],
       child: const MaterialApp(
+        locale: testLocale,
+        localizationsDelegates: testLocalizationsDelegates,
+        supportedLocales: testSupportedLocales,
         home: UpdateGate(child: Scaffold(body: Text('본문'))),
       ),
     ),

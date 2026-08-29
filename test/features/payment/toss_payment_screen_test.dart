@@ -7,6 +7,8 @@ import 'package:cafe_app/features/payment/data/local_payments_repository.dart';
 import 'package:cafe_app/features/payment/domain/payment_models.dart';
 import 'package:cafe_app/features/payment/presentation/toss_payment_screen.dart';
 
+import '../../support/localized_app.dart';
+
 void main() {
   const request = PaymentRequest(
     orderId: 'bean-123456',
@@ -17,6 +19,9 @@ void main() {
   Future<void> pumpScreen(WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
+        locale: testLocale,
+        localizationsDelegates: testLocalizationsDelegates,
+        supportedLocales: testSupportedLocales,
         theme: buildAppTheme(),
         home: TossPaymentScreen(
           request: request,

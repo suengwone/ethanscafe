@@ -11,6 +11,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:cafe_app/core/services/connectivity_providers.dart';
+import 'package:cafe_app/core/l10n/locale_providers.dart';
 import 'package:cafe_app/core/theme/app_theme.dart';
 import 'package:cafe_app/core/theme/theme_mode_providers.dart';
 import 'package:cafe_app/core/utils/text_utils.dart';
@@ -75,6 +76,7 @@ import 'package:cafe_app/features/points/presentation/admin_points_scan_screen.d
 import 'package:cafe_app/features/points/presentation/points_charge_screen.dart';
 import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/profile/presentation/appearance_settings_screen.dart';
+import 'package:cafe_app/features/profile/presentation/language_settings_screen.dart';
 import 'package:cafe_app/features/profile/presentation/delivery_address_screen.dart';
 import 'package:cafe_app/features/profile/presentation/notification_settings_screen.dart';
 import 'package:cafe_app/features/profile/presentation/payment_methods_screen.dart';
@@ -86,6 +88,8 @@ import 'package:cafe_app/router/app_router.dart';
 
 import '../features/auth/fake_account_repository.dart';
 import '../features/auth/fake_auth_repository.dart';
+
+import '../support/localized_app.dart';
 
 Future<void> _loadFont(String family, String path) async {
   final file = File(path);
@@ -527,6 +531,7 @@ void main() {
     List<Override> overrides = const [],
     AppUser? user,
     Brightness brightness = Brightness.dark,
+    Locale locale = testLocale,
   }) async {
     await tester.pumpWidget(
       ProviderScope(
@@ -537,6 +542,9 @@ void main() {
           ...overrides,
         ],
         child: MaterialApp(
+          locale: locale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           debugShowCheckedModeBanner: false,
           theme: buildAppTheme(brightness: brightness),
           home: screen,
@@ -568,6 +576,9 @@ void main() {
           builder: (context, ref, _) {
             final router = ref.watch(routerProvider);
             return MaterialApp.router(
+              locale: testLocale,
+              localizationsDelegates: testLocalizationsDelegates,
+              supportedLocales: testSupportedLocales,
               theme: buildAppTheme(brightness: brightness),
               routerConfig: router,
               builder: (context, child) =>
@@ -1246,6 +1257,34 @@ void main() {
     );
   });
 
+  testWidgets('언어 설정 화면 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const LanguageSettingsScreen(),
+      user: _previewUser,
+    );
+
+    await expectGolden(
+      find.byType(LanguageSettingsScreen),
+      'language_settings_screen',
+    );
+  });
+  testWidgets('언어 설정 화면(영어) 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(
+      tester,
+      const LanguageSettingsScreen(),
+      user: _previewUser,
+      overrides: [storedLocaleProvider.overrideWithValue(const Locale('en'))],
+      locale: const Locale('en'),
+    );
+
+    await expectGolden(
+      find.byType(LanguageSettingsScreen),
+      'language_settings_screen_en',
+    );
+  });
   testWidgets('화면 테마 설정 화면(라이트) 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(
@@ -1387,6 +1426,9 @@ void main() {
           couponNowProvider.overrideWithValue(DateTime(2026, 8, 3)),
         ],
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           debugShowCheckedModeBanner: false,
           theme: buildAppTheme(),
           home: const CouponListScreen(),
@@ -1410,6 +1452,9 @@ void main() {
           couponNowProvider.overrideWithValue(DateTime(2026, 8, 3)),
         ],
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           debugShowCheckedModeBanner: false,
           theme: buildAppTheme(),
           home: const CouponListScreen(),
@@ -1490,7 +1535,13 @@ void main() {
             FakeAuthRepository(user: _previewUser),
           ),
         ],
-        child: MaterialApp(theme: buildAppTheme(), home: const ProfileScreen()),
+        child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
+          theme: buildAppTheme(),
+          home: const ProfileScreen(),
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -1582,6 +1633,9 @@ void main() {
           ),
         ],
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           debugShowCheckedModeBanner: false,
           theme: buildAppTheme(),
           home: const ProfileScreen(),
@@ -1614,6 +1668,9 @@ void main() {
           ),
         ],
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           debugShowCheckedModeBanner: false,
           theme: buildAppTheme(),
           home: AdminPointsScanScreen(
@@ -1642,6 +1699,9 @@ void main() {
           ),
         ],
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           debugShowCheckedModeBanner: false,
           theme: buildAppTheme(),
           home: const ProfileScreen(),

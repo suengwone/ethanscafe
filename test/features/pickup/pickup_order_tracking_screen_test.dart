@@ -13,6 +13,8 @@ import 'package:cafe_app/features/pickup/domain/pickup_orders_repository.dart';
 import 'package:cafe_app/features/pickup/presentation/pickup_order_providers.dart';
 import 'package:cafe_app/features/pickup/presentation/pickup_order_tracking_screen.dart';
 
+import '../../support/localized_app.dart';
+
 const _items = [
   PickupOrderItem(
     menuId: 'espresso-vanilla-latte',
@@ -75,6 +77,9 @@ void main() {
           pickupOrdersRepositoryProvider.overrideWithValue(repository),
         ],
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           theme: buildAppTheme(),
           home: PickupOrderTrackingScreen(orderId: orderId),
         ),

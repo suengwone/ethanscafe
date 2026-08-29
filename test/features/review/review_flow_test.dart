@@ -11,6 +11,8 @@ import 'package:cafe_app/features/order/presentation/order_history_screen.dart';
 import 'package:cafe_app/features/review/data/local_reviews_repository.dart';
 import 'package:cafe_app/features/review/presentation/review_sheet.dart';
 
+import '../../support/localized_app.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -83,6 +85,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           theme: buildAppTheme(),
           home: const OrderHistoryScreen(),
         ),

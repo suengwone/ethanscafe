@@ -8,6 +8,8 @@ import 'package:cafe_app/features/store/domain/store_models.dart';
 import 'package:cafe_app/features/store/presentation/store_detail_screen.dart';
 import 'package:cafe_app/features/store/presentation/stores_providers.dart';
 
+import '../../support/localized_app.dart';
+
 void main() {
   final now = DateTime(2026, 8, 19, 15); // 수요일 15시
 
@@ -41,6 +43,9 @@ void main() {
           storeClockProvider.overrideWithValue(() => clock ?? now),
         ],
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           theme: buildAppTheme(),
           home: StoreDetailScreen(storeId: storeId),
         ),

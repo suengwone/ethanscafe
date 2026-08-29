@@ -15,6 +15,8 @@ import 'package:cafe_app/features/wholesale/presentation/business_home_screen.da
 import '../auth/fake_account_repository.dart';
 import '../auth/fake_auth_repository.dart';
 
+import '../../support/localized_app.dart';
+
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
@@ -33,6 +35,9 @@ void main() {
           ),
         ],
         child: MaterialApp(
+          locale: testLocale,
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
           theme: buildAppTheme(),
           home: const RoleHomeScreen(),
         ),
