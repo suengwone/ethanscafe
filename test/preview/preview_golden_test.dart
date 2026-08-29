@@ -561,6 +561,7 @@ void main() {
     bool isOnline = true,
     List<Override> overrides = const [],
     Brightness brightness = Brightness.dark,
+    Locale locale = testLocale,
   }) async {
     await tester.pumpWidget(
       ProviderScope(
@@ -576,7 +577,7 @@ void main() {
           builder: (context, ref, _) {
             final router = ref.watch(routerProvider);
             return MaterialApp.router(
-              locale: testLocale,
+              locale: locale,
               localizationsDelegates: testLocalizationsDelegates,
               supportedLocales: testSupportedLocales,
               theme: buildAppTheme(brightness: brightness),
@@ -893,6 +894,13 @@ void main() {
     await expectGolden(find.byType(AppShell), 'home_screen_logged_in');
   });
 
+  testWidgets('홈 화면(영어) 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpApp(tester, user: _previewUser, locale: const Locale('en'));
+
+    await expectGolden(find.byType(AppShell), 'home_screen_en');
+  });
+
   testWidgets('알림 목록 화면 스크린샷', (WidgetTester tester) async {
     await configureView(tester);
     await pumpScreen(tester, const NoticeListScreen());
@@ -958,6 +966,13 @@ void main() {
     await pumpScreen(tester, const MenuScreen());
 
     await expectGolden(find.byType(MenuScreen), 'menu_screen');
+  });
+
+  testWidgets('메뉴 화면(영어) 스크린샷', (WidgetTester tester) async {
+    await configureView(tester);
+    await pumpScreen(tester, const MenuScreen(), locale: const Locale('en'));
+
+    await expectGolden(find.byType(MenuScreen), 'menu_screen_en');
   });
 
   testWidgets('메뉴 상세 화면 스크린샷', (WidgetTester tester) async {
