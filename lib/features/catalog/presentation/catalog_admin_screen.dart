@@ -31,13 +31,14 @@ final _noticeDateFormat = DateFormat('yyyy.MM.dd');
 class CatalogAdminScreen extends ConsumerWidget {
   const CatalogAdminScreen({super.key});
 
-  static const _tabs = <({String label, String addLabel})>[
-    (label: '메뉴', addLabel: '메뉴 등록'),
-    (label: '원두', addLabel: '원두 등록'),
-    (label: '배너', addLabel: '배너 등록'),
-    (label: '매장', addLabel: '매장 등록'),
-    (label: '공지', addLabel: '공지 등록'),
-  ];
+  static List<({String label, String addLabel})> _tabs(AppLocalizations l10n) =>
+      [
+        (label: l10n.catalogTabMenu, addLabel: l10n.catalogAddMenu),
+        (label: l10n.catalogTabBeans, addLabel: l10n.catalogAddBean),
+        (label: l10n.catalogTabBanners, addLabel: l10n.catalogAddBanner),
+        (label: l10n.catalogTabStores, addLabel: l10n.catalogAddStore),
+        (label: l10n.catalogTabNotices, addLabel: l10n.catalogAddNotice),
+      ];
 
   static Widget _editScreenFor(int tabIndex) {
     return switch (tabIndex) {
@@ -51,12 +52,13 @@ class CatalogAdminScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final tabs = _tabs(AppLocalizations.of(context));
     return DefaultTabController(
-      length: _tabs.length,
+      length: tabs.length,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('카탈로그 관리'),
-          bottom: TabBar(tabs: [for (final tab in _tabs) Tab(text: tab.label)]),
+          title: Text(AppLocalizations.of(context).catalogAdminTitle),
+          bottom: TabBar(tabs: [for (final tab in tabs) Tab(text: tab.label)]),
         ),
         body: const TabBarView(
           children: [
@@ -69,19 +71,19 @@ class CatalogAdminScreen extends ConsumerWidget {
         ),
         floatingActionButton: Builder(
           builder: (context) {
-            final tabs = DefaultTabController.of(context);
+            final controller = DefaultTabController.of(context);
             // 보고 있는 탭에 맞는 등록 화면을 연다.
             return AnimatedBuilder(
-              animation: tabs,
+              animation: controller,
               builder: (context, _) {
                 return FloatingActionButton.extended(
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (context) => _editScreenFor(tabs.index),
+                      builder: (context) => _editScreenFor(controller.index),
                     ),
                   ),
                   icon: const Icon(Icons.add),
-                  label: Text(_tabs[tabs.index].addLabel),
+                  label: Text(tabs[controller.index].addLabel),
                 );
               },
             );
@@ -100,8 +102,8 @@ class _MenuTab extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     return _CatalogList<MenuItem>(
       state: ref.watch(menuItemsProvider),
-      errorMessage: '메뉴를 불러오지 못했습니다.',
-      emptyMessage: '등록된 메뉴가 없습니다.',
+      errorMessage: l10n.menuLoadFailed,
+      emptyMessage: l10n.catalogMenuEmpty,
       onRetry: () => ref.invalidate(menuItemsProvider),
       nameOf: (item) => item.name,
       subtitleOf: (item) =>
@@ -128,8 +130,8 @@ class _BeanTab extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     return _CatalogList<Bean>(
       state: ref.watch(beansProvider),
-      errorMessage: '원두를 불러오지 못했습니다.',
-      emptyMessage: '등록된 원두가 없습니다.',
+      errorMessage: l10n.beansLoadFailed,
+      emptyMessage: l10n.catalogBeansEmpty,
       onRetry: () => ref.invalidate(beansProvider),
       nameOf: (bean) => bean.name,
       subtitleOf: (bean) =>
@@ -154,8 +156,8 @@ class _BannerTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return _CatalogList<EventBanner>(
       state: ref.watch(bannersProvider),
-      errorMessage: '배너를 불러오지 못했습니다.',
-      emptyMessage: '등록된 배너가 없습니다.',
+      errorMessage: AppLocalizations.of(context).catalogBannersLoadFailed,
+      emptyMessage: AppLocalizations.of(context).catalogBannersEmpty,
       onRetry: () => ref.invalidate(bannersProvider),
       nameOf: (banner) => banner.title,
       subtitleOf: (banner) => banner.subtitle,
@@ -175,8 +177,8 @@ class _StoreTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return _CatalogList<CafeStore>(
       state: ref.watch(storesProvider),
-      errorMessage: '매장을 불러오지 못했습니다.',
-      emptyMessage: '등록된 매장이 없습니다.',
+      errorMessage: AppLocalizations.of(context).storeLoadFailed,
+      emptyMessage: AppLocalizations.of(context).catalogStoresEmpty,
       onRetry: () => ref.invalidate(storesProvider),
       nameOf: (store) => store.name,
       subtitleOf: (store) => store.address,
@@ -197,8 +199,8 @@ class _NoticeTab extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     return _CatalogList<Notice>(
       state: ref.watch(noticesProvider),
-      errorMessage: '공지를 불러오지 못했습니다.',
-      emptyMessage: '등록된 공지가 없습니다.',
+      errorMessage: l10n.catalogNoticesLoadFailed,
+      emptyMessage: l10n.catalogNoticesEmpty,
       onRetry: () => ref.invalidate(noticesProvider),
       nameOf: (notice) => notice.title,
       subtitleOf: (notice) =>
@@ -248,7 +250,10 @@ class _CatalogList<T> extends StatelessWidget {
           children: [
             Text(errorMessage),
             const SizedBox(height: 8),
-            TextButton(onPressed: onRetry, child: const Text('다시 시도')),
+            TextButton(
+              onPressed: onRetry,
+              child: Text(AppLocalizations.of(context).retry),
+            ),
           ],
         ),
       ),
@@ -319,9 +324,13 @@ class _CatalogTileState extends State<_CatalogTile> {
       await onSoldOutChanged(soldOut);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('판매 상태를 바꾸지 못했습니다: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context).catalogSoldOutFailed('$e'),
+            ),
+          ),
+        );
       }
     } finally {
       if (mounted) {
@@ -353,14 +362,22 @@ class _CatalogTileState extends State<_CatalogTile> {
                   Text(
                     widget.name,
                     style: textTheme.bodyLarge?.copyWith(
-                      color: soldOut ? context.palette.muted : context.palette.ink,
+                      color: soldOut
+                          ? context.palette.muted
+                          : context.palette.ink,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    soldOut ? '품절 · ${widget.subtitle}' : widget.subtitle,
-                    style: textTheme.bodySmall?.copyWith(color: context.palette.muted),
+                    soldOut
+                        ? AppLocalizations.of(
+                            context,
+                          ).catalogSoldOutPrefix(widget.subtitle)
+                        : widget.subtitle,
+                    style: textTheme.bodySmall?.copyWith(
+                      color: context.palette.muted,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),

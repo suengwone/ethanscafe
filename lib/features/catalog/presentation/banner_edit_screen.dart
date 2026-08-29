@@ -72,7 +72,9 @@ class _BannerEditScreenState extends ConsumerState<BannerEditScreen> {
       if (mounted) {
         setState(() => _busy = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('저장하지 못했습니다: $e')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).adminSaveFailed('$e')),
+          ),
         );
       }
     }
@@ -86,16 +88,18 @@ class _BannerEditScreenState extends ConsumerState<BannerEditScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('배너를 내릴까요?'),
-        content: Text('${banner.title}을(를) 홈에서 지웁니다.'),
+        title: Text(AppLocalizations.of(context).bannerRemoveTitle),
+        content: Text(
+          AppLocalizations.of(context).bannerRemoveBody(banner.title),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('닫기'),
+            child: Text(AppLocalizations.of(context).commonClose),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('배너 내리기'),
+            child: Text(AppLocalizations.of(context).bannerRemoveAction),
           ),
         ],
       ),
@@ -113,7 +117,9 @@ class _BannerEditScreenState extends ConsumerState<BannerEditScreen> {
       if (mounted) {
         setState(() => _busy = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('내리지 못했습니다: $e')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).adminRemoveFailed('$e')),
+          ),
         );
       }
     }
@@ -123,12 +129,16 @@ class _BannerEditScreenState extends ConsumerState<BannerEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isNew ? '배너 등록' : '배너 수정'),
+        title: Text(
+          _isNew
+              ? AppLocalizations.of(context).bannerCreateTitle
+              : AppLocalizations.of(context).bannerEditTitle,
+        ),
         actions: [
           if (!_isNew)
             IconButton(
               onPressed: _busy ? null : _delete,
-              tooltip: '배너 내리기',
+              tooltip: AppLocalizations.of(context).bannerRemoveAction,
               icon: const Icon(Icons.delete_outline),
             ),
         ],
@@ -140,20 +150,27 @@ class _BannerEditScreenState extends ConsumerState<BannerEditScreen> {
           children: [
             TextFormField(
               controller: _title,
-              decoration: const InputDecoration(labelText: '제목'),
-              validator: (value) =>
-                  (value ?? '').trim().isEmpty ? '제목을 입력해 주세요.' : null,
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).adminFieldTitle,
+              ),
+              validator: (value) => (value ?? '').trim().isEmpty
+                  ? AppLocalizations.of(context).adminFieldTitleRequired
+                  : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _subtitle,
-              decoration: const InputDecoration(labelText: '설명'),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).adminFieldDescription,
+              ),
               maxLines: 2,
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               initialValue: _icon,
-              decoration: const InputDecoration(labelText: '아이콘'),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).adminFieldIcon,
+              ),
               items: [
                 for (final entry in bannerIconChoices.entries)
                   DropdownMenuItem(
@@ -177,9 +194,9 @@ class _BannerEditScreenState extends ConsumerState<BannerEditScreen> {
             const SizedBox(height: 12),
             TextFormField(
               controller: _sortOrder,
-              decoration: const InputDecoration(
-                labelText: '노출 순서',
-                helperText: '작을수록 먼저 보입니다.',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).adminSortOrder,
+                helperText: AppLocalizations.of(context).adminSortOrderHelper,
               ),
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -193,7 +210,11 @@ class _BannerEditScreenState extends ConsumerState<BannerEditScreen> {
                       height: 18,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : Text(_isNew ? '등록' : '저장'),
+                  : Text(
+                      _isNew
+                          ? AppLocalizations.of(context).adminCreate
+                          : AppLocalizations.of(context).adminSave,
+                    ),
             ),
           ],
         ),

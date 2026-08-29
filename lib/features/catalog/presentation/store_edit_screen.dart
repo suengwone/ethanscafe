@@ -34,6 +34,7 @@ class _StoreEditScreenState extends ConsumerState<StoreEditScreen> {
   late final TextEditingController _sortOrder;
   late final TextEditingController _notice;
   late StoreCongestion _congestion;
+
   /// 같은 혼잡도를 다시 골라도 시각을 새로 찍어 준다.
   bool _congestionTouched = false;
   bool _busy = false;
@@ -105,7 +106,9 @@ class _StoreEditScreenState extends ConsumerState<StoreEditScreen> {
       if (mounted) {
         setState(() => _busy = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('저장하지 못했습니다: $e')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).adminSaveFailed('$e')),
+          ),
         );
       }
     }
@@ -130,16 +133,16 @@ class _StoreEditScreenState extends ConsumerState<StoreEditScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('매장을 내릴까요?'),
-        content: Text('${store.name}을(를) 매장 찾기에서 지웁니다.'),
+        title: Text(AppLocalizations.of(context).storeRemoveTitle),
+        content: Text(AppLocalizations.of(context).storeRemoveBody(store.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('닫기'),
+            child: Text(AppLocalizations.of(context).commonClose),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('매장 내리기'),
+            child: Text(AppLocalizations.of(context).storeRemoveAction),
           ),
         ],
       ),
@@ -157,7 +160,9 @@ class _StoreEditScreenState extends ConsumerState<StoreEditScreen> {
       if (mounted) {
         setState(() => _busy = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('내리지 못했습니다: $e')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).adminRemoveFailed('$e')),
+          ),
         );
       }
     }
@@ -167,12 +172,16 @@ class _StoreEditScreenState extends ConsumerState<StoreEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isNew ? '매장 등록' : '매장 수정'),
+        title: Text(
+          _isNew
+              ? AppLocalizations.of(context).storeCreateTitle
+              : AppLocalizations.of(context).storeEditTitle,
+        ),
         actions: [
           if (!_isNew)
             IconButton(
               onPressed: _busy ? null : _delete,
-              tooltip: '매장 내리기',
+              tooltip: AppLocalizations.of(context).storeRemoveAction,
               icon: const Icon(Icons.delete_outline),
             ),
         ],
@@ -184,71 +193,80 @@ class _StoreEditScreenState extends ConsumerState<StoreEditScreen> {
           children: [
             TextFormField(
               controller: _name,
-              decoration: const InputDecoration(labelText: '매장 이름'),
-              validator: (value) =>
-                  (value ?? '').trim().isEmpty ? '매장 이름을 입력해 주세요.' : null,
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).storeFieldName,
+              ),
+              validator: (value) => (value ?? '').trim().isEmpty
+                  ? AppLocalizations.of(context).storeFieldNameRequired
+                  : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _address,
-              decoration: const InputDecoration(labelText: '주소'),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).storeFieldAddress,
+              ),
               maxLines: 2,
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _phone,
-              decoration: const InputDecoration(labelText: '전화번호'),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).storeFieldPhone,
+              ),
               keyboardType: TextInputType.phone,
             ),
             const SizedBox(height: 12),
             _CoordinateField(
               controller: _latitude,
-              label: '위도',
+              label: AppLocalizations.of(context).storeFieldLatitude,
               helperText: '-90 ~ 90',
               limit: 90,
             ),
             const SizedBox(height: 12),
             _CoordinateField(
               controller: _longitude,
-              label: '경도',
+              label: AppLocalizations.of(context).storeFieldLongitude,
               helperText: '-180 ~ 180',
               limit: 180,
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _weekdayHours,
-              decoration: const InputDecoration(
-                labelText: '평일 영업시간',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).storeFieldWeekdayHours,
                 hintText: '09:00 - 21:00',
               ),
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _weekendHours,
-              decoration: const InputDecoration(
-                labelText: '주말 영업시간',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).storeFieldWeekendHours,
                 hintText: '10:00 - 19:00',
               ),
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _services,
-              decoration: const InputDecoration(
-                labelText: '편의시설',
-                helperText: '쉼표로 구분 (예: 무료주차 2시간, 테라스)',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).storeFieldFacilities,
+                helperText: AppLocalizations.of(
+                  context,
+                ).storeFieldFacilitiesHelper,
               ),
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _notice,
-              decoration: const InputDecoration(
-                labelText: '매장 공지',
-                helperText: '매장 상세 맨 위에 걸립니다. 비우면 안 보입니다.',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).storeFieldNotice,
+                helperText: AppLocalizations.of(context).storeFieldNoticeHelper,
               ),
               maxLines: 2,
             ),
             const SizedBox(height: 16),
-            const Text('현재 혼잡도'),
+            Text(AppLocalizations.of(context).storeFieldCongestion),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -273,16 +291,17 @@ class _StoreEditScreenState extends ConsumerState<StoreEditScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              '고른 지 ${CafeStore.congestionFreshness.inHours}시간이 지나면 숨기고, '
-                '그때부터는 진행 중인 주문 수로 자동 집계한 값이 대신 뜹니다.',
+              AppLocalizations.of(
+                context,
+              ).storeCongestionHelper(CafeStore.congestionFreshness.inHours),
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _sortOrder,
-              decoration: const InputDecoration(
-                labelText: '노출 순서',
-                helperText: '작을수록 먼저 보입니다.',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).adminSortOrder,
+                helperText: AppLocalizations.of(context).adminSortOrderHelper,
               ),
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -296,7 +315,11 @@ class _StoreEditScreenState extends ConsumerState<StoreEditScreen> {
                       height: 18,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : Text(_isNew ? '등록' : '저장'),
+                  : Text(
+                      _isNew
+                          ? AppLocalizations.of(context).adminCreate
+                          : AppLocalizations.of(context).adminSave,
+                    ),
             ),
           ],
         ),
@@ -331,7 +354,9 @@ class _CoordinateField extends StatelessWidget {
       validator: (value) {
         final coordinate = double.tryParse((value ?? '').trim());
         if (coordinate == null || coordinate.abs() > limit) {
-          return '$label를 $helperText 사이 숫자로 입력해 주세요.';
+          return AppLocalizations.of(
+            context,
+          ).storeNumberInvalid(label, helperText);
         }
         return null;
       },

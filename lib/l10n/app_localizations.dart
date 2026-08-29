@@ -755,7 +755,7 @@ abstract class AppLocalizations {
   /// No description provided for @menuFieldPrice.
   ///
   /// In ko, this message translates to:
-  /// **'가격'**
+  /// **'가격 (원)'**
   String get menuFieldPrice;
 
   /// No description provided for @menuFieldServingOptions.
@@ -3583,6 +3583,618 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'결제 {amount}원 · 보너스 +{bonus}P'**
   String pointsPaidWithBonus(String amount, String bonus);
+
+  /// No description provided for @adminSaveFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장하지 못했습니다: {error}'**
+  String adminSaveFailed(String error);
+
+  /// No description provided for @adminRemoveFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'내리지 못했습니다: {error}'**
+  String adminRemoveFailed(String error);
+
+  /// No description provided for @adminSortOrder.
+  ///
+  /// In ko, this message translates to:
+  /// **'노출 순서'**
+  String get adminSortOrder;
+
+  /// No description provided for @adminSortOrderHelper.
+  ///
+  /// In ko, this message translates to:
+  /// **'작을수록 먼저 보입니다.'**
+  String get adminSortOrderHelper;
+
+  /// No description provided for @adminCreate.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록'**
+  String get adminCreate;
+
+  /// No description provided for @adminSave.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장'**
+  String get adminSave;
+
+  /// No description provided for @adminFieldTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'제목'**
+  String get adminFieldTitle;
+
+  /// No description provided for @adminFieldTitleRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'제목을 입력해 주세요.'**
+  String get adminFieldTitleRequired;
+
+  /// No description provided for @adminFieldDescription.
+  ///
+  /// In ko, this message translates to:
+  /// **'설명'**
+  String get adminFieldDescription;
+
+  /// No description provided for @adminFieldIcon.
+  ///
+  /// In ko, this message translates to:
+  /// **'아이콘'**
+  String get adminFieldIcon;
+
+  /// No description provided for @adminFieldName.
+  ///
+  /// In ko, this message translates to:
+  /// **'이름'**
+  String get adminFieldName;
+
+  /// No description provided for @adminFieldNameRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'이름을 입력해 주세요.'**
+  String get adminFieldNameRequired;
+
+  /// No description provided for @adminPriceInvalid.
+  ///
+  /// In ko, this message translates to:
+  /// **'가격을 숫자로 입력해 주세요.'**
+  String get adminPriceInvalid;
+
+  /// No description provided for @bannerCreateTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'배너 등록'**
+  String get bannerCreateTitle;
+
+  /// No description provided for @bannerEditTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'배너 수정'**
+  String get bannerEditTitle;
+
+  /// No description provided for @bannerRemoveTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'배너를 내릴까요?'**
+  String get bannerRemoveTitle;
+
+  /// No description provided for @bannerRemoveBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'{title}을(를) 홈에서 지웁니다.'**
+  String bannerRemoveBody(String title);
+
+  /// No description provided for @bannerRemoveAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'배너 내리기'**
+  String get bannerRemoveAction;
+
+  /// No description provided for @storeCreateTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 등록'**
+  String get storeCreateTitle;
+
+  /// No description provided for @storeEditTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 수정'**
+  String get storeEditTitle;
+
+  /// No description provided for @storeRemoveTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장을 내릴까요?'**
+  String get storeRemoveTitle;
+
+  /// No description provided for @storeRemoveBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}을(를) 매장 찾기에서 지웁니다.'**
+  String storeRemoveBody(String name);
+
+  /// No description provided for @storeRemoveAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 내리기'**
+  String get storeRemoveAction;
+
+  /// No description provided for @storeFieldName.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 이름'**
+  String get storeFieldName;
+
+  /// No description provided for @storeFieldNameRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 이름을 입력해 주세요.'**
+  String get storeFieldNameRequired;
+
+  /// No description provided for @storeFieldAddress.
+  ///
+  /// In ko, this message translates to:
+  /// **'주소'**
+  String get storeFieldAddress;
+
+  /// No description provided for @storeFieldPhone.
+  ///
+  /// In ko, this message translates to:
+  /// **'전화번호'**
+  String get storeFieldPhone;
+
+  /// No description provided for @storeFieldLatitude.
+  ///
+  /// In ko, this message translates to:
+  /// **'위도'**
+  String get storeFieldLatitude;
+
+  /// No description provided for @storeFieldLongitude.
+  ///
+  /// In ko, this message translates to:
+  /// **'경도'**
+  String get storeFieldLongitude;
+
+  /// No description provided for @storeFieldWeekdayHours.
+  ///
+  /// In ko, this message translates to:
+  /// **'평일 영업시간'**
+  String get storeFieldWeekdayHours;
+
+  /// No description provided for @storeFieldWeekendHours.
+  ///
+  /// In ko, this message translates to:
+  /// **'주말 영업시간'**
+  String get storeFieldWeekendHours;
+
+  /// No description provided for @storeFieldFacilities.
+  ///
+  /// In ko, this message translates to:
+  /// **'편의시설'**
+  String get storeFieldFacilities;
+
+  /// No description provided for @storeFieldFacilitiesHelper.
+  ///
+  /// In ko, this message translates to:
+  /// **'쉼표로 구분 (예: 무료주차 2시간, 테라스)'**
+  String get storeFieldFacilitiesHelper;
+
+  /// No description provided for @storeFieldNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 공지'**
+  String get storeFieldNotice;
+
+  /// No description provided for @storeFieldNoticeHelper.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 상세 맨 위에 걸립니다. 비우면 안 보입니다.'**
+  String get storeFieldNoticeHelper;
+
+  /// No description provided for @storeFieldCongestion.
+  ///
+  /// In ko, this message translates to:
+  /// **'현재 혼잡도'**
+  String get storeFieldCongestion;
+
+  /// No description provided for @storeCongestionHelper.
+  ///
+  /// In ko, this message translates to:
+  /// **'고른 지 {hours}시간이 지나면 숨기고, 그때부터는 진행 중인 주문 수로 자동 집계한 값이 대신 뜹니다.'**
+  String storeCongestionHelper(int hours);
+
+  /// No description provided for @storeNumberInvalid.
+  ///
+  /// In ko, this message translates to:
+  /// **'{label}를 {range} 사이 숫자로 입력해 주세요.'**
+  String storeNumberInvalid(String label, String range);
+
+  /// No description provided for @menuCreateTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴 등록'**
+  String get menuCreateTitle;
+
+  /// No description provided for @menuEditTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴 수정'**
+  String get menuEditTitle;
+
+  /// No description provided for @menuRemoveTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴를 내릴까요?'**
+  String get menuRemoveTitle;
+
+  /// No description provided for @menuRemoveBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}을(를) 카탈로그에서 지웁니다. 지난 주문 내역은 그대로 남습니다.'**
+  String menuRemoveBody(String name);
+
+  /// No description provided for @menuRemoveAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴 내리기'**
+  String get menuRemoveAction;
+
+  /// No description provided for @menuFieldCategoryLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리'**
+  String get menuFieldCategoryLabel;
+
+  /// No description provided for @menuFieldPriceFrom.
+  ///
+  /// In ko, this message translates to:
+  /// **'가격 뒤에 ~ 붙이기'**
+  String get menuFieldPriceFrom;
+
+  /// No description provided for @menuFieldPriceFromHelper.
+  ///
+  /// In ko, this message translates to:
+  /// **'옵션에 따라 가격이 올라가는 메뉴'**
+  String get menuFieldPriceFromHelper;
+
+  /// No description provided for @menuFieldBadge.
+  ///
+  /// In ko, this message translates to:
+  /// **'뱃지'**
+  String get menuFieldBadge;
+
+  /// No description provided for @menuBadgeNone.
+  ///
+  /// In ko, this message translates to:
+  /// **'없음'**
+  String get menuBadgeNone;
+
+  /// No description provided for @menuFieldDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'상세 설명 (선택)'**
+  String get menuFieldDetail;
+
+  /// No description provided for @menuFieldRecommended.
+  ///
+  /// In ko, this message translates to:
+  /// **'추천 메뉴'**
+  String get menuFieldRecommended;
+
+  /// No description provided for @menuFieldSoldOut.
+  ///
+  /// In ko, this message translates to:
+  /// **'품절'**
+  String get menuFieldSoldOut;
+
+  /// No description provided for @noticeCreateTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지 등록'**
+  String get noticeCreateTitle;
+
+  /// No description provided for @noticeEditTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지 수정'**
+  String get noticeEditTitle;
+
+  /// No description provided for @noticeRemoveTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지를 내릴까요?'**
+  String get noticeRemoveTitle;
+
+  /// No description provided for @noticeRemoveBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'{title}을(를) 알림 목록에서 지웁니다.'**
+  String noticeRemoveBody(String title);
+
+  /// No description provided for @noticeRemoveAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지 내리기'**
+  String get noticeRemoveAction;
+
+  /// No description provided for @noticeFieldBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'본문'**
+  String get noticeFieldBody;
+
+  /// No description provided for @noticeFieldBodyRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'본문을 입력해 주세요.'**
+  String get noticeFieldBodyRequired;
+
+  /// No description provided for @noticeFieldCategory.
+  ///
+  /// In ko, this message translates to:
+  /// **'분류'**
+  String get noticeFieldCategory;
+
+  /// No description provided for @noticeFieldDate.
+  ///
+  /// In ko, this message translates to:
+  /// **'게시일'**
+  String get noticeFieldDate;
+
+  /// No description provided for @noticeFieldDateHelper.
+  ///
+  /// In ko, this message translates to:
+  /// **'최근 날짜일수록 목록 위에 보입니다.'**
+  String get noticeFieldDateHelper;
+
+  /// No description provided for @noticeChooseDate.
+  ///
+  /// In ko, this message translates to:
+  /// **'날짜 선택'**
+  String get noticeChooseDate;
+
+  /// No description provided for @noticeFieldImportant.
+  ///
+  /// In ko, this message translates to:
+  /// **'중요 공지'**
+  String get noticeFieldImportant;
+
+  /// No description provided for @noticeFieldImportantHelper.
+  ///
+  /// In ko, this message translates to:
+  /// **'목록에서 중요 뱃지를 붙입니다.'**
+  String get noticeFieldImportantHelper;
+
+  /// No description provided for @beanCreateTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 등록'**
+  String get beanCreateTitle;
+
+  /// No description provided for @beanEditTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 수정'**
+  String get beanEditTitle;
+
+  /// No description provided for @beanRemoveTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두를 내릴까요?'**
+  String get beanRemoveTitle;
+
+  /// No description provided for @beanRemoveBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}을(를) 카탈로그에서 지웁니다. 지난 주문 내역은 그대로 남습니다.'**
+  String beanRemoveBody(String name);
+
+  /// No description provided for @beanRemoveAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 내리기'**
+  String get beanRemoveAction;
+
+  /// No description provided for @beanFieldRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'{label}을(를) 입력해 주세요.'**
+  String beanFieldRequired(String label);
+
+  /// No description provided for @beanFieldOriginLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'산지'**
+  String get beanFieldOriginLabel;
+
+  /// No description provided for @beanFieldStory.
+  ///
+  /// In ko, this message translates to:
+  /// **'스토리'**
+  String get beanFieldStory;
+
+  /// No description provided for @beanFieldRoastLevel.
+  ///
+  /// In ko, this message translates to:
+  /// **'로스팅 정도'**
+  String get beanFieldRoastLevel;
+
+  /// No description provided for @beanFieldProcessLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'가공 방식'**
+  String get beanFieldProcessLabel;
+
+  /// No description provided for @beanFieldProcessHelper.
+  ///
+  /// In ko, this message translates to:
+  /// **'워시드, 내추럴, 디카페인 등'**
+  String get beanFieldProcessHelper;
+
+  /// No description provided for @beanFieldNotes.
+  ///
+  /// In ko, this message translates to:
+  /// **'테이스팅 노트'**
+  String get beanFieldNotes;
+
+  /// No description provided for @beanFieldNotesHelper.
+  ///
+  /// In ko, this message translates to:
+  /// **'쉼표로 구분 (예: 자몽, 자스민, 흑설탕)'**
+  String get beanFieldNotesHelper;
+
+  /// No description provided for @beanFieldBrewsLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'추천 추출법'**
+  String get beanFieldBrewsLabel;
+
+  /// No description provided for @beanFieldBrewsHelper.
+  ///
+  /// In ko, this message translates to:
+  /// **'쉼표로 구분 (예: 핸드드립, 에스프레소)'**
+  String get beanFieldBrewsHelper;
+
+  /// No description provided for @beanFieldPrice200.
+  ///
+  /// In ko, this message translates to:
+  /// **'200g 가격 (원)'**
+  String get beanFieldPrice200;
+
+  /// No description provided for @beanFieldPrice500.
+  ///
+  /// In ko, this message translates to:
+  /// **'500g 가격 (원)'**
+  String get beanFieldPrice500;
+
+  /// No description provided for @beanFieldNewBadge.
+  ///
+  /// In ko, this message translates to:
+  /// **'NEW 뱃지'**
+  String get beanFieldNewBadge;
+
+  /// No description provided for @catalogAdminTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'카탈로그 관리'**
+  String get catalogAdminTitle;
+
+  /// No description provided for @catalogTabMenu.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴'**
+  String get catalogTabMenu;
+
+  /// No description provided for @catalogAddMenu.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴 등록'**
+  String get catalogAddMenu;
+
+  /// No description provided for @catalogTabBeans.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두'**
+  String get catalogTabBeans;
+
+  /// No description provided for @catalogAddBean.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 등록'**
+  String get catalogAddBean;
+
+  /// No description provided for @catalogTabBanners.
+  ///
+  /// In ko, this message translates to:
+  /// **'배너'**
+  String get catalogTabBanners;
+
+  /// No description provided for @catalogAddBanner.
+  ///
+  /// In ko, this message translates to:
+  /// **'배너 등록'**
+  String get catalogAddBanner;
+
+  /// No description provided for @catalogTabStores.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장'**
+  String get catalogTabStores;
+
+  /// No description provided for @catalogAddStore.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 등록'**
+  String get catalogAddStore;
+
+  /// No description provided for @catalogTabNotices.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지'**
+  String get catalogTabNotices;
+
+  /// No description provided for @catalogAddNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지 등록'**
+  String get catalogAddNotice;
+
+  /// No description provided for @catalogMenuEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 메뉴가 없습니다.'**
+  String get catalogMenuEmpty;
+
+  /// No description provided for @catalogBeansEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 원두가 없습니다.'**
+  String get catalogBeansEmpty;
+
+  /// No description provided for @catalogBannersLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'배너를 불러오지 못했습니다.'**
+  String get catalogBannersLoadFailed;
+
+  /// No description provided for @catalogBannersEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 배너가 없습니다.'**
+  String get catalogBannersEmpty;
+
+  /// No description provided for @catalogStoresEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 매장이 없습니다.'**
+  String get catalogStoresEmpty;
+
+  /// No description provided for @catalogNoticesLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'공지를 불러오지 못했습니다.'**
+  String get catalogNoticesLoadFailed;
+
+  /// No description provided for @catalogNoticesEmpty.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 공지가 없습니다.'**
+  String get catalogNoticesEmpty;
+
+  /// No description provided for @catalogSoldOutFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'판매 상태를 바꾸지 못했습니다: {error}'**
+  String catalogSoldOutFailed(String error);
+
+  /// No description provided for @catalogSoldOutPrefix.
+  ///
+  /// In ko, this message translates to:
+  /// **'품절 · {subtitle}'**
+  String catalogSoldOutPrefix(String subtitle);
 }
 
 class _AppLocalizationsDelegate

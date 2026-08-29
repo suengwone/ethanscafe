@@ -93,9 +93,11 @@ class _NoticeEditScreenState extends ConsumerState<NoticeEditScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _busy = false);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('저장하지 못했습니다: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context).adminSaveFailed('$e')),
+          ),
+        );
       }
     }
   }
@@ -108,16 +110,18 @@ class _NoticeEditScreenState extends ConsumerState<NoticeEditScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('공지를 내릴까요?'),
-        content: Text('${notice.title}을(를) 알림 목록에서 지웁니다.'),
+        title: Text(AppLocalizations.of(context).noticeRemoveTitle),
+        content: Text(
+          AppLocalizations.of(context).noticeRemoveBody(notice.title),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('닫기'),
+            child: Text(AppLocalizations.of(context).commonClose),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('공지 내리기'),
+            child: Text(AppLocalizations.of(context).noticeRemoveAction),
           ),
         ],
       ),
@@ -134,9 +138,11 @@ class _NoticeEditScreenState extends ConsumerState<NoticeEditScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _busy = false);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('내리지 못했습니다: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context).adminRemoveFailed('$e')),
+          ),
+        );
       }
     }
   }
@@ -145,12 +151,16 @@ class _NoticeEditScreenState extends ConsumerState<NoticeEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isNew ? '공지 등록' : '공지 수정'),
+        title: Text(
+          _isNew
+              ? AppLocalizations.of(context).noticeCreateTitle
+              : AppLocalizations.of(context).noticeEditTitle,
+        ),
         actions: [
           if (!_isNew)
             IconButton(
               onPressed: _busy ? null : _delete,
-              tooltip: '공지 내리기',
+              tooltip: AppLocalizations.of(context).noticeRemoveAction,
               icon: const Icon(Icons.delete_outline),
             ),
         ],
@@ -162,28 +172,38 @@ class _NoticeEditScreenState extends ConsumerState<NoticeEditScreen> {
           children: [
             TextFormField(
               controller: _title,
-              decoration: const InputDecoration(labelText: '제목'),
-              validator: (value) =>
-                  (value ?? '').trim().isEmpty ? '제목을 입력해 주세요.' : null,
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).adminFieldTitle,
+              ),
+              validator: (value) => (value ?? '').trim().isEmpty
+                  ? AppLocalizations.of(context).adminFieldTitleRequired
+                  : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _body,
-              decoration: const InputDecoration(labelText: '본문'),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).noticeFieldBody,
+              ),
               maxLines: 6,
-              validator: (value) =>
-                  (value ?? '').trim().isEmpty ? '본문을 입력해 주세요.' : null,
+              validator: (value) => (value ?? '').trim().isEmpty
+                  ? AppLocalizations.of(context).noticeFieldBodyRequired
+                  : null,
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<NoticeCategory>(
               initialValue: _category,
-              decoration: const InputDecoration(labelText: '분류'),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).noticeFieldCategory,
+              ),
               items: [
                 for (final category in NoticeCategory.values)
                   DropdownMenuItem(
                     value: category,
                     child: Text(
-                      AppLocalizations.of(context).noticeCategoryLabel(category),
+                      AppLocalizations.of(
+                        context,
+                      ).noticeCategoryLabel(category),
                     ),
                   ),
               ],
@@ -192,16 +212,16 @@ class _NoticeEditScreenState extends ConsumerState<NoticeEditScreen> {
             ),
             const SizedBox(height: 12),
             InputDecorator(
-              decoration: const InputDecoration(
-                labelText: '게시일',
-                helperText: '최근 날짜일수록 목록 위에 보입니다.',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).noticeFieldDate,
+                helperText: AppLocalizations.of(context).noticeFieldDateHelper,
               ),
               child: Row(
                 children: [
                   Expanded(child: Text(_dateFormat.format(_createdAt))),
                   TextButton(
                     onPressed: _busy ? null : _pickDate,
-                    child: const Text('날짜 선택'),
+                    child: Text(AppLocalizations.of(context).noticeChooseDate),
                   ),
                 ],
               ),
@@ -209,8 +229,10 @@ class _NoticeEditScreenState extends ConsumerState<NoticeEditScreen> {
             const SizedBox(height: 12),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('중요 공지'),
-              subtitle: const Text('목록에서 중요 뱃지를 붙입니다.'),
+              title: Text(AppLocalizations.of(context).noticeFieldImportant),
+              subtitle: Text(
+                AppLocalizations.of(context).noticeFieldImportantHelper,
+              ),
               value: _isImportant,
               onChanged: (value) => setState(() => _isImportant = value),
             ),
@@ -223,7 +245,11 @@ class _NoticeEditScreenState extends ConsumerState<NoticeEditScreen> {
                       height: 18,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : Text(_isNew ? '등록' : '저장'),
+                  : Text(
+                      _isNew
+                          ? AppLocalizations.of(context).adminCreate
+                          : AppLocalizations.of(context).adminSave,
+                    ),
             ),
           ],
         ),

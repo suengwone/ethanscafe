@@ -92,7 +92,7 @@ class CatalogAdminController {
   CatalogAdminRepository get _repository {
     final repository = _ref.read(catalogAdminRepositoryProvider);
     if (repository == null) {
-      throw StateError('관리자 기능을 사용할 수 없습니다.');
+      throw StateError('Admin actions are unavailable.');
     }
     return repository;
   }

@@ -359,7 +359,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get menuFieldCategory => '카테고리';
 
   @override
-  String get menuFieldPrice => '가격';
+  String get menuFieldPrice => '가격 (원)';
 
   @override
   String get menuFieldServingOptions => '제공 옵션';
@@ -1959,5 +1959,335 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String pointsPaidWithBonus(String amount, String bonus) {
     return '결제 $amount원 · 보너스 +${bonus}P';
+  }
+
+  @override
+  String adminSaveFailed(String error) {
+    return '저장하지 못했습니다: $error';
+  }
+
+  @override
+  String adminRemoveFailed(String error) {
+    return '내리지 못했습니다: $error';
+  }
+
+  @override
+  String get adminSortOrder => '노출 순서';
+
+  @override
+  String get adminSortOrderHelper => '작을수록 먼저 보입니다.';
+
+  @override
+  String get adminCreate => '등록';
+
+  @override
+  String get adminSave => '저장';
+
+  @override
+  String get adminFieldTitle => '제목';
+
+  @override
+  String get adminFieldTitleRequired => '제목을 입력해 주세요.';
+
+  @override
+  String get adminFieldDescription => '설명';
+
+  @override
+  String get adminFieldIcon => '아이콘';
+
+  @override
+  String get adminFieldName => '이름';
+
+  @override
+  String get adminFieldNameRequired => '이름을 입력해 주세요.';
+
+  @override
+  String get adminPriceInvalid => '가격을 숫자로 입력해 주세요.';
+
+  @override
+  String get bannerCreateTitle => '배너 등록';
+
+  @override
+  String get bannerEditTitle => '배너 수정';
+
+  @override
+  String get bannerRemoveTitle => '배너를 내릴까요?';
+
+  @override
+  String bannerRemoveBody(String title) {
+    return '$title을(를) 홈에서 지웁니다.';
+  }
+
+  @override
+  String get bannerRemoveAction => '배너 내리기';
+
+  @override
+  String get storeCreateTitle => '매장 등록';
+
+  @override
+  String get storeEditTitle => '매장 수정';
+
+  @override
+  String get storeRemoveTitle => '매장을 내릴까요?';
+
+  @override
+  String storeRemoveBody(String name) {
+    return '$name을(를) 매장 찾기에서 지웁니다.';
+  }
+
+  @override
+  String get storeRemoveAction => '매장 내리기';
+
+  @override
+  String get storeFieldName => '매장 이름';
+
+  @override
+  String get storeFieldNameRequired => '매장 이름을 입력해 주세요.';
+
+  @override
+  String get storeFieldAddress => '주소';
+
+  @override
+  String get storeFieldPhone => '전화번호';
+
+  @override
+  String get storeFieldLatitude => '위도';
+
+  @override
+  String get storeFieldLongitude => '경도';
+
+  @override
+  String get storeFieldWeekdayHours => '평일 영업시간';
+
+  @override
+  String get storeFieldWeekendHours => '주말 영업시간';
+
+  @override
+  String get storeFieldFacilities => '편의시설';
+
+  @override
+  String get storeFieldFacilitiesHelper => '쉼표로 구분 (예: 무료주차 2시간, 테라스)';
+
+  @override
+  String get storeFieldNotice => '매장 공지';
+
+  @override
+  String get storeFieldNoticeHelper => '매장 상세 맨 위에 걸립니다. 비우면 안 보입니다.';
+
+  @override
+  String get storeFieldCongestion => '현재 혼잡도';
+
+  @override
+  String storeCongestionHelper(int hours) {
+    return '고른 지 $hours시간이 지나면 숨기고, 그때부터는 진행 중인 주문 수로 자동 집계한 값이 대신 뜹니다.';
+  }
+
+  @override
+  String storeNumberInvalid(String label, String range) {
+    return '$label를 $range 사이 숫자로 입력해 주세요.';
+  }
+
+  @override
+  String get menuCreateTitle => '메뉴 등록';
+
+  @override
+  String get menuEditTitle => '메뉴 수정';
+
+  @override
+  String get menuRemoveTitle => '메뉴를 내릴까요?';
+
+  @override
+  String menuRemoveBody(String name) {
+    return '$name을(를) 카탈로그에서 지웁니다. 지난 주문 내역은 그대로 남습니다.';
+  }
+
+  @override
+  String get menuRemoveAction => '메뉴 내리기';
+
+  @override
+  String get menuFieldCategoryLabel => '카테고리';
+
+  @override
+  String get menuFieldPriceFrom => '가격 뒤에 ~ 붙이기';
+
+  @override
+  String get menuFieldPriceFromHelper => '옵션에 따라 가격이 올라가는 메뉴';
+
+  @override
+  String get menuFieldBadge => '뱃지';
+
+  @override
+  String get menuBadgeNone => '없음';
+
+  @override
+  String get menuFieldDetail => '상세 설명 (선택)';
+
+  @override
+  String get menuFieldRecommended => '추천 메뉴';
+
+  @override
+  String get menuFieldSoldOut => '품절';
+
+  @override
+  String get noticeCreateTitle => '공지 등록';
+
+  @override
+  String get noticeEditTitle => '공지 수정';
+
+  @override
+  String get noticeRemoveTitle => '공지를 내릴까요?';
+
+  @override
+  String noticeRemoveBody(String title) {
+    return '$title을(를) 알림 목록에서 지웁니다.';
+  }
+
+  @override
+  String get noticeRemoveAction => '공지 내리기';
+
+  @override
+  String get noticeFieldBody => '본문';
+
+  @override
+  String get noticeFieldBodyRequired => '본문을 입력해 주세요.';
+
+  @override
+  String get noticeFieldCategory => '분류';
+
+  @override
+  String get noticeFieldDate => '게시일';
+
+  @override
+  String get noticeFieldDateHelper => '최근 날짜일수록 목록 위에 보입니다.';
+
+  @override
+  String get noticeChooseDate => '날짜 선택';
+
+  @override
+  String get noticeFieldImportant => '중요 공지';
+
+  @override
+  String get noticeFieldImportantHelper => '목록에서 중요 뱃지를 붙입니다.';
+
+  @override
+  String get beanCreateTitle => '원두 등록';
+
+  @override
+  String get beanEditTitle => '원두 수정';
+
+  @override
+  String get beanRemoveTitle => '원두를 내릴까요?';
+
+  @override
+  String beanRemoveBody(String name) {
+    return '$name을(를) 카탈로그에서 지웁니다. 지난 주문 내역은 그대로 남습니다.';
+  }
+
+  @override
+  String get beanRemoveAction => '원두 내리기';
+
+  @override
+  String beanFieldRequired(String label) {
+    return '$label을(를) 입력해 주세요.';
+  }
+
+  @override
+  String get beanFieldOriginLabel => '산지';
+
+  @override
+  String get beanFieldStory => '스토리';
+
+  @override
+  String get beanFieldRoastLevel => '로스팅 정도';
+
+  @override
+  String get beanFieldProcessLabel => '가공 방식';
+
+  @override
+  String get beanFieldProcessHelper => '워시드, 내추럴, 디카페인 등';
+
+  @override
+  String get beanFieldNotes => '테이스팅 노트';
+
+  @override
+  String get beanFieldNotesHelper => '쉼표로 구분 (예: 자몽, 자스민, 흑설탕)';
+
+  @override
+  String get beanFieldBrewsLabel => '추천 추출법';
+
+  @override
+  String get beanFieldBrewsHelper => '쉼표로 구분 (예: 핸드드립, 에스프레소)';
+
+  @override
+  String get beanFieldPrice200 => '200g 가격 (원)';
+
+  @override
+  String get beanFieldPrice500 => '500g 가격 (원)';
+
+  @override
+  String get beanFieldNewBadge => 'NEW 뱃지';
+
+  @override
+  String get catalogAdminTitle => '카탈로그 관리';
+
+  @override
+  String get catalogTabMenu => '메뉴';
+
+  @override
+  String get catalogAddMenu => '메뉴 등록';
+
+  @override
+  String get catalogTabBeans => '원두';
+
+  @override
+  String get catalogAddBean => '원두 등록';
+
+  @override
+  String get catalogTabBanners => '배너';
+
+  @override
+  String get catalogAddBanner => '배너 등록';
+
+  @override
+  String get catalogTabStores => '매장';
+
+  @override
+  String get catalogAddStore => '매장 등록';
+
+  @override
+  String get catalogTabNotices => '공지';
+
+  @override
+  String get catalogAddNotice => '공지 등록';
+
+  @override
+  String get catalogMenuEmpty => '등록된 메뉴가 없습니다.';
+
+  @override
+  String get catalogBeansEmpty => '등록된 원두가 없습니다.';
+
+  @override
+  String get catalogBannersLoadFailed => '배너를 불러오지 못했습니다.';
+
+  @override
+  String get catalogBannersEmpty => '등록된 배너가 없습니다.';
+
+  @override
+  String get catalogStoresEmpty => '등록된 매장이 없습니다.';
+
+  @override
+  String get catalogNoticesLoadFailed => '공지를 불러오지 못했습니다.';
+
+  @override
+  String get catalogNoticesEmpty => '등록된 공지가 없습니다.';
+
+  @override
+  String catalogSoldOutFailed(String error) {
+    return '판매 상태를 바꾸지 못했습니다: $error';
+  }
+
+  @override
+  String catalogSoldOutPrefix(String subtitle) {
+    return '품절 · $subtitle';
   }
 }

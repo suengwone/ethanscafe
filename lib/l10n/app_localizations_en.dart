@@ -368,7 +368,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuFieldCategory => 'Category';
 
   @override
-  String get menuFieldPrice => 'Price';
+  String get menuFieldPrice => 'Price (₩)';
 
   @override
   String get menuFieldServingOptions => 'Served as';
@@ -2004,5 +2004,341 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String pointsPaidWithBonus(String amount, String bonus) {
     return 'Paid ₩$amount · bonus +${bonus}P';
+  }
+
+  @override
+  String adminSaveFailed(String error) {
+    return 'Could not save: $error';
+  }
+
+  @override
+  String adminRemoveFailed(String error) {
+    return 'Could not take it down: $error';
+  }
+
+  @override
+  String get adminSortOrder => 'Sort order';
+
+  @override
+  String get adminSortOrderHelper => 'Lower numbers come first.';
+
+  @override
+  String get adminCreate => 'Create';
+
+  @override
+  String get adminSave => 'Save';
+
+  @override
+  String get adminFieldTitle => 'Title';
+
+  @override
+  String get adminFieldTitleRequired => 'Enter a title.';
+
+  @override
+  String get adminFieldDescription => 'Description';
+
+  @override
+  String get adminFieldIcon => 'Icon';
+
+  @override
+  String get adminFieldName => 'Name';
+
+  @override
+  String get adminFieldNameRequired => 'Enter a name.';
+
+  @override
+  String get adminPriceInvalid => 'Enter the price as a number.';
+
+  @override
+  String get bannerCreateTitle => 'New banner';
+
+  @override
+  String get bannerEditTitle => 'Edit banner';
+
+  @override
+  String get bannerRemoveTitle => 'Take this banner down?';
+
+  @override
+  String bannerRemoveBody(String title) {
+    return 'This removes $title from the home tab.';
+  }
+
+  @override
+  String get bannerRemoveAction => 'Take it down';
+
+  @override
+  String get storeCreateTitle => 'New store';
+
+  @override
+  String get storeEditTitle => 'Edit store';
+
+  @override
+  String get storeRemoveTitle => 'Take this store down?';
+
+  @override
+  String storeRemoveBody(String name) {
+    return 'This removes $name from Find a store.';
+  }
+
+  @override
+  String get storeRemoveAction => 'Take it down';
+
+  @override
+  String get storeFieldName => 'Store name';
+
+  @override
+  String get storeFieldNameRequired => 'Enter the store name.';
+
+  @override
+  String get storeFieldAddress => 'Address';
+
+  @override
+  String get storeFieldPhone => 'Phone';
+
+  @override
+  String get storeFieldLatitude => 'Latitude';
+
+  @override
+  String get storeFieldLongitude => 'Longitude';
+
+  @override
+  String get storeFieldWeekdayHours => 'Weekday hours';
+
+  @override
+  String get storeFieldWeekendHours => 'Weekend hours';
+
+  @override
+  String get storeFieldFacilities => 'Facilities';
+
+  @override
+  String get storeFieldFacilitiesHelper =>
+      'Comma separated, e.g. two hours free parking, terrace';
+
+  @override
+  String get storeFieldNotice => 'Store notice';
+
+  @override
+  String get storeFieldNoticeHelper =>
+      'Sits at the top of the store page. Leave it empty to hide it.';
+
+  @override
+  String get storeFieldCongestion => 'How busy it is now';
+
+  @override
+  String storeCongestionHelper(int hours) {
+    return 'After $hours hours this is hidden and the count of orders in progress takes over.';
+  }
+
+  @override
+  String storeNumberInvalid(String label, String range) {
+    return 'Enter $label as a number between $range.';
+  }
+
+  @override
+  String get menuCreateTitle => 'New menu item';
+
+  @override
+  String get menuEditTitle => 'Edit menu item';
+
+  @override
+  String get menuRemoveTitle => 'Take this item down?';
+
+  @override
+  String menuRemoveBody(String name) {
+    return 'This removes $name from the catalogue. Past orders stay as they are.';
+  }
+
+  @override
+  String get menuRemoveAction => 'Take it down';
+
+  @override
+  String get menuFieldCategoryLabel => 'Category';
+
+  @override
+  String get menuFieldPriceFrom => 'Show the price as a starting price';
+
+  @override
+  String get menuFieldPriceFromHelper =>
+      'For items where options push the price up';
+
+  @override
+  String get menuFieldBadge => 'Badge';
+
+  @override
+  String get menuBadgeNone => 'None';
+
+  @override
+  String get menuFieldDetail => 'Long description (optional)';
+
+  @override
+  String get menuFieldRecommended => 'Recommended';
+
+  @override
+  String get menuFieldSoldOut => 'Sold out';
+
+  @override
+  String get noticeCreateTitle => 'New notice';
+
+  @override
+  String get noticeEditTitle => 'Edit notice';
+
+  @override
+  String get noticeRemoveTitle => 'Take this notice down?';
+
+  @override
+  String noticeRemoveBody(String title) {
+    return 'This removes $title from the notification list.';
+  }
+
+  @override
+  String get noticeRemoveAction => 'Take it down';
+
+  @override
+  String get noticeFieldBody => 'Body';
+
+  @override
+  String get noticeFieldBodyRequired => 'Enter the body text.';
+
+  @override
+  String get noticeFieldCategory => 'Category';
+
+  @override
+  String get noticeFieldDate => 'Publish date';
+
+  @override
+  String get noticeFieldDateHelper => 'Later dates show higher in the list.';
+
+  @override
+  String get noticeChooseDate => 'Choose a date';
+
+  @override
+  String get noticeFieldImportant => 'Important';
+
+  @override
+  String get noticeFieldImportantHelper =>
+      'Adds an Important badge in the list.';
+
+  @override
+  String get beanCreateTitle => 'New bean';
+
+  @override
+  String get beanEditTitle => 'Edit bean';
+
+  @override
+  String get beanRemoveTitle => 'Take this bean down?';
+
+  @override
+  String beanRemoveBody(String name) {
+    return 'This removes $name from the catalogue. Past orders stay as they are.';
+  }
+
+  @override
+  String get beanRemoveAction => 'Take it down';
+
+  @override
+  String beanFieldRequired(String label) {
+    return 'Enter $label.';
+  }
+
+  @override
+  String get beanFieldOriginLabel => 'Origin';
+
+  @override
+  String get beanFieldStory => 'Story';
+
+  @override
+  String get beanFieldRoastLevel => 'Roast level';
+
+  @override
+  String get beanFieldProcessLabel => 'Process';
+
+  @override
+  String get beanFieldProcessHelper => 'Washed, natural, decaf and so on';
+
+  @override
+  String get beanFieldNotes => 'Tasting notes';
+
+  @override
+  String get beanFieldNotesHelper =>
+      'Comma separated, e.g. grapefruit, jasmine, brown sugar';
+
+  @override
+  String get beanFieldBrewsLabel => 'Brew methods';
+
+  @override
+  String get beanFieldBrewsHelper =>
+      'Comma separated, e.g. hand drip, espresso';
+
+  @override
+  String get beanFieldPrice200 => '200g price (₩)';
+
+  @override
+  String get beanFieldPrice500 => '500g price (₩)';
+
+  @override
+  String get beanFieldNewBadge => 'NEW badge';
+
+  @override
+  String get catalogAdminTitle => 'Catalogue';
+
+  @override
+  String get catalogTabMenu => 'Menu';
+
+  @override
+  String get catalogAddMenu => 'New menu item';
+
+  @override
+  String get catalogTabBeans => 'Beans';
+
+  @override
+  String get catalogAddBean => 'New bean';
+
+  @override
+  String get catalogTabBanners => 'Banners';
+
+  @override
+  String get catalogAddBanner => 'New banner';
+
+  @override
+  String get catalogTabStores => 'Stores';
+
+  @override
+  String get catalogAddStore => 'New store';
+
+  @override
+  String get catalogTabNotices => 'Notices';
+
+  @override
+  String get catalogAddNotice => 'New notice';
+
+  @override
+  String get catalogMenuEmpty => 'No menu items yet.';
+
+  @override
+  String get catalogBeansEmpty => 'No beans yet.';
+
+  @override
+  String get catalogBannersLoadFailed => 'Could not load the banners.';
+
+  @override
+  String get catalogBannersEmpty => 'No banners yet.';
+
+  @override
+  String get catalogStoresEmpty => 'No stores yet.';
+
+  @override
+  String get catalogNoticesLoadFailed => 'Could not load the notices.';
+
+  @override
+  String get catalogNoticesEmpty => 'No notices yet.';
+
+  @override
+  String catalogSoldOutFailed(String error) {
+    return 'Could not change availability: $error';
+  }
+
+  @override
+  String catalogSoldOutPrefix(String subtitle) {
+    return 'Sold out · $subtitle';
   }
 }

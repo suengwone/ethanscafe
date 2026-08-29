@@ -168,7 +168,7 @@
   "menuSectionOptions": "옵션 안내",
   "menuSectionDetails": "상세 정보",
   "menuFieldCategory": "카테고리",
-  "menuFieldPrice": "가격",
+  "menuFieldPrice": "가격 (원)",
   "menuFieldServingOptions": "제공 옵션",
   "menuNotFound": "메뉴를 찾을 수 없습니다: {menuId}",
   "@menuNotFound": {
@@ -1342,6 +1342,195 @@
         "type": "String"
       },
       "bonus": {
+        "type": "String"
+      }
+    }
+  },
+  "adminSaveFailed": "저장하지 못했습니다: {error}",
+  "@adminSaveFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "adminRemoveFailed": "내리지 못했습니다: {error}",
+  "@adminRemoveFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "adminSortOrder": "노출 순서",
+  "adminSortOrderHelper": "작을수록 먼저 보입니다.",
+  "adminCreate": "등록",
+  "adminSave": "저장",
+  "adminFieldTitle": "제목",
+  "adminFieldTitleRequired": "제목을 입력해 주세요.",
+  "adminFieldDescription": "설명",
+  "adminFieldIcon": "아이콘",
+  "adminFieldName": "이름",
+  "adminFieldNameRequired": "이름을 입력해 주세요.",
+  "adminPriceInvalid": "가격을 숫자로 입력해 주세요.",
+  "bannerCreateTitle": "배너 등록",
+  "bannerEditTitle": "배너 수정",
+  "bannerRemoveTitle": "배너를 내릴까요?",
+  "bannerRemoveBody": "{title}을(를) 홈에서 지웁니다.",
+  "@bannerRemoveBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "bannerRemoveAction": "배너 내리기",
+  "storeCreateTitle": "매장 등록",
+  "storeEditTitle": "매장 수정",
+  "storeRemoveTitle": "매장을 내릴까요?",
+  "storeRemoveBody": "{name}을(를) 매장 찾기에서 지웁니다.",
+  "@storeRemoveBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storeRemoveAction": "매장 내리기",
+  "storeFieldName": "매장 이름",
+  "storeFieldNameRequired": "매장 이름을 입력해 주세요.",
+  "storeFieldAddress": "주소",
+  "storeFieldPhone": "전화번호",
+  "storeFieldLatitude": "위도",
+  "storeFieldLongitude": "경도",
+  "storeFieldWeekdayHours": "평일 영업시간",
+  "storeFieldWeekendHours": "주말 영업시간",
+  "storeFieldFacilities": "편의시설",
+  "storeFieldFacilitiesHelper": "쉼표로 구분 (예: 무료주차 2시간, 테라스)",
+  "storeFieldNotice": "매장 공지",
+  "storeFieldNoticeHelper": "매장 상세 맨 위에 걸립니다. 비우면 안 보입니다.",
+  "storeFieldCongestion": "현재 혼잡도",
+  "storeCongestionHelper": "고른 지 {hours}시간이 지나면 숨기고, 그때부터는 진행 중인 주문 수로 자동 집계한 값이 대신 뜹니다.",
+  "@storeCongestionHelper": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "storeNumberInvalid": "{label}를 {range} 사이 숫자로 입력해 주세요.",
+  "@storeNumberInvalid": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "menuCreateTitle": "메뉴 등록",
+  "menuEditTitle": "메뉴 수정",
+  "menuRemoveTitle": "메뉴를 내릴까요?",
+  "menuRemoveBody": "{name}을(를) 카탈로그에서 지웁니다. 지난 주문 내역은 그대로 남습니다.",
+  "@menuRemoveBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "menuRemoveAction": "메뉴 내리기",
+  "menuFieldCategoryLabel": "카테고리",
+  "menuFieldPriceFrom": "가격 뒤에 ~ 붙이기",
+  "menuFieldPriceFromHelper": "옵션에 따라 가격이 올라가는 메뉴",
+  "menuFieldBadge": "뱃지",
+  "menuBadgeNone": "없음",
+  "menuFieldDetail": "상세 설명 (선택)",
+  "menuFieldRecommended": "추천 메뉴",
+  "menuFieldSoldOut": "품절",
+  "noticeCreateTitle": "공지 등록",
+  "noticeEditTitle": "공지 수정",
+  "noticeRemoveTitle": "공지를 내릴까요?",
+  "noticeRemoveBody": "{title}을(를) 알림 목록에서 지웁니다.",
+  "@noticeRemoveBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "noticeRemoveAction": "공지 내리기",
+  "noticeFieldBody": "본문",
+  "noticeFieldBodyRequired": "본문을 입력해 주세요.",
+  "noticeFieldCategory": "분류",
+  "noticeFieldDate": "게시일",
+  "noticeFieldDateHelper": "최근 날짜일수록 목록 위에 보입니다.",
+  "noticeChooseDate": "날짜 선택",
+  "noticeFieldImportant": "중요 공지",
+  "noticeFieldImportantHelper": "목록에서 중요 뱃지를 붙입니다.",
+  "beanCreateTitle": "원두 등록",
+  "beanEditTitle": "원두 수정",
+  "beanRemoveTitle": "원두를 내릴까요?",
+  "beanRemoveBody": "{name}을(를) 카탈로그에서 지웁니다. 지난 주문 내역은 그대로 남습니다.",
+  "@beanRemoveBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "beanRemoveAction": "원두 내리기",
+  "beanFieldRequired": "{label}을(를) 입력해 주세요.",
+  "@beanFieldRequired": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "beanFieldOriginLabel": "산지",
+  "beanFieldStory": "스토리",
+  "beanFieldRoastLevel": "로스팅 정도",
+  "beanFieldProcessLabel": "가공 방식",
+  "beanFieldProcessHelper": "워시드, 내추럴, 디카페인 등",
+  "beanFieldNotes": "테이스팅 노트",
+  "beanFieldNotesHelper": "쉼표로 구분 (예: 자몽, 자스민, 흑설탕)",
+  "beanFieldBrewsLabel": "추천 추출법",
+  "beanFieldBrewsHelper": "쉼표로 구분 (예: 핸드드립, 에스프레소)",
+  "beanFieldPrice200": "200g 가격 (원)",
+  "beanFieldPrice500": "500g 가격 (원)",
+  "beanFieldNewBadge": "NEW 뱃지",
+  "catalogAdminTitle": "카탈로그 관리",
+  "catalogTabMenu": "메뉴",
+  "catalogAddMenu": "메뉴 등록",
+  "catalogTabBeans": "원두",
+  "catalogAddBean": "원두 등록",
+  "catalogTabBanners": "배너",
+  "catalogAddBanner": "배너 등록",
+  "catalogTabStores": "매장",
+  "catalogAddStore": "매장 등록",
+  "catalogTabNotices": "공지",
+  "catalogAddNotice": "공지 등록",
+  "catalogMenuEmpty": "등록된 메뉴가 없습니다.",
+  "catalogBeansEmpty": "등록된 원두가 없습니다.",
+  "catalogBannersLoadFailed": "배너를 불러오지 못했습니다.",
+  "catalogBannersEmpty": "등록된 배너가 없습니다.",
+  "catalogStoresEmpty": "등록된 매장이 없습니다.",
+  "catalogNoticesLoadFailed": "공지를 불러오지 못했습니다.",
+  "catalogNoticesEmpty": "등록된 공지가 없습니다.",
+  "catalogSoldOutFailed": "판매 상태를 바꾸지 못했습니다: {error}",
+  "@catalogSoldOutFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogSoldOutPrefix": "품절 · {subtitle}",
+  "@catalogSoldOutPrefix": {
+    "placeholders": {
+      "subtitle": {
         "type": "String"
       }
     }

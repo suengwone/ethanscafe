@@ -104,7 +104,9 @@ class _BeanEditScreenState extends ConsumerState<BeanEditScreen> {
       if (mounted) {
         setState(() => _busy = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('저장하지 못했습니다: $e')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).adminSaveFailed('$e')),
+          ),
         );
       }
     }
@@ -118,16 +120,16 @@ class _BeanEditScreenState extends ConsumerState<BeanEditScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('원두를 내릴까요?'),
-        content: Text('${bean.name}을(를) 카탈로그에서 지웁니다. 지난 주문 내역은 그대로 남습니다.'),
+        title: Text(AppLocalizations.of(context).beanRemoveTitle),
+        content: Text(AppLocalizations.of(context).beanRemoveBody(bean.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('닫기'),
+            child: Text(AppLocalizations.of(context).commonClose),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('원두 내리기'),
+            child: Text(AppLocalizations.of(context).beanRemoveAction),
           ),
         ],
       ),
@@ -145,7 +147,9 @@ class _BeanEditScreenState extends ConsumerState<BeanEditScreen> {
       if (mounted) {
         setState(() => _busy = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('내리지 못했습니다: $e')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).adminRemoveFailed('$e')),
+          ),
         );
       }
     }
@@ -165,7 +169,9 @@ class _BeanEditScreenState extends ConsumerState<BeanEditScreen> {
         decoration: InputDecoration(labelText: label, helperText: helperText),
         maxLines: maxLines,
         validator: required
-            ? (value) => (value ?? '').trim().isEmpty ? '$label을(를) 입력해 주세요.' : null
+            ? (value) => (value ?? '').trim().isEmpty
+                  ? AppLocalizations.of(context).beanFieldRequired(label)
+                  : null
             : null,
       ),
     );
@@ -182,7 +188,7 @@ class _BeanEditScreenState extends ConsumerState<BeanEditScreen> {
         validator: (value) {
           final price = int.tryParse((value ?? '').trim());
           if (price == null || price < 0) {
-            return '가격을 숫자로 입력해 주세요.';
+            return AppLocalizations.of(context).adminPriceInvalid;
           }
           return null;
         },
@@ -191,11 +197,7 @@ class _BeanEditScreenState extends ConsumerState<BeanEditScreen> {
   }
 
   /// 산미·바디·단맛은 상세 화면에서 5칸 막대로 보여주므로 1~5로 받는다.
-  Widget _profileSlider(
-    String label,
-    int value,
-    ValueChanged<int> onChanged,
-  ) {
+  Widget _profileSlider(String label, int value, ValueChanged<int> onChanged) {
     return Row(
       children: [
         SizedBox(width: 52, child: Text(label)),
@@ -218,12 +220,16 @@ class _BeanEditScreenState extends ConsumerState<BeanEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isCreating ? '원두 등록' : '원두 수정'),
+        title: Text(
+          _isCreating
+              ? AppLocalizations.of(context).beanCreateTitle
+              : AppLocalizations.of(context).beanEditTitle,
+        ),
         actions: [
           if (!_isCreating)
             IconButton(
               onPressed: _busy ? null : _delete,
-              tooltip: '원두 내리기',
+              tooltip: AppLocalizations.of(context).beanRemoveAction,
               icon: const Icon(Icons.delete_outline),
             ),
         ],
@@ -233,53 +239,98 @@ class _BeanEditScreenState extends ConsumerState<BeanEditScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            _textField('name', '이름', required: true),
-            _textField('origin', '산지', required: true),
-            _textField('description', '설명', maxLines: 2),
-            _textField('story', '스토리', maxLines: 3),
+            _textField(
+              'name',
+              AppLocalizations.of(context).adminFieldName,
+              required: true,
+            ),
+            _textField(
+              'origin',
+              AppLocalizations.of(context).beanFieldOriginLabel,
+              required: true,
+            ),
+            _textField(
+              'description',
+              AppLocalizations.of(context).adminFieldDescription,
+              maxLines: 2,
+            ),
+            _textField(
+              'story',
+              AppLocalizations.of(context).beanFieldStory,
+              maxLines: 3,
+            ),
             DropdownButtonFormField<RoastLevel>(
               initialValue: _roastLevel,
-              decoration: const InputDecoration(labelText: '로스팅 정도'),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).beanFieldRoastLevel,
+              ),
               items: [
                 for (final level in RoastLevel.values)
                   DropdownMenuItem(
                     value: level,
-                    child: Text(AppLocalizations.of(context).roastLevelLabel(level)),
+                    child: Text(
+                      AppLocalizations.of(context).roastLevelLabel(level),
+                    ),
                   ),
               ],
-              onChanged: (value) => setState(
-                () => _roastLevel = value ?? _roastLevel,
-              ),
+              onChanged: (value) =>
+                  setState(() => _roastLevel = value ?? _roastLevel),
             ),
             const SizedBox(height: 12),
-            _textField('process', '가공 방식', helperText: '워시드, 내추럴, 디카페인 등'),
+            _textField(
+              'process',
+              AppLocalizations.of(context).beanFieldProcessLabel,
+              helperText: AppLocalizations.of(context).beanFieldProcessHelper,
+            ),
             _textField(
               'tastingNotes',
-              '테이스팅 노트',
-              helperText: '쉼표로 구분 (예: 자몽, 자스민, 흑설탕)',
+              AppLocalizations.of(context).beanFieldNotes,
+              helperText: AppLocalizations.of(context).beanFieldNotesHelper,
             ),
             _textField(
               'recommendedBrews',
-              '추천 추출법',
-              helperText: '쉼표로 구분 (예: 핸드드립, 에스프레소)',
+              AppLocalizations.of(context).beanFieldBrewsLabel,
+              helperText: AppLocalizations.of(context).beanFieldBrewsHelper,
             ),
             const SizedBox(height: 4),
-            _profileSlider('산미', _acidity, (v) => setState(() => _acidity = v)),
-            _profileSlider('바디', _body, (v) => setState(() => _body = v)),
-            _profileSlider('단맛', _sweetness, (v) => setState(() => _sweetness = v)),
+            _profileSlider(
+              AppLocalizations.of(context).beanProfileAcidity,
+              _acidity,
+              (v) => setState(() => _acidity = v),
+            ),
+            _profileSlider(
+              AppLocalizations.of(context).beanProfileBody,
+              _body,
+              (v) => setState(() => _body = v),
+            ),
+            _profileSlider(
+              AppLocalizations.of(context).beanProfileSweetness,
+              _sweetness,
+              (v) => setState(() => _sweetness = v),
+            ),
             const SizedBox(height: 12),
-            _priceField('price200', '200g 가격 (원)'),
-            _priceField('price500', '500g 가격 (원)'),
-            _textField('sortOrder', '노출 순서', helperText: '작을수록 먼저 보입니다.'),
+            _priceField(
+              'price200',
+              AppLocalizations.of(context).beanFieldPrice200,
+            ),
+            _priceField(
+              'price500',
+              AppLocalizations.of(context).beanFieldPrice500,
+            ),
+            _textField(
+              'sortOrder',
+              AppLocalizations.of(context).adminSortOrder,
+              helperText: AppLocalizations.of(context).adminSortOrderHelper,
+            ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('NEW 뱃지'),
+              title: Text(AppLocalizations.of(context).beanFieldNewBadge),
               value: _isNew,
               onChanged: (value) => setState(() => _isNew = value),
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('품절'),
+              title: Text(AppLocalizations.of(context).menuFieldSoldOut),
               value: _soldOut,
               onChanged: (value) => setState(() => _soldOut = value),
             ),
@@ -292,7 +343,11 @@ class _BeanEditScreenState extends ConsumerState<BeanEditScreen> {
                       height: 18,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : Text(_isCreating ? '등록' : '저장'),
+                  : Text(
+                      _isCreating
+                          ? AppLocalizations.of(context).adminCreate
+                          : AppLocalizations.of(context).adminSave,
+                    ),
             ),
           ],
         ),
