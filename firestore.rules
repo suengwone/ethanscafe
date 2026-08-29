@@ -38,6 +38,18 @@ service cloud.firestore {
       allow read, write: if isSignedIn() && request.auth.uid == userId;
     }
 
+    // 알림함. 새 알림은 서버 트리거가 붙이고, 본인은 읽음 표시와 삭제만 한다.
+    // 돈이 걸린 값이 아니라 본인 쓰기를 굳이 막지 않되, 서버가 지키는 상한(50건)은
+    // 규칙에서도 지킨다. 문서가 1MiB를 넘으면 서버 쓰기가 조용히 실패해
+    // 그 사람만 새 알림을 못 받게 되기 때문이다.
+    match /notifications/{userId} {
+      allow read: if isSignedIn() && request.auth.uid == userId;
+      allow write: if isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.items is list
+        && request.resource.data.items.size() <= 50;
+    }
+
     match /fcmTokens/{userId} {
       allow read, write: if isSignedIn() && request.auth.uid == userId;
     }

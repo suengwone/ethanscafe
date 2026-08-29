@@ -126,3 +126,29 @@ test('충전 내역은 본인이 읽기만 한다', async () => {
     }),
   );
 });
+
+test('알림함은 본인만 읽고 쓰되 50건을 넘기지 못한다', async () => {
+  const items = (count) =>
+    Array.from({length: count}, (_, index) => ({id: `n${index}`}));
+  const mine = 'notifications/me';
+
+  await assertSucceeds(
+    setDoc(doc(user(env, 'me').firestore(), mine), {items: items(50)}),
+  );
+  await assertSucceeds(getDoc(doc(user(env, 'me').firestore(), mine)));
+
+  // 문서를 부풀려 서버 쓰기를 막지 못하게 상한을 규칙에서도 지킨다.
+  await assertFails(
+    setDoc(doc(user(env, 'me').firestore(), mine), {items: items(51)}),
+  );
+  // 알림함 모양이 아닌 문서도 막는다.
+  await assertFails(
+    setDoc(doc(user(env, 'me').firestore(), mine), {value: 1}),
+  );
+
+  await assertFails(getDoc(doc(user(env, 'other').firestore(), mine)));
+  await assertFails(
+    setDoc(doc(user(env, 'other').firestore(), mine), {items: []}),
+  );
+  await assertFails(getDoc(doc(guest(env).firestore(), mine)));
+});
