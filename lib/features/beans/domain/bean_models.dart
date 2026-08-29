@@ -2,17 +2,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'bean_models.freezed.dart';
 
-enum RoastLevel {
-  light('라이트'),
-  mediumLight('미디엄 라이트'),
-  medium('미디엄'),
-  mediumDark('미디엄 다크'),
-  dark('다크');
-
-  const RoastLevel(this.label);
-
-  final String label;
-}
+/// 이름은 `bean_labels.dart`의 확장이 l10n에서 꺼내 온다.
+enum RoastLevel { light, mediumLight, medium, mediumDark, dark }
 
 enum BeanWeight {
   g200('200g'),
@@ -23,18 +14,8 @@ enum BeanWeight {
   final String label;
 }
 
-enum GrindOption {
-  wholeBean('홀빈', '분쇄하지 않은 원두 그대로'),
-  espresso('에스프레소', '가정용 에스프레소 머신용'),
-  mokaPot('모카포트', '모카포트 추출용'),
-  handDrip('핸드드립', '푸어오버·드리퍼용'),
-  frenchPress('프렌치프레스', '침출식 추출용');
-
-  const GrindOption(this.label, this.description);
-
-  final String label;
-  final String description;
-}
+/// 이름과 설명은 `bean_labels.dart`의 확장이 l10n에서 꺼내 온다.
+enum GrindOption { wholeBean, espresso, mokaPot, handDrip, frenchPress }
 
 @freezed
 abstract class Bean with _$Bean {

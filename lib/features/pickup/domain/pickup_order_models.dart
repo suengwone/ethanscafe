@@ -10,15 +10,11 @@ const pickupOrderPointsUseDescription = '픽업 주문 포인트 사용';
 const pickupOrderCancelDescription = '픽업 주문 취소';
 
 enum PickupOrderStatus {
-  received('주문 접수'),
-  preparing('제조 중'),
-  ready('픽업 대기'),
-  pickedUp('픽업 완료'),
-  cancelled('주문 취소');
-
-  const PickupOrderStatus(this.label);
-
-  final String label;
+  received,
+  preparing,
+  ready,
+  pickedUp,
+  cancelled;
 }
 
 const pickupOrderProgressSteps = [

@@ -6,6 +6,9 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../features/beans/presentation/bean_labels.dart';
+import '../../../features/subscription/presentation/subscription_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/subscription_models.dart';
 import 'subscription_providers.dart';
 
@@ -20,19 +23,21 @@ class SubscriptionListScreen extends ConsumerWidget {
     final subscriptionsState = ref.watch(beanSubscriptionsControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('원두 정기구독')),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).subscriptionListTitle),
+      ),
       body: subscriptionsState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('구독 정보를 불러오지 못했습니다.'),
+              Text(AppLocalizations.of(context).subscriptionLoadFailed),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () =>
                     ref.invalidate(beanSubscriptionsControllerProvider),
-                child: const Text('다시 시도'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -65,19 +70,19 @@ class _EmptySubscriptions extends StatelessWidget {
           Icon(LucideIcons.repeat, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text(
-            '구독 중인 원두가 없어요',
+            AppLocalizations.of(context).subscriptionEmptyTitle,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           Text(
-            '원두 상세에서 정기구독을 시작하면 주기마다 배송해 드려요.',
+            AppLocalizations.of(context).subscriptionEmptyDetail,
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: 16),
           FilledButton.icon(
             onPressed: () => context.go('/menu'),
             icon: const Icon(LucideIcons.bean, size: 18),
-            label: const Text('원두 보러 가기'),
+            label: Text(AppLocalizations.of(context).subscriptionBrowse),
           ),
         ],
       ),
@@ -94,21 +99,23 @@ class _SubscriptionCard extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('구독 해지'),
+        title: Text(AppLocalizations.of(context).subscriptionCancelTitle),
         content: Text(
-          '${subscription.beanName} 정기구독을 해지할까요?\n해지 후에는 배송이 중단됩니다.',
+          AppLocalizations.of(
+            context,
+          ).subscriptionCancelConfirm(subscription.beanName),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('취소'),
+            child: Text(AppLocalizations.of(context).commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.error,
             ),
-            child: const Text('해지하기'),
+            child: Text(AppLocalizations.of(context).subscriptionCancelAction),
           ),
         ],
       ),
@@ -123,7 +130,13 @@ class _SubscriptionCard extends ConsumerWidget {
       return;
     }
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${subscription.beanName} 구독이 해지되었습니다.')),
+      SnackBar(
+        content: Text(
+          AppLocalizations.of(
+            context,
+          ).subscriptionCancelled(subscription.beanName),
+        ),
+      ),
     );
   }
 
@@ -167,7 +180,8 @@ class _SubscriptionCard extends ConsumerWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${subscription.optionLabel} · ${subscription.cycleLabel}',
+                        '${AppLocalizations.of(context).beanOption(subscription.weight, subscription.grind)} · '
+                        '${AppLocalizations.of(context).subscriptionCycleQuantity(AppLocalizations.of(context).subscriptionCycleLabel(subscription.cycle), subscription.quantity)}',
                         style: textTheme.bodySmall,
                       ),
                     ],
@@ -184,14 +198,20 @@ class _SubscriptionCard extends ConsumerWidget {
                 Expanded(
                   child: Text(
                     subscription.isCancelled
-                        ? '구독 시작 ${_dateFormat.format(subscription.createdAt)}'
-                        : '다음 배송 ${_dateFormat.format(subscription.nextDeliveryDate)}',
+                        ? AppLocalizations.of(context).subscriptionStartedOn(
+                            _dateFormat.format(subscription.createdAt),
+                          )
+                        : AppLocalizations.of(context).subscriptionNextDelivery(
+                            _dateFormat.format(subscription.nextDeliveryDate),
+                          ),
                     style: textTheme.bodySmall,
                   ),
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  '회당 ${_priceFormat.format(subscription.pricePerDelivery)}원',
+                  AppLocalizations.of(context).subscriptionPricePerDelivery(
+                    _priceFormat.format(subscription.pricePerDelivery),
+                  ),
                   style: textTheme.labelLarge,
                 ),
               ],
@@ -211,7 +231,11 @@ class _SubscriptionCard extends ConsumerWidget {
                             : LucideIcons.pause,
                         size: 15,
                       ),
-                      label: Text(subscription.isPaused ? '구독 재개' : '일시정지'),
+                      label: Text(
+                        subscription.isPaused
+                            ? AppLocalizations.of(context).subscriptionResume
+                            : AppLocalizations.of(context).subscriptionPause,
+                      ),
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(color: context.palette.accent),
                         foregroundColor: context.palette.accentSoft,
@@ -223,10 +247,11 @@ class _SubscriptionCard extends ConsumerWidget {
                     child: OutlinedButton.icon(
                       onPressed: () => _cancel(context, ref),
                       icon: const Icon(LucideIcons.x, size: 15),
-                      label: const Text('해지하기'),
+                      label: Text(
+                        AppLocalizations.of(context).subscriptionCancelAction,
+                      ),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor:
-                            Theme.of(context).colorScheme.error,
+                        foregroundColor: Theme.of(context).colorScheme.error,
                       ),
                     ),
                   ),
@@ -255,13 +280,13 @@ class _SubscriptionStatusChip extends StatelessWidget {
         border: Border.all(color: context.palette.border),
       ),
       child: Text(
-        status.label,
+        AppLocalizations.of(context).subscriptionStatusLabel(status),
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: status == SubscriptionStatus.cancelled
-                  ? context.palette.muted
-                  : context.palette.accentSoft,
-              fontWeight: FontWeight.w600,
-            ),
+          color: status == SubscriptionStatus.cancelled
+              ? context.palette.muted
+              : context.palette.accentSoft,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

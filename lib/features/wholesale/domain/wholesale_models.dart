@@ -6,13 +6,9 @@ part 'wholesale_models.freezed.dart';
 part 'wholesale_models.g.dart';
 
 enum WholesaleQuoteStatus {
-  requested('견적 확인 중'),
-  quoted('견적서 발송'),
-  confirmed('주문 확정');
-
-  const WholesaleQuoteStatus(this.label);
-
-  final String label;
+  requested,
+  quoted,
+  confirmed;
 }
 
 @freezed

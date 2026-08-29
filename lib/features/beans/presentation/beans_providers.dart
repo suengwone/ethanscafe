@@ -23,6 +23,6 @@ final beanProvider = FutureProvider.family<Bean, String>((ref, beanId) async {
   final beans = await ref.watch(beansProvider.future);
   return beans.firstWhere(
     (bean) => bean.id == beanId,
-    orElse: () => throw StateError('원두를 찾을 수 없습니다: $beanId'),
+    orElse: () => throw StateError('Bean not found: $beanId'),
   );
 });

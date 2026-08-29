@@ -7,6 +7,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
+import '../../../features/beans/presentation/bean_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/login_required.dart';
 import '../../review/presentation/product_review_section.dart';
 import '../../subscription/presentation/bean_subscribe_sheet.dart';
@@ -28,7 +30,7 @@ class BeanDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('원두 상세'),
+        title: Text(AppLocalizations.of(context).beanDetailTitle),
         actions: const [BeanCartButton(), SizedBox(width: 4)],
       ),
       body: beanState.when(
@@ -37,11 +39,11 @@ class BeanDetailScreen extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('원두 정보를 불러오지 못했습니다.'),
+              Text(AppLocalizations.of(context).beansLoadFailed),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.invalidate(beanProvider(beanId)),
-                child: const Text('다시 시도'),
+                child: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ),
@@ -147,7 +149,9 @@ class _HeaderSection extends StatelessWidget {
                 _InfoChip(icon: LucideIcons.mapPin, label: bean.origin),
                 _InfoChip(
                   icon: LucideIcons.flame,
-                  label: '${bean.roastLevel.label} 로스팅',
+                  label: AppLocalizations.of(context).beanRoastBadge(
+                    AppLocalizations.of(context).roastLevelLabel(bean.roastLevel),
+                  ),
                 ),
                 _InfoChip(icon: LucideIcons.droplets, label: bean.process),
               ],
@@ -197,7 +201,7 @@ class _TastingNotesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _SectionCard(
-      title: '향미 노트',
+      title: AppLocalizations.of(context).beanSectionNotes,
       child: Wrap(
         spacing: 8,
         runSpacing: 8,
@@ -235,14 +239,14 @@ class _FlavorProfileSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _SectionCard(
-      title: '테이스팅 프로필',
+      title: AppLocalizations.of(context).beanSectionProfile,
       child: Column(
         children: [
-          _ProfileRow(label: '산미', level: bean.acidity),
+          _ProfileRow(label: AppLocalizations.of(context).beanProfileAcidity, level: bean.acidity),
           const SizedBox(height: 12),
-          _ProfileRow(label: '바디', level: bean.body),
+          _ProfileRow(label: AppLocalizations.of(context).beanProfileBody, level: bean.body),
           const SizedBox(height: 12),
-          _ProfileRow(label: '단맛', level: bean.sweetness),
+          _ProfileRow(label: AppLocalizations.of(context).beanProfileSweetness, level: bean.sweetness),
         ],
       ),
     );
@@ -297,7 +301,7 @@ class _StorySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _SectionCard(
-      title: '원두 이야기',
+      title: AppLocalizations.of(context).beanSectionStory,
       child: Text(
         bean.story.keepWord,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.6),
@@ -314,18 +318,26 @@ class _InfoSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _SectionCard(
-      title: '상세 정보',
+      title: AppLocalizations.of(context).beanSectionDetails,
       child: Column(
         children: [
-          _InfoRow(label: '원산지', value: bean.origin),
-          _InfoRow(label: '가공 방식', value: bean.process),
-          _InfoRow(label: '로스팅', value: bean.roastLevel.label),
-          _InfoRow(label: '추천 추출', value: bean.recommendedBrews.join(' · ')),
+          _InfoRow(label: AppLocalizations.of(context).beanFieldOrigin, value: bean.origin),
+          _InfoRow(label: AppLocalizations.of(context).beanFieldProcess, value: bean.process),
           _InfoRow(
-            label: '가격',
+            label: AppLocalizations.of(context).beanFieldRoast,
+            value: AppLocalizations.of(context).roastLevelLabel(bean.roastLevel),
+          ),
+          _InfoRow(
+            label: AppLocalizations.of(context).beanFieldBrews,
+            value: bean.recommendedBrews.join(' · '),
+          ),
+          _InfoRow(
+            label: AppLocalizations.of(context).beanFieldPrice,
             value:
-                '200g ${_priceFormat.format(bean.price200)}원 · '
-                '500g ${_priceFormat.format(bean.price500)}원',
+                AppLocalizations.of(context).beanPriceBoth(
+                  _priceFormat.format(bean.price200),
+                  _priceFormat.format(bean.price500),
+                ),
           ),
         ],
       ),
@@ -391,7 +403,7 @@ class BeanCartButton extends ConsumerWidget {
 
     return IconButton(
       onPressed: () => context.push('/menu/beans-cart'),
-      tooltip: '원두 장바구니',
+      tooltip: AppLocalizations.of(context).beanCartTooltip,
       icon: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -450,11 +462,11 @@ class _OrderBar extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '200g 기준',
+                      AppLocalizations.of(context).beansPricePer200g,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     Text(
-                      '${_priceFormat.format(bean.price200)}원',
+                      AppLocalizations.of(context).priceWon(_priceFormat.format(bean.price200)),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -466,7 +478,7 @@ class _OrderBar extends ConsumerWidget {
               ),
               IconButton(
                 onPressed: () => _openGift(context, ref),
-                tooltip: '선물하기',
+                tooltip: AppLocalizations.of(context).beanGiftTooltip,
                 icon: const Icon(LucideIcons.gift, size: 20),
                 style: IconButton.styleFrom(
                   side: BorderSide(color: context.palette.border),
@@ -478,7 +490,7 @@ class _OrderBar extends ConsumerWidget {
                 onPressed: () =>
                     showBeanSubscribeSheet(context, ref, bean: bean),
                 icon: const Icon(LucideIcons.repeat, size: 16),
-                label: const Text('구독'),
+                label: Text(AppLocalizations.of(context).beanSubscribe),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 14,
@@ -493,7 +505,9 @@ class _OrderBar extends ConsumerWidget {
                 onPressed:
                     bean.soldOut ? null : () => _showOrderSheet(context, ref),
                 icon: const Icon(LucideIcons.shoppingBag, size: 18),
-                label: Text(bean.soldOut ? '품절' : '주문하기'),
+                label: Text(
+                  bean.soldOut ? AppLocalizations.of(context).beanSoldOut : AppLocalizations.of(context).beanOrder,
+                ),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -509,14 +523,22 @@ class _OrderBar extends ConsumerWidget {
   }
 
   void _openGift(BuildContext context, WidgetRef ref) {
-    if (!requireLogin(context, ref, message: '원두 선물하기는 로그인 후 이용할 수 있어요.')) {
+    if (!requireLogin(
+      context,
+      ref,
+      message: AppLocalizations.of(context).beanGiftRequiresSignIn,
+    )) {
       return;
     }
     context.push('/menu/beans/${bean.id}/gift');
   }
 
   Future<void> _showOrderSheet(BuildContext context, WidgetRef ref) async {
-    if (!requireLogin(context, ref, message: '원두 주문은 로그인 후 이용할 수 있어요.')) {
+    if (!requireLogin(
+      context,
+      ref,
+      message: AppLocalizations.of(context).beanOrderRequiresSignIn,
+    )) {
       return;
     }
 
@@ -543,9 +565,9 @@ class _OrderBar extends ConsumerWidget {
     if (result.action == BeanOrderAction.addToCart) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${bean.name}을(를) 장바구니에 담았습니다.'),
+          content: Text(AppLocalizations.of(context).beanAddedToCart(bean.name)),
           action: SnackBarAction(
-            label: '보기',
+            label: AppLocalizations.of(context).beanViewCart,
             onPressed: () => context.push('/menu/beans-cart'),
           ),
         ),
@@ -619,12 +641,15 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
             Text(widget.bean.name.keepWord, style: textTheme.titleLarge),
             const SizedBox(height: 4),
             Text(
-              '${widget.bean.origin} · ${widget.bean.roastLevel.label} 로스팅'
+              AppLocalizations.of(context).beansRoastOf(
+                    widget.bean.origin,
+                    AppLocalizations.of(context).roastLevelLabel(widget.bean.roastLevel),
+                  )
                   .keepWord,
               style: textTheme.bodySmall,
             ),
             const SizedBox(height: 20),
-            Text('용량', style: textTheme.titleSmall),
+            Text(AppLocalizations.of(context).beanFieldWeight, style: textTheme.titleSmall),
             const SizedBox(height: 8),
             Row(
               children: BeanWeight.values
@@ -646,7 +671,7 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
                   .toList(),
             ),
             const SizedBox(height: 20),
-            Text('분쇄도', style: textTheme.titleSmall),
+            Text(AppLocalizations.of(context).beanFieldGrind, style: textTheme.titleSmall),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -654,7 +679,7 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
               children: GrindOption.values
                   .map(
                     (grind) => ChoiceChip(
-                      label: Text(grind.label),
+                      label: Text(AppLocalizations.of(context).grindLabel(grind)),
                       selected: _grind == grind,
                       onSelected: (_) => setState(() => _grind = grind),
                       selectedColor: context.palette.accent.withValues(alpha: 0.25),
@@ -674,11 +699,14 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
                   .toList(),
             ),
             const SizedBox(height: 6),
-            Text(_grind.description.keepWord, style: textTheme.bodySmall),
+            Text(
+              AppLocalizations.of(context).grindDescription(_grind).keepWord,
+              style: textTheme.bodySmall,
+            ),
             const SizedBox(height: 20),
             Row(
               children: [
-                Text('수량', style: textTheme.titleSmall),
+                Text(AppLocalizations.of(context).beanFieldQuantity, style: textTheme.titleSmall),
                 const Spacer(),
                 _QuantityButton(
                   icon: LucideIcons.minus,
@@ -705,10 +733,10 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
             const SizedBox(height: 12),
             Row(
               children: [
-                Text('총 결제 금액', style: textTheme.bodyMedium),
+                Text(AppLocalizations.of(context).beanTotalPrice, style: textTheme.bodyMedium),
                 const Spacer(),
                 Text(
-                  '${_priceFormat.format(_totalPrice)}원',
+                  AppLocalizations.of(context).priceWon(_priceFormat.format(_totalPrice)),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -724,7 +752,7 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
                   child: OutlinedButton.icon(
                     onPressed: () => _pop(context, BeanOrderAction.addToCart),
                     icon: const Icon(LucideIcons.shoppingBag, size: 18),
-                    label: const Text('장바구니 담기'),
+                    label: Text(AppLocalizations.of(context).beanAddToCart),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       side: BorderSide(color: context.palette.accent),
@@ -739,7 +767,9 @@ class _BeanOrderSheetState extends State<BeanOrderSheet> {
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
-                    child: Text('${_priceFormat.format(_totalPrice)}원 주문'),
+                    child: Text(
+                      AppLocalizations.of(context).beanOrderForAmount(_priceFormat.format(_totalPrice)),
+                    ),
                   ),
                 ),
               ],
@@ -792,7 +822,7 @@ class _WeightOption extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '${_priceFormat.format(price)}원',
+              AppLocalizations.of(context).priceWon(_priceFormat.format(price)),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],

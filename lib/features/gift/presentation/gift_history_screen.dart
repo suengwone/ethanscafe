@@ -5,6 +5,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../features/beans/presentation/bean_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/gift_models.dart';
 import 'gift_providers.dart';
 
@@ -133,7 +135,8 @@ class _GiftCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    'To. ${gift.recipientName} · ${gift.recipientPhone} · ${gift.optionLabel}'
+                    'To. ${gift.recipientName} · ${gift.recipientPhone} · '
+                            '${AppLocalizations.of(context).beanOption(gift.weight, gift.grind)}'
                         .keepWord,
                     style: textTheme.bodySmall,
                   ),

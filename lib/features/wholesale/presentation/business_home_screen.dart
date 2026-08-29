@@ -6,6 +6,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../features/beans/presentation/bean_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/account_providers.dart';
 import '../../auth/presentation/auth_providers.dart';
 import '../domain/wholesale_models.dart';
@@ -345,7 +347,9 @@ class _WholesaleBeanCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '${bean.origin} · ${bean.roastLevel.label} · ${bean.process}'
+              '${bean.origin} · '
+                      '${AppLocalizations.of(context).roastLevelLabel(bean.roastLevel)} · '
+                      '${bean.process}'
                   .keepWord,
               style: textTheme.bodySmall,
             ),

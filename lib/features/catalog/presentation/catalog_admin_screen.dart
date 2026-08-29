@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../features/beans/presentation/bean_labels.dart';
 import '../../../features/menu/presentation/menu_labels.dart';
 import '../../../features/notice/presentation/notice_labels.dart';
 import '../../../l10n/app_localizations.dart';
@@ -124,13 +125,15 @@ class _BeanTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     return _CatalogList<Bean>(
       state: ref.watch(beansProvider),
       errorMessage: '원두를 불러오지 못했습니다.',
       emptyMessage: '등록된 원두가 없습니다.',
       onRetry: () => ref.invalidate(beansProvider),
       nameOf: (bean) => bean.name,
-      subtitleOf: (bean) => '${bean.origin} · ${bean.roastLevel.label}',
+      subtitleOf: (bean) =>
+          '${bean.origin} · ${l10n.roastLevelLabel(bean.roastLevel)}',
       soldOutOf: (bean) => bean.soldOut,
       onSoldOutChanged: (bean, soldOut) => ref
           .read(catalogAdminControllerProvider)

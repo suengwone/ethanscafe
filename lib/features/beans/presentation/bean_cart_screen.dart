@@ -6,6 +6,9 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../features/beans/presentation/bean_labels.dart';
+import '../../../features/order/presentation/order_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../coupon/domain/coupon_models.dart';
 import '../../coupon/presentation/coupon_select_sheet.dart';
 import '../../coupon/presentation/coupons_providers.dart';
@@ -155,7 +158,9 @@ class _FulfillmentCard extends ConsumerWidget {
                 Expanded(
                   child: _MethodChip(
                     icon: LucideIcons.truck,
-                    label: BeanFulfillmentMethod.delivery.label,
+                    label: AppLocalizations.of(context).fulfillmentLabel(
+                      BeanFulfillmentMethod.delivery,
+                    ),
                     selected: method == BeanFulfillmentMethod.delivery,
                     onTap: () => ref
                         .read(beanFulfillmentMethodProvider.notifier)
@@ -166,7 +171,7 @@ class _FulfillmentCard extends ConsumerWidget {
                 Expanded(
                   child: _MethodChip(
                     icon: LucideIcons.store,
-                    label: BeanFulfillmentMethod.pickup.label,
+                    label: AppLocalizations.of(context).fulfillmentLabel(BeanFulfillmentMethod.pickup),
                     selected: method == BeanFulfillmentMethod.pickup,
                     onTap: () => ref
                         .read(beanFulfillmentMethodProvider.notifier)
@@ -664,7 +669,10 @@ class _CartItemCard extends ConsumerWidget {
                     children: [
                       Text(item.bean.name.keepWord, style: textTheme.labelLarge),
                       const SizedBox(height: 3),
-                      Text(item.optionLabel, style: textTheme.bodySmall),
+                      Text(
+                        AppLocalizations.of(context).beanOption(item.weight, item.grind),
+                        style: textTheme.bodySmall,
+                      ),
                     ],
                   ),
                 ),
@@ -844,10 +852,12 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
         SnackBar(
           content: Text(
             order.earnedPoints > 0
-                ? '원두 주문이 접수되었습니다. ${_priceFormat.format(order.earnedPoints)}P가 적립됐어요.'
+                ? AppLocalizations.of(context).beanCartOrderedWithPoints(
+                    _priceFormat.format(order.earnedPoints),
+                  )
                 : method == BeanFulfillmentMethod.pickup
-                    ? '원두 주문이 접수되었습니다. 로스팅 후 매장에서 픽업하실 수 있어요.'
-                    : '원두 주문이 접수되었습니다. 로스팅 후 순차 발송됩니다.',
+                ? AppLocalizations.of(context).beanCartOrderedPickup
+                : AppLocalizations.of(context).beanCartOrderedDelivery,
           ),
         ),
       );

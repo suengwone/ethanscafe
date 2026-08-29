@@ -1147,6 +1147,1386 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'위치 권한이 없어 거리를 계산할 수 없습니다.'**
   String get storeLocationPermissionDenied;
+
+  /// No description provided for @roastLight.
+  ///
+  /// In ko, this message translates to:
+  /// **'라이트'**
+  String get roastLight;
+
+  /// No description provided for @roastMediumLight.
+  ///
+  /// In ko, this message translates to:
+  /// **'미디엄 라이트'**
+  String get roastMediumLight;
+
+  /// No description provided for @roastMedium.
+  ///
+  /// In ko, this message translates to:
+  /// **'미디엄'**
+  String get roastMedium;
+
+  /// No description provided for @roastMediumDark.
+  ///
+  /// In ko, this message translates to:
+  /// **'미디엄 다크'**
+  String get roastMediumDark;
+
+  /// No description provided for @roastDark.
+  ///
+  /// In ko, this message translates to:
+  /// **'다크'**
+  String get roastDark;
+
+  /// No description provided for @grindWholeBean.
+  ///
+  /// In ko, this message translates to:
+  /// **'홀빈'**
+  String get grindWholeBean;
+
+  /// No description provided for @grindWholeBeanNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'분쇄하지 않은 원두 그대로'**
+  String get grindWholeBeanNote;
+
+  /// No description provided for @grindEspresso.
+  ///
+  /// In ko, this message translates to:
+  /// **'에스프레소'**
+  String get grindEspresso;
+
+  /// No description provided for @grindEspressoNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'가정용 에스프레소 머신용'**
+  String get grindEspressoNote;
+
+  /// No description provided for @grindMokaPot.
+  ///
+  /// In ko, this message translates to:
+  /// **'모카포트'**
+  String get grindMokaPot;
+
+  /// No description provided for @grindMokaPotNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'모카포트 추출용'**
+  String get grindMokaPotNote;
+
+  /// No description provided for @grindHandDrip.
+  ///
+  /// In ko, this message translates to:
+  /// **'핸드드립'**
+  String get grindHandDrip;
+
+  /// No description provided for @grindHandDripNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'푸어오버·드리퍼용'**
+  String get grindHandDripNote;
+
+  /// No description provided for @grindFrenchPress.
+  ///
+  /// In ko, this message translates to:
+  /// **'프렌치프레스'**
+  String get grindFrenchPress;
+
+  /// No description provided for @grindFrenchPressNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'침출식 추출용'**
+  String get grindFrenchPressNote;
+
+  /// No description provided for @subscriptionCycleWeekly.
+  ///
+  /// In ko, this message translates to:
+  /// **'매주'**
+  String get subscriptionCycleWeekly;
+
+  /// No description provided for @subscriptionCycleBiweekly.
+  ///
+  /// In ko, this message translates to:
+  /// **'격주'**
+  String get subscriptionCycleBiweekly;
+
+  /// No description provided for @subscriptionCycleMonthly.
+  ///
+  /// In ko, this message translates to:
+  /// **'매월'**
+  String get subscriptionCycleMonthly;
+
+  /// No description provided for @subscriptionStatusActive.
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 중'**
+  String get subscriptionStatusActive;
+
+  /// No description provided for @subscriptionStatusPaused.
+  ///
+  /// In ko, this message translates to:
+  /// **'일시정지'**
+  String get subscriptionStatusPaused;
+
+  /// No description provided for @subscriptionStatusCancelled.
+  ///
+  /// In ko, this message translates to:
+  /// **'해지됨'**
+  String get subscriptionStatusCancelled;
+
+  /// No description provided for @beanOrderStatusReceived.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 접수'**
+  String get beanOrderStatusReceived;
+
+  /// No description provided for @beanOrderStatusRoasting.
+  ///
+  /// In ko, this message translates to:
+  /// **'로스팅 중'**
+  String get beanOrderStatusRoasting;
+
+  /// No description provided for @beanOrderStatusShipped.
+  ///
+  /// In ko, this message translates to:
+  /// **'발송 완료'**
+  String get beanOrderStatusShipped;
+
+  /// No description provided for @beanOrderStatusDelivered.
+  ///
+  /// In ko, this message translates to:
+  /// **'배송 완료'**
+  String get beanOrderStatusDelivered;
+
+  /// No description provided for @beanOrderStatusReady.
+  ///
+  /// In ko, this message translates to:
+  /// **'픽업 대기'**
+  String get beanOrderStatusReady;
+
+  /// No description provided for @beanOrderStatusPickedUp.
+  ///
+  /// In ko, this message translates to:
+  /// **'픽업 완료'**
+  String get beanOrderStatusPickedUp;
+
+  /// No description provided for @beanOrderStatusCancelled.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 취소'**
+  String get beanOrderStatusCancelled;
+
+  /// No description provided for @fulfillmentDelivery.
+  ///
+  /// In ko, this message translates to:
+  /// **'택배 배송'**
+  String get fulfillmentDelivery;
+
+  /// No description provided for @fulfillmentPickup.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 픽업'**
+  String get fulfillmentPickup;
+
+  /// No description provided for @pickupStatusReceived.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 접수'**
+  String get pickupStatusReceived;
+
+  /// No description provided for @pickupStatusPreparing.
+  ///
+  /// In ko, this message translates to:
+  /// **'제조 중'**
+  String get pickupStatusPreparing;
+
+  /// No description provided for @pickupStatusReady.
+  ///
+  /// In ko, this message translates to:
+  /// **'픽업 대기'**
+  String get pickupStatusReady;
+
+  /// No description provided for @pickupStatusPickedUp.
+  ///
+  /// In ko, this message translates to:
+  /// **'픽업 완료'**
+  String get pickupStatusPickedUp;
+
+  /// No description provided for @pickupStatusCancelled.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 취소'**
+  String get pickupStatusCancelled;
+
+  /// No description provided for @refundStatusPending.
+  ///
+  /// In ko, this message translates to:
+  /// **'환불 처리 중'**
+  String get refundStatusPending;
+
+  /// No description provided for @refundStatusDone.
+  ///
+  /// In ko, this message translates to:
+  /// **'환불 완료'**
+  String get refundStatusDone;
+
+  /// No description provided for @refundStatusFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'환불 확인 중'**
+  String get refundStatusFailed;
+
+  /// No description provided for @wholesaleStatusRequested.
+  ///
+  /// In ko, this message translates to:
+  /// **'견적 확인 중'**
+  String get wholesaleStatusRequested;
+
+  /// No description provided for @wholesaleStatusQuoted.
+  ///
+  /// In ko, this message translates to:
+  /// **'견적서 발송'**
+  String get wholesaleStatusQuoted;
+
+  /// No description provided for @wholesaleStatusConfirmed.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 확정'**
+  String get wholesaleStatusConfirmed;
+
+  /// No description provided for @orderItemsSummary.
+  ///
+  /// In ko, this message translates to:
+  /// **'{first} 외 {others}건'**
+  String orderItemsSummary(String first, int others);
+
+  /// No description provided for @orderTypePickup.
+  ///
+  /// In ko, this message translates to:
+  /// **'픽업'**
+  String get orderTypePickup;
+
+  /// No description provided for @orderTypeBean.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두'**
+  String get orderTypeBean;
+
+  /// No description provided for @orderRecipientUnset.
+  ///
+  /// In ko, this message translates to:
+  /// **'수령인 미지정'**
+  String get orderRecipientUnset;
+
+  /// No description provided for @orderStoreUnset.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 미지정'**
+  String get orderStoreUnset;
+
+  /// No description provided for @beanOptionLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'{weight} · {grind}'**
+  String beanOptionLabel(String weight, String grind);
+
+  /// No description provided for @beanQuantity.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name} {count}개'**
+  String beanQuantity(String name, int count);
+
+  /// No description provided for @subscriptionCycleQuantity.
+  ///
+  /// In ko, this message translates to:
+  /// **'{cycle} {count}개'**
+  String subscriptionCycleQuantity(String cycle, int count);
+
+  /// No description provided for @beansLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 정보를 불러오지 못했습니다.'**
+  String get beansLoadFailed;
+
+  /// No description provided for @beansFilterAcidic.
+  ///
+  /// In ko, this message translates to:
+  /// **'산미가 화사한 원두'**
+  String get beansFilterAcidic;
+
+  /// No description provided for @beansFilterAcidicNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'과일처럼 밝고 산뜻한 맛을 좋아한다면'**
+  String get beansFilterAcidicNote;
+
+  /// No description provided for @beansFilterMellow.
+  ///
+  /// In ko, this message translates to:
+  /// **'산미 적은 고소한 원두'**
+  String get beansFilterMellow;
+
+  /// No description provided for @beansFilterMellowNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'산미 부담 없이 고소하고 묵직한 한 잔을 원한다면'**
+  String get beansFilterMellowNote;
+
+  /// No description provided for @beansFilterDecaf.
+  ///
+  /// In ko, this message translates to:
+  /// **'디카페인'**
+  String get beansFilterDecaf;
+
+  /// No description provided for @beansFilterDecafNote.
+  ///
+  /// In ko, this message translates to:
+  /// **'늦은 오후에도 카페인 걱정 없이'**
+  String get beansFilterDecafNote;
+
+  /// No description provided for @beansCartCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'장바구니 · {count}개'**
+  String beansCartCount(int count);
+
+  /// No description provided for @beansRoastNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'매주 화요일 로스팅한 원두를 홀빈 또는 원하는 분쇄도로 보내드립니다.'**
+  String get beansRoastNotice;
+
+  /// No description provided for @beansRoastOf.
+  ///
+  /// In ko, this message translates to:
+  /// **'{origin} · {roast} 로스팅'**
+  String beansRoastOf(String origin, String roast);
+
+  /// No description provided for @beansPricePer200g.
+  ///
+  /// In ko, this message translates to:
+  /// **'200g 기준'**
+  String get beansPricePer200g;
+
+  /// No description provided for @beanNotFound.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두를 찾을 수 없습니다: {beanId}'**
+  String beanNotFound(String beanId);
+
+  /// No description provided for @beanCartTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 장바구니'**
+  String get beanCartTitle;
+
+  /// No description provided for @beanCartEmptyTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'장바구니가 비어 있어요'**
+  String get beanCartEmptyTitle;
+
+  /// No description provided for @beanCartEmptyDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'마음에 드는 원두를 담아보세요.'**
+  String get beanCartEmptyDetail;
+
+  /// No description provided for @beanCartBrowse.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 보러 가기'**
+  String get beanCartBrowse;
+
+  /// No description provided for @beanCartFulfillment.
+  ///
+  /// In ko, this message translates to:
+  /// **'수령 방법'**
+  String get beanCartFulfillment;
+
+  /// No description provided for @beanCartNoAddress.
+  ///
+  /// In ko, this message translates to:
+  /// **'등록된 배송지가 없어요. 배송지를 추가해 주세요.'**
+  String get beanCartNoAddress;
+
+  /// No description provided for @beanCartAddAddress.
+  ///
+  /// In ko, this message translates to:
+  /// **'배송지 추가'**
+  String get beanCartAddAddress;
+
+  /// No description provided for @beanCartChange.
+  ///
+  /// In ko, this message translates to:
+  /// **'변경'**
+  String get beanCartChange;
+
+  /// No description provided for @beanCartNoStore.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두를 픽업할 매장을 선택해 주세요.'**
+  String get beanCartNoStore;
+
+  /// No description provided for @beanCartChooseStore.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 선택'**
+  String get beanCartChooseStore;
+
+  /// No description provided for @beanCartAddressSheetTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'배송지 선택'**
+  String get beanCartAddressSheetTitle;
+
+  /// No description provided for @beanCartAddressSheetDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두를 받을 배송지를 선택해 주세요.'**
+  String get beanCartAddressSheetDetail;
+
+  /// No description provided for @beanCartAddressLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'배송지를 불러오지 못했습니다.'**
+  String get beanCartAddressLoadFailed;
+
+  /// No description provided for @beanCartManageAddresses.
+  ///
+  /// In ko, this message translates to:
+  /// **'배송지 관리'**
+  String get beanCartManageAddresses;
+
+  /// No description provided for @beanCartClose.
+  ///
+  /// In ko, this message translates to:
+  /// **'닫기'**
+  String get beanCartClose;
+
+  /// No description provided for @beanCartDefaultAddress.
+  ///
+  /// In ko, this message translates to:
+  /// **'기본 배송지'**
+  String get beanCartDefaultAddress;
+
+  /// No description provided for @beanCartStoreSheetTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'픽업 매장 선택'**
+  String get beanCartStoreSheetTitle;
+
+  /// No description provided for @beanCartStoreSheetDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'로스팅이 끝나면 선택한 매장에서 픽업할 수 있어요.'**
+  String get beanCartStoreSheetDetail;
+
+  /// No description provided for @beanCartStoreLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 정보를 불러오지 못했습니다.'**
+  String get beanCartStoreLoadFailed;
+
+  /// No description provided for @beanCartRemoved.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}을(를) 장바구니에서 뺐어요.'**
+  String beanCartRemoved(String name);
+
+  /// No description provided for @beanCartUndo.
+  ///
+  /// In ko, this message translates to:
+  /// **'실행취소'**
+  String get beanCartUndo;
+
+  /// No description provided for @beanCartDelete.
+  ///
+  /// In ko, this message translates to:
+  /// **'삭제'**
+  String get beanCartDelete;
+
+  /// No description provided for @beanCartNeedAddress.
+  ///
+  /// In ko, this message translates to:
+  /// **'배송지를 먼저 등록해 주세요.'**
+  String get beanCartNeedAddress;
+
+  /// No description provided for @beanCartNeedStore.
+  ///
+  /// In ko, this message translates to:
+  /// **'픽업 매장을 먼저 선택해 주세요.'**
+  String get beanCartNeedStore;
+
+  /// No description provided for @beanCartPaymentIncomplete.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제가 완료되지 않았습니다.'**
+  String get beanCartPaymentIncomplete;
+
+  /// No description provided for @beanCartOrderedWithPoints.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 주문이 접수되었습니다. {points}P가 적립됐어요.'**
+  String beanCartOrderedWithPoints(String points);
+
+  /// No description provided for @beanCartOrderedPickup.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 주문이 접수되었습니다. 로스팅 후 매장에서 픽업하실 수 있어요.'**
+  String get beanCartOrderedPickup;
+
+  /// No description provided for @beanCartOrderedDelivery.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 주문이 접수되었습니다. 로스팅 후 순차 발송됩니다.'**
+  String get beanCartOrderedDelivery;
+
+  /// No description provided for @beanCartOrderFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 처리에 실패했습니다. 다시 시도해 주세요.'**
+  String get beanCartOrderFailed;
+
+  /// No description provided for @beanCartCouponsApplied.
+  ///
+  /// In ko, this message translates to:
+  /// **'쿠폰 {count}장 적용'**
+  String beanCartCouponsApplied(int count);
+
+  /// No description provided for @beanCartNoUsableCoupons.
+  ///
+  /// In ko, this message translates to:
+  /// **'적용 가능한 쿠폰이 없어요'**
+  String get beanCartNoUsableCoupons;
+
+  /// No description provided for @beanCartUsableCoupons.
+  ///
+  /// In ko, this message translates to:
+  /// **'사용 가능한 쿠폰 {count}장'**
+  String beanCartUsableCoupons(int count);
+
+  /// No description provided for @beanCartChooseCoupon.
+  ///
+  /// In ko, this message translates to:
+  /// **'쿠폰 선택'**
+  String get beanCartChooseCoupon;
+
+  /// No description provided for @beanCartUsePoints.
+  ///
+  /// In ko, this message translates to:
+  /// **'포인트 사용 (보유 {balance}P)'**
+  String beanCartUsePoints(String balance);
+
+  /// No description provided for @beanCartNoPoints.
+  ///
+  /// In ko, this message translates to:
+  /// **'사용 가능한 포인트가 없어요'**
+  String get beanCartNoPoints;
+
+  /// No description provided for @beanCartItemCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'총 {count}개'**
+  String beanCartItemCount(int count);
+
+  /// No description provided for @beanCartOrdering.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 중...'**
+  String get beanCartOrdering;
+
+  /// No description provided for @beanCartPay.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제하기'**
+  String get beanCartPay;
+
+  /// No description provided for @beanCartOrder.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문하기'**
+  String get beanCartOrder;
+
+  /// No description provided for @discountAmount.
+  ///
+  /// In ko, this message translates to:
+  /// **'-{amount}원'**
+  String discountAmount(String amount);
+
+  /// No description provided for @beanDetailTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 상세'**
+  String get beanDetailTitle;
+
+  /// No description provided for @beanRoastBadge.
+  ///
+  /// In ko, this message translates to:
+  /// **'{roast} 로스팅'**
+  String beanRoastBadge(String roast);
+
+  /// No description provided for @beanSectionNotes.
+  ///
+  /// In ko, this message translates to:
+  /// **'향미 노트'**
+  String get beanSectionNotes;
+
+  /// No description provided for @beanSectionProfile.
+  ///
+  /// In ko, this message translates to:
+  /// **'테이스팅 프로필'**
+  String get beanSectionProfile;
+
+  /// No description provided for @beanProfileAcidity.
+  ///
+  /// In ko, this message translates to:
+  /// **'산미'**
+  String get beanProfileAcidity;
+
+  /// No description provided for @beanProfileBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'바디'**
+  String get beanProfileBody;
+
+  /// No description provided for @beanProfileSweetness.
+  ///
+  /// In ko, this message translates to:
+  /// **'단맛'**
+  String get beanProfileSweetness;
+
+  /// No description provided for @beanSectionStory.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 이야기'**
+  String get beanSectionStory;
+
+  /// No description provided for @beanSectionDetails.
+  ///
+  /// In ko, this message translates to:
+  /// **'상세 정보'**
+  String get beanSectionDetails;
+
+  /// No description provided for @beanFieldOrigin.
+  ///
+  /// In ko, this message translates to:
+  /// **'원산지'**
+  String get beanFieldOrigin;
+
+  /// No description provided for @beanFieldProcess.
+  ///
+  /// In ko, this message translates to:
+  /// **'가공 방식'**
+  String get beanFieldProcess;
+
+  /// No description provided for @beanFieldRoast.
+  ///
+  /// In ko, this message translates to:
+  /// **'로스팅'**
+  String get beanFieldRoast;
+
+  /// No description provided for @beanFieldBrews.
+  ///
+  /// In ko, this message translates to:
+  /// **'추천 추출'**
+  String get beanFieldBrews;
+
+  /// No description provided for @beanFieldPrice.
+  ///
+  /// In ko, this message translates to:
+  /// **'가격'**
+  String get beanFieldPrice;
+
+  /// No description provided for @beanPriceBoth.
+  ///
+  /// In ko, this message translates to:
+  /// **'200g {price200}원 · 500g {price500}원'**
+  String beanPriceBoth(String price200, String price500);
+
+  /// No description provided for @beanCartTooltip.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 장바구니'**
+  String get beanCartTooltip;
+
+  /// No description provided for @beanGiftTooltip.
+  ///
+  /// In ko, this message translates to:
+  /// **'선물하기'**
+  String get beanGiftTooltip;
+
+  /// No description provided for @beanSubscribe.
+  ///
+  /// In ko, this message translates to:
+  /// **'구독'**
+  String get beanSubscribe;
+
+  /// No description provided for @beanSoldOut.
+  ///
+  /// In ko, this message translates to:
+  /// **'품절'**
+  String get beanSoldOut;
+
+  /// No description provided for @beanOrder.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문하기'**
+  String get beanOrder;
+
+  /// No description provided for @beanGiftRequiresSignIn.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 선물하기는 로그인 후 이용할 수 있어요.'**
+  String get beanGiftRequiresSignIn;
+
+  /// No description provided for @beanOrderRequiresSignIn.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 주문은 로그인 후 이용할 수 있어요.'**
+  String get beanOrderRequiresSignIn;
+
+  /// No description provided for @beanAddedToCart.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}을(를) 장바구니에 담았습니다.'**
+  String beanAddedToCart(String name);
+
+  /// No description provided for @beanViewCart.
+  ///
+  /// In ko, this message translates to:
+  /// **'보기'**
+  String get beanViewCart;
+
+  /// No description provided for @beanFieldWeight.
+  ///
+  /// In ko, this message translates to:
+  /// **'용량'**
+  String get beanFieldWeight;
+
+  /// No description provided for @beanFieldGrind.
+  ///
+  /// In ko, this message translates to:
+  /// **'분쇄도'**
+  String get beanFieldGrind;
+
+  /// No description provided for @beanFieldQuantity.
+  ///
+  /// In ko, this message translates to:
+  /// **'수량'**
+  String get beanFieldQuantity;
+
+  /// No description provided for @beanTotalPrice.
+  ///
+  /// In ko, this message translates to:
+  /// **'총 결제 금액'**
+  String get beanTotalPrice;
+
+  /// No description provided for @beanAddToCart.
+  ///
+  /// In ko, this message translates to:
+  /// **'장바구니 담기'**
+  String get beanAddToCart;
+
+  /// No description provided for @beanOrderForAmount.
+  ///
+  /// In ko, this message translates to:
+  /// **'{amount}원 주문'**
+  String beanOrderForAmount(String amount);
+
+  /// No description provided for @subscriptionRequiresSignIn.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 구독은 로그인 후 이용할 수 있어요.'**
+  String get subscriptionRequiresSignIn;
+
+  /// No description provided for @subscriptionStarted.
+  ///
+  /// In ko, this message translates to:
+  /// **'{bean} {cycle} 정기구독이 시작되었습니다.'**
+  String subscriptionStarted(String bean, String cycle);
+
+  /// No description provided for @subscriptionManage.
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 관리'**
+  String get subscriptionManage;
+
+  /// No description provided for @subscriptionTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 정기구독'**
+  String get subscriptionTitle;
+
+  /// No description provided for @subscriptionFieldCycle.
+  ///
+  /// In ko, this message translates to:
+  /// **'배송 주기'**
+  String get subscriptionFieldCycle;
+
+  /// No description provided for @subscriptionFieldQuantity.
+  ///
+  /// In ko, this message translates to:
+  /// **'회당 수량'**
+  String get subscriptionFieldQuantity;
+
+  /// No description provided for @subscriptionFieldPrice.
+  ///
+  /// In ko, this message translates to:
+  /// **'회당 결제 금액'**
+  String get subscriptionFieldPrice;
+
+  /// No description provided for @subscriptionNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'{cycle} 로스팅한 원두를 배송해 드려요. 언제든 일시정지·해지할 수 있어요.'**
+  String subscriptionNotice(String cycle);
+
+  /// No description provided for @subscriptionStart.
+  ///
+  /// In ko, this message translates to:
+  /// **'{cycle} 구독 시작하기'**
+  String subscriptionStart(String cycle);
+
+  /// No description provided for @subscriptionEveryDays.
+  ///
+  /// In ko, this message translates to:
+  /// **'{days}일마다'**
+  String subscriptionEveryDays(int days);
+
+  /// No description provided for @subscriptionListTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 정기구독'**
+  String get subscriptionListTitle;
+
+  /// No description provided for @subscriptionLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 정보를 불러오지 못했습니다.'**
+  String get subscriptionLoadFailed;
+
+  /// No description provided for @subscriptionEmptyTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 중인 원두가 없어요'**
+  String get subscriptionEmptyTitle;
+
+  /// No description provided for @subscriptionEmptyDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 상세에서 정기구독을 시작하면 주기마다 배송해 드려요.'**
+  String get subscriptionEmptyDetail;
+
+  /// No description provided for @subscriptionBrowse.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 보러 가기'**
+  String get subscriptionBrowse;
+
+  /// No description provided for @subscriptionCancelTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 해지'**
+  String get subscriptionCancelTitle;
+
+  /// No description provided for @subscriptionCancelConfirm.
+  ///
+  /// In ko, this message translates to:
+  /// **'{bean} 정기구독을 해지할까요?\n해지 후에는 배송이 중단됩니다.'**
+  String subscriptionCancelConfirm(String bean);
+
+  /// No description provided for @subscriptionCancelled.
+  ///
+  /// In ko, this message translates to:
+  /// **'{bean} 구독이 해지되었습니다.'**
+  String subscriptionCancelled(String bean);
+
+  /// No description provided for @subscriptionStartedOn.
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 시작 {date}'**
+  String subscriptionStartedOn(String date);
+
+  /// No description provided for @subscriptionNextDelivery.
+  ///
+  /// In ko, this message translates to:
+  /// **'다음 배송 {date}'**
+  String subscriptionNextDelivery(String date);
+
+  /// No description provided for @subscriptionPricePerDelivery.
+  ///
+  /// In ko, this message translates to:
+  /// **'회당 {amount}원'**
+  String subscriptionPricePerDelivery(String amount);
+
+  /// No description provided for @subscriptionResume.
+  ///
+  /// In ko, this message translates to:
+  /// **'구독 재개'**
+  String get subscriptionResume;
+
+  /// No description provided for @subscriptionPause.
+  ///
+  /// In ko, this message translates to:
+  /// **'일시정지'**
+  String get subscriptionPause;
+
+  /// No description provided for @subscriptionCancelAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'해지하기'**
+  String get subscriptionCancelAction;
+
+  /// No description provided for @commonCancel.
+  ///
+  /// In ko, this message translates to:
+  /// **'취소'**
+  String get commonCancel;
+
+  /// No description provided for @adminOrdersTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 관리'**
+  String get adminOrdersTitle;
+
+  /// No description provided for @adminOrdersRefresh.
+  ///
+  /// In ko, this message translates to:
+  /// **'새로고침'**
+  String get adminOrdersRefresh;
+
+  /// No description provided for @adminOrdersTabRefundFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'환불 실패'**
+  String get adminOrdersTabRefundFailed;
+
+  /// No description provided for @adminOrdersNoPickup.
+  ///
+  /// In ko, this message translates to:
+  /// **'처리할 픽업 주문이 없습니다.'**
+  String get adminOrdersNoPickup;
+
+  /// No description provided for @adminOrdersNoBean.
+  ///
+  /// In ko, this message translates to:
+  /// **'처리할 원두 주문이 없습니다.'**
+  String get adminOrdersNoBean;
+
+  /// No description provided for @adminOrdersNoRefundFailures.
+  ///
+  /// In ko, this message translates to:
+  /// **'환불이 밀린 주문이 없습니다.'**
+  String get adminOrdersNoRefundFailures;
+
+  /// No description provided for @adminOrdersRefunded.
+  ///
+  /// In ko, this message translates to:
+  /// **'환불했습니다.'**
+  String get adminOrdersRefunded;
+
+  /// No description provided for @adminOrdersRefundFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'환불에 실패했습니다: {error}'**
+  String adminOrdersRefundFailed(String error);
+
+  /// No description provided for @adminOrdersRefundFailedLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'{type} · 환불 실패'**
+  String adminOrdersRefundFailedLabel(String type);
+
+  /// No description provided for @adminOrdersRetryRefund.
+  ///
+  /// In ko, this message translates to:
+  /// **'환불 재시도'**
+  String get adminOrdersRetryRefund;
+
+  /// No description provided for @adminOrdersAdvanceFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'상태를 바꾸지 못했습니다'**
+  String get adminOrdersAdvanceFailed;
+
+  /// No description provided for @adminOrdersCancelTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문을 취소할까요?'**
+  String get adminOrdersCancelTitle;
+
+  /// No description provided for @adminOrdersCancelBody.
+  ///
+  /// In ko, this message translates to:
+  /// **'{summary} 주문을 취소합니다.\n사용한 포인트와 쿠폰을 돌려주고 결제한 금액을 환불합니다.'**
+  String adminOrdersCancelBody(String summary);
+
+  /// No description provided for @adminOrdersCancelFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문을 취소하지 못했습니다'**
+  String get adminOrdersCancelFailed;
+
+  /// No description provided for @adminOrdersCancelAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 취소'**
+  String get adminOrdersCancelAction;
+
+  /// No description provided for @adminOrdersAdvanceTo.
+  ///
+  /// In ko, this message translates to:
+  /// **'{status}로'**
+  String adminOrdersAdvanceTo(String status);
+
+  /// No description provided for @adminOrdersLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문을 불러오지 못했습니다.'**
+  String get adminOrdersLoadFailed;
+
+  /// No description provided for @commonClose.
+  ///
+  /// In ko, this message translates to:
+  /// **'닫기'**
+  String get commonClose;
+
+  /// No description provided for @orderHistoryTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 내역'**
+  String get orderHistoryTitle;
+
+  /// No description provided for @orderHistoryLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 내역을 불러오지 못했습니다.'**
+  String get orderHistoryLoadFailed;
+
+  /// No description provided for @orderHistoryEmptyTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 내역이 없어요'**
+  String get orderHistoryEmptyTitle;
+
+  /// No description provided for @orderHistoryEmptyDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장 결제나 픽업 · 원두 주문을 하면 내역이 쌓여요.'**
+  String get orderHistoryEmptyDetail;
+
+  /// No description provided for @orderCouponDiscount.
+  ///
+  /// In ko, this message translates to:
+  /// **'쿠폰 -{amount}원'**
+  String orderCouponDiscount(String amount);
+
+  /// No description provided for @orderPointsUsed.
+  ///
+  /// In ko, this message translates to:
+  /// **'-{amount}P 사용'**
+  String orderPointsUsed(String amount);
+
+  /// No description provided for @orderPointsEarned.
+  ///
+  /// In ko, this message translates to:
+  /// **'+{amount}P 적립'**
+  String orderPointsEarned(String amount);
+
+  /// No description provided for @orderBeanLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 주문'**
+  String get orderBeanLabel;
+
+  /// No description provided for @orderItemCount.
+  ///
+  /// In ko, this message translates to:
+  /// **'총 {count}개'**
+  String orderItemCount(int count);
+
+  /// No description provided for @orderReorder.
+  ///
+  /// In ko, this message translates to:
+  /// **'재주문'**
+  String get orderReorder;
+
+  /// No description provided for @orderCancel.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 취소'**
+  String get orderCancel;
+
+  /// No description provided for @orderReorderUnavailableBeans.
+  ///
+  /// In ko, this message translates to:
+  /// **'지금은 판매하지 않는 상품이라 재주문할 수 없어요.'**
+  String get orderReorderUnavailableBeans;
+
+  /// No description provided for @orderReorderUnavailableMenu.
+  ///
+  /// In ko, this message translates to:
+  /// **'지금은 판매하지 않는 메뉴라 재주문할 수 없어요.'**
+  String get orderReorderUnavailableMenu;
+
+  /// No description provided for @orderReorderPartialBeans.
+  ///
+  /// In ko, this message translates to:
+  /// **'판매 종료된 {names} 상품은 제외하고 장바구니에 담았어요.'**
+  String orderReorderPartialBeans(String names);
+
+  /// No description provided for @orderReorderPartialMenu.
+  ///
+  /// In ko, this message translates to:
+  /// **'판매 종료된 {names} 메뉴는 제외하고 장바구니에 담았어요.'**
+  String orderReorderPartialMenu(String names);
+
+  /// No description provided for @orderReorderDone.
+  ///
+  /// In ko, this message translates to:
+  /// **'이전 주문 구성을 장바구니에 담았어요.'**
+  String get orderReorderDone;
+
+  /// No description provided for @orderCancelBeanTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'원두 주문을 취소할까요?'**
+  String get orderCancelBeanTitle;
+
+  /// No description provided for @orderCancelledNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문이 취소되었어요. 사용한 쿠폰과 포인트는 복구됩니다.'**
+  String get orderCancelledNotice;
+
+  /// No description provided for @orderPickupSummary.
+  ///
+  /// In ko, this message translates to:
+  /// **'픽업 주문 · {store} · 주문번호 {number}번 · 총 {count}개'**
+  String orderPickupSummary(String store, int number, int count);
+
+  /// No description provided for @orderTrackStatus.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 현황 보기'**
+  String get orderTrackStatus;
+
+  /// No description provided for @orderWriteReview.
+  ///
+  /// In ko, this message translates to:
+  /// **'리뷰 쓰기'**
+  String get orderWriteReview;
+
+  /// No description provided for @pickupOptionTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'옵션'**
+  String get pickupOptionTitle;
+
+  /// No description provided for @pickupTotalPrice.
+  ///
+  /// In ko, this message translates to:
+  /// **'총 주문 금액'**
+  String get pickupTotalPrice;
+
+  /// No description provided for @pickupAddToCart.
+  ///
+  /// In ko, this message translates to:
+  /// **'장바구니 담기'**
+  String get pickupAddToCart;
+
+  /// No description provided for @pickupCartTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'픽업 주문'**
+  String get pickupCartTitle;
+
+  /// No description provided for @pickupCartRequiresSignIn.
+  ///
+  /// In ko, this message translates to:
+  /// **'장바구니는 로그인 후 이용할 수 있어요.'**
+  String get pickupCartRequiresSignIn;
+
+  /// No description provided for @pickupCartTooltip.
+  ///
+  /// In ko, this message translates to:
+  /// **'픽업 장바구니'**
+  String get pickupCartTooltip;
+
+  /// No description provided for @pickupCartEmptyTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'장바구니가 비어 있어요'**
+  String get pickupCartEmptyTitle;
+
+  /// No description provided for @pickupCartEmptyDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴에서 마시고 싶은 음료를 담아보세요.'**
+  String get pickupCartEmptyDetail;
+
+  /// No description provided for @pickupCartBrowse.
+  ///
+  /// In ko, this message translates to:
+  /// **'메뉴 보러 가기'**
+  String get pickupCartBrowse;
+
+  /// No description provided for @pickupCartChooseStorePrompt.
+  ///
+  /// In ko, this message translates to:
+  /// **'픽업 매장을 선택해 주세요'**
+  String get pickupCartChooseStorePrompt;
+
+  /// No description provided for @pickupCartStoreRequired.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 전에 픽업할 매장이 필요해요.'**
+  String get pickupCartStoreRequired;
+
+  /// No description provided for @pickupCartRemoved.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name}을(를) 장바구니에서 뺐어요.'**
+  String pickupCartRemoved(String name);
+
+  /// No description provided for @pickupCartStoreSheetDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'음료를 픽업할 매장을 선택해 주세요.'**
+  String get pickupCartStoreSheetDetail;
+
+  /// No description provided for @pickupCartOrderedWithPoints.
+  ///
+  /// In ko, this message translates to:
+  /// **'픽업 주문이 접수되었습니다. 주문번호 {number}번 · {points}P가 적립됐어요.'**
+  String pickupCartOrderedWithPoints(int number, String points);
+
+  /// No description provided for @pickupCartOrdered.
+  ///
+  /// In ko, this message translates to:
+  /// **'픽업 주문이 접수되었습니다. 주문번호 {number}번 · 준비가 끝나면 알려드릴게요.'**
+  String pickupCartOrdered(int number);
+
+  /// No description provided for @pickupTrackingTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 현황'**
+  String get pickupTrackingTitle;
+
+  /// No description provided for @pickupTrackingLoadFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 현황을 불러오지 못했습니다.'**
+  String get pickupTrackingLoadFailed;
+
+  /// No description provided for @pickupTrackingLiveNotice.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 상태가 바뀌면 실시간으로 반영돼요.'**
+  String get pickupTrackingLiveNotice;
+
+  /// No description provided for @pickupTrackingNotFound.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문을 찾을 수 없어요'**
+  String get pickupTrackingNotFound;
+
+  /// No description provided for @pickupTrackingNotFoundDetail.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 내역에서 다시 확인해 주세요.'**
+  String get pickupTrackingNotFoundDetail;
+
+  /// No description provided for @pickupOrderNumber.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문번호 {number}번'**
+  String pickupOrderNumber(int number);
+
+  /// No description provided for @pickupOrderedAt.
+  ///
+  /// In ko, this message translates to:
+  /// **'{time} 주문'**
+  String pickupOrderedAt(String time);
+
+  /// No description provided for @pickupStepReceived.
+  ///
+  /// In ko, this message translates to:
+  /// **'매장에서 주문을 확인하고 있어요.'**
+  String get pickupStepReceived;
+
+  /// No description provided for @pickupStepPreparing.
+  ///
+  /// In ko, this message translates to:
+  /// **'바리스타가 정성껏 만들고 있어요.'**
+  String get pickupStepPreparing;
+
+  /// No description provided for @pickupStepReady.
+  ///
+  /// In ko, this message translates to:
+  /// **'픽업대에서 주문을 찾아가세요.'**
+  String get pickupStepReady;
+
+  /// No description provided for @pickupStepPickedUp.
+  ///
+  /// In ko, this message translates to:
+  /// **'맛있게 즐기세요. 감사합니다!'**
+  String get pickupStepPickedUp;
+
+  /// No description provided for @pickupInProgress.
+  ///
+  /// In ko, this message translates to:
+  /// **'진행 중'**
+  String get pickupInProgress;
+
+  /// No description provided for @pickupRefundChecking.
+  ///
+  /// In ko, this message translates to:
+  /// **'사용한 쿠폰과 포인트는 복구되었어요. 결제 환불은 확인 중이며, 오래 걸리면 고객센터로 문의해 주세요.'**
+  String get pickupRefundChecking;
+
+  /// No description provided for @pickupRefundNormal.
+  ///
+  /// In ko, this message translates to:
+  /// **'사용한 쿠폰과 포인트는 복구되었어요. 결제 환불은 수단에 따라 3~5일 소요될 수 있어요.'**
+  String get pickupRefundNormal;
+
+  /// No description provided for @pickupCancelledTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문이 취소되었어요'**
+  String get pickupCancelledTitle;
+
+  /// No description provided for @pickupCancelAction.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 취소하기'**
+  String get pickupCancelAction;
+
+  /// No description provided for @pickupCancelTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'픽업 주문을 취소할까요?'**
+  String get pickupCancelTitle;
+
+  /// No description provided for @pickupSectionItems.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문 상품'**
+  String get pickupSectionItems;
+
+  /// No description provided for @pickupItemQuantity.
+  ///
+  /// In ko, this message translates to:
+  /// **'{count}개'**
+  String pickupItemQuantity(int count);
+
+  /// No description provided for @pickupPaidAmount.
+  ///
+  /// In ko, this message translates to:
+  /// **'결제 금액'**
+  String get pickupPaidAmount;
 }
 
 class _AppLocalizationsDelegate

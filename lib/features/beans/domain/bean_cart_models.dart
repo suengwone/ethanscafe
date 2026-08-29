@@ -19,8 +19,6 @@ abstract class BeanCartItem with _$BeanCartItem {
 
   int get totalPrice => unitPrice * quantity;
 
-  String get optionLabel => '${weight.label} · ${grind.label}';
-
   bool hasSameOption({
     required Bean bean,
     required BeanWeight weight,

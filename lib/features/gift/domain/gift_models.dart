@@ -38,7 +38,5 @@ abstract class BeanGift with _$BeanGift {
 
   int get totalPrice => unitPrice * quantity;
 
-  String get optionLabel => '${weight.label} · ${grind.label}';
-
   String get summary => quantity == 1 ? beanName : '$beanName $quantity개';
 }

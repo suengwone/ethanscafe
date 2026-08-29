@@ -7,6 +7,10 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/order_cancel_dialog.dart';
+import '../../../features/beans/presentation/bean_labels.dart';
+import '../../../features/order/presentation/order_labels.dart';
+import '../../../features/pickup/presentation/pickup_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../beans/presentation/bean_cart_providers.dart';
 import '../../beans/presentation/beans_providers.dart';
 import '../../menu/presentation/menu_providers.dart';
@@ -111,8 +115,9 @@ class OrderHistoryScreen extends ConsumerWidget {
               itemCount: records.length,
               itemBuilder: (context, index) => switch (records[index]) {
                 BeanOrderRecord(:final order) => _BeanOrderCard(order: order),
-                PickupOrderRecord(:final order) =>
-                  _PickupOrderCard(order: order),
+                PickupOrderRecord(:final order) => _PickupOrderCard(
+                  order: order,
+                ),
                 StorePaymentRecord(:final entry) => _OrderCard(entry: entry),
               },
             ),
@@ -219,8 +224,11 @@ class _BeanOrderCard extends ConsumerWidget {
                       '원두 주문',
                       order.fulfillmentMethod == BeanFulfillmentMethod.pickup &&
                               order.storeName != null
-                          ? '${order.fulfillmentMethod.label} · ${order.storeName}'
-                          : order.fulfillmentMethod.label,
+                          ? '${AppLocalizations.of(context).fulfillmentLabel(order.fulfillmentMethod)} · '
+                                '${order.storeName}'
+                          : AppLocalizations.of(
+                              context,
+                            ).fulfillmentLabel(order.fulfillmentMethod),
                       if (order.paymentMethod != null) order.paymentMethod!,
                       '총 ${order.itemCount}개',
                     ].join(' · ').keepWord,
@@ -283,14 +291,19 @@ class _BeanOrderCard extends ConsumerWidget {
             ],
             if (_reviewable) ...[
               const SizedBox(height: 12),
-              Container(height: 1, color: context.palette.border.withValues(alpha: 0.5)),
+              Container(
+                height: 1,
+                color: context.palette.border.withValues(alpha: 0.5),
+              ),
               for (final item in order.items)
                 _ReviewItemRow(
                   orderId: order.id,
                   productId: item.beanId,
                   productType: ReviewProductType.bean,
                   productName: item.beanName,
-                  optionLabel: item.optionLabel,
+                  optionLabel: AppLocalizations.of(
+                    context,
+                  ).beanOption(item.weight, item.grind),
                 ),
             ],
           ],
@@ -346,9 +359,9 @@ class _BeanOrderCard extends ConsumerWidget {
       return;
     }
     try {
-      await ref.read(beanOrdersControllerProvider.notifier).cancelOrder(
-            order.id,
-          );
+      await ref
+          .read(beanOrdersControllerProvider.notifier)
+          .cancelOrder(order.id);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('주문이 취소되었어요. 사용한 쿠폰과 포인트는 복구됩니다.')),
@@ -356,8 +369,9 @@ class _BeanOrderCard extends ConsumerWidget {
       }
     } on StateError catch (error) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(error.message)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error.message)));
       }
     }
   }
@@ -427,7 +441,10 @@ class _PickupOrderCard extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  _PickupStatusChip(status: order.status, refund: order.refundStatus),
+                  _PickupStatusChip(
+                    status: order.status,
+                    refund: order.refundStatus,
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
@@ -496,7 +513,7 @@ class _PickupOrderCard extends ConsumerWidget {
                   ),
                   onPressed: () => _reorder(context, ref),
                   icon: const Icon(LucideIcons.rotateCcw, size: 13),
-                  label: const Text('재주문'),
+                  label: Text(AppLocalizations.of(context).orderReorder),
                 ),
               ),
               if (_reviewable) ...[
@@ -590,7 +607,9 @@ class _ReviewItemRow extends ConsumerWidget {
                   const SizedBox(height: 2),
                   Text(
                     '“${review.comment}”'.keepWord,
-                    style: textTheme.bodySmall?.copyWith(color: context.palette.muted),
+                    style: textTheme.bodySmall?.copyWith(
+                      color: context.palette.muted,
+                    ),
                   ),
                 ],
               ],
@@ -636,6 +655,7 @@ class _PickupStatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
@@ -645,8 +665,12 @@ class _PickupStatusChip extends StatelessWidget {
       ),
       child: Text(
         status == PickupOrderStatus.cancelled
-            ? refundLabelFor(status.label, refund)
-            : status.label,
+            ? refundLabelFor(
+                l10n.pickupStatusLabel(status),
+                refund,
+                l10n.refundStatusLabel,
+              )
+            : l10n.pickupStatusLabel(status),
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
           color: status == PickupOrderStatus.cancelled
               ? context.palette.muted
@@ -666,6 +690,7 @@ class _StatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
@@ -675,8 +700,12 @@ class _StatusChip extends StatelessWidget {
       ),
       child: Text(
         status == BeanOrderStatus.cancelled
-            ? refundLabelFor(status.label, refund)
-            : status.label,
+            ? refundLabelFor(
+                l10n.beanOrderStatusLabel(status),
+                refund,
+                l10n.refundStatusLabel,
+              )
+            : l10n.beanOrderStatusLabel(status),
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
           color: status == BeanOrderStatus.cancelled
               ? context.palette.muted
@@ -743,7 +772,9 @@ class _OrderCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   '+${_amountFormat.format(entry.amount)}P 적립',
-                  style: textTheme.bodySmall?.copyWith(color: context.palette.accent),
+                  style: textTheme.bodySmall?.copyWith(
+                    color: context.palette.accent,
+                  ),
                 ),
               ],
             ),

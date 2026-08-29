@@ -590,4 +590,796 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get storeLocationPermissionDenied =>
       'Without location access we cannot work out the distance.';
+
+  @override
+  String get roastLight => 'Light';
+
+  @override
+  String get roastMediumLight => 'Medium light';
+
+  @override
+  String get roastMedium => 'Medium';
+
+  @override
+  String get roastMediumDark => 'Medium dark';
+
+  @override
+  String get roastDark => 'Dark';
+
+  @override
+  String get grindWholeBean => 'Whole bean';
+
+  @override
+  String get grindWholeBeanNote => 'Left unground';
+
+  @override
+  String get grindEspresso => 'Espresso';
+
+  @override
+  String get grindEspressoNote => 'For a home espresso machine';
+
+  @override
+  String get grindMokaPot => 'Moka pot';
+
+  @override
+  String get grindMokaPotNote => 'For a moka pot';
+
+  @override
+  String get grindHandDrip => 'Hand drip';
+
+  @override
+  String get grindHandDripNote => 'For pour-over and drippers';
+
+  @override
+  String get grindFrenchPress => 'French press';
+
+  @override
+  String get grindFrenchPressNote => 'For immersion brewing';
+
+  @override
+  String get subscriptionCycleWeekly => 'Weekly';
+
+  @override
+  String get subscriptionCycleBiweekly => 'Every two weeks';
+
+  @override
+  String get subscriptionCycleMonthly => 'Monthly';
+
+  @override
+  String get subscriptionStatusActive => 'Active';
+
+  @override
+  String get subscriptionStatusPaused => 'Paused';
+
+  @override
+  String get subscriptionStatusCancelled => 'Cancelled';
+
+  @override
+  String get beanOrderStatusReceived => 'Order received';
+
+  @override
+  String get beanOrderStatusRoasting => 'Roasting';
+
+  @override
+  String get beanOrderStatusShipped => 'Shipped';
+
+  @override
+  String get beanOrderStatusDelivered => 'Delivered';
+
+  @override
+  String get beanOrderStatusReady => 'Ready for pickup';
+
+  @override
+  String get beanOrderStatusPickedUp => 'Picked up';
+
+  @override
+  String get beanOrderStatusCancelled => 'Cancelled';
+
+  @override
+  String get fulfillmentDelivery => 'Delivery';
+
+  @override
+  String get fulfillmentPickup => 'Store pickup';
+
+  @override
+  String get pickupStatusReceived => 'Order received';
+
+  @override
+  String get pickupStatusPreparing => 'Making it';
+
+  @override
+  String get pickupStatusReady => 'Ready for pickup';
+
+  @override
+  String get pickupStatusPickedUp => 'Picked up';
+
+  @override
+  String get pickupStatusCancelled => 'Cancelled';
+
+  @override
+  String get refundStatusPending => 'Refund in progress';
+
+  @override
+  String get refundStatusDone => 'Refunded';
+
+  @override
+  String get refundStatusFailed => 'Checking the refund';
+
+  @override
+  String get wholesaleStatusRequested => 'Reviewing your request';
+
+  @override
+  String get wholesaleStatusQuoted => 'Quote sent';
+
+  @override
+  String get wholesaleStatusConfirmed => 'Order confirmed';
+
+  @override
+  String orderItemsSummary(String first, int others) {
+    return '$first and $others more';
+  }
+
+  @override
+  String get orderTypePickup => 'Pickup';
+
+  @override
+  String get orderTypeBean => 'Beans';
+
+  @override
+  String get orderRecipientUnset => 'No recipient';
+
+  @override
+  String get orderStoreUnset => 'No store';
+
+  @override
+  String beanOptionLabel(String weight, String grind) {
+    return '$weight · $grind';
+  }
+
+  @override
+  String beanQuantity(String name, int count) {
+    return '$name ×$count';
+  }
+
+  @override
+  String subscriptionCycleQuantity(String cycle, int count) {
+    return '$cycle, ×$count';
+  }
+
+  @override
+  String get beansLoadFailed => 'Could not load the beans.';
+
+  @override
+  String get beansFilterAcidic => 'Bright and fruity';
+
+  @override
+  String get beansFilterAcidicNote => 'If you like a light, fruity cup';
+
+  @override
+  String get beansFilterMellow => 'Low acidity, nutty';
+
+  @override
+  String get beansFilterMellowNote =>
+      'If you want something round and full with little acidity';
+
+  @override
+  String get beansFilterDecaf => 'Decaf';
+
+  @override
+  String get beansFilterDecafNote => 'For late afternoons';
+
+  @override
+  String beansCartCount(int count) {
+    return 'Cart · $count';
+  }
+
+  @override
+  String get beansRoastNotice =>
+      'We roast every Tuesday and ship whole bean or ground to your grind.';
+
+  @override
+  String beansRoastOf(String origin, String roast) {
+    return '$origin · $roast roast';
+  }
+
+  @override
+  String get beansPricePer200g => 'For 200g';
+
+  @override
+  String beanNotFound(String beanId) {
+    return 'Bean not found: $beanId';
+  }
+
+  @override
+  String get beanCartTitle => 'Bean cart';
+
+  @override
+  String get beanCartEmptyTitle => 'Your cart is empty';
+
+  @override
+  String get beanCartEmptyDetail => 'Add a bean you like the look of.';
+
+  @override
+  String get beanCartBrowse => 'Browse the beans';
+
+  @override
+  String get beanCartFulfillment => 'How to receive it';
+
+  @override
+  String get beanCartNoAddress => 'No address saved yet. Add one to continue.';
+
+  @override
+  String get beanCartAddAddress => 'Add an address';
+
+  @override
+  String get beanCartChange => 'Change';
+
+  @override
+  String get beanCartNoStore => 'Choose a store to pick the beans up from.';
+
+  @override
+  String get beanCartChooseStore => 'Choose a store';
+
+  @override
+  String get beanCartAddressSheetTitle => 'Choose an address';
+
+  @override
+  String get beanCartAddressSheetDetail => 'Where should the beans go?';
+
+  @override
+  String get beanCartAddressLoadFailed => 'Could not load your addresses.';
+
+  @override
+  String get beanCartManageAddresses => 'Manage addresses';
+
+  @override
+  String get beanCartClose => 'Close';
+
+  @override
+  String get beanCartDefaultAddress => 'Default address';
+
+  @override
+  String get beanCartStoreSheetTitle => 'Choose a pickup store';
+
+  @override
+  String get beanCartStoreSheetDetail =>
+      'Once roasting is done you can collect from the store you pick.';
+
+  @override
+  String get beanCartStoreLoadFailed => 'Could not load the stores.';
+
+  @override
+  String beanCartRemoved(String name) {
+    return 'Removed $name from your cart.';
+  }
+
+  @override
+  String get beanCartUndo => 'Undo';
+
+  @override
+  String get beanCartDelete => 'Remove';
+
+  @override
+  String get beanCartNeedAddress => 'Add an address first.';
+
+  @override
+  String get beanCartNeedStore => 'Choose a pickup store first.';
+
+  @override
+  String get beanCartPaymentIncomplete => 'The payment did not go through.';
+
+  @override
+  String beanCartOrderedWithPoints(String points) {
+    return 'Your bean order is in. You earned ${points}P.';
+  }
+
+  @override
+  String get beanCartOrderedPickup =>
+      'Your bean order is in. Collect it from the store once it is roasted.';
+
+  @override
+  String get beanCartOrderedDelivery =>
+      'Your bean order is in. It ships once it is roasted.';
+
+  @override
+  String get beanCartOrderFailed => 'Could not place the order. Try again.';
+
+  @override
+  String beanCartCouponsApplied(int count) {
+    return '$count coupons applied';
+  }
+
+  @override
+  String get beanCartNoUsableCoupons => 'No coupons apply here';
+
+  @override
+  String beanCartUsableCoupons(int count) {
+    return '$count coupons available';
+  }
+
+  @override
+  String get beanCartChooseCoupon => 'Choose a coupon';
+
+  @override
+  String beanCartUsePoints(String balance) {
+    return 'Use points (${balance}P available)';
+  }
+
+  @override
+  String get beanCartNoPoints => 'No points available';
+
+  @override
+  String beanCartItemCount(int count) {
+    return '$count items';
+  }
+
+  @override
+  String get beanCartOrdering => 'Placing the order…';
+
+  @override
+  String get beanCartPay => 'Pay';
+
+  @override
+  String get beanCartOrder => 'Place order';
+
+  @override
+  String discountAmount(String amount) {
+    return '-₩$amount';
+  }
+
+  @override
+  String get beanDetailTitle => 'Bean';
+
+  @override
+  String beanRoastBadge(String roast) {
+    return '$roast roast';
+  }
+
+  @override
+  String get beanSectionNotes => 'Tasting notes';
+
+  @override
+  String get beanSectionProfile => 'Flavour profile';
+
+  @override
+  String get beanProfileAcidity => 'Acidity';
+
+  @override
+  String get beanProfileBody => 'Body';
+
+  @override
+  String get beanProfileSweetness => 'Sweetness';
+
+  @override
+  String get beanSectionStory => 'The story';
+
+  @override
+  String get beanSectionDetails => 'Details';
+
+  @override
+  String get beanFieldOrigin => 'Origin';
+
+  @override
+  String get beanFieldProcess => 'Process';
+
+  @override
+  String get beanFieldRoast => 'Roast';
+
+  @override
+  String get beanFieldBrews => 'Brew with';
+
+  @override
+  String get beanFieldPrice => 'Price';
+
+  @override
+  String beanPriceBoth(String price200, String price500) {
+    return '200g ₩$price200 · 500g ₩$price500';
+  }
+
+  @override
+  String get beanCartTooltip => 'Bean cart';
+
+  @override
+  String get beanGiftTooltip => 'Send as a gift';
+
+  @override
+  String get beanSubscribe => 'Subscribe';
+
+  @override
+  String get beanSoldOut => 'Sold out';
+
+  @override
+  String get beanOrder => 'Order';
+
+  @override
+  String get beanGiftRequiresSignIn => 'Sign in to send beans as a gift.';
+
+  @override
+  String get beanOrderRequiresSignIn => 'Sign in to order beans.';
+
+  @override
+  String beanAddedToCart(String name) {
+    return '$name is in your cart.';
+  }
+
+  @override
+  String get beanViewCart => 'View';
+
+  @override
+  String get beanFieldWeight => 'Size';
+
+  @override
+  String get beanFieldGrind => 'Grind';
+
+  @override
+  String get beanFieldQuantity => 'Quantity';
+
+  @override
+  String get beanTotalPrice => 'Total';
+
+  @override
+  String get beanAddToCart => 'Add to cart';
+
+  @override
+  String beanOrderForAmount(String amount) {
+    return 'Order for ₩$amount';
+  }
+
+  @override
+  String get subscriptionRequiresSignIn => 'Sign in to subscribe to beans.';
+
+  @override
+  String subscriptionStarted(String bean, String cycle) {
+    return 'Your $cycle subscription to $bean has started.';
+  }
+
+  @override
+  String get subscriptionManage => 'Manage';
+
+  @override
+  String get subscriptionTitle => 'Bean subscription';
+
+  @override
+  String get subscriptionFieldCycle => 'How often';
+
+  @override
+  String get subscriptionFieldQuantity => 'Bags per delivery';
+
+  @override
+  String get subscriptionFieldPrice => 'Charged per delivery';
+
+  @override
+  String subscriptionNotice(String cycle) {
+    return 'We roast and ship $cycle. Pause or cancel whenever you like.';
+  }
+
+  @override
+  String subscriptionStart(String cycle) {
+    return 'Start a $cycle subscription';
+  }
+
+  @override
+  String subscriptionEveryDays(int days) {
+    return 'Every $days days';
+  }
+
+  @override
+  String get subscriptionListTitle => 'Bean subscriptions';
+
+  @override
+  String get subscriptionLoadFailed => 'Could not load your subscriptions.';
+
+  @override
+  String get subscriptionEmptyTitle => 'No subscriptions yet';
+
+  @override
+  String get subscriptionEmptyDetail =>
+      'Start one from a bean\'s page and we will ship on your schedule.';
+
+  @override
+  String get subscriptionBrowse => 'Browse the beans';
+
+  @override
+  String get subscriptionCancelTitle => 'Cancel subscription';
+
+  @override
+  String subscriptionCancelConfirm(String bean) {
+    return 'Cancel your $bean subscription?\nDeliveries stop after that.';
+  }
+
+  @override
+  String subscriptionCancelled(String bean) {
+    return 'Your $bean subscription is cancelled.';
+  }
+
+  @override
+  String subscriptionStartedOn(String date) {
+    return 'Started $date';
+  }
+
+  @override
+  String subscriptionNextDelivery(String date) {
+    return 'Next delivery $date';
+  }
+
+  @override
+  String subscriptionPricePerDelivery(String amount) {
+    return '₩$amount per delivery';
+  }
+
+  @override
+  String get subscriptionResume => 'Resume';
+
+  @override
+  String get subscriptionPause => 'Pause';
+
+  @override
+  String get subscriptionCancelAction => 'Cancel';
+
+  @override
+  String get commonCancel => 'Cancel';
+
+  @override
+  String get adminOrdersTitle => 'Orders';
+
+  @override
+  String get adminOrdersRefresh => 'Refresh';
+
+  @override
+  String get adminOrdersTabRefundFailed => 'Failed refunds';
+
+  @override
+  String get adminOrdersNoPickup => 'No pickup orders to work on.';
+
+  @override
+  String get adminOrdersNoBean => 'No bean orders to work on.';
+
+  @override
+  String get adminOrdersNoRefundFailures => 'No refunds are stuck.';
+
+  @override
+  String get adminOrdersRefunded => 'Refunded.';
+
+  @override
+  String adminOrdersRefundFailed(String error) {
+    return 'The refund failed: $error';
+  }
+
+  @override
+  String adminOrdersRefundFailedLabel(String type) {
+    return '$type · refund failed';
+  }
+
+  @override
+  String get adminOrdersRetryRefund => 'Retry the refund';
+
+  @override
+  String get adminOrdersAdvanceFailed => 'Could not change the status';
+
+  @override
+  String get adminOrdersCancelTitle => 'Cancel this order?';
+
+  @override
+  String adminOrdersCancelBody(String summary) {
+    return 'This cancels $summary. Points and coupons go back, and the payment is refunded.';
+  }
+
+  @override
+  String get adminOrdersCancelFailed => 'Could not cancel the order';
+
+  @override
+  String get adminOrdersCancelAction => 'Cancel the order';
+
+  @override
+  String adminOrdersAdvanceTo(String status) {
+    return 'Move to $status';
+  }
+
+  @override
+  String get adminOrdersLoadFailed => 'Could not load the orders.';
+
+  @override
+  String get commonClose => 'Close';
+
+  @override
+  String get orderHistoryTitle => 'Order history';
+
+  @override
+  String get orderHistoryLoadFailed => 'Could not load your orders.';
+
+  @override
+  String get orderHistoryEmptyTitle => 'No orders yet';
+
+  @override
+  String get orderHistoryEmptyDetail =>
+      'Pay in store or place a pickup or bean order and it shows up here.';
+
+  @override
+  String orderCouponDiscount(String amount) {
+    return 'Coupon -₩$amount';
+  }
+
+  @override
+  String orderPointsUsed(String amount) {
+    return '-${amount}P used';
+  }
+
+  @override
+  String orderPointsEarned(String amount) {
+    return '+${amount}P earned';
+  }
+
+  @override
+  String get orderBeanLabel => 'Bean order';
+
+  @override
+  String orderItemCount(int count) {
+    return '$count items';
+  }
+
+  @override
+  String get orderReorder => 'Order again';
+
+  @override
+  String get orderCancel => 'Cancel order';
+
+  @override
+  String get orderReorderUnavailableBeans =>
+      'These beans are no longer sold, so we cannot reorder them.';
+
+  @override
+  String get orderReorderUnavailableMenu =>
+      'This item is no longer on the menu, so we cannot reorder it.';
+
+  @override
+  String orderReorderPartialBeans(String names) {
+    return 'Added everything except $names, which we no longer sell.';
+  }
+
+  @override
+  String orderReorderPartialMenu(String names) {
+    return 'Added everything except $names, which is off the menu.';
+  }
+
+  @override
+  String get orderReorderDone => 'Your previous order is back in the cart.';
+
+  @override
+  String get orderCancelBeanTitle => 'Cancel this bean order?';
+
+  @override
+  String get orderCancelledNotice =>
+      'The order is cancelled. Your coupons and points come back.';
+
+  @override
+  String orderPickupSummary(String store, int number, int count) {
+    return 'Pickup · $store · order #$number · $count items';
+  }
+
+  @override
+  String get orderTrackStatus => 'Track this order';
+
+  @override
+  String get orderWriteReview => 'Write a review';
+
+  @override
+  String get pickupOptionTitle => 'Options';
+
+  @override
+  String get pickupTotalPrice => 'Order total';
+
+  @override
+  String get pickupAddToCart => 'Add to cart';
+
+  @override
+  String get pickupCartTitle => 'Pickup order';
+
+  @override
+  String get pickupCartRequiresSignIn => 'Sign in to use the cart.';
+
+  @override
+  String get pickupCartTooltip => 'Pickup cart';
+
+  @override
+  String get pickupCartEmptyTitle => 'Your cart is empty';
+
+  @override
+  String get pickupCartEmptyDetail => 'Add something from the menu.';
+
+  @override
+  String get pickupCartBrowse => 'Browse the menu';
+
+  @override
+  String get pickupCartChooseStorePrompt => 'Choose a pickup store';
+
+  @override
+  String get pickupCartStoreRequired => 'Pick a store before you order.';
+
+  @override
+  String pickupCartRemoved(String name) {
+    return 'Removed $name from your cart.';
+  }
+
+  @override
+  String get pickupCartStoreSheetDetail =>
+      'Where will you collect your drinks?';
+
+  @override
+  String pickupCartOrderedWithPoints(int number, String points) {
+    return 'Your pickup order is in. Order #$number · you earned ${points}P.';
+  }
+
+  @override
+  String pickupCartOrdered(int number) {
+    return 'Your pickup order is in. Order #$number · we will tell you when it is ready.';
+  }
+
+  @override
+  String get pickupTrackingTitle => 'Order status';
+
+  @override
+  String get pickupTrackingLoadFailed => 'Could not load the order status.';
+
+  @override
+  String get pickupTrackingLiveNotice =>
+      'This updates the moment the order moves.';
+
+  @override
+  String get pickupTrackingNotFound => 'Order not found';
+
+  @override
+  String get pickupTrackingNotFoundDetail => 'Check your order history.';
+
+  @override
+  String pickupOrderNumber(int number) {
+    return 'Order #$number';
+  }
+
+  @override
+  String pickupOrderedAt(String time) {
+    return 'Ordered at $time';
+  }
+
+  @override
+  String get pickupStepReceived => 'The store is looking at your order.';
+
+  @override
+  String get pickupStepPreparing => 'A barista is making it.';
+
+  @override
+  String get pickupStepReady => 'Collect it from the pickup counter.';
+
+  @override
+  String get pickupStepPickedUp => 'Enjoy — and thank you!';
+
+  @override
+  String get pickupInProgress => 'In progress';
+
+  @override
+  String get pickupRefundChecking =>
+      'Your coupons and points are back. We are still checking the refund — contact support if it drags on.';
+
+  @override
+  String get pickupRefundNormal =>
+      'Your coupons and points are back. The refund can take three to five days depending on how you paid.';
+
+  @override
+  String get pickupCancelledTitle => 'This order was cancelled';
+
+  @override
+  String get pickupCancelAction => 'Cancel this order';
+
+  @override
+  String get pickupCancelTitle => 'Cancel this pickup order?';
+
+  @override
+  String get pickupSectionItems => 'What you ordered';
+
+  @override
+  String pickupItemQuantity(int count) {
+    return '×$count';
+  }
+
+  @override
+  String get pickupPaidAmount => 'Paid';
 }

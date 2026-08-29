@@ -11,26 +11,18 @@ const beanOrderPointsUseDescription = '원두 주문 포인트 사용';
 const beanOrderCancelDescription = '원두 주문 취소';
 
 enum BeanOrderStatus {
-  received('주문 접수'),
-  roasting('로스팅 중'),
-  shipped('발송 완료'),
-  delivered('배송 완료'),
-  ready('픽업 대기'),
-  pickedUp('픽업 완료'),
-  cancelled('주문 취소');
-
-  const BeanOrderStatus(this.label);
-
-  final String label;
+  received,
+  roasting,
+  shipped,
+  delivered,
+  ready,
+  pickedUp,
+  cancelled;
 }
 
 enum BeanFulfillmentMethod {
-  delivery('택배 배송'),
-  pickup('매장 픽업');
-
-  const BeanFulfillmentMethod(this.label);
-
-  final String label;
+  delivery,
+  pickup;
 }
 
 @freezed
@@ -50,8 +42,6 @@ abstract class BeanOrderItem with _$BeanOrderItem {
       _$BeanOrderItemFromJson(json);
 
   int get totalPrice => unitPrice * quantity;
-
-  String get optionLabel => '${weight.label} · ${grind.label}';
 }
 
 @freezed

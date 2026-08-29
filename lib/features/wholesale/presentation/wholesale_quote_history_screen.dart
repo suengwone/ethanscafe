@@ -5,6 +5,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../features/wholesale/presentation/wholesale_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/wholesale_models.dart';
 import 'wholesale_providers.dart';
 
@@ -219,7 +221,7 @@ class _QuoteStatusChip extends StatelessWidget {
         border: Border.all(color: context.palette.border),
       ),
       child: Text(
-        status.label,
+        AppLocalizations.of(context).wholesaleStatusLabel(status),
         style: Theme.of(context)
             .textTheme
             .bodySmall

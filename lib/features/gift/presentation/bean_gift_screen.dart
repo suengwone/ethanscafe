@@ -6,6 +6,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../features/beans/presentation/bean_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../beans/domain/bean_models.dart';
 import '../../beans/presentation/beans_providers.dart';
 import 'gift_providers.dart';
@@ -166,7 +168,7 @@ class _BeanGiftFormState extends ConsumerState<_BeanGiftForm> {
                           children: GrindOption.values
                               .map(
                                 (grind) => ChoiceChip(
-                                  label: Text(grind.label),
+                                  label: Text(AppLocalizations.of(context).grindLabel(grind)),
                                   selected: _grind == grind,
                                   onSelected: (_) =>
                                       setState(() => _grind = grind),
@@ -313,7 +315,12 @@ class _BeanSummaryCard extends StatelessWidget {
                   Text(bean.name.keepWord, style: textTheme.labelLarge),
                   const SizedBox(height: 4),
                   Text(
-                    '${bean.origin} · ${bean.roastLevel.label} 로스팅'.keepWord,
+                    AppLocalizations.of(context)
+                        .beansRoastOf(
+                          bean.origin,
+                          AppLocalizations.of(context).roastLevelLabel(bean.roastLevel),
+                        )
+                        .keepWord,
                     style: textTheme.bodySmall,
                   ),
                 ],

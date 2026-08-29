@@ -6,6 +6,9 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../features/beans/presentation/bean_labels.dart';
+import '../../../features/subscription/presentation/subscription_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/login_required.dart';
 import '../../beans/domain/bean_models.dart';
 import '../domain/subscription_models.dart';
@@ -18,7 +21,11 @@ Future<void> showBeanSubscribeSheet(
   WidgetRef ref, {
   required Bean bean,
 }) async {
-  if (!requireLogin(context, ref, message: '원두 구독은 로그인 후 이용할 수 있어요.')) {
+  if (!requireLogin(
+    context,
+    ref,
+    message: AppLocalizations.of(context).subscriptionRequiresSignIn,
+  )) {
     return;
   }
 
@@ -48,10 +55,13 @@ Future<void> showBeanSubscribeSheet(
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(
-        '${bean.name} ${selection.cycle.label} 정기구독이 시작되었습니다.',
+        AppLocalizations.of(context).subscriptionStarted(
+          bean.name,
+          AppLocalizations.of(context).subscriptionCycleLabel(selection.cycle),
+        ),
       ),
       action: SnackBarAction(
-        label: '구독 관리',
+        label: AppLocalizations.of(context).subscriptionManage,
         onPressed: () => context.push('/profile/subscriptions'),
       ),
     ),
@@ -109,17 +119,20 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
               children: [
                 Icon(LucideIcons.repeat, size: 18, color: context.palette.accent),
                 const SizedBox(width: 8),
-                Text('원두 정기구독', style: textTheme.titleLarge),
+                Text(AppLocalizations.of(context).subscriptionTitle, style: textTheme.titleLarge),
               ],
             ),
             const SizedBox(height: 4),
             Text(
-              '${widget.bean.name} · ${widget.bean.roastLevel.label} 로스팅'
+              AppLocalizations.of(context).beansRoastOf(
+                    widget.bean.name,
+                    AppLocalizations.of(context).roastLevelLabel(widget.bean.roastLevel),
+                  )
                   .keepWord,
               style: textTheme.bodySmall,
             ),
             const SizedBox(height: 20),
-            Text('배송 주기', style: textTheme.titleSmall),
+            Text(AppLocalizations.of(context).subscriptionFieldCycle, style: textTheme.titleSmall),
             const SizedBox(height: 8),
             Row(
               children: SubscriptionCycle.values
@@ -141,7 +154,7 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
                   .toList(),
             ),
             const SizedBox(height: 20),
-            Text('용량', style: textTheme.titleSmall),
+            Text(AppLocalizations.of(context).beanFieldWeight, style: textTheme.titleSmall),
             const SizedBox(height: 8),
             Row(
               children: BeanWeight.values
@@ -163,7 +176,7 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
                   .toList(),
             ),
             const SizedBox(height: 20),
-            Text('분쇄도', style: textTheme.titleSmall),
+            Text(AppLocalizations.of(context).beanFieldGrind, style: textTheme.titleSmall),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -171,7 +184,7 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
               children: GrindOption.values
                   .map(
                     (grind) => ChoiceChip(
-                      label: Text(grind.label),
+                      label: Text(AppLocalizations.of(context).grindLabel(grind)),
                       selected: _grind == grind,
                       onSelected: (_) => setState(() => _grind = grind),
                       selectedColor: context.palette.accent.withValues(alpha: 0.25),
@@ -193,7 +206,7 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
             const SizedBox(height: 20),
             Row(
               children: [
-                Text('회당 수량', style: textTheme.titleSmall),
+                Text(AppLocalizations.of(context).subscriptionFieldQuantity, style: textTheme.titleSmall),
                 const Spacer(),
                 _QuantityButton(
                   icon: LucideIcons.minus,
@@ -220,10 +233,10 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
             const SizedBox(height: 12),
             Row(
               children: [
-                Text('회당 결제 금액', style: textTheme.bodyMedium),
+                Text(AppLocalizations.of(context).subscriptionFieldPrice, style: textTheme.bodyMedium),
                 const Spacer(),
                 Text(
-                  '${_priceFormat.format(_pricePerDelivery)}원',
+                  AppLocalizations.of(context).priceWon(_priceFormat.format(_pricePerDelivery)),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -234,7 +247,9 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
             ),
             const SizedBox(height: 6),
             Text(
-              '${_cycle.label} 로스팅한 원두를 배송해 드려요. 언제든 일시정지·해지할 수 있어요.'.keepWord,
+              AppLocalizations.of(context)
+                  .subscriptionNotice(AppLocalizations.of(context).subscriptionCycleLabel(_cycle))
+                  .keepWord,
               style: textTheme.bodySmall,
             ),
             const SizedBox(height: 16),
@@ -250,7 +265,9 @@ class _BeanSubscribeSheetState extends State<BeanSubscribeSheet> {
                   ),
                 ),
                 icon: const Icon(LucideIcons.repeat, size: 18),
-                label: Text('${_cycle.label} 구독 시작하기'),
+                label: Text(
+                  AppLocalizations.of(context).subscriptionStart(AppLocalizations.of(context).subscriptionCycleLabel(_cycle)),
+                ),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
@@ -294,7 +311,7 @@ class _CycleOption extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              cycle.label,
+              AppLocalizations.of(context).subscriptionCycleLabel(cycle),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: selected ? context.palette.accentSoft : context.palette.ink,
@@ -302,7 +319,7 @@ class _CycleOption extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '${cycle.days}일마다',
+              AppLocalizations.of(context).subscriptionEveryDays(cycle.days),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -353,7 +370,7 @@ class _WeightOption extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '${_priceFormat.format(price)}원',
+              AppLocalizations.of(context).priceWon(_priceFormat.format(price)),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],

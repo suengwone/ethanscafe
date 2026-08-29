@@ -32,7 +32,7 @@ class PickupCartScreen extends ConsumerWidget {
     final items = ref.watch(pickupCartProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('픽업 주문')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context).pickupCartTitle)),
       body: items.isEmpty
           ? const _EmptyCart()
           : ListView(
@@ -60,12 +60,16 @@ class PickupCartButton extends ConsumerWidget {
 
     return IconButton(
       onPressed: () {
-        if (!requireLogin(context, ref, message: '장바구니는 로그인 후 이용할 수 있어요.')) {
+        if (!requireLogin(
+          context,
+          ref,
+          message: AppLocalizations.of(context).pickupCartRequiresSignIn,
+        )) {
           return;
         }
         context.push('/menu/cart');
       },
-      tooltip: '픽업 장바구니',
+      tooltip: AppLocalizations.of(context).pickupCartTooltip,
       icon: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -113,19 +117,19 @@ class _EmptyCart extends StatelessWidget {
           Icon(LucideIcons.coffee, size: 48, color: context.palette.muted),
           const SizedBox(height: 16),
           Text(
-            '장바구니가 비어 있어요',
+            AppLocalizations.of(context).pickupCartEmptyTitle,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           Text(
-            '메뉴에서 마시고 싶은 음료를 담아보세요.',
+            AppLocalizations.of(context).pickupCartEmptyDetail,
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: 20),
           FilledButton.tonal(
             onPressed: () =>
                 context.canPop() ? context.pop() : context.go('/menu'),
-            child: const Text('메뉴 보러 가기'),
+            child: Text(AppLocalizations.of(context).pickupCartBrowse),
           ),
         ],
       ),
@@ -181,13 +185,15 @@ class _StoreCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    store == null ? '픽업 매장을 선택해 주세요' : store.name.keepWord,
+                    store == null
+                        ? AppLocalizations.of(context).pickupCartChooseStorePrompt
+                        : store.name.keepWord,
                     style: textTheme.labelLarge,
                   ),
                   const SizedBox(height: 3),
                   Text(
                     store == null
-                        ? '주문 전에 픽업할 매장이 필요해요.'
+                        ? AppLocalizations.of(context).pickupCartStoreRequired
                         : store.address.keepWord,
                     style: textTheme.bodySmall,
                     maxLines: 1,
@@ -198,7 +204,9 @@ class _StoreCard extends ConsumerWidget {
             ),
             TextButton(
               onPressed: () => _selectStore(context, ref),
-              child: Text(store == null ? '매장 선택' : '변경'),
+              child: Text(
+                store == null ? AppLocalizations.of(context).beanCartChooseStore : AppLocalizations.of(context).beanCartChange,
+              ),
             ),
           ],
         ),
@@ -228,9 +236,9 @@ class _StoreSelectSheet extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('픽업 매장 선택', style: textTheme.titleMedium),
+            Text(AppLocalizations.of(context).beanCartStoreSheetTitle, style: textTheme.titleMedium),
             const SizedBox(height: 4),
-            Text('음료를 픽업할 매장을 선택해 주세요.', style: textTheme.bodySmall),
+            Text(AppLocalizations.of(context).pickupCartStoreSheetDetail, style: textTheme.bodySmall),
             const SizedBox(height: 14),
             ...switch (storesState) {
               AsyncData(:final value) => value.map(
@@ -244,7 +252,7 @@ class _StoreSelectSheet extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Text(
-                      '매장 정보를 불러오지 못했습니다.',
+                      AppLocalizations.of(context).beanCartStoreLoadFailed,
                       textAlign: TextAlign.center,
                       style: textTheme.bodySmall,
                     ),
@@ -260,7 +268,7 @@ class _StoreSelectSheet extends ConsumerWidget {
             const SizedBox(height: 8),
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('닫기'),
+              child: Text(AppLocalizations.of(context).commonClose),
             ),
           ],
         ),
@@ -336,9 +344,9 @@ class _CartItemCard extends ConsumerWidget {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: Text('${removed.menuItem.name}을(를) 장바구니에서 뺐어요.'),
+          content: Text(AppLocalizations.of(context).pickupCartRemoved(removed.menuItem.name)),
           action: SnackBarAction(
-            label: '실행취소',
+            label: AppLocalizations.of(context).beanCartUndo,
             onPressed: () => notifier.insertAt(index, removed),
           ),
         ),
@@ -385,7 +393,7 @@ class _CartItemCard extends ConsumerWidget {
                   onPressed: () => _remove(context, ref),
                   icon: const Icon(LucideIcons.trash2, size: 18),
                   color: context.palette.muted,
-                  tooltip: '삭제',
+                  tooltip: AppLocalizations.of(context).beanCartDelete,
                 ),
               ],
             ),
@@ -414,7 +422,7 @@ class _CartItemCard extends ConsumerWidget {
                 ),
                 const Spacer(),
                 Text(
-                  '${_priceFormat.format(item.totalPrice)}원',
+                  AppLocalizations.of(context).priceWon(_priceFormat.format(item.totalPrice)),
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 16,
@@ -502,7 +510,7 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
     final store = ref.read(pickupStoreProvider);
     if (store == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('픽업 매장을 먼저 선택해 주세요.')),
+        SnackBar(content: Text(AppLocalizations.of(context).beanCartNeedStore)),
       );
       return;
     }
@@ -526,7 +534,7 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
           }
           setState(() => _submitting = false);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('결제가 완료되지 않았습니다.')),
+            SnackBar(content: Text(AppLocalizations.of(context).beanCartPaymentIncomplete)),
           );
           return;
         }
@@ -549,10 +557,11 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
         SnackBar(
           content: Text(
             order.earnedPoints > 0
-                ? '픽업 주문이 접수되었습니다. 주문번호 ${order.pickupNumber}번 · '
-                    '${_priceFormat.format(order.earnedPoints)}P가 적립됐어요.'
-                : '픽업 주문이 접수되었습니다. 주문번호 ${order.pickupNumber}번 · '
-                    '준비가 끝나면 알려드릴게요.',
+                ? AppLocalizations.of(context).pickupCartOrderedWithPoints(
+                    order.pickupNumber,
+                    _priceFormat.format(order.earnedPoints),
+                  )
+                : AppLocalizations.of(context).pickupCartOrdered(order.pickupNumber),
           ),
         ),
       );
@@ -567,7 +576,7 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
       }
       setState(() => _submitting = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('주문 처리에 실패했습니다. 다시 시도해 주세요.')),
+        SnackBar(content: Text(AppLocalizations.of(context).beanCartOrderFailed)),
       );
     }
   }
@@ -613,19 +622,19 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                   Expanded(
                     child: Text(
                       coupons.length > 1
-                          ? '쿠폰 ${coupons.length}장 적용'
+                          ? AppLocalizations.of(context).beanCartCouponsApplied(coupons.length)
                           : coupons.isNotEmpty
                               ? coupons.first.title
                               : applicable.isEmpty
-                                  ? '적용 가능한 쿠폰이 없어요'
-                                  : '사용 가능한 쿠폰 ${applicable.length}장',
+                                ? AppLocalizations.of(context).beanCartNoUsableCoupons
+                                : AppLocalizations.of(context).beanCartUsableCoupons(applicable.length),
                       style: Theme.of(context).textTheme.bodySmall,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   if (couponDiscount > 0)
                     Text(
-                      '-${_priceFormat.format(couponDiscount)}원',
+                      AppLocalizations.of(context).discountAmount(_priceFormat.format(couponDiscount)),
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall
@@ -635,7 +644,11 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                     onPressed: applicable.isEmpty || _submitting
                         ? null
                         : () => _selectCoupons(applicable, total),
-                    child: Text(coupons.isEmpty ? '쿠폰 선택' : '변경'),
+                    child: Text(
+                      coupons.isEmpty
+                          ? AppLocalizations.of(context).beanCartChooseCoupon
+                          : AppLocalizations.of(context).beanCartChange,
+                    ),
                   ),
                 ],
               ),
@@ -646,8 +659,8 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                   Expanded(
                     child: Text(
                       usablePoints > 0
-                          ? '포인트 사용 (보유 ${_priceFormat.format(balance)}P)'
-                          : '사용 가능한 포인트가 없어요',
+                        ? AppLocalizations.of(context).beanCartUsePoints(_priceFormat.format(balance))
+                        : AppLocalizations.of(context).beanCartNoPoints,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
@@ -676,11 +689,11 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          '총 $count개',
+                          AppLocalizations.of(context).beanCartItemCount(count),
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         Text(
-                          '${_priceFormat.format(payAmount)}원',
+                          AppLocalizations.of(context).priceWon(_priceFormat.format(payAmount)),
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -702,10 +715,10 @@ class _CheckoutBarState extends ConsumerState<_CheckoutBar> {
                     ),
                     label: Text(
                       _submitting
-                          ? '주문 중...'
-                          : payAmount > 0
-                              ? '결제하기'
-                              : '주문하기',
+                        ? AppLocalizations.of(context).beanCartOrdering
+                        : payAmount > 0
+                        ? AppLocalizations.of(context).beanCartPay
+                        : AppLocalizations.of(context).beanCartOrder,
                     ),
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(

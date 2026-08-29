@@ -145,6 +145,7 @@ void main() {
     final order = await repository.placeOrder(items: _items);
 
     expect(order.summary, '에티오피아 예가체프 아리차 에이미 G1 외 1건');
-    expect(order.items.first.optionLabel, '200g · 핸드드립');
+    expect(order.items.first.weight, BeanWeight.g200);
+    expect(order.items.first.grind, GrindOption.handDrip);
   });
 }

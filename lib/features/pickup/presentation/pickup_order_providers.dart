@@ -82,7 +82,7 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
     PaymentApproval? payment,
   }) async {
     if (cartItems.isEmpty) {
-      throw StateError('장바구니가 비어 있습니다.');
+      throw StateError('The cart is empty.');
     }
 
     final items = cartItems
@@ -108,13 +108,13 @@ class PickupOrdersController extends AsyncNotifier<List<PickupOrder>> {
       throw ArgumentError.value(
         usedPoints,
         'usedPoints',
-        '사용 포인트가 결제 금액을 벗어났습니다.',
+        'The points used fall outside the order total.',
       );
     }
 
     final paidAmount = totalAmount - couponDiscount - usedPoints;
     if (payment != null && payment.amount != paidAmount) {
-      throw StateError('결제 승인 금액이 주문 금액과 일치하지 않습니다.');
+      throw StateError('The approved amount does not match the order total.');
     }
 
     final order = await ref.read(pickupCheckoutProvider).placeOrder(

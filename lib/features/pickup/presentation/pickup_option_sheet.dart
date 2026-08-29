@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../menu/domain/menu_models.dart';
 import 'pickup_cart_providers.dart';
 
@@ -76,7 +77,7 @@ class _PickupOptionSheetState extends State<PickupOptionSheet> {
             Text(item.description.keepWord, style: textTheme.bodySmall),
             if (item.servingOptions.isNotEmpty) ...[
               const SizedBox(height: 20),
-              Text('옵션', style: textTheme.titleSmall),
+              Text(AppLocalizations.of(context).pickupOptionTitle, style: textTheme.titleSmall),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
@@ -108,7 +109,7 @@ class _PickupOptionSheetState extends State<PickupOptionSheet> {
             const SizedBox(height: 20),
             Row(
               children: [
-                Text('수량', style: textTheme.titleSmall),
+                Text(AppLocalizations.of(context).beanFieldQuantity, style: textTheme.titleSmall),
                 const Spacer(),
                 _QuantityButton(
                   icon: LucideIcons.minus,
@@ -135,10 +136,10 @@ class _PickupOptionSheetState extends State<PickupOptionSheet> {
             const SizedBox(height: 12),
             Row(
               children: [
-                Text('총 주문 금액', style: textTheme.bodyMedium),
+                Text(AppLocalizations.of(context).pickupTotalPrice, style: textTheme.bodyMedium),
                 const Spacer(),
                 Text(
-                  '${_priceFormat.format(_totalPrice)}원',
+                  AppLocalizations.of(context).priceWon(_priceFormat.format(_totalPrice)),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -155,7 +156,7 @@ class _PickupOptionSheetState extends State<PickupOptionSheet> {
                   PickupOptionSelection(option: _option, quantity: _quantity),
                 ),
                 icon: const Icon(LucideIcons.shoppingBag, size: 18),
-                label: const Text('장바구니 담기'),
+                label: Text(AppLocalizations.of(context).pickupAddToCart),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,

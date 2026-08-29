@@ -51,11 +51,11 @@ class AdminOrdersController {
   Future<void> advancePickup(ActivePickupOrder entry) async {
     final next = nextPickupStatus(entry.status);
     if (next == null) {
-      throw StateError('더 진행할 단계가 없습니다.');
+      throw StateError('There is no next step.');
     }
     final repository = _ref.read(adminOrdersRepositoryProvider);
     if (repository == null) {
-      throw StateError('관리자 기능을 사용할 수 없습니다.');
+      throw StateError('Admin actions are unavailable.');
     }
     await repository.advancePickupStatus(
       uid: entry.uid,
@@ -69,11 +69,11 @@ class AdminOrdersController {
     final next =
         nextBeanStatus(entry.status, entry.fulfillmentMethod);
     if (next == null) {
-      throw StateError('더 진행할 단계가 없습니다.');
+      throw StateError('There is no next step.');
     }
     final repository = _ref.read(adminOrdersRepositoryProvider);
     if (repository == null) {
-      throw StateError('관리자 기능을 사용할 수 없습니다.');
+      throw StateError('Admin actions are unavailable.');
     }
     await repository.advanceBeanStatus(
       uid: entry.uid,
@@ -96,7 +96,7 @@ class AdminOrdersController {
   Future<void> retryRefund(RefundFailure failure) async {
     final repository = _ref.read(adminOrdersRepositoryProvider);
     if (repository == null) {
-      throw StateError('관리자 기능을 사용할 수 없습니다.');
+      throw StateError('Admin actions are unavailable.');
     }
     await repository.retryRefund(failure);
     _ref.invalidate(refundFailuresProvider);
@@ -105,7 +105,7 @@ class AdminOrdersController {
   Future<void> _cancel(String orderType, String uid, String orderId) {
     final repository = _ref.read(adminOrdersRepositoryProvider);
     if (repository == null) {
-      throw StateError('관리자 기능을 사용할 수 없습니다.');
+      throw StateError('Admin actions are unavailable.');
     }
     return repository.cancelOrder(
       orderType: orderType,

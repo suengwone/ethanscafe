@@ -4,6 +4,9 @@ import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../features/order/presentation/order_labels.dart';
+import '../../../features/pickup/presentation/pickup_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/admin_order_models.dart';
 import '../domain/refund_failure_models.dart';
 import 'admin_orders_providers.dart';
@@ -23,18 +26,20 @@ class AdminOrdersScreen extends ConsumerWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('주문 관리'),
-          bottom: const TabBar(
+          title: Text(AppLocalizations.of(context).adminOrdersTitle),
+          bottom: TabBar(
             tabs: [
-              Tab(text: '픽업'),
-              Tab(text: '원두'),
-              Tab(text: '환불 실패'),
+              Tab(text: AppLocalizations.of(context).orderTypePickup),
+              Tab(text: AppLocalizations.of(context).orderTypeBean),
+              Tab(
+                text: AppLocalizations.of(context).adminOrdersTabRefundFailed,
+              ),
             ],
           ),
           actions: [
             IconButton(
               icon: const Icon(LucideIcons.refreshCw),
-              tooltip: '새로고침',
+              tooltip: AppLocalizations.of(context).adminOrdersRefresh,
               onPressed: () {
                 ref.invalidate(activePickupOrdersProvider);
                 ref.invalidate(activeBeanOrdersProvider);
@@ -63,12 +68,13 @@ class _PickupOrdersTab extends ConsumerWidget {
     final state = ref.watch(activePickupOrdersProvider);
     return state.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, _) => _ErrorView(
-        onRetry: () => ref.invalidate(activePickupOrdersProvider),
-      ),
+      error: (error, _) =>
+          _ErrorView(onRetry: () => ref.invalidate(activePickupOrdersProvider)),
       data: (orders) {
         if (orders.isEmpty) {
-          return const _EmptyView(message: '처리할 픽업 주문이 없습니다.');
+          return _EmptyView(
+            message: AppLocalizations.of(context).adminOrdersNoPickup,
+          );
         }
         return ListView.separated(
           padding: const EdgeInsets.all(16),
@@ -81,17 +87,22 @@ class _PickupOrdersTab extends ConsumerWidget {
               badge: '#${entry.pickupNumber}',
               summary: entry.summary,
               subtitle: entry.storeName,
-              statusLabel: entry.status.label,
+              statusLabel: AppLocalizations.of(
+                context,
+              ).pickupStatusLabel(entry.status),
               createdAt: entry.createdAt,
-              nextLabel: next?.label,
+              nextLabel: next == null
+                  ? null
+                  : AppLocalizations.of(context).pickupStatusLabel(next),
               onAdvance: next == null
                   ? null
                   : () => ref
-                      .read(adminOrdersControllerProvider)
-                      .advancePickup(entry),
+                        .read(adminOrdersControllerProvider)
+                        .advancePickup(entry),
               onCancel: isPickupStatusCancellable(entry.status)
-                  ? () =>
-                      ref.read(adminOrdersControllerProvider).cancelPickup(entry)
+                  ? () => ref
+                        .read(adminOrdersControllerProvider)
+                        .cancelPickup(entry)
                   : null,
             );
           },
@@ -109,12 +120,13 @@ class _BeanOrdersTab extends ConsumerWidget {
     final state = ref.watch(activeBeanOrdersProvider);
     return state.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, _) => _ErrorView(
-        onRetry: () => ref.invalidate(activeBeanOrdersProvider),
-      ),
+      error: (error, _) =>
+          _ErrorView(onRetry: () => ref.invalidate(activeBeanOrdersProvider)),
       data: (orders) {
         if (orders.isEmpty) {
-          return const _EmptyView(message: '처리할 원두 주문이 없습니다.');
+          return _EmptyView(
+            message: AppLocalizations.of(context).adminOrdersNoBean,
+          );
         }
         return ListView.separated(
           padding: const EdgeInsets.all(16),
@@ -122,24 +134,29 @@ class _BeanOrdersTab extends ConsumerWidget {
           separatorBuilder: (_, _) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
             final entry = orders[index];
-            final next = nextBeanStatus(
-              entry.status,
-              entry.fulfillmentMethod,
-            );
+            final next = nextBeanStatus(entry.status, entry.fulfillmentMethod);
             return _OrderCard(
-              badge: entry.fulfillmentMethod.label,
+              badge: AppLocalizations.of(
+                context,
+              ).fulfillmentLabel(entry.fulfillmentMethod),
               summary: entry.summary,
               subtitle: entry.destinationLabel,
-              statusLabel: entry.status.label,
+              statusLabel: AppLocalizations.of(
+                context,
+              ).beanOrderStatusLabel(entry.status),
               createdAt: entry.createdAt,
-              nextLabel: next?.label,
+              nextLabel: next == null
+                  ? null
+                  : AppLocalizations.of(context).beanOrderStatusLabel(next),
               onAdvance: next == null
                   ? null
-                  : () =>
-                      ref.read(adminOrdersControllerProvider).advanceBean(entry),
+                  : () => ref
+                        .read(adminOrdersControllerProvider)
+                        .advanceBean(entry),
               onCancel: isBeanStatusCancellable(entry.status)
-                  ? () =>
-                      ref.read(adminOrdersControllerProvider).cancelBean(entry)
+                  ? () => ref
+                        .read(adminOrdersControllerProvider)
+                        .cancelBean(entry)
                   : null,
             );
           },
@@ -158,12 +175,13 @@ class _RefundFailuresTab extends ConsumerWidget {
     final state = ref.watch(refundFailuresProvider);
     return state.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, _) => _ErrorView(
-        onRetry: () => ref.invalidate(refundFailuresProvider),
-      ),
+      error: (error, _) =>
+          _ErrorView(onRetry: () => ref.invalidate(refundFailuresProvider)),
       data: (failures) {
         if (failures.isEmpty) {
-          return const _EmptyView(message: '환불이 밀린 주문이 없습니다.');
+          return _EmptyView(
+            message: AppLocalizations.of(context).adminOrdersNoRefundFailures,
+          );
         }
         return ListView.separated(
           padding: const EdgeInsets.all(16),
@@ -205,13 +223,19 @@ class _RefundFailureCardState extends State<_RefundFailureCard> {
       await widget.onRetry();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('환불했습니다.')),
+          SnackBar(
+            content: Text(AppLocalizations.of(context).adminOrdersRefunded),
+          ),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('환불에 실패했습니다: $e')),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context).adminOrdersRefundFailed('$e'),
+            ),
+          ),
         );
       }
     } finally {
@@ -237,17 +261,26 @@ class _RefundFailureCardState extends State<_RefundFailureCard> {
         children: [
           Row(
             children: [
-              Icon(LucideIcons.triangleAlert, size: 16, color: Colors.redAccent),
+              Icon(
+                LucideIcons.triangleAlert,
+                size: 16,
+                color: Colors.redAccent,
+              ),
               const SizedBox(width: 6),
               Text(
-                '${failure.orderTypeLabel} · 환불 실패',
-                style: textTheme.labelMedium
-                    ?.copyWith(color: Colors.redAccent),
+                AppLocalizations.of(context).adminOrdersRefundFailedLabel(
+                  failure.orderType == 'pickup'
+                      ? AppLocalizations.of(context).orderTypePickup
+                      : AppLocalizations.of(context).orderTypeBean,
+                ),
+                style: textTheme.labelMedium?.copyWith(color: Colors.redAccent),
               ),
               const Spacer(),
               Text(
                 _dateFormat.format(failure.failedAt),
-                style: textTheme.bodySmall?.copyWith(color: context.palette.muted),
+                style: textTheme.bodySmall?.copyWith(
+                  color: context.palette.muted,
+                ),
               ),
             ],
           ),
@@ -261,7 +294,9 @@ class _RefundFailureCardState extends State<_RefundFailureCard> {
           ),
           const SizedBox(height: 2),
           Text(
-            '${_amountFormat.format(failure.amount)}원',
+            AppLocalizations.of(
+              context,
+            ).priceWon(_amountFormat.format(failure.amount)),
             style: textTheme.bodySmall?.copyWith(color: context.palette.muted),
           ),
           const SizedBox(height: 14),
@@ -276,7 +311,7 @@ class _RefundFailureCardState extends State<_RefundFailureCard> {
                         height: 16,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('환불 재시도'),
+                    : Text(AppLocalizations.of(context).adminOrdersRetryRefund),
               ),
             ],
           ),
@@ -314,29 +349,34 @@ class _OrderCard extends StatefulWidget {
 class _OrderCardState extends State<_OrderCard> {
   bool _busy = false;
 
-  Future<void> _advance() => _run(widget.onAdvance, '상태를 바꾸지 못했습니다');
+  Future<void> _advance() => _run(
+    widget.onAdvance,
+    AppLocalizations.of(context).adminOrdersAdvanceFailed,
+  );
 
   /// 취소는 결제 환불까지 되돌리므로 한 번 더 확인받는다.
   Future<void> _cancel() async {
     if (widget.onCancel == null || _busy) {
       return;
     }
+    // 다이얼로그를 기다린 뒤에는 이 위젯이 사라졌을 수 있어 context를 다시
+    // 만지지 않는다. 실패 문구는 미리 꺼내 둔다.
+    final failureMessage = AppLocalizations.of(context).adminOrdersCancelFailed;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('주문을 취소할까요?'),
+        title: Text(AppLocalizations.of(context).adminOrdersCancelTitle),
         content: Text(
-          '${widget.summary} 주문을 취소합니다.\n'
-          '사용한 포인트와 쿠폰을 돌려주고 결제한 금액을 환불합니다.',
+          AppLocalizations.of(context).adminOrdersCancelBody(widget.summary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('닫기'),
+            child: Text(AppLocalizations.of(context).commonClose),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('주문 취소'),
+            child: Text(AppLocalizations.of(context).adminOrdersCancelAction),
           ),
         ],
       ),
@@ -344,7 +384,7 @@ class _OrderCardState extends State<_OrderCard> {
     if (confirmed != true) {
       return;
     }
-    await _run(widget.onCancel, '주문을 취소하지 못했습니다');
+    await _run(widget.onCancel, failureMessage);
   }
 
   Future<void> _run(Future<void> Function()? action, String failure) async {
@@ -356,9 +396,9 @@ class _OrderCardState extends State<_OrderCard> {
       await action();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$failure: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('$failure: $e')));
       }
     } finally {
       if (mounted) {
@@ -383,8 +423,10 @@ class _OrderCardState extends State<_OrderCard> {
           Row(
             children: [
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: context.palette.accent.withValues(alpha: 0.18),
                   borderRadius: BorderRadius.circular(8),
@@ -400,7 +442,9 @@ class _OrderCardState extends State<_OrderCard> {
               const Spacer(),
               Text(
                 _timeFormat.format(widget.createdAt),
-                style: textTheme.bodySmall?.copyWith(color: context.palette.muted),
+                style: textTheme.bodySmall?.copyWith(
+                  color: context.palette.muted,
+                ),
               ),
             ],
           ),
@@ -424,13 +468,15 @@ class _OrderCardState extends State<_OrderCard> {
               const SizedBox(width: 6),
               Text(
                 widget.statusLabel,
-                style: textTheme.bodySmall?.copyWith(color: context.palette.ink),
+                style: textTheme.bodySmall?.copyWith(
+                  color: context.palette.ink,
+                ),
               ),
               const Spacer(),
               if (widget.onCancel != null)
                 TextButton(
                   onPressed: _busy ? null : _cancel,
-                  child: const Text('취소'),
+                  child: Text(AppLocalizations.of(context).commonCancel),
                 ),
               if (widget.onCancel != null && widget.nextLabel != null)
                 const SizedBox(width: 8),
@@ -443,7 +489,11 @@ class _OrderCardState extends State<_OrderCard> {
                           height: 16,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : Text('${widget.nextLabel}로'),
+                      : Text(
+                          AppLocalizations.of(
+                            context,
+                          ).adminOrdersAdvanceTo(widget.nextLabel!),
+                        ),
                 ),
             ],
           ),
@@ -464,14 +514,17 @@ class _EmptyView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(LucideIcons.clipboardCheck, size: 40, color: context.palette.muted),
+          Icon(
+            LucideIcons.clipboardCheck,
+            size: 40,
+            color: context.palette.muted,
+          ),
           const SizedBox(height: 12),
           Text(
             message,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(color: context.palette.muted),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: context.palette.muted),
           ),
         ],
       ),
@@ -490,9 +543,12 @@ class _ErrorView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text('주문을 불러오지 못했습니다.'),
+          Text(AppLocalizations.of(context).adminOrdersLoadFailed),
           const SizedBox(height: 8),
-          TextButton(onPressed: onRetry, child: const Text('다시 시도')),
+          TextButton(
+            onPressed: onRetry,
+            child: Text(AppLocalizations.of(context).retry),
+          ),
         ],
       ),
     );

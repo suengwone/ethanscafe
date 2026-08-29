@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../features/beans/presentation/bean_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../beans/domain/bean_models.dart';
 import '../domain/comma_list.dart';
 import 'catalog_admin_providers.dart';
@@ -240,7 +242,10 @@ class _BeanEditScreenState extends ConsumerState<BeanEditScreen> {
               decoration: const InputDecoration(labelText: '로스팅 정도'),
               items: [
                 for (final level in RoastLevel.values)
-                  DropdownMenuItem(value: level, child: Text(level.label)),
+                  DropdownMenuItem(
+                    value: level,
+                    child: Text(AppLocalizations.of(context).roastLevelLabel(level)),
+                  ),
               ],
               onChanged: (value) => setState(
                 () => _roastLevel = value ?? _roastLevel,

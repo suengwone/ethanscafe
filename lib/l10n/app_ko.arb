@@ -309,5 +309,573 @@
   "storeNoticeTitle": "매장 공지",
   "storeNoInfo": "정보 없음",
   "storeLocationServiceOff": "위치 서비스가 꺼져 있습니다. 설정에서 위치 서비스를 켜주세요.",
-  "storeLocationPermissionDenied": "위치 권한이 없어 거리를 계산할 수 없습니다."
+  "storeLocationPermissionDenied": "위치 권한이 없어 거리를 계산할 수 없습니다.",
+  "roastLight": "라이트",
+  "roastMediumLight": "미디엄 라이트",
+  "roastMedium": "미디엄",
+  "roastMediumDark": "미디엄 다크",
+  "roastDark": "다크",
+  "grindWholeBean": "홀빈",
+  "grindWholeBeanNote": "분쇄하지 않은 원두 그대로",
+  "grindEspresso": "에스프레소",
+  "grindEspressoNote": "가정용 에스프레소 머신용",
+  "grindMokaPot": "모카포트",
+  "grindMokaPotNote": "모카포트 추출용",
+  "grindHandDrip": "핸드드립",
+  "grindHandDripNote": "푸어오버·드리퍼용",
+  "grindFrenchPress": "프렌치프레스",
+  "grindFrenchPressNote": "침출식 추출용",
+  "subscriptionCycleWeekly": "매주",
+  "subscriptionCycleBiweekly": "격주",
+  "subscriptionCycleMonthly": "매월",
+  "subscriptionStatusActive": "구독 중",
+  "subscriptionStatusPaused": "일시정지",
+  "subscriptionStatusCancelled": "해지됨",
+  "beanOrderStatusReceived": "주문 접수",
+  "beanOrderStatusRoasting": "로스팅 중",
+  "beanOrderStatusShipped": "발송 완료",
+  "beanOrderStatusDelivered": "배송 완료",
+  "beanOrderStatusReady": "픽업 대기",
+  "beanOrderStatusPickedUp": "픽업 완료",
+  "beanOrderStatusCancelled": "주문 취소",
+  "fulfillmentDelivery": "택배 배송",
+  "fulfillmentPickup": "매장 픽업",
+  "pickupStatusReceived": "주문 접수",
+  "pickupStatusPreparing": "제조 중",
+  "pickupStatusReady": "픽업 대기",
+  "pickupStatusPickedUp": "픽업 완료",
+  "pickupStatusCancelled": "주문 취소",
+  "refundStatusPending": "환불 처리 중",
+  "refundStatusDone": "환불 완료",
+  "refundStatusFailed": "환불 확인 중",
+  "wholesaleStatusRequested": "견적 확인 중",
+  "wholesaleStatusQuoted": "견적서 발송",
+  "wholesaleStatusConfirmed": "주문 확정",
+  "orderItemsSummary": "{first} 외 {others}건",
+  "@orderItemsSummary": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "others": {
+        "type": "int"
+      }
+    }
+  },
+  "orderTypePickup": "픽업",
+  "orderTypeBean": "원두",
+  "orderRecipientUnset": "수령인 미지정",
+  "orderStoreUnset": "매장 미지정",
+  "beanOptionLabel": "{weight} · {grind}",
+  "@beanOptionLabel": {
+    "placeholders": {
+      "weight": {
+        "type": "String"
+      },
+      "grind": {
+        "type": "String"
+      }
+    }
+  },
+  "beanQuantity": "{name} {count}개",
+  "@beanQuantity": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "subscriptionCycleQuantity": "{cycle} {count}개",
+  "@subscriptionCycleQuantity": {
+    "placeholders": {
+      "cycle": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "beansLoadFailed": "원두 정보를 불러오지 못했습니다.",
+  "beansFilterAcidic": "산미가 화사한 원두",
+  "beansFilterAcidicNote": "과일처럼 밝고 산뜻한 맛을 좋아한다면",
+  "beansFilterMellow": "산미 적은 고소한 원두",
+  "beansFilterMellowNote": "산미 부담 없이 고소하고 묵직한 한 잔을 원한다면",
+  "beansFilterDecaf": "디카페인",
+  "beansFilterDecafNote": "늦은 오후에도 카페인 걱정 없이",
+  "beansCartCount": "장바구니 · {count}개",
+  "@beansCartCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "beansRoastNotice": "매주 화요일 로스팅한 원두를 홀빈 또는 원하는 분쇄도로 보내드립니다.",
+  "beansRoastOf": "{origin} · {roast} 로스팅",
+  "@beansRoastOf": {
+    "placeholders": {
+      "origin": {
+        "type": "String"
+      },
+      "roast": {
+        "type": "String"
+      }
+    }
+  },
+  "beansPricePer200g": "200g 기준",
+  "beanNotFound": "원두를 찾을 수 없습니다: {beanId}",
+  "@beanNotFound": {
+    "placeholders": {
+      "beanId": {
+        "type": "String"
+      }
+    }
+  },
+  "beanCartTitle": "원두 장바구니",
+  "beanCartEmptyTitle": "장바구니가 비어 있어요",
+  "beanCartEmptyDetail": "마음에 드는 원두를 담아보세요.",
+  "beanCartBrowse": "원두 보러 가기",
+  "beanCartFulfillment": "수령 방법",
+  "beanCartNoAddress": "등록된 배송지가 없어요. 배송지를 추가해 주세요.",
+  "beanCartAddAddress": "배송지 추가",
+  "beanCartChange": "변경",
+  "beanCartNoStore": "원두를 픽업할 매장을 선택해 주세요.",
+  "beanCartChooseStore": "매장 선택",
+  "beanCartAddressSheetTitle": "배송지 선택",
+  "beanCartAddressSheetDetail": "원두를 받을 배송지를 선택해 주세요.",
+  "beanCartAddressLoadFailed": "배송지를 불러오지 못했습니다.",
+  "beanCartManageAddresses": "배송지 관리",
+  "beanCartClose": "닫기",
+  "beanCartDefaultAddress": "기본 배송지",
+  "beanCartStoreSheetTitle": "픽업 매장 선택",
+  "beanCartStoreSheetDetail": "로스팅이 끝나면 선택한 매장에서 픽업할 수 있어요.",
+  "beanCartStoreLoadFailed": "매장 정보를 불러오지 못했습니다.",
+  "beanCartRemoved": "{name}을(를) 장바구니에서 뺐어요.",
+  "@beanCartRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "beanCartUndo": "실행취소",
+  "beanCartDelete": "삭제",
+  "beanCartNeedAddress": "배송지를 먼저 등록해 주세요.",
+  "beanCartNeedStore": "픽업 매장을 먼저 선택해 주세요.",
+  "beanCartPaymentIncomplete": "결제가 완료되지 않았습니다.",
+  "beanCartOrderedWithPoints": "원두 주문이 접수되었습니다. {points}P가 적립됐어요.",
+  "@beanCartOrderedWithPoints": {
+    "placeholders": {
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "beanCartOrderedPickup": "원두 주문이 접수되었습니다. 로스팅 후 매장에서 픽업하실 수 있어요.",
+  "beanCartOrderedDelivery": "원두 주문이 접수되었습니다. 로스팅 후 순차 발송됩니다.",
+  "beanCartOrderFailed": "주문 처리에 실패했습니다. 다시 시도해 주세요.",
+  "beanCartCouponsApplied": "쿠폰 {count}장 적용",
+  "@beanCartCouponsApplied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "beanCartNoUsableCoupons": "적용 가능한 쿠폰이 없어요",
+  "beanCartUsableCoupons": "사용 가능한 쿠폰 {count}장",
+  "@beanCartUsableCoupons": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "beanCartChooseCoupon": "쿠폰 선택",
+  "beanCartUsePoints": "포인트 사용 (보유 {balance}P)",
+  "@beanCartUsePoints": {
+    "placeholders": {
+      "balance": {
+        "type": "String"
+      }
+    }
+  },
+  "beanCartNoPoints": "사용 가능한 포인트가 없어요",
+  "beanCartItemCount": "총 {count}개",
+  "@beanCartItemCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "beanCartOrdering": "주문 중...",
+  "beanCartPay": "결제하기",
+  "beanCartOrder": "주문하기",
+  "discountAmount": "-{amount}원",
+  "@discountAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "beanDetailTitle": "원두 상세",
+  "beanRoastBadge": "{roast} 로스팅",
+  "@beanRoastBadge": {
+    "placeholders": {
+      "roast": {
+        "type": "String"
+      }
+    }
+  },
+  "beanSectionNotes": "향미 노트",
+  "beanSectionProfile": "테이스팅 프로필",
+  "beanProfileAcidity": "산미",
+  "beanProfileBody": "바디",
+  "beanProfileSweetness": "단맛",
+  "beanSectionStory": "원두 이야기",
+  "beanSectionDetails": "상세 정보",
+  "beanFieldOrigin": "원산지",
+  "beanFieldProcess": "가공 방식",
+  "beanFieldRoast": "로스팅",
+  "beanFieldBrews": "추천 추출",
+  "beanFieldPrice": "가격",
+  "beanPriceBoth": "200g {price200}원 · 500g {price500}원",
+  "@beanPriceBoth": {
+    "placeholders": {
+      "price200": {
+        "type": "String"
+      },
+      "price500": {
+        "type": "String"
+      }
+    }
+  },
+  "beanCartTooltip": "원두 장바구니",
+  "beanGiftTooltip": "선물하기",
+  "beanSubscribe": "구독",
+  "beanSoldOut": "품절",
+  "beanOrder": "주문하기",
+  "beanGiftRequiresSignIn": "원두 선물하기는 로그인 후 이용할 수 있어요.",
+  "beanOrderRequiresSignIn": "원두 주문은 로그인 후 이용할 수 있어요.",
+  "beanAddedToCart": "{name}을(를) 장바구니에 담았습니다.",
+  "@beanAddedToCart": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "beanViewCart": "보기",
+  "beanFieldWeight": "용량",
+  "beanFieldGrind": "분쇄도",
+  "beanFieldQuantity": "수량",
+  "beanTotalPrice": "총 결제 금액",
+  "beanAddToCart": "장바구니 담기",
+  "beanOrderForAmount": "{amount}원 주문",
+  "@beanOrderForAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionRequiresSignIn": "원두 구독은 로그인 후 이용할 수 있어요.",
+  "subscriptionStarted": "{bean} {cycle} 정기구독이 시작되었습니다.",
+  "@subscriptionStarted": {
+    "placeholders": {
+      "bean": {
+        "type": "String"
+      },
+      "cycle": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionManage": "구독 관리",
+  "subscriptionTitle": "원두 정기구독",
+  "subscriptionFieldCycle": "배송 주기",
+  "subscriptionFieldQuantity": "회당 수량",
+  "subscriptionFieldPrice": "회당 결제 금액",
+  "subscriptionNotice": "{cycle} 로스팅한 원두를 배송해 드려요. 언제든 일시정지·해지할 수 있어요.",
+  "@subscriptionNotice": {
+    "placeholders": {
+      "cycle": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionStart": "{cycle} 구독 시작하기",
+  "@subscriptionStart": {
+    "placeholders": {
+      "cycle": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionEveryDays": "{days}일마다",
+  "@subscriptionEveryDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "subscriptionListTitle": "원두 정기구독",
+  "subscriptionLoadFailed": "구독 정보를 불러오지 못했습니다.",
+  "subscriptionEmptyTitle": "구독 중인 원두가 없어요",
+  "subscriptionEmptyDetail": "원두 상세에서 정기구독을 시작하면 주기마다 배송해 드려요.",
+  "subscriptionBrowse": "원두 보러 가기",
+  "subscriptionCancelTitle": "구독 해지",
+  "subscriptionCancelConfirm": "{bean} 정기구독을 해지할까요?\n해지 후에는 배송이 중단됩니다.",
+  "@subscriptionCancelConfirm": {
+    "placeholders": {
+      "bean": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionCancelled": "{bean} 구독이 해지되었습니다.",
+  "@subscriptionCancelled": {
+    "placeholders": {
+      "bean": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionStartedOn": "구독 시작 {date}",
+  "@subscriptionStartedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionNextDelivery": "다음 배송 {date}",
+  "@subscriptionNextDelivery": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionPricePerDelivery": "회당 {amount}원",
+  "@subscriptionPricePerDelivery": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionResume": "구독 재개",
+  "subscriptionPause": "일시정지",
+  "subscriptionCancelAction": "해지하기",
+  "commonCancel": "취소",
+  "adminOrdersTitle": "주문 관리",
+  "adminOrdersRefresh": "새로고침",
+  "adminOrdersTabRefundFailed": "환불 실패",
+  "adminOrdersNoPickup": "처리할 픽업 주문이 없습니다.",
+  "adminOrdersNoBean": "처리할 원두 주문이 없습니다.",
+  "adminOrdersNoRefundFailures": "환불이 밀린 주문이 없습니다.",
+  "adminOrdersRefunded": "환불했습니다.",
+  "adminOrdersRefundFailed": "환불에 실패했습니다: {error}",
+  "@adminOrdersRefundFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "adminOrdersRefundFailedLabel": "{type} · 환불 실패",
+  "@adminOrdersRefundFailedLabel": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "adminOrdersRetryRefund": "환불 재시도",
+  "adminOrdersAdvanceFailed": "상태를 바꾸지 못했습니다",
+  "adminOrdersCancelTitle": "주문을 취소할까요?",
+  "adminOrdersCancelBody": "{summary} 주문을 취소합니다.\n사용한 포인트와 쿠폰을 돌려주고 결제한 금액을 환불합니다.",
+  "@adminOrdersCancelBody": {
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "adminOrdersCancelFailed": "주문을 취소하지 못했습니다",
+  "adminOrdersCancelAction": "주문 취소",
+  "adminOrdersAdvanceTo": "{status}로",
+  "@adminOrdersAdvanceTo": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "adminOrdersLoadFailed": "주문을 불러오지 못했습니다.",
+  "commonClose": "닫기",
+  "orderHistoryTitle": "주문 내역",
+  "orderHistoryLoadFailed": "주문 내역을 불러오지 못했습니다.",
+  "orderHistoryEmptyTitle": "주문 내역이 없어요",
+  "orderHistoryEmptyDetail": "매장 결제나 픽업 · 원두 주문을 하면 내역이 쌓여요.",
+  "orderCouponDiscount": "쿠폰 -{amount}원",
+  "@orderCouponDiscount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "orderPointsUsed": "-{amount}P 사용",
+  "@orderPointsUsed": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "orderPointsEarned": "+{amount}P 적립",
+  "@orderPointsEarned": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "orderBeanLabel": "원두 주문",
+  "orderItemCount": "총 {count}개",
+  "@orderItemCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "orderReorder": "재주문",
+  "orderCancel": "주문 취소",
+  "orderReorderUnavailableBeans": "지금은 판매하지 않는 상품이라 재주문할 수 없어요.",
+  "orderReorderUnavailableMenu": "지금은 판매하지 않는 메뉴라 재주문할 수 없어요.",
+  "orderReorderPartialBeans": "판매 종료된 {names} 상품은 제외하고 장바구니에 담았어요.",
+  "@orderReorderPartialBeans": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "orderReorderPartialMenu": "판매 종료된 {names} 메뉴는 제외하고 장바구니에 담았어요.",
+  "@orderReorderPartialMenu": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "orderReorderDone": "이전 주문 구성을 장바구니에 담았어요.",
+  "orderCancelBeanTitle": "원두 주문을 취소할까요?",
+  "orderCancelledNotice": "주문이 취소되었어요. 사용한 쿠폰과 포인트는 복구됩니다.",
+  "orderPickupSummary": "픽업 주문 · {store} · 주문번호 {number}번 · 총 {count}개",
+  "@orderPickupSummary": {
+    "placeholders": {
+      "store": {
+        "type": "String"
+      },
+      "number": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "orderTrackStatus": "주문 현황 보기",
+  "orderWriteReview": "리뷰 쓰기",
+  "pickupOptionTitle": "옵션",
+  "pickupTotalPrice": "총 주문 금액",
+  "pickupAddToCart": "장바구니 담기",
+  "pickupCartTitle": "픽업 주문",
+  "pickupCartRequiresSignIn": "장바구니는 로그인 후 이용할 수 있어요.",
+  "pickupCartTooltip": "픽업 장바구니",
+  "pickupCartEmptyTitle": "장바구니가 비어 있어요",
+  "pickupCartEmptyDetail": "메뉴에서 마시고 싶은 음료를 담아보세요.",
+  "pickupCartBrowse": "메뉴 보러 가기",
+  "pickupCartChooseStorePrompt": "픽업 매장을 선택해 주세요",
+  "pickupCartStoreRequired": "주문 전에 픽업할 매장이 필요해요.",
+  "pickupCartRemoved": "{name}을(를) 장바구니에서 뺐어요.",
+  "@pickupCartRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pickupCartStoreSheetDetail": "음료를 픽업할 매장을 선택해 주세요.",
+  "pickupCartOrderedWithPoints": "픽업 주문이 접수되었습니다. 주문번호 {number}번 · {points}P가 적립됐어요.",
+  "@pickupCartOrderedWithPoints": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "points": {
+        "type": "String"
+      }
+    }
+  },
+  "pickupCartOrdered": "픽업 주문이 접수되었습니다. 주문번호 {number}번 · 준비가 끝나면 알려드릴게요.",
+  "@pickupCartOrdered": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "pickupTrackingTitle": "주문 현황",
+  "pickupTrackingLoadFailed": "주문 현황을 불러오지 못했습니다.",
+  "pickupTrackingLiveNotice": "주문 상태가 바뀌면 실시간으로 반영돼요.",
+  "pickupTrackingNotFound": "주문을 찾을 수 없어요",
+  "pickupTrackingNotFoundDetail": "주문 내역에서 다시 확인해 주세요.",
+  "pickupOrderNumber": "주문번호 {number}번",
+  "@pickupOrderNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "pickupOrderedAt": "{time} 주문",
+  "@pickupOrderedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "pickupStepReceived": "매장에서 주문을 확인하고 있어요.",
+  "pickupStepPreparing": "바리스타가 정성껏 만들고 있어요.",
+  "pickupStepReady": "픽업대에서 주문을 찾아가세요.",
+  "pickupStepPickedUp": "맛있게 즐기세요. 감사합니다!",
+  "pickupInProgress": "진행 중",
+  "pickupRefundChecking": "사용한 쿠폰과 포인트는 복구되었어요. 결제 환불은 확인 중이며, 오래 걸리면 고객센터로 문의해 주세요.",
+  "pickupRefundNormal": "사용한 쿠폰과 포인트는 복구되었어요. 결제 환불은 수단에 따라 3~5일 소요될 수 있어요.",
+  "pickupCancelledTitle": "주문이 취소되었어요",
+  "pickupCancelAction": "주문 취소하기",
+  "pickupCancelTitle": "픽업 주문을 취소할까요?",
+  "pickupSectionItems": "주문 상품",
+  "pickupItemQuantity": "{count}개",
+  "@pickupItemQuantity": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pickupPaidAmount": "결제 금액"
 }

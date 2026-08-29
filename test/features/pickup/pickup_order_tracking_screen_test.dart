@@ -100,7 +100,7 @@ void main() {
     expect(find.text('주문번호 3번'), findsOneWidget);
     expect(find.text('바닐라 라떼 외 1건'.keepWord), findsOneWidget);
     for (final status in pickupOrderProgressSteps) {
-      expect(find.text(status.label), findsOneWidget);
+      expect(find.text(_statusLabels[status]!), findsOneWidget);
     }
     expect(find.text('진행 중'), findsOneWidget);
     expect(find.text('바닐라 라떼 (ICED)'.keepWord), findsOneWidget);
@@ -173,3 +173,11 @@ void main() {
     expect(find.text('주문을 찾을 수 없어요'), findsOneWidget);
   });
 }
+
+const _statusLabels = {
+  PickupOrderStatus.received: '주문 접수',
+  PickupOrderStatus.preparing: '제조 중',
+  PickupOrderStatus.ready: '픽업 대기',
+  PickupOrderStatus.pickedUp: '픽업 완료',
+  PickupOrderStatus.cancelled: '주문 취소',
+};

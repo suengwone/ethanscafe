@@ -47,7 +47,8 @@ void main() {
     expect(gift.message, '생일 축하해!');
     expect(gift.totalPrice, 36000);
     expect(gift.status, BeanGiftStatus.sent);
-    expect(gift.optionLabel, '200g · 홀빈');
+    expect(gift.weight, BeanWeight.g200);
+    expect(gift.grind, GrindOption.wholeBean);
     expect(gift.summary, '에티오피아 예가체프 아리차 에이미 G1 2개');
   });
 

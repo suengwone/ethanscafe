@@ -44,8 +44,10 @@ void main() {
     expect(subscription.id, isNotEmpty);
     expect(subscription.status, SubscriptionStatus.active);
     expect(subscription.pricePerDelivery, 36000);
-    expect(subscription.cycleLabel, '격주 2개');
-    expect(subscription.optionLabel, '200g · 핸드드립');
+    expect(subscription.cycle, SubscriptionCycle.biweekly);
+    expect(subscription.quantity, 2);
+    expect(subscription.weight, BeanWeight.g200);
+    expect(subscription.grind, GrindOption.handDrip);
     expect(
       subscription.nextDeliveryDate.difference(before).inDays,
       inInclusiveRange(13, 14),

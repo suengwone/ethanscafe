@@ -7,6 +7,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/text_utils.dart';
 import '../../../core/widgets/new_badge.dart';
+import '../../../features/beans/presentation/bean_labels.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../review/domain/review_models.dart';
 import '../../review/presentation/review_providers.dart';
 import '../domain/bean_models.dart';
@@ -28,11 +30,11 @@ class BeansListView extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('원두 정보를 불러오지 못했습니다.'),
+            Text(AppLocalizations.of(context).beansLoadFailed),
             const SizedBox(height: 8),
             TextButton(
               onPressed: () => ref.invalidate(beansProvider),
-              child: const Text('다시 시도'),
+              child: Text(AppLocalizations.of(context).retry),
             ),
           ],
         ),
@@ -54,26 +56,26 @@ class BeansListView extends ConsumerWidget {
               children: [
                 const _BeansHeader(),
                 if (acidic.isNotEmpty) ...[
-                  const _BeanSectionHeader(
+                  _BeanSectionHeader(
                     icon: LucideIcons.citrus,
-                    title: '산미가 화사한 원두',
-                    subtitle: '과일처럼 밝고 산뜻한 맛을 좋아한다면',
+                    title: AppLocalizations.of(context).beansFilterAcidic,
+                    subtitle: AppLocalizations.of(context).beansFilterAcidicNote,
                   ),
                   ...acidic.map((bean) => _BeanCard(bean: bean)),
                 ],
                 if (nutty.isNotEmpty) ...[
-                  const _BeanSectionHeader(
+                  _BeanSectionHeader(
                     icon: LucideIcons.nut,
-                    title: '산미 적은 고소한 원두',
-                    subtitle: '산미 부담 없이 고소하고 묵직한 한 잔을 원한다면',
+                    title: AppLocalizations.of(context).beansFilterMellow,
+                    subtitle: AppLocalizations.of(context).beansFilterMellowNote,
                   ),
                   ...nutty.map((bean) => _BeanCard(bean: bean)),
                 ],
                 if (decaf.isNotEmpty) ...[
-                  const _BeanSectionHeader(
+                  _BeanSectionHeader(
                     icon: LucideIcons.moonStar,
-                    title: '디카페인',
-                    subtitle: '늦은 오후에도 카페인 걱정 없이',
+                    title: AppLocalizations.of(context).beansFilterDecaf,
+                    subtitle: AppLocalizations.of(context).beansFilterDecafNote,
                   ),
                   ...decaf.map((bean) => _BeanCard(bean: bean)),
                 ],
@@ -118,7 +120,7 @@ class _CartSummaryBar extends ConsumerWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                '장바구니 · $count개',
+                AppLocalizations.of(context).beansCartCount(count),
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: context.palette.onAccent,
@@ -126,7 +128,7 @@ class _CartSummaryBar extends ConsumerWidget {
               ),
               const Spacer(),
               Text(
-                '${_priceFormat.format(total)}원',
+                AppLocalizations.of(context).priceWon(_priceFormat.format(total)),
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: context.palette.onAccent,
@@ -154,7 +156,7 @@ class _BeansHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 8, bottom: 12),
       child: Text(
-        '매주 화요일 로스팅한 원두를 홀빈 또는 원하는 분쇄도로 보내드립니다.'.keepWord,
+        AppLocalizations.of(context).beansRoastNotice.keepWord,
         style: Theme.of(context).textTheme.bodySmall,
       ),
     );
@@ -274,7 +276,10 @@ class _BeanCard extends ConsumerWidget {
                         ),
                         const SizedBox(height: 3),
                         Text(
-                          '${bean.origin} · ${bean.roastLevel.label} 로스팅'
+                          AppLocalizations.of(context).beansRoastOf(
+                                bean.origin,
+                                AppLocalizations.of(context).roastLevelLabel(bean.roastLevel),
+                              )
                               .keepWord,
                           style: textTheme.bodySmall,
                         ),
@@ -300,10 +305,10 @@ class _BeanCard extends ConsumerWidget {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  Text('200g 기준', style: textTheme.bodySmall),
+                  Text(AppLocalizations.of(context).beansPricePer200g, style: textTheme.bodySmall),
                   const Spacer(),
                   Text(
-                    '${_priceFormat.format(bean.price200)}원',
+                    AppLocalizations.of(context).priceWon(_priceFormat.format(bean.price200)),
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
