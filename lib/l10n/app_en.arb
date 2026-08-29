@@ -1,0 +1,28 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Foxtrot",
+
+  "settingsAppearanceTitle": "Theme",
+  "settingsAppearanceThemeSection": "Choose a theme",
+  "settingsAppearanceStoredOnThisDevice": "Your choice is saved on this device only. Pick it again on another device.",
+  "settingsAppearancePreview": "Preview",
+  "settingsAppearancePreviewRewards": "Foxtrot Rewards",
+  "settingsAppearancePreviewBalance": "32,250P available",
+  "settingsAppearancePreviewOrder": "Order",
+  "settingsAppearancePreviewCart": "Cart",
+
+  "themeModeSystem": "System setting",
+  "themeModeSystemDescription": "Follows your device setting",
+  "themeModeLight": "Light",
+  "themeModeLightDescription": "Always use the light background",
+  "themeModeDark": "Dark",
+  "themeModeDarkDescription": "Always use the dark background",
+
+  "settingsLanguageTitle": "Language",
+  "settingsLanguageSection": "Choose a language",
+  "settingsLanguageSystem": "System setting",
+  "settingsLanguageSystemDescription": "Follows your device language",
+  "settingsLanguageStoredOnThisDevice": "Your choice is saved on this device only. Pick it again on another device.",
+  "settingsLanguageUnsupportedNotice": "Text the store enters itself, such as menu names and store notices, appears in the language it was written in."
+}

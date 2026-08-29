@@ -4,9 +4,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:naver_login_sdk/naver_login_sdk.dart';
+import 'core/l10n/locale_providers.dart';
 import 'core/services/push_notification_providers.dart';
 import 'core/services/push_notification_service.dart';
 import 'core/theme/app_theme.dart';
@@ -14,6 +16,7 @@ import 'core/theme/theme_mode_providers.dart';
 import 'core/widgets/offline_banner.dart';
 import 'core/widgets/update_gate.dart';
 import 'features/coupon/presentation/auto_coupon_providers.dart';
+import 'l10n/app_localizations.dart';
 import 'firebase_options.dart';
 import 'router/app_router.dart';
 
@@ -71,9 +74,13 @@ Future<void> main() async {
     }
   }
   final storedThemeMode = await loadStoredThemeMode();
+  final storedLocale = await loadStoredLocale();
   runApp(
     ProviderScope(
-      overrides: [storedThemeModeProvider.overrideWithValue(storedThemeMode)],
+      overrides: [
+        storedThemeModeProvider.overrideWithValue(storedThemeMode),
+        storedLocaleProvider.overrideWithValue(storedLocale),
+      ],
       child: const CafeApp(),
     ),
   );
@@ -89,10 +96,19 @@ class CafeApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
-      title: '폭스트롯',
+      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       theme: buildAppTheme(brightness: Brightness.light),
       darkTheme: buildAppTheme(),
       themeMode: ref.watch(themeModeProvider),
+      // null이면 기기 언어를 따른다.
+      locale: ref.watch(localeProvider),
+      supportedLocales: supportedLocales,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       routerConfig: router,
       debugShowCheckedModeBanner: false,
       builder: (context, child) => OfflineBanner(

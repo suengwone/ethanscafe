@@ -1,0 +1,29 @@
+{
+  "@@locale": "ko",
+
+  "appTitle": "폭스트롯",
+  "@appTitle": {"description": "앱 이름. 작업 전환기와 브라우저 탭에 보인다"},
+
+  "settingsAppearanceTitle": "화면 테마",
+  "settingsAppearanceThemeSection": "테마 선택",
+  "settingsAppearanceStoredOnThisDevice": "고른 테마는 이 기기에만 저장됩니다. 다른 기기에서는 다시 골라 주세요.",
+  "settingsAppearancePreview": "미리보기",
+  "settingsAppearancePreviewRewards": "폭스트롯 리워드",
+  "settingsAppearancePreviewBalance": "보유 포인트 32,250P",
+  "settingsAppearancePreviewOrder": "주문하기",
+  "settingsAppearancePreviewCart": "장바구니",
+
+  "themeModeSystem": "시스템 설정",
+  "themeModeSystemDescription": "기기 설정을 따라 자동으로 바뀝니다",
+  "themeModeLight": "라이트",
+  "themeModeLightDescription": "밝은 배경으로 고정합니다",
+  "themeModeDark": "다크",
+  "themeModeDarkDescription": "어두운 배경으로 고정합니다",
+
+  "settingsLanguageTitle": "언어",
+  "settingsLanguageSection": "언어 선택",
+  "settingsLanguageSystem": "시스템 설정",
+  "settingsLanguageSystemDescription": "기기 언어를 따릅니다",
+  "settingsLanguageStoredOnThisDevice": "고른 언어는 이 기기에만 저장됩니다. 다른 기기에서는 다시 골라 주세요.",
+  "settingsLanguageUnsupportedNotice": "메뉴 이름과 매장 안내처럼 매장이 직접 올리는 글은 등록된 언어 그대로 보입니다."
+}
