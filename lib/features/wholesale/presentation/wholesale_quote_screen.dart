@@ -305,6 +305,7 @@ class _QuoteBeanTile extends StatelessWidget {
                 const SizedBox(width: 10),
                 _StepperButton(
                   icon: LucideIcons.minus,
+                  tooltip: AppLocalizations.of(context).wholesaleDecreaseKg,
                   onPressed: selected ? onDecrease : null,
                 ),
                 SizedBox(
@@ -319,7 +320,11 @@ class _QuoteBeanTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                _StepperButton(icon: LucideIcons.plus, onPressed: onIncrease),
+                _StepperButton(
+                  icon: LucideIcons.plus,
+                  onPressed: onIncrease,
+                  tooltip: AppLocalizations.of(context).wholesaleIncreaseKg,
+                ),
               ],
             ),
             if (selected) ...[
@@ -354,14 +359,20 @@ class _QuoteBeanTile extends StatelessWidget {
 }
 
 class _StepperButton extends StatelessWidget {
-  const _StepperButton({required this.icon, required this.onPressed});
+  const _StepperButton({
+    required this.icon,
+    required this.onPressed,
+    required this.tooltip,
+  });
 
   final IconData icon;
   final VoidCallback? onPressed;
+  final String tooltip;
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
+      tooltip: tooltip,
       onPressed: onPressed,
       style: IconButton.styleFrom(
         backgroundColor: context.palette.surface,

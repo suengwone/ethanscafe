@@ -261,6 +261,9 @@ class _HeaderSection extends StatelessWidget {
               ),
               clipBehavior: Clip.antiAlias,
               child: Image.asset(
+                semanticLabel: AppLocalizations.of(
+                  context,
+                ).menuPhotoOf(item.name),
                 item.imageAsset,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Icon(
@@ -439,6 +442,7 @@ class MenuImageThumbnail extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: Image.asset(
+        semanticLabel: AppLocalizations.of(context).menuPhotoOf(item.name),
         item.imageAsset,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) => Icon(

@@ -108,6 +108,9 @@ class _RecommendedCard extends StatelessWidget {
                 ),
                 clipBehavior: Clip.antiAlias,
                 child: Image.asset(
+                  semanticLabel: AppLocalizations.of(
+                    context,
+                  ).menuPhotoOf(item.name),
                   item.imageAsset,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Icon(

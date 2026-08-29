@@ -1704,5 +1704,23 @@
         "type": "String"
       }
     }
+  },
+  "reviewRatingStars": "별 {count}개",
+  "@reviewRatingStars": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wholesaleDecreaseKg": "수량 줄이기",
+  "wholesaleIncreaseKg": "수량 늘리기",
+  "menuPhotoOf": "{name} 사진",
+  "@menuPhotoOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -4783,6 +4783,30 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'주문이 실패했는데 환불이 처리되지 않았어요. 고객센터로 문의해 주세요. ({reason})'**
   String orderFailedRefundPending(String reason);
+
+  /// No description provided for @reviewRatingStars.
+  ///
+  /// In ko, this message translates to:
+  /// **'별 {count}개'**
+  String reviewRatingStars(int count);
+
+  /// No description provided for @wholesaleDecreaseKg.
+  ///
+  /// In ko, this message translates to:
+  /// **'수량 줄이기'**
+  String get wholesaleDecreaseKg;
+
+  /// No description provided for @wholesaleIncreaseKg.
+  ///
+  /// In ko, this message translates to:
+  /// **'수량 늘리기'**
+  String get wholesaleIncreaseKg;
+
+  /// No description provided for @menuPhotoOf.
+  ///
+  /// In ko, this message translates to:
+  /// **'{name} 사진'**
+  String menuPhotoOf(String name);
 }
 
 class _AppLocalizationsDelegate

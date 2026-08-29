@@ -2666,4 +2666,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String orderFailedRefundPending(String reason) {
     return 'The order failed and the refund did not go through. Please contact support. ($reason)';
   }
+
+  @override
+  String reviewRatingStars(int count) {
+    return '$count stars';
+  }
+
+  @override
+  String get wholesaleDecreaseKg => 'Decrease';
+
+  @override
+  String get wholesaleIncreaseKg => 'Increase';
+
+  @override
+  String menuPhotoOf(String name) {
+    return 'Photo of $name';
+  }
 }

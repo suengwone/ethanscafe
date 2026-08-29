@@ -780,5 +780,9 @@
   "notificationMarketingDetail": "Discount coupons and promotions",
   "orderFailedGeneric": "Could not place the order. Try again.",
   "orderFailedRefunded": "The order did not go through, so the payment was refunded. ({reason})",
-  "orderFailedRefundPending": "The order failed and the refund did not go through. Please contact support. ({reason})"
+  "orderFailedRefundPending": "The order failed and the refund did not go through. Please contact support. ({reason})",
+  "reviewRatingStars": "{count} stars",
+  "wholesaleDecreaseKg": "Decrease",
+  "wholesaleIncreaseKg": "Increase",
+  "menuPhotoOf": "Photo of {name}"
 }

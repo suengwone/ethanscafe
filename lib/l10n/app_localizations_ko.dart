@@ -2608,4 +2608,20 @@ class AppLocalizationsKo extends AppLocalizations {
   String orderFailedRefundPending(String reason) {
     return '주문이 실패했는데 환불이 처리되지 않았어요. 고객센터로 문의해 주세요. ($reason)';
   }
+
+  @override
+  String reviewRatingStars(int count) {
+    return '별 $count개';
+  }
+
+  @override
+  String get wholesaleDecreaseKg => '수량 줄이기';
+
+  @override
+  String get wholesaleIncreaseKg => '수량 늘리기';
+
+  @override
+  String menuPhotoOf(String name) {
+    return '$name 사진';
+  }
 }

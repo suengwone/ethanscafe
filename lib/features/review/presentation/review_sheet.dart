@@ -119,6 +119,8 @@ class _ReviewSheetState extends ConsumerState<ReviewSheet> {
               children: [
                 for (var star = 1; star <= maxReviewRating; star++)
                   IconButton(
+                    // 화면을 읽어 주는 사람에게 별 다섯 개는 전부 같은 버튼이다.
+                    tooltip: l10n.reviewRatingStars(star),
                     onPressed: () => setState(() => _rating = star),
                     icon: Icon(
                       Icons.star_rounded,
