@@ -18,7 +18,14 @@ const {
   validateUpdateOrderStatusRequest,
 } = require('./order_transitions');
 const {userDataDocPaths} = require('./account_cleanup');
-const {orderFeedEntries, mergeFeedItems} = require('./notification_feed');
+const {
+  isPushAllowed,
+  orderFeedEntries,
+  newPointHistoryEntries,
+  pointsFeedEntries,
+  mergeFeedItems,
+  newFeedItems,
+} = require('./notification_feed');
 const {
   NAVER_PROFILE_URL,
   validateNaverSignInRequest,
@@ -1282,7 +1289,6 @@ exports.cleanUpDeletedUserData = functionsV1
     await batch.commit();
   });
 
-const ORDER_HISTORY_ROUTE = '/profile/orders';
 const ANDROID_CHANNEL_ID = 'high_importance_channel';
 const INVALID_TOKEN_CODES = [
   'messaging/invalid-registration-token',
@@ -1293,109 +1299,133 @@ const INVALID_TOKEN_CODES = [
 const NOTIFICATION_FEED_COLLECTION = 'notifications';
 
 /**
- * 보낸 알림을 사용자 알림함(`notifications/{uid}`)에도 남긴다.
+ * 알림 한 묶음을 사용자에게 보낸다.
+ *
+ * 알림함에 남기는 일이 먼저다. 푸시 설정과 상관없이 쌓아야 푸시를 꺼 둔 사람도
+ * 앱을 열면 무슨 일이 있었는지 볼 수 있다. 알림함 쓰기가 넘어져도 푸시는 보낸다.
+ */
+async function deliverNotifications(uid, entries) {
+  if (entries.length === 0) {
+    return;
+  }
+  // 알림함에 못 남겼더라도 푸시는 보낸다. 그래서 기본값은 전부다.
+  let toPush = entries;
+  try {
+    const added = await saveNotificationFeed(uid, entries);
+    // 트리거는 같은 사건으로 두 번 불릴 수 있다. 알림함이 이미 갖고 있던
+    // 항목이면 푸시도 다시 보내지 않는다.
+    toPush = entries.filter((entry) => added.has(entry.id));
+  } catch (error) {
+    console.error('알림함에 알림을 남기지 못했습니다.', uid, error);
+  }
+  await pushNotifications(uid, toPush);
+}
+
+/**
+ * 알림함(`notifications/{uid}`)에 항목을 붙인다.
  *
  * 새 알림을 붙이는 이 쓰기와 사용자가 읽음 표시를 하는 쓰기가 같은 문서를
  * 다투므로 트랜잭션으로 감싼다.
  */
-async function saveNotificationFeed(uid, notifications) {
+async function saveNotificationFeed(uid, entries) {
   const firestore = getFirestore();
-  const entries = orderFeedEntries({
-    notifications,
-    route: ORDER_HISTORY_ROUTE,
-    createdAt: Timestamp.now(),
-  });
   const doc = firestore.collection(NOTIFICATION_FEED_COLLECTION).doc(uid);
-  await firestore.runTransaction(async (transaction) => {
+  return firestore.runTransaction(async (transaction) => {
     const snapshot = await transaction.get(doc);
     const data = snapshot.data();
+    const existing = data && data.items;
     transaction.set(
         doc,
         {
-          items: mergeFeedItems(data && data.items, entries),
+          items: mergeFeedItems(existing, entries),
           updatedAt: Timestamp.now(),
         },
         {merge: true},
     );
+    return new Set(newFeedItems(existing, entries).map((item) => item.id));
   });
 }
 
 /**
- * 주문 상태 변경 알림 발송. 원두·픽업 트리거가 공유한다.
- * 알림 설정이 꺼져 있거나 토큰이 없으면 조용히 끝낸다.
+ * 기기로 푸시를 보낸다. 사용자가 끈 분류나 토큰이 없으면 조용히 끝낸다.
  */
-async function pushOrderStatusNotifications(uid, notifications) {
-  if (notifications.length === 0) {
+async function pushNotifications(uid, entries) {
+  if (entries.length === 0) {
     return;
   }
-  // 알림함은 푸시 설정과 상관없이 쌓는다. 푸시를 꺼 둔 사람도 앱을 열면 주문이
-  // 어디까지 갔는지 볼 수 있어야 한다. 여기서 넘어져도 푸시는 보낸다.
-  try {
-    await saveNotificationFeed(uid, notifications);
-  } catch (error) {
-    console.error('알림함에 알림을 남기지 못했습니다.', uid, error);
-  }
-  {
-    const firestore = getFirestore();
+  const firestore = getFirestore();
 
-    const settingsSnapshot = await firestore
+  const settingsSnapshot = await firestore
       .collection('notificationSettings')
       .doc(uid)
       .get();
-    const settings = settingsSnapshot.data();
-    if (settings && settings.pushEnabled === false) {
-      return;
-    }
+  const settings = settingsSnapshot.data();
+  const allowed = entries.filter(
+      (entry) => isPushAllowed(settings, entry.category),
+  );
+  if (allowed.length === 0) {
+    return;
+  }
 
-    const tokensSnapshot = await firestore
+  const tokensSnapshot = await firestore
       .collection('fcmTokens')
       .doc(uid)
       .get();
-    const tokensData = tokensSnapshot.data();
-    const tokens = (
-      tokensData && Array.isArray(tokensData.tokens) ? tokensData.tokens : []
-    ).filter((token) => typeof token === 'string' && token.length > 0);
-    if (tokens.length === 0) {
-      return;
-    }
+  const tokensData = tokensSnapshot.data();
+  const tokens = (
+    tokensData && Array.isArray(tokensData.tokens) ? tokensData.tokens : []
+  ).filter((token) => typeof token === 'string' && token.length > 0);
+  if (tokens.length === 0) {
+    return;
+  }
 
-    const messaging = getMessaging();
-    const invalidTokens = new Set();
-    for (const notification of notifications) {
-      const response = await messaging.sendEachForMulticast({
-        tokens,
-        notification: {
-          title: notification.title,
-          body: notification.body,
-        },
-        data: {
-          route: ORDER_HISTORY_ROUTE,
-          orderId: notification.orderId,
-          status: notification.status,
-        },
-        android: {
-          priority: 'high',
-          notification: {channelId: ANDROID_CHANNEL_ID},
-        },
-        apns: {payload: {aps: {sound: 'default'}}},
-      });
-      response.responses.forEach((result, index) => {
-        if (result.error && INVALID_TOKEN_CODES.includes(result.error.code)) {
-          invalidTokens.add(tokens[index]);
-        }
-      });
-    }
+  const messaging = getMessaging();
+  const invalidTokens = new Set();
+  for (const entry of allowed) {
+    const response = await messaging.sendEachForMulticast({
+      tokens,
+      notification: {
+        title: entry.title,
+        body: entry.body,
+      },
+      data: {
+        route: entry.route,
+        category: entry.category,
+      },
+      android: {
+        priority: 'high',
+        notification: {channelId: ANDROID_CHANNEL_ID},
+      },
+      apns: {payload: {aps: {sound: 'default'}}},
+    });
+    response.responses.forEach((result, index) => {
+      if (result.error && INVALID_TOKEN_CODES.includes(result.error.code)) {
+        invalidTokens.add(tokens[index]);
+      }
+    });
+  }
 
-    if (invalidTokens.size > 0) {
-      await firestore
+  if (invalidTokens.size > 0) {
+    await firestore
         .collection('fcmTokens')
         .doc(uid)
         .set(
-          {tokens: FieldValue.arrayRemove(...invalidTokens)},
-          {merge: true},
+            {tokens: FieldValue.arrayRemove(...invalidTokens)},
+            {merge: true},
         );
-    }
   }
+}
+
+/** 주문 상태 변경 알림. 원두·픽업 트리거가 공유한다. */
+async function pushOrderStatusNotifications(uid, orderType, notifications) {
+  await deliverNotifications(
+      uid,
+      orderFeedEntries({
+        notifications,
+        orderType,
+        createdAt: Timestamp.now(),
+      }),
+  );
 }
 
 /** 진행 중인 주문 색인을 주문 문서 변경에 맞춰 갱신한다. */
@@ -1461,6 +1491,7 @@ exports.sendBeanOrderStatusPush = onDocumentWritten(
     });
     await pushOrderStatusNotifications(
         event.params.uid,
+        'bean',
         collectStatusChangeNotifications(before, after),
     );
   },
@@ -1481,8 +1512,29 @@ exports.sendPickupOrderStatusPush = onDocumentWritten(
     await syncStoreActivity({beforeData: before, afterData: after});
     await pushOrderStatusNotifications(
         event.params.uid,
+        'pickup',
         collectStatusChangeNotifications(
             before, after, PICKUP_STATUS_MESSAGES),
+    );
+  },
+);
+
+exports.sendPointsChangePush = onDocumentWritten(
+  'points/{uid}',
+  async (event) => {
+    const before = event.data.before.exists ? event.data.before.data() : null;
+    const after = event.data.after.exists ? event.data.after.data() : null;
+    const fresh = newPointHistoryEntries(before, after);
+    if (fresh.length === 0) {
+      return;
+    }
+    await deliverNotifications(
+        event.params.uid,
+        pointsFeedEntries({
+          entries: fresh,
+          balance: (after && after.balance) || 0,
+          createdAt: Timestamp.now(),
+        }),
     );
   },
 );
