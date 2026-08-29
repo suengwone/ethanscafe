@@ -42,7 +42,9 @@ class CloudFunctionsReferralRepository implements ReferralRepository {
     Map<String, dynamic> payload,
   ) async {
     try {
-      final result = await _functions.httpsCallable(name).call(payload);
+      final result = await _functions
+          .httpsCallable(name)
+          .call<Object?>(payload);
       return Map<String, dynamic>.from(result.data as Map);
     } on FirebaseFunctionsException catch (error) {
       // 서버가 거절 사유를 한국어 문구로 돌려주므로 그대로 보여준다.

@@ -29,37 +29,39 @@ class CloudFunctionsPickupCheckoutRepository implements PickupCheckout {
     int usedPoints = 0,
     PaymentApproval? payment,
   }) async {
-    final result = await _functions.httpsCallable(placeOrderCallableName).call({
-      'orderType': 'pickup',
-      'items': [
-        for (final item in items)
-          {
-            'menuId': item.menuId,
-            'menuName': item.menuName,
-            if (item.option != null) 'option': item.option,
-            'quantity': item.quantity,
-            'unitPrice': item.unitPrice,
-          },
-      ],
-      'storeId': storeId,
-      'storeName': storeName,
-      'usedPoints': usedPoints,
-      'couponIds': [for (final coupon in coupons) coupon.id],
-      if (payment != null)
-        'payment': {
-          'paymentKey': payment.paymentKey,
-          'orderId': payment.orderId,
-          'amount': payment.amount,
-        },
-    });
+    final result = await _functions
+        .httpsCallable(placeOrderCallableName)
+        .call<Object?>({
+          'orderType': 'pickup',
+          'items': [
+            for (final item in items)
+              {
+                'menuId': item.menuId,
+                'menuName': item.menuName,
+                if (item.option != null) 'option': item.option,
+                'quantity': item.quantity,
+                'unitPrice': item.unitPrice,
+              },
+          ],
+          'storeId': storeId,
+          'storeName': storeName,
+          'usedPoints': usedPoints,
+          'couponIds': [for (final coupon in coupons) coupon.id],
+          if (payment != null)
+            'payment': {
+              'paymentKey': payment.paymentKey,
+              'orderId': payment.orderId,
+              'amount': payment.amount,
+            },
+        });
     return _orderFromResult(result.data);
   }
 
   @override
   Future<PickupOrder> cancelOrder(String orderId) async {
-    final result = await _functions.httpsCallable(cancelOrderCallableName).call(
-      {'orderType': 'pickup', 'orderId': orderId},
-    );
+    final result = await _functions
+        .httpsCallable(cancelOrderCallableName)
+        .call<Object?>({'orderType': 'pickup', 'orderId': orderId});
     return _orderFromResult(result.data);
   }
 

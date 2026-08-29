@@ -115,7 +115,7 @@ class FirestoreAdminOrdersRepository implements AdminOrdersRepository {
     required String uid,
     required String orderId,
   }) async {
-    await _functions.httpsCallable(cancelCallableName).call({
+    await _functions.httpsCallable(cancelCallableName).call<Object?>({
       'orderType': orderType,
       'uid': uid,
       'orderId': orderId,
@@ -143,7 +143,7 @@ class FirestoreAdminOrdersRepository implements AdminOrdersRepository {
 
   @override
   Future<void> retryRefund(RefundFailure failure) async {
-    await _functions.httpsCallable(retryRefundCallableName).call({
+    await _functions.httpsCallable(retryRefundCallableName).call<Object?>({
       'orderType': failure.orderType,
       'uid': failure.uid,
       'orderId': failure.orderId,
@@ -156,7 +156,7 @@ class FirestoreAdminOrdersRepository implements AdminOrdersRepository {
     required String orderId,
     required String status,
   }) async {
-    await _functions.httpsCallable(updateCallableName).call({
+    await _functions.httpsCallable(updateCallableName).call<Object?>({
       'orderType': orderType,
       'uid': uid,
       'orderId': orderId,

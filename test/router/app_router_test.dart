@@ -41,7 +41,7 @@ void main() {
       'points_data': jsonEncode({
         'membershipId': 'MEMBER-12345678',
         'balance': 0,
-        'history': [],
+        'history': <Object?>[],
       }),
     });
   });

@@ -12,6 +12,11 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   exclude:
     - build/**
+  # 암묵적 dynamic을 막는다. 끄고 두면 잘못된 타입이 런타임까지 조용히 흘러간다.
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
 
 linter:
   # The lint rules applied to this project can be customized in the

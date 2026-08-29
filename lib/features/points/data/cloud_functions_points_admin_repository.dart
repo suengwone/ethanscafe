@@ -18,10 +18,12 @@ class CloudFunctionsPointsAdminRepository implements PointsAdminRepository {
     required int paymentAmount,
   }) async {
     final trimmed = membershipId.trim();
-    final result = await _functions.httpsCallable(earnCallableName).call({
-      'membershipId': trimmed,
-      'paymentAmount': paymentAmount,
-    });
+    final result = await _functions
+        .httpsCallable(earnCallableName)
+        .call<Object?>({
+          'membershipId': trimmed,
+          'paymentAmount': paymentAmount,
+        });
     final data = Map<String, dynamic>.from(result.data as Map);
     return PointsEarnResult(
       membershipId: data['membershipId'] as String? ?? trimmed,

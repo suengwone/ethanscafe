@@ -102,7 +102,10 @@ class FirebaseAuthRepository implements AuthRepository {
         );
         final callableResult = await _functions
             .httpsCallable(kakaoSignInCallableName)
-            .call({'code': webAuth.code, 'redirectUri': webAuth.redirectUri});
+            .call<Object?>({
+              'code': webAuth.code,
+              'redirectUri': webAuth.redirectUri,
+            });
         final data = Map<String, dynamic>.from(callableResult.data as Map);
         final idToken = data['idToken'] as String?;
         if (idToken == null || idToken.isEmpty) {
@@ -168,7 +171,7 @@ class FirebaseAuthRepository implements AuthRepository {
       }
       final result = await _functions
           .httpsCallable(naverSignInCallableName)
-          .call(payload);
+          .call<Object?>(payload);
       final data = Map<String, dynamic>.from(result.data as Map);
       final customToken = data['token'] as String?;
       if (customToken == null || customToken.isEmpty) {

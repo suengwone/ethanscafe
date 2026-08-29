@@ -39,12 +39,14 @@ class FirestoreAccountRepository implements AccountRepository {
     validateBusinessProfile(business);
     final normalized = normalizeBusinessProfile(business);
     try {
-      await _functions.httpsCallable(registerBusinessCallableName).call({
-        'companyName': normalized.companyName,
-        'businessNumber': normalized.businessNumber,
-        'managerName': normalized.managerName,
-        'phone': normalized.phone,
-      });
+      await _functions
+          .httpsCallable(registerBusinessCallableName)
+          .call<Object?>({
+            'companyName': normalized.companyName,
+            'businessNumber': normalized.businessNumber,
+            'managerName': normalized.managerName,
+            'phone': normalized.phone,
+          });
     } on FirebaseFunctionsException catch (e) {
       throw Exception(e.message ?? '사업자 등록에 실패했습니다. 다시 시도해주세요.');
     }

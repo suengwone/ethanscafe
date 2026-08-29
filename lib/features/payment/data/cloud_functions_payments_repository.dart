@@ -18,11 +18,13 @@ class CloudFunctionsPaymentsRepository implements PaymentsRepository {
     required String orderId,
     required int amount,
   }) async {
-    final result = await _functions.httpsCallable(confirmCallableName).call({
-      'paymentKey': paymentKey,
-      'orderId': orderId,
-      'amount': amount,
-    });
+    final result = await _functions
+        .httpsCallable(confirmCallableName)
+        .call<Object?>({
+          'paymentKey': paymentKey,
+          'orderId': orderId,
+          'amount': amount,
+        });
     final data = Map<String, dynamic>.from(result.data as Map);
     return PaymentApproval(
       paymentKey: data['paymentKey'] as String? ?? paymentKey,

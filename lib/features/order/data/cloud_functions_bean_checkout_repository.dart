@@ -33,42 +33,44 @@ class CloudFunctionsBeanCheckoutRepository implements BeanCheckout {
     String? recipientPhone,
     String? shippingAddress,
   }) async {
-    final result = await _functions.httpsCallable(placeOrderCallableName).call({
-      'orderType': 'bean',
-      'items': [
-        for (final item in items)
-          {
-            'beanId': item.beanId,
-            'beanName': item.beanName,
-            'weight': item.weight.name,
-            'grind': item.grind.name,
-            'quantity': item.quantity,
-            'unitPrice': item.unitPrice,
-          },
-      ],
-      'usedPoints': usedPoints,
-      'couponIds': [for (final coupon in coupons) coupon.id],
-      if (payment != null)
-        'payment': {
-          'paymentKey': payment.paymentKey,
-          'orderId': payment.orderId,
-          'amount': payment.amount,
-        },
-      'fulfillmentMethod': fulfillmentMethod.name,
-      'storeId': ?storeId,
-      'storeName': ?storeName,
-      'recipient': ?recipient,
-      'recipientPhone': ?recipientPhone,
-      'shippingAddress': ?shippingAddress,
-    });
+    final result = await _functions
+        .httpsCallable(placeOrderCallableName)
+        .call<Object?>({
+          'orderType': 'bean',
+          'items': [
+            for (final item in items)
+              {
+                'beanId': item.beanId,
+                'beanName': item.beanName,
+                'weight': item.weight.name,
+                'grind': item.grind.name,
+                'quantity': item.quantity,
+                'unitPrice': item.unitPrice,
+              },
+          ],
+          'usedPoints': usedPoints,
+          'couponIds': [for (final coupon in coupons) coupon.id],
+          if (payment != null)
+            'payment': {
+              'paymentKey': payment.paymentKey,
+              'orderId': payment.orderId,
+              'amount': payment.amount,
+            },
+          'fulfillmentMethod': fulfillmentMethod.name,
+          'storeId': ?storeId,
+          'storeName': ?storeName,
+          'recipient': ?recipient,
+          'recipientPhone': ?recipientPhone,
+          'shippingAddress': ?shippingAddress,
+        });
     return _orderFromResult(result.data);
   }
 
   @override
   Future<BeanOrder> cancelOrder(String orderId) async {
-    final result = await _functions.httpsCallable(cancelOrderCallableName).call(
-      {'orderType': 'bean', 'orderId': orderId},
-    );
+    final result = await _functions
+        .httpsCallable(cancelOrderCallableName)
+        .call<Object?>({'orderType': 'bean', 'orderId': orderId});
     return _orderFromResult(result.data);
   }
 

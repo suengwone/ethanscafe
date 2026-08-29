@@ -56,7 +56,7 @@ class FirestorePointsRepository implements PointsRepository {
       throw ArgumentError.value(amount, 'amount', '사용 포인트는 0보다 커야 합니다.');
     }
 
-    await _functions.httpsCallable(usePointsCallableName).call({
+    await _functions.httpsCallable(usePointsCallableName).call<Object?>({
       'amount': amount,
       'description': description,
     });
