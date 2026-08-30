@@ -32,3 +32,6 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+
+# Xcode가 SPM 상태를 적어 두는 곳. 빌드마다 달라지고 소스가 아니다.
+**/xcshareddata/swiftpm/
