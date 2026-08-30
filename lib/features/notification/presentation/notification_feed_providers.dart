@@ -17,7 +17,9 @@ final notificationFeedRepositoryProvider = Provider<NotificationFeedRepository>(
         }
       }
     } catch (_) {}
-    return LocalNotificationFeedRepository();
+    final local = LocalNotificationFeedRepository();
+    ref.onDispose(local.dispose);
+    return local;
   },
 );
 

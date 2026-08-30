@@ -11,6 +11,7 @@
 | 플랫폼 | iOS, Android, Web (Flutter) |
 | 목적 | 카페 고객용 주문·멤버십·포인트 앱 **+ 사업자(B2B) 도매 견적 창구** |
 | 번들 ID | Android: `com.ethanscafe.cafe_app` / iOS: `com.ethanscafe.cafeApp` |
+| 최소 OS | Android API 23 / **iOS 15.0** — 현재 Firebase iOS SDK가 15.0 미만을 지원하지 않는다 |
 | Firebase 프로젝트 | `foxtrot-3bdba` (리전 `asia-northeast3`) |
 
 ## 2. 사용자 유형
@@ -120,7 +121,7 @@
   - 멱등성: `paymentKey`를 충전 기록(`points/{uid}/charges`)에 저장해 중복 충전 차단
   - 환불: 앱 내 미지원 (고객센터 응대). 게스트 충전 불가
 
-- ✅ **포인트 사용 잠금** (`/profile/security`, `local_auth`) — 포인트를 쓰는 주문을 올리기 직전에 기기 잠금(생체 인증·PIN)으로 본인을 확인한다
+- ✅ **포인트 사용 잠금** (`/profile/security`, `local_auth`) — 포인트를 쓰는 주문을 올리기 직전에 기기 잠금(생체 인증·PIN)으로 본인을 확인한다. **기본값은 켜짐**이라, 이미 쓰던 사람도 다음 포인트 사용에서 처음으로 확인 창을 만난다 (배포 안내에 적을 것)
   - 포인트는 충전해 둔 현금성 잔액이라 폰을 잃어버리면 그 자리에서 소진된다. 카드 결제는 토스 결제창이 이미 본인을 확인하므로 여기서 또 묻지 않는다
   - 포인트를 쓰지 않는 주문은 묻지 않고 지나간다
   - **걸 잠금이 없는 기기는 통과시킨다.** 막을 수단이 없는데 막으면 그 기기에서는 포인트를 영영 쓰지 못한다. 설정 화면이 그 사실을 적어 준다
@@ -379,6 +380,7 @@
 - 토스페이먼츠: `TOSS_CLIENT_KEY` (dart-define), `TOSS_SECRET_KEY` (Functions 시크릿)
 - Remote Config 키 4종은 `remoteconfig.template.json`에 **소스로 둔다**: `min_supported_version`, `store_url`, `notice_enabled`, `notice_message`
   - 값도 소스에서 고친다. **콘솔에서 고친 값은 다음 배포에 덮인다** — 공지 문구를 급히 띄우더라도 커밋을 지나가게 해서 무엇이 왜 켜졌는지 남긴다
+  - 덮이는 시점은 원격 설정을 건드린 배포만이 아니다. `deploy.yml`은 함수만 바뀐 푸시에서도 원격 설정을 통째로 올린다. **장애 중 콘솔에서 배너를 켜 두면 다음 함수 배포가 그것을 끈다.** 급한 공지도 커밋으로 올려야 하는 이유다
   - 기본값은 모두 비어 있거나 꺼짐이라, 채우기 전에는 아무것도 차단하지 않고 아무 배너도 뜨지 않는다
 - Android: minSdk 23, compileSdk 37, AGP 9.0.1
 - 자산: `assets/images/menu/`, Pretendard 폰트
@@ -544,3 +546,4 @@
 | 2026-08-30 | 원격 설정을 소스로 — 콘솔에만 있어야 했던 Remote Config 키 4종을 `remoteconfig.template.json`에 적고 배포 파이프라인에 얹었다. 키가 없어 앱이 늘 기본값으로만 돌던 것을 끝내고, 최소 지원 버전·운영 공지를 누가 언제 왜 바꿨는지 커밋에 남긴다 |
 | 2026-08-30 | 포인트 사용 잠금 — 포인트를 쓰는 주문 앞에 기기 잠금 확인을 걸었다(`/profile/security`에서 끌 수 있다). 카드 결제는 결제창이 이미 본인을 확인하므로 두 번 묻지 않고, 잠금이 없는 기기는 통과시켜 포인트가 묶이지 않게 했다 |
 | 2026-08-30 | Android 빌드 복구 — `firebase_core` 4.14.0이 없앤 심볼을 `firebase_auth` 6.5.6이 아직 부르고 있어 APK가 아예 만들어지지 않았다. CI가 analyze·test만 돌려 아무도 모르고 있었다. `firebase_auth`를 6.6.1로 올려 맞췄다 |
+| 2026-08-30 | iOS 빌드 복구 및 CI 보강 — Firebase 플러그인들이 서로 다른 `firebase-ios-sdk`를 요구해 iOS 빌드가 의존성 해석 단계에서 멈춰 있었다. 플러그인 묶음을 한 세대로 맞추고, 그 SDK가 요구하는 대로 최소 iOS 버전을 13.0에서 15.0으로 올렸다(iOS 13·14 기기는 지원에서 빠진다). 같은 일이 조용히 반복되지 않도록 CI에 Android 빌드 잡을 세웠다 — analyze·test만으로는 네이티브 설정과 SDK 충돌이 잡히지 않는다 |

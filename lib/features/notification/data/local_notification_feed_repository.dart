@@ -14,6 +14,11 @@ class LocalNotificationFeedRepository implements NotificationFeedRepository {
 
   final _changes = StreamController<List<AppNotification>>.broadcast();
 
+  /// 로그인·로그아웃으로 저장소가 갈릴 때 provider가 부른다.
+  void dispose() {
+    _changes.close();
+  }
+
   @override
   Stream<List<AppNotification>> watchNotifications() async* {
     yield await _load();

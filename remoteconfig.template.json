@@ -19,14 +19,14 @@
       "defaultValue": {
         "value": "false"
       },
-      "description": "앱 상단 운영 공지 배너를 켠다. notice_message가 비어 있으면 켜도 보이지 않는다.",
+      "description": "앱 상단 운영 공지 배너를 켠다. notice_message가 비어 있으면 켜도 보이지 않는다. 값은 이 파일에서 고친다 — 콘솔 수정은 다음 배포에 덮인다.",
       "valueType": "BOOLEAN"
     },
     "notice_message": {
       "defaultValue": {
         "value": ""
       },
-      "description": "운영 공지 배너에 띄울 한 줄. 서버 점검처럼 앱을 새로 올리지 않고 알려야 할 때 쓴다.",
+      "description": "운영 공지 배너에 띄울 한 줄. 값은 이 파일에서 고친다 — 콘솔에서 고치면 다음 배포(함수만 바뀐 배포 포함)에 도로 덮인다.",
       "valueType": "STRING"
     }
   },
