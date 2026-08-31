@@ -27,6 +27,7 @@ import 'package:cafe_app/features/points/presentation/points_screen.dart';
 import 'package:cafe_app/features/profile/presentation/appearance_settings_screen.dart';
 import 'package:cafe_app/features/profile/presentation/delivery_address_screen.dart';
 import 'package:cafe_app/features/profile/presentation/payment_methods_screen.dart';
+import 'package:cafe_app/features/profile/presentation/policy_screen.dart';
 import 'package:cafe_app/features/profile/presentation/profile_screen.dart';
 import 'package:cafe_app/features/profile/presentation/support_screen.dart';
 import 'package:cafe_app/features/referral/presentation/referral_screen.dart';
@@ -184,6 +185,27 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(NoticeListScreen), findsOneWidget);
+    expect(find.byType(LoginScreen), findsNothing);
+  });
+
+  testWidgets('비로그인 시에도 이용약관을 볼 수 있다', (tester) async {
+    // 스토어 심사가 앱 밖에서 닿는 방침 주소를 요구한다.
+    final router = await pumpApp(tester);
+
+    router.go('/profile/terms');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PolicyScreen), findsOneWidget);
+    expect(find.byType(LoginScreen), findsNothing);
+  });
+
+  testWidgets('비로그인 시에도 개인정보처리방침을 볼 수 있다', (tester) async {
+    final router = await pumpApp(tester);
+
+    router.go('/profile/privacy');
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PolicyScreen), findsOneWidget);
     expect(find.byType(LoginScreen), findsNothing);
   });
 

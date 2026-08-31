@@ -39,7 +39,17 @@ import '../features/subscription/presentation/subscription_list_screen.dart';
 import '../features/wholesale/presentation/wholesale_quote_history_screen.dart';
 import '../features/wholesale/presentation/wholesale_quote_screen.dart';
 
-const publicPaths = {'/', '/login', '/menu', '/notices', '/stores'};
+/// 약관과 개인정보처리방침은 로그인 없이 열려 있어야 한다. 스토어 심사는 앱 밖에서
+/// 닿는 방침 주소를 요구하고, 가입할지 정하려는 사람이 먼저 읽는 글이기도 하다.
+const publicPaths = {
+  '/',
+  '/login',
+  '/menu',
+  '/notices',
+  '/stores',
+  '/profile/terms',
+  '/profile/privacy',
+};
 
 /// `/menu` 하위지만 로그인이 필요한 거래 흐름.
 /// 비회원 주문은 서버를 거치지 않아 결제·주문이 기기에만 남으므로 진입을 막는다.

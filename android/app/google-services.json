@@ -50,6 +50,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "930389726649-jcbm82o1t1pubn6hqdu581qdg6jt9fvf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ethanscafe.cafe_app",
+            "certificate_hash": "c64783094ff84d305153b78be68e380c72118149"
+          }
+        },
+        {
+          "client_id": "930389726649-pbpdkiehtr19a3lma6hrhlhdo6875m17.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ethanscafe.cafe_app",
+            "certificate_hash": "30ae0f23dc55a9c296626f2c4bad76174d934fd7"
+          }
+        },
+        {
           "client_id": "930389726649-ehu1afj0eapdq41n19ur95u9b99f3mhf.apps.googleusercontent.com",
           "client_type": 3
         }
